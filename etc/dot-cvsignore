@@ -1,0 +1,14 @@
+#
+# .CVSIGNORE --Custom settings for CVS to control files to be ignored.
+#
+.DS_Store
+Desktop
+Documents
+Downloads
+Library
+Movies
+Music
+Pictures
+Projects
+Public
+Sites

@@ -1,0 +1,8 @@
+#
+# .ASTYLERC --Custom settings for ASTYLE, the C/C++/Java code formatter.
+#
+style=ansi
+brackets=break
+indent-namespaces
+min-conditional-indent=0
+convert-tabs

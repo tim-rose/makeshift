@@ -1,0 +1,6 @@
+#
+# .CVSRC --Custom settings for CVS to provide defaults for some commands.
+#
+cvs -q
+update -Pd
+checkout -P
