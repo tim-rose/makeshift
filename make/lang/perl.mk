@@ -45,6 +45,7 @@ X_PL_FLAGS = -k__ '-k$$__' -k%__ -k__x -k__n:1,2 -k__nx:1,2 -k__xn:1,2 -kN__ -k
 #
 .PHONY: perl-clean
 clean:	perl-clean
+distclean:	perl-clean
 perl-clean:
 	$(RM) $(PERL_TRG)
 
