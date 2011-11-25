@@ -31,6 +31,7 @@ SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%)
 $(bindir)/%:		%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@
 $(libexecdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%.shl:	%.shl;	$(INSTALL_DATA) $? $@
+$(sysconfdir)/%:	%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@
 
 #
 # %.awk:		--Rules for installing awk scripts
