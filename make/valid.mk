@@ -40,7 +40,7 @@ var-absolute-path[%]:
 	@case '$(value $*)' in \
 	/*);; \
 	*)  echo 'Error: $* ("$(value $*)") is not an absolute path'; \
-	    false;; \
+	    false; \
 	esac
 
 #
@@ -58,7 +58,7 @@ file-writable[%]:
 file-exists[%]:
 	@if [ ! -f $* ]; then \
 	    echo "Error: file $* does not exist"; \
-	    false); \
+	    false; \
 	fi
 
 #
@@ -67,7 +67,7 @@ file-exists[%]:
 dir-exists[%]:
 	@if [ ! -d $* ]; then \
 	    echo "Error: directory $* does not exist"; \
-	    false); \
+	    false; \
 	fi
 
 #

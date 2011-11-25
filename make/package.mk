@@ -65,3 +65,12 @@ package-distclean:
 .PHONY:		package-vars-ok
 package-vars-ok:	var-defined[PACKAGE] var-defined[VERSION] var-defined[RELEASE]
 
+#
+#
+#
+publish:	var-defined[PACKAGE_DIR] $(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE)
+
+$(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE):	$(PVRA).$(PKG_TYPE)
+	cp $< $@;
+	cd $(PACKAGE_DIR); make clean; make all
+
