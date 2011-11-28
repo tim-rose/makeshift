@@ -70,7 +70,7 @@ package-vars-ok:	var-defined[PACKAGE] var-defined[VERSION] var-defined[RELEASE]
 #
 publish:	var-defined[PACKAGE_DIR] $(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE)
 
-$(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE):	$(PVRA).$(PKG_TYPE)
-	cp $< $@;
-	cd $(PACKAGE_DIR); make clean; make all
+$(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE):	$(PACKAGE_DIR) $(PVRA).$(PKG_TYPE)
+	cp $(PVRA).$(PKG_TYPE) $@;
+	cd $(PACKAGE_DIR); $(MAKE) -f $(DEVKIT_HOME)/include/repository.mk make clean; make all
 
