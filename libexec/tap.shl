@@ -55,7 +55,7 @@ TAP_BEGIN
 TAP_EXIT()
 {
     local s=
-    
+    local status=1
     if [ $_tap_test -ne $_tap_plan ]; then
 	s=; test $_tap_plan -ne 1 && s=s
 	diag "Looks like you planned %d test%s but ran %d." \
@@ -65,7 +65,10 @@ TAP_EXIT()
 	s=; test $_tap_fail -gt 1 && s=s
 	diag "Looks like you failed %d test%s of %d run." \
 	"$_tap_fail" "$s" "$_tap_test"
+    else
+	status=0
     fi
+    exit $status
 }
 
 #
