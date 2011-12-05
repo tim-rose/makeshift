@@ -8,7 +8,7 @@ TAP_TRG	= $(TAP_TESTS:%=%.tap)
 pre-test:	var-defined[TAP_TESTS] var-defined[SUMMARISE_TESTS]
 test:	test-tap
 .PHONY:	test-tap
-test-tap:	$(TAP_TRG);	$(SUMMARISE_TESTS) $(TAP_TRG)
+test-tap:	$(TAP_TRG);	prove --exec cat $(TAP_TRG)
 
 clean:		clean-tap
 distclean:	clean-tap

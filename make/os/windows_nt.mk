@@ -17,5 +17,3 @@ PKG_TYPE	= deb
 PERL_PATH	= /usr/bin/perl
 PYTHON_PATH	= /usr/bin/python
 SH_PATH		= /bin/sh
-
-SUMMARISE_TESTS   = prove --exec cat

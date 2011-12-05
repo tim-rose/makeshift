@@ -72,5 +72,5 @@ publish:	var-defined[PACKAGE_DIR] $(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE)
 
 $(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE):	$(PACKAGE_DIR) $(PVRA).$(PKG_TYPE)
 	cp $(PVRA).$(PKG_TYPE) $@;
-	cd $(PACKAGE_DIR); $(MAKE) -f $(DEVKIT_HOME)/include/repository.mk make clean; make all
+	cd $(PACKAGE_DIR); $(MAKE) -f $(DEVKIT_HOME)/include/repository.mk clean all
 
