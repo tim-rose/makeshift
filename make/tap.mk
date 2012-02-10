@@ -5,7 +5,7 @@ TAP_TRG	= $(TAP_TESTS:%=%.tap)
 %.tap:	%;	$* > $@
 %.tap:	%.t;	perl $*.t > $@
 
-pre-test:	var-defined[TAP_TESTS] var-defined[SUMMARISE_TESTS]
+pre-test:	var-defined[TAP_TESTS] 
 test:	test-tap
 .PHONY:	test-tap
 test-tap:	$(TAP_TRG);	prove --exec cat $(TAP_TRG)
