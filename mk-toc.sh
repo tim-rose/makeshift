@@ -129,6 +129,9 @@ set_type()
 	.el|.lisp)
 	    comment_prefix='; '
 	    ;;
+	.man|.[0-9])
+	    comment_prefix='.\" '
+	    ;;
 	*)
 	    log_quit 'unknown file type "%s"' $suffix
 	    ;;
