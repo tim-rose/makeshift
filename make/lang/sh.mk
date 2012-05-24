@@ -29,6 +29,7 @@ SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%)
 #
 %:			%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@
 $(bindir)/%:		%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@
+$(sbindir)/%:		%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@
 $(libexecdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%.shl:	%.shl;	$(INSTALL_DATA) $? $@
 $(sysconfdir)/%:	%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@

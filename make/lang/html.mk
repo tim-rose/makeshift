@@ -10,7 +10,7 @@
 $(wwwdir)/%.html:	%.html;	$(INSTALL_DATA) $? $@
 
 %.html:	%.md
-	if Markdown < $*.md >$*-body; then \
+	if markdown < $*.md >$*-body; then \
 	    { echo "<html><body>"; cat $*-body; echo "</body></html>"; } >$@ ; \
 	    $(RM) $*-body; \
 	fi
