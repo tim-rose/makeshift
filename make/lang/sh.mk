@@ -27,12 +27,12 @@ SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%)
 #
 # %.sh:		--Rules for installing shell scripts, libraries
 #
-%:			%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@
-$(bindir)/%:		%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@
-$(sbindir)/%:		%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@
+%:			%.sh;	$(INSTALL_PROGRAM) $? $@
+$(bindir)/%:		%.sh;	$(INSTALL_PROGRAM) $? $@
+$(sbindir)/%:		%.sh;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%.shl:	%.shl;	$(INSTALL_DATA) $? $@
-$(sysconfdir)/%:	%.sh;	@$(INSTALL_SCRIPT) $(SH_PATH) $? $@
+$(sysconfdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 
 #
 # %.awk:		--Rules for installing awk scripts
