@@ -177,7 +177,10 @@ ok_match()
     local have="$1"; shift
     local expect="$1"; shift
 
-    match "$have" "$expect";
+    case "$have" in
+    $expect) true;;
+     *) false;;
+    esac
     _tap_test_msg $? "$@" || _tap_report_diff "$have" "$expect" && false
 }
 
