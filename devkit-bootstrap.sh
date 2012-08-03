@@ -50,15 +50,19 @@ with the choices you've made.
 
 If you wish to install devkit system-wide and automatically used by all
 users of make, install it to "/usr/local".  Otherwise, install devkit
-to your home directory ("$HOME"), and then you can use "make -I$HOME/include".
+to your home directory ("$HOME"), and then you can use 
+"make -I$HOME/include".
 
 EOF
 sleep 2 && echo ""
 export OS=$(uname -s)
 export ARCH=$(uname -m|sed -e "s/i.86/i386/")
-export DEVKIT_HOME=$(prompt "where will devkit be installed?" $HOME) || exit
-export prefix=$(prompt "where devkit install software?" ${prefix:-/usr/local}) || exit
-export VCS=$(prompt 'version-control system?' 'git') || exit
+export DEVKIT_HOME=$(
+    prompt "where will devkit be installed?" ${DEVKIT_HOME:-$HOME}) || exit
+export prefix=$(
+    prompt "where will devkit install software?" ${prefix:-/usr/local}) || exit
+export VCS=$(
+    prompt 'what version-control system are you using?' ${VCS:-'git'}) || exit
 if ! make -I $PWD/make installdirs install; then
     echo "whoops.  It looks like that didn't work."
 else
