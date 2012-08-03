@@ -45,30 +45,47 @@ all:	build
 #
 # Standard directories
 #
-#exec_prefix = $(DESTDIR)/$(prefix)/$(archdir)	# (GNU std)
-prefix_opt 	= $(prefix)/$(opt)
-exec_prefix	= $(DESTDIR)/$(prefix_opt)
+# Remarks:
+# These directories are set according to a blend of the following variables:
+# * DESTDIR	-- an alternative root (e.g. chroot jail, pkg-building root)
+# * prefix	-- the application's idea of its root installation directory
+# * opt		-- FSHS "opt" component (undefined if not FSHS)
+# * usr		-- bindir modfier: either undefined or "usr"
+# * archdir	-- system+architecture-specific bindir modifier (unused)
+#
+# In typical usage, DESTDIR should be undefined (it's explicitly set
+# as needed by some of the packaging targets), and prefix should be
+# set to either "/usr/local" or $HOME (or a subdirectory).  Note that
+# GNU make will search for include files in /usr/local/include, so
+# installing devkit itself into /usr/local is a win.  However if you
+# install devkit into $HOME, you must use/alias make as
+# "make -I$HOME/include".
+#
+rootdir 	= $(DESTDIR)/$(prefix)
+rootdir_opt 	= $(DESTDIR)/$(prefix)/$(opt)
+#exec_prefix = $(rootdir)/$(archdir)	# (GNU std)
+exec_prefix	= $(rootdir_opt)/$(usr)
 
 bindir		= $(exec_prefix)/bin
 sbindir 	= $(exec_prefix)/sbin
-#libexecdir	= $(exec_prefix)/libexec/$(archdir)
+#libexecdir	= $(exec_prefix)/libexec/$(archdir)	# (GNU std)
 libexecdir	= $(exec_prefix)/libexec/$(subdir)
+datadir		= $(exec_prefix)/share/$(subdir)
 
-sysconfdir	= $(DESTDIR)/etc/$(opt)/$(subdir)
-divertdir	= $(DESTDIR)/var/lib/divert/$(subdir)
-sharedstatedir	= $(DESTDIR)/$(prefix_opt)/com/$(subdir)
-localstatedir	= $(DESTDIR)/var/$(opt)/$(subdir)
-datadir		= $(DESTDIR)/$(prefix_opt)/share/$(subdir)
-srvdir 		= $(DESTDIR)/$(prefix)/srv/$(subdir)
-wwwdir 		= $(DESTDIR)/$(prefix)/srv/www/$(subdir)
+sysconfdir	= $(rootdir)/etc/$(opt)/$(subdir)
+divertdir	= $(rootdir)/var/lib/divert/$(subdir)
+sharedstatedir	= $(rootdir_opt)/com/$(subdir)
+localstatedir	= $(rootdir)/var/$(opt)/$(subdir)
+srvdir 		= $(rootdir)/srv/$(subdir)
+wwwdir 		= $(rootdir)/srv/www/$(subdir)
 
 #libdir		= $(exec_prefix)/lib/$(archdir)	# (GNU std)
 libdir		= $(exec_prefix)/lib/$(subdir)
 perllibdir	= $(exec_prefix)/lib/perl5/$(subdir)
-infodir		= $(DESTDIR)/$(prefix_opt)/info
-lispdir		= $(DESTDIR)/$(prefix_opt)/share/emacs/site-lisp
+infodir		= $(rootdir_opt)/info
+lispdir		= $(rootdir_opt)/share/emacs/site-lisp
 
-includedir	= $(DESTDIR)/$(prefix_opt)/include/$(subdir)
+includedir	= $(rootdir_opt)/include/$(subdir)
 mandir		= $(datadir)/man
 man1dir		= $(mandir)/man1
 man3dir		= $(mandir)/man3

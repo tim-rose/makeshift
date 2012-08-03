@@ -70,7 +70,7 @@ data.tar.gz:	.data
 #
 .data:	build
 	$(MAKE) $(MFLAGS) installdirs install \
-		 DESTDIR=$$(pwd)/.data prefix=usr
+		 DESTDIR=$$(pwd)/.data prefix= usr=usr
 
 #
 # md5sums: --Calculate the md5sums for all the installed files.
