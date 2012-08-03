@@ -9,7 +9,6 @@
 # file-exists[%]:     --Test if a file exists.
 # dir-exists[%]:      --Test if a directory exists.
 # mkdir[%]:           --Create a directory if needed.
-# destdir-ok:         --Test that the "destdir" variable is correctly defined.
 #
 # Remarks:
 # This file contains various validation tests of the makefile system
@@ -77,9 +76,3 @@ mkdir[%]:
 	@if [ ! -d $* ]; then \
 	    $(INSTALL_DIRECTORY) $*; \
 	fi
-
-#
-# destdir-ok: --Test that the "destdir" variable is correctly defined.
-#
-.PHONY:		destdir-ok
-destdir-ok:	var-defined[DESTDIR] var-absolute-path[DESTDIR]
