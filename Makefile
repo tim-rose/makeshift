@@ -13,18 +13,11 @@
 # TODO: add a wiki page describing make usage, and the standard targets.
 #
 LANG=sh
-PACKAGE = devkit
-
-PL_SRC = mk-toc.pl
-SH_SRC = devkit-bootstrap.sh mk-ar.sh mk-filelist.sh mk-toc.sh \
-    svn-checkout.sh svn-edit.sh svn-import.sh svn-keyword.sh \
-    svn-releases.sh
+SH_SRC = devkit-bootstrap.sh
 
 include devkit.mk
-
-installdirs:	$(bindir) $(libexecdir)
-install:	$(PL_SRC:%.pl=$(bindir)/%)
-install:	$(SH_SRC:%.sh=$(bindir)/%)
+install:
+installdirs:
 
 targets.mk:
 	cd make && $(MAKE) targets.mk
