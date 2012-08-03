@@ -38,20 +38,26 @@ prompt()
 #
 # main...
 #
+
 cat <<EOF
 
 Hello, it looks like this is the first time you've tried to install devkit!
-Unfortunately, devkit needs to be installed before it can install itself.
-Fortunately, I'm here to help.
+
+The script you're now running will complete the installation.
+
 I'll ask a few questions, and then try to run the install myself,
 with the choices you've made.
 
-Basically, if you want to install devkit for system-wide use, you should
-install it into "/usr/local", otherwise install into your home directory.
+If you wish to install devkit system-wide and automatically used by all
+users of make, install it to "/usr/local".  Otherwise, install devkit
+to your home directory ("$HOME"), and then you can use "make -I$HOME/include".
+
 EOF
 sleep 2 && echo ""
+export OS=$(uname -s)
+export ARCH=$(uname -m|sed -e "s/i.86/i386/")
 export DEVKIT_HOME=$(prompt "where will devkit be installed?" $HOME) || exit
-export DESTDIR=$(prompt "where devkit install software?" $DEVKIT_HOME) || exit
+export prefix=$(prompt "where devkit install software?" ${prefix:-/usr/local}) || exit
 export VCS=$(prompt 'version-control system?' 'git') || exit
 if ! make -I $PWD/make installdirs install; then
     echo "whoops.  It looks like that didn't work."
@@ -62,11 +68,11 @@ OK!  It looks like we're all installed.
 To use the devkit system, you'll need to setup some environment
 variables.  You should probably put something like this in your ".bashrc":
 
-export DEVKIT_HOME=$DEVKIT_HOME
-export DESTDIR=$DESTDIR
-export VCS=$VCS
 export OS=\$(uname -s)
-export ARCH=\$(uname -m)
+export ARCH=\$(uname -m | sed -e "s/i.86/i386/")
+export DEVKIT_HOME=$DEVKIT_HOME
+export prefix=$prefix
+export VCS=$VCS
 
 Now, the make will resume (and fail).
 It won't work until you update the environment variables described above.
