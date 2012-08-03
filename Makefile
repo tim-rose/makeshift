@@ -26,9 +26,6 @@ installdirs:	$(bindir) $(libexecdir)
 install:	$(PL_SRC:%.pl=$(bindir)/%)
 install:	$(SH_SRC:%.sh=$(bindir)/%)
 
-pre-install:	destdir-ok
-pre-installdirs:	destdir-ok
-
 targets.mk:
 	cd make && $(MAKE) targets.mk
 devkit.mk:
