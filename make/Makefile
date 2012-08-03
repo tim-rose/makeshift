@@ -11,7 +11,7 @@ STD_TRG = all install installdirs uninstall install-strip \
 DEVKIT_TRG = build src depend test toc tidy doc todo
 
 MK_SRC = build.mk database.mk deb.mk devkit.mk library.mk package.mk \
-    repository.mk tap.mk targets.mk valid.mk
+    repository.mk tap.mk valid.mk
 
 include devkit.mk 
 
