@@ -111,12 +111,6 @@ INSTALL_SCRIPT = install_script() { \
     && $(RM) $$$$.tmp; }; install_script
 
 #
-# install: --common requirements of the install target(s)
-#
-install:		destdir-ok
-installdirs:		destdir-ok
-
-#
 # src: --Make sure the src target can write to the Makefile
 #
 src:			file-writable[Makefile]
