@@ -29,6 +29,7 @@ toc_split()
     comment_prefix_rgx=$(echo "$comment_prefix" | sed -e 's/\*/[*]/')
     debug 'comment_prefix="%s", comment_prefix_rgx="%s"' \
 	"$comment_prefix" "$comment_prefix_rgx"
+    debug 'toc_label="%s"' "$toc_label"
     awk "
 function info(str) { 
     if (\"$verbose\") {
@@ -37,7 +38,7 @@ function info(str) {
 }
 function debug(str) { 
     if (\"$debug\") {
-        printf(\"%s\n\", str);
+        printf(\"line %d: %s\n\", NR, str);
     }
 }
 
@@ -94,7 +95,7 @@ END {
     if (max > 20) {
         max = 20;
     }
-    info(sprintf(\"%s: %d entries\", \"$0\", entry));
+    info(sprintf(\"%s: %d entries\", \"$1\", entry));
     output = \"$1.toc\";
     printf(\"%s%s:\n\", \"$comment_prefix\", \"$toc_label\") > output;
     for (i=0; i<entry; ++i) {
@@ -143,7 +144,7 @@ set_type()
 #
 toc_label='Contents'
 comment_prefix=''
-name_rgx='[a-zA-Z0-9_][-a-zA-Z0-9_.$]*[][{}():%*][][{}():%*]*'
+name_rgx='[a-zA-Z0-9_.$%*][-a-zA-Z0-9_.$%*]*[][{}():%*][][{}():%*]*'
 
 #
 # process command-line options
@@ -184,6 +185,8 @@ for file; do
 	else
 	    info '%s: no toc' $file
 	fi
-	rm -f $file.pre $file.toc $file.post
+	if [ !"$debug" ]; then
+	    rm -f $file.pre $file.toc $file.post
+	fi
     fi
 done
