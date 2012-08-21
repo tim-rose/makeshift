@@ -26,7 +26,7 @@ LISP_TRG = $(LISP_SRC:%.el=%.elc)
 %.elc:	%.el
 	emacs -batch -f batch-byte-compile $*.el
 pre-build:	src-var-defined[LISP_SRC]
-build:	$(SHELL_TRG)
+build:	$(LISP_TRG)
 
 #
 # lisp-clean: --Remove lisp binaries built from source.
