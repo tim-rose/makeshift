@@ -38,8 +38,8 @@ python-toc:
 #
 # python-src: --python-specific customisations for the "src" target.
 #
-src:	python-src
 .PHONY:	python-src
+src:	python-src
 python-src:	
 	$(ECHO) "++ make[$@]@$$PWD"
 	@mk-filelist -qn PY_SRC *.py

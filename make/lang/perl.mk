@@ -52,8 +52,8 @@ perl-clean:
 #
 # perl-tidy: --perl-specific customisations for the "tidy" target.
 #
-tidy:	perl-tidy
 .PHONY:	perl-tidy
+tidy:	perl-tidy
 perl-tidy:
 	@$(ECHO) "++ make[$@]@$$PWD"
 	perltidy --profile=$(DEVKIT_HOME)/etc/.perltidyrc $(PERL_SRC)
@@ -70,8 +70,8 @@ perl-toc:
 #
 # perl-src: --perl-specific customisations for the "src" target.
 #
-src:	perl-src
 .PHONY:	perl-src
+src:	perl-src
 perl-src:	
 	@$(ECHO) "++ make[$@]@$$PWD"
 	@mk-filelist -qn PL_SRC *.pl
@@ -88,7 +88,7 @@ perl-todo:
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(PERL_SRC) /dev/null || true
 
 #
-# ???
+# *.pot --extract strings for internationalisation.
 #
 $(PACKAGE).pot:	$(ALL_SRC)
 	xgettext $(XFLAGS) $(X_PL_FLAGS) $(PERL_SRC) -o $@
