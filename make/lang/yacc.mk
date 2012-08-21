@@ -2,19 +2,10 @@
 # YACC.MK --Rules for working with YACC objects.
 #
 # Contents:
-# build() --yacc-specific customisations for the "build" target.
-# clean() --yacc-specific customisations for the "clean" target.
-# src()   --yacc-specific customisations for the "src" target.
-# toc()   --yacc-specific customisations for the "toc" target.
-# build:  --yacc-specific customisations for the "build" target.
-# clean:  --yacc-specific customisations for the "clean" target.
-# src:    --yacc-specific customisations for the "src" target.
-# toc:    --yacc-specific customisations for the "toc" target.
-# %.y()   --yacc-related build rules.
-# build() --yacc-specific customisations for the "build" target.
-# clean() --yacc-specific customisations for the "clean" target.
-# src()   --yacc-specific customisations for the "src" target.
-# toc()   --yacc-specific customisations for the "toc" target.
+# build: --yacc-specific customisations for the "build" target.
+# clean: --yacc-specific customisations for the "clean" target.
+# src:   --yacc-specific customisations for the "src" target.
+# toc:   --yacc-specific customisations for the "toc" target.
 #
 # Remarks:
 # YACC files are pre-processed into "C" files which are then handled

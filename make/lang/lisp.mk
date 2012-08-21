@@ -2,17 +2,10 @@
 # LISP.MK --Rules for (emacs) lisp stuff.
 #
 # Contents:
-# lisp-toc()  --Build the table-of-contents for LISP-ish files.
-# lisp-src()  --lisp-specific customisations for the "src" target.
-# todo()      --Report unfinished work (identified by keyword comments)
 # lisp-clean: --Remove lisp binaries built from source.
 # lisp-toc:   --Build the table-of-contents for LISP-ish files.
 # lisp-src:   --lisp-specific customisations for the "src" target.
 # todo:       --Report unfinished work (identified by keyword comments)
-# %.el()       --Rules for installing lisp scripts
-# lisp-toc()   --Build the table-of-contents for LISP-ish files.
-# lisp-src()   --lisp-specific customisations for the "src" target.
-# todo()       --Report unfinished work (identified by keyword comments)
 #
 # Remarks:
 # One day when I get back to some serious lisp development I'll

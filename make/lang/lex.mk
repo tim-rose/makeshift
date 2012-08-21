@@ -2,19 +2,11 @@
 # LEX.MK --Rules for working with LEX objects.
 #
 # Contents:
-# build() --lex-specific customisations for the "build" target.
-# clean() --lex-specific customisations for the "clean" target.
-# src()   --lex-specific customisations for the "src" target.
-# toc()   --lex-specific customisations for the "toc" target.
-# build:  --lex-specific customisations for the "build" target.
-# clean:  --lex-specific customisations for the "clean" target.
-# src:    --lex-specific customisations for the "src" target.
-# toc:    --lex-specific customisations for the "toc" target.
-# %.l()   --lex-related build rules.
-# build() --lex-specific customisations for the "build" target.
-# clean() --lex-specific customisations for the "clean" target.
-# src()   --lex-specific customisations for the "src" target.
-# toc()   --lex-specific customisations for the "toc" target.
+# %.l:   --lex-related build rules.
+# build: --lex-specific customisations for the "build" target.
+# clean: --lex-specific customisations for the "clean" target.
+# src:   --lex-specific customisations for the "src" target.
+# toc:   --lex-specific customisations for the "toc" target.
 #
 # Remarks:
 # LEX files are pre-processed into "C" files which are then handled

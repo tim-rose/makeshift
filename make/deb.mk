@@ -6,6 +6,7 @@
 # debian-binary:  --Create the "debian-binary" file automatically.
 # control.tar.gz: --Create the control tarball from the debian subdirectory.
 # data.tar.gz:    --Create the installed binary tarball.
+# .data:          --Construct the installed system in a special sub-directory.
 # md5sums:        --Calculate the md5sums for all the installed files.
 # conffiles:      --Make "conffiles" as required.
 # control-ok:     --Test that the control file has the correct information.

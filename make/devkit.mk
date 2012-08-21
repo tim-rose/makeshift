@@ -5,8 +5,8 @@
 # build:     --The default target
 # STD_DIR:   --The standard target directories are built as needed.
 # INSTALL_*: --Specialised install commands.
-# install:   --common requirements of the install target(s)
 # src:       --Make sure the src target can write to the Makefile
+# %.gz:      --Rules for building compressed/summarised data.
 # clean:     --Devkit-specific customisations for the "clean" target.
 # distclean: --devkit-specific customisations for the "distclean" target.
 #

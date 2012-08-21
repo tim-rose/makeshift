@@ -2,30 +2,18 @@
 # SHELL.MK --Rules for building shell, awk scripts andk libraries.
 #
 # Contents:
-# shell-build()        --Make scripts "executable".
-# shell-src-var-defined() --Test if "enough" of the shell SRC vars. are defined.
-# shell-clean()        --Remove script executables.
-# shell-toc()          --Build the table-of-contents for shell, awk files.
-# shell-src()          --shell-specific customisations for the "src" target.
-# todo()               --Report unfinished work (identified by keyword comments)
+# %.sh:                --Rules for installing shell scripts, libraries
+# %.awk:               --Rules for installing awk scripts
 # shell-build:         --Make scripts "executable".
 # shell-src-var-defined: --Test if "enough" of the shell SRC vars. are defined.
 # shell-clean:         --Remove script executables.
 # shell-toc:           --Build the table-of-contents for shell, awk files.
 # shell-src:           --shell-specific customisations for the "src" target.
 # todo:                --Report unfinished work (identified by keyword comments)
-# %.sh()             --Rules for installing shell scripts, libraries
-# %.awk()            --Rules for installing awk scripts
-# shell-build()      --Make scripts "executable".
-# shell-src-var-defined() --Test if "enough" of the shell SRC vars. are defined.
-# shell-clean()      --Remove script executables.
-# shell-toc()        --Build the table-of-contents for shell, awk files.
-# shell-src()        --shell-specific customisations for the "src" target.
-# todo()             --Report unfinished work (identified by keyword comments)
 #
 SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%)
 #
-# %.sh:		--Rules for installing shell scripts, libraries
+# %.sh: --Rules for installing shell scripts, libraries
 #
 %:			%.sh;	$(INSTALL_PROGRAM) $? $@
 $(bindir)/%:		%.sh;	$(INSTALL_PROGRAM) $? $@
@@ -35,7 +23,7 @@ $(libexecdir)/%.shl:	%.shl;	$(INSTALL_DATA) $? $@
 $(sysconfdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 
 #
-# %.awk:		--Rules for installing awk scripts
+# %.awk: --Rules for installing awk scripts
 #
 %:			%.awk;	@$(INSTALL_SCRIPT) $(AWK_PATH) $? $@
 $(bindir)/%:		%.awk;	$(INSTALL_SCRIPT) $(AWK_PATH) $? $@

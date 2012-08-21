@@ -2,33 +2,17 @@
 # C.MK --Rules for building C objects and programs.
 #
 # Contents:
-# build()             --c-specific customisations for the "build" target.
-# c-src-var-defined() --Test if "enough" of the C SRC variables are defined
-# clean()             --c-specific customisations for the "clean" target.
-# tidy()              --c-specific customisations for the "tidy" target.
-# c-toc()             --Build the table-of-contents for C-ish files.
-# c-src()             --c-specific customisations for the "src" target.
-# tags()              --Build vi, emacs tags files.
-# todo()              --Report unfinished work (identified by keyword comments)
-# main:               --rules for building executables from a file containing "main()".
-# build:              --c-specific customisations for the "build" target.
-# c-src-var-defined:  --Test if "enough" of the C SRC variables are defined
-# clean:              --c-specific customisations for the "clean" target.
-# tidy:               --c-specific customisations for the "tidy" target.
-# c-toc:              --Build the table-of-contents for C-ish files.
-# c-src:              --c-specific customisations for the "src" target.
-# tags:               --Build vi, emacs tags files.
-# todo:               --Report unfinished work (identified by keyword comments)
-# %.o()              --Compile a C file into an arch-specific sub-directory.
-# %.h()              --Rules for installing header files.
-# build()            --c-specific customisations for the "build" target.
-# c-src-var-defined() --Test if "enough" of the C SRC variables are defined
-# clean()            --c-specific customisations for the "clean" target.
-# tidy()             --c-specific customisations for the "tidy" target.
-# c-toc()            --Build the table-of-contents for C-ish files.
-# c-src()            --c-specific customisations for the "src" target.
-# tags()             --Build vi, emacs tags files.
-# todo()             --Report unfinished work (identified by keyword comments)
+# main:              --rules for building executables from a file containing "main()".
+# %.o:               --Compile a C file into an arch-specific sub-directory.
+# %.h:               --Rules for installing header files.
+# build:             --c-specific customisations for the "build" target.
+# c-src-var-defined: --Test if "enough" of the C SRC variables are defined
+# clean:             --c-specific customisations for the "clean" target.
+# tidy:              --c-specific customisations for the "tidy" target.
+# c-toc:             --Build the table-of-contents for C-ish files.
+# c-src:             --c-specific customisations for the "src" target.
+# tags:              --Build vi, emacs tags files.
+# todo:              --Report unfinished work (identified by keyword comments)
 #
 -include $(C_SRC:%.c=$(archdir)/%-depend.mk)
 

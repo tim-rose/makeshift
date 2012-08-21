@@ -2,30 +2,16 @@
 # C++.MK --Rules for building C++ objects and programs.
 #
 # Contents:
-# build()   --cxx-specific customisations for the "build" target.
-# clean()   --cxx-specific customisations for the "clean" target.
-# tidy()    --cxx-specific customisations for the "tidy" target.
-# cxx-toc() --Build the table-of-contents for CXX-ish files.
-# cxx-src() --cxx-specific customisations for the "src" target.
-# tags()    --Build vi, emacs tags files.
-# todo()    --Report unfinished work (identified by keyword comments)
-# main:     --rules for building executables from a file containing "main()".
-# build:    --cxx-specific customisations for the "build" target.
-# clean:    --cxx-specific customisations for the "clean" target.
-# tidy:     --cxx-specific customisations for the "tidy" target.
-# cxx-toc:  --Build the table-of-contents for CXX-ish files.
-# cxx-src:  --cxx-specific customisations for the "src" target.
-# tags:     --Build vi, emacs tags files.
-# todo:     --Report unfinished work (identified by keyword comments)
-# %.o()     --Compile a C++ file into an arch-specific sub-directory.
-# %.hpp()   --Rules for installing header files.
-# build()   --cxx-specific customisations for the "build" target.
-# clean()   --cxx-specific customisations for the "clean" target.
-# tidy()    --cxx-specific customisations for the "tidy" target.
-# cxx-toc() --Build the table-of-contents for CXX-ish files.
-# cxx-src() --cxx-specific customisations for the "src" target.
-# tags()    --Build vi, emacs tags files.
-# todo()    --Report unfinished work (identified by keyword comments)
+# main:    --rules for building executables from a file containing "main()".
+# %.o:     --Compile a C++ file into an arch-specific sub-directory.
+# %.hpp:   --Rules for installing header files.
+# build:   --cxx-specific customisations for the "build" target.
+# clean:   --cxx-specific customisations for the "clean" target.
+# tidy:    --cxx-specific customisations for the "tidy" target.
+# cxx-toc: --Build the table-of-contents for CXX-ish files.
+# cxx-src: --cxx-specific customisations for the "src" target.
+# tags:    --Build vi, emacs tags files.
+# todo:    --Report unfinished work (identified by keyword comments)
 #
 -include $(CXX_SRC:%.cpp=$(archdir)/%-depend.mk)
 

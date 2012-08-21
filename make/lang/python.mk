@@ -2,19 +2,10 @@
 # PYTHON.MK --Rules for building PYTHON objects and programs.
 #
 # Contents:
-# python-clean() --Remove script executables.
-# python-toc()   --Build the table-of-contents for PYTHON-ish files.
-# python-src()   --python-specific customisations for the "src" target.
-# todo()         --Report unfinished work (identified by keyword comments)
-# python-clean:  --Remove script executables.
-# python-toc:    --Build the table-of-contents for PYTHON-ish files.
-# python-src:    --python-specific customisations for the "src" target.
-# todo:          --Report unfinished work (identified by keyword comments)
-# %.py()         --Rules for installing python scripts
-# python-clean() --Remove script executables.
-# python-toc()   --Build the table-of-contents for PYTHON-ish files.
-# python-src()   --python-specific customisations for the "src" target.
-# todo()         --Report unfinished work (identified by keyword comments)
+# python-clean: --Remove script executables.
+# python-toc:   --Build the table-of-contents for PYTHON-ish files.
+# python-src:   --python-specific customisations for the "src" target.
+# todo:         --Report unfinished work (identified by keyword comments)
 #
 # %.py:		--Rules for installing python scripts
 #

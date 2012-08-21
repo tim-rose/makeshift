@@ -2,10 +2,8 @@
 # DATABASE.MK --Default targets for database-related projects.
 #
 # Contents:
-# distclean() --Cleanup the test database for this database.
-# distclean:  --Cleanup the test database for this database.
-# %.db()      --Make a database from an sql file.
-# distclean() --Cleanup the test database for this database.
+# %.db:      --Make a database from an sql file.
+# distclean: --Cleanup the test database for this database.
 #
 # Remarks:
 # This file defines special targets for setting up and tearing down

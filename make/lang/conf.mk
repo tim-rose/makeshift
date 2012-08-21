@@ -2,6 +2,7 @@
 # CONF.MK --Rules for building config files.
 #
 # Contents:
+# %.conf:              --Rules for installing config files.
 # shell-build:         --Make scripts "executable".
 # conf-src-var-defined: --Test if "enough" of the conf SRC vars. are defined.
 # conf-toc:            --Build the table-of-contents for conf, awk files.
