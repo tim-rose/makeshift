@@ -55,7 +55,7 @@ to your home directory ("$HOME"), and then you can use
 
 EOF
 sleep 2 && echo ""
-export OS=$(uname -s)
+export OS=$(uname -s | tr '[A-Z]' '[a-z]')
 export ARCH=$(uname -m|sed -e "s/i.86/i386/")
 export DEVKIT_HOME=$(
     prompt "where will devkit be installed?" ${DEVKIT_HOME:-$HOME}) || exit
