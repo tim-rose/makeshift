@@ -55,8 +55,8 @@ to your home directory ("$HOME"), and then you can use
 
 EOF
 sleep 2 && echo ""
-export OS=$(uname -s | tr '[A-Z]' '[a-z]')
-export ARCH=$(uname -m|sed -e "s/i.86/i386/")
+export OS=${OS:-$(uname -s | tr '[A-Z]' '[a-z]')}
+export ARCH=${ARCH:-$(uname -m|sed -e "s/i.86/i386/")}
 export DEVKIT_HOME=$(
     prompt "where will devkit be installed?" ${DEVKIT_HOME:-$HOME}) || exit
 export prefix=$(
@@ -72,8 +72,8 @@ OK!  It looks like we're all installed.
 To use the devkit system, you'll need to setup some environment
 variables.  You should probably put something like this in your ".bashrc":
 
-export OS=\$(uname -s)
-export ARCH=\$(uname -m | sed -e "s/i.86/i386/")
+export OS=\$(uname -s | tr '[A-Z]' '[a-z]')
+export ARCH=\$(uname -m | sed -e 's/i.86/i386/')
 export DEVKIT_HOME=$DEVKIT_HOME
 export prefix=$prefix
 export VCS=$VCS
