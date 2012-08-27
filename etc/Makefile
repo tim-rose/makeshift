@@ -4,20 +4,19 @@
 LANG	= conf
 MAKEFLAGS = -I ../make
 CONF_SRC = subversion.conf tidy.conf
-DOT_SRC = dot-astylerc dot-cvsignore dot-cvsrc dot-indent.pro \
-    dot-perltidyrc
+ETC_SRC = _astylerc _cvsignore _cvsrc _indent.pro _perltidyrc
 
 include devkit.mk
 
 $(sysconfdir)/%:	%;	$(INSTALL_DATA) $< $@
-$(sysconfdir)/.%:	dot-%;	$(INSTALL_DATA) $< $@
+$(sysconfdir)/.%:	_%;	$(INSTALL_DATA) $< $@
 
 installdirs:		$(sysconfdir)
 install:		$(CONF_SRC:%=$(sysconfdir)/%)
-install:		$(DOT_SRC:dot-%=$(sysconfdir)/.%)
+install:		$(ETC_SRC:_%=$(sysconfdir)/.%)
 
 toc:
-	mk-toc $(DOT_SRC)
+	mk-toc $(ETC_SRC)
 
 src:
-	mk-filelist -n DOT_SRC dot-*
+	mk-filelist -n ETC_SRC _*
