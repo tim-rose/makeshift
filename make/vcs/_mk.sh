@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# DOT-MK.SH	--Create the fallback ".mk" file for the VCS directory
+# _MK.SH	--Create the fallback ".mk" file for the VCS directory
 #
 date=$(date)
 vcs_list=$(echo *.mk| sed -e s/.mk//g)

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# DOT-MK.SH	--Create the fallback ".mk" file for the ARCH directory
+# _MK.SH	--Create the fallback ".mk" file for the ARCH directory
 #
 date=$(date)
 arch_list=$(echo *.mk| sed -e s/.mk//g)

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# DOT-MK.SH	--Create the fallback ".mk" file for the OS directory
+# _MK.SH	--Create the fallback ".mk" file for the OS directory
 #
 date=$(date)
 os_list=$(echo *.mk| sed -e s/.mk//g)
