@@ -50,7 +50,7 @@ $(archdir)/%: %.c $(archdir)/%.o
 # be absent, so this setup will avoid premature compilation.
 #
 $(archdir)/%.o: %.c mkdir[$(archdir)]
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@echo $(CC) $(CPPFLAGS) $(C_VIS_CFLAGS) -c -o $(archdir)/$*.o $<
 	@$(CC) $(CPPFLAGS) $(C_ALL_CFLAGS) -c -o $@ \
 		-MMD -MF $(archdir)/$*-depend.mk $<
@@ -79,7 +79,7 @@ c-src-var-defined:
 clean:	c-clean
 .PHONY:	c-clean
 c-clean:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(RM) $(archdir)/*.o $(C_MAIN)
 
 #
@@ -88,7 +88,7 @@ c-clean:
 tidy:	c-tidy
 .PHONY:	c-tidy
 c-tidy:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(H_SRC) $(C_SRC)
 #
 # c-toc: --Build the table-of-contents for C-ish files.
@@ -96,7 +96,7 @@ c-tidy:
 .PHONY: c-toc
 toc:	c-toc
 c-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(H_SRC) $(C_SRC)
 
 #
@@ -105,7 +105,7 @@ c-toc:
 src:	c-src
 .PHONY:	c-src
 c-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn C_SRC *.c
 	@mk-filelist -qn C_MAIN_SRC \
 		$$(grep -l '^ *int *main(' *.c 2>/dev/null)
@@ -117,7 +117,7 @@ c-src:
 .PHONY: c-tags
 tags:	c-tags
 c-tags:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	ctags 	$(H_SRC) $(C_SRC) && \
 	etags	$(H_SRC) $(C_SRC); true
 
@@ -127,5 +127,5 @@ c-tags:
 .PHONY: c-todo
 todo:	c-todo
 c-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(H_SRC) $(C_SRC) /dev/null || true

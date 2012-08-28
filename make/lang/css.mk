@@ -14,7 +14,7 @@ $(wwwdir)/%.css:	%.css;	$(INSTALL_FILE) $? $@
 .PHONY: css-toc
 toc:	css-toc
 css-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(CSS_SRC)
 #
 # css-src: --css-specific customisations for the "src" target.
@@ -22,7 +22,7 @@ css-toc:
 src:	css-src
 .PHONY:	css-src
 css-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn CSS_SRC *.css
 
 #
@@ -31,5 +31,5 @@ css-src:
 .PHONY: css-todo
 todo:	css-todo
 css-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(CSS_SRC) /dev/null || true

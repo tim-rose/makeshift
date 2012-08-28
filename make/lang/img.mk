@@ -17,7 +17,7 @@ $(wwwdir)/%.jpg:	%.jpg;	$(INSTALL_FILE) $? $@
 src:	img-src
 .PHONY:	img-src
 img-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn PNG_SRC *.png
 	@mk-filelist -qn GIF_SRC *.gif
 	@mk-filelist -qn JPG_SRC *.jpeg *.jpg

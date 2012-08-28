@@ -42,7 +42,7 @@ conf-src-var-defined:
 .PHONY: conf-toc
 toc:	conf-toc
 conf-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(CONF_SRC) $(CFG_SRC) $(INI_SRC)
 
 #
@@ -51,7 +51,7 @@ conf-toc:
 src:	conf-src
 .PHONY:	conf-src
 conf-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn CONF_SRC *.conf
 	@mk-filelist -qn CFG_SRC *.cfg
 	@mk-filelist -qn INI_SRC *.ini
@@ -62,5 +62,5 @@ conf-src:
 .PHONY: conf-todo
 todo:	conf-todo
 conf-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(CONF_SRC) $(CFG_SRC) /dev/null || true

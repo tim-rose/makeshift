@@ -14,7 +14,7 @@ $(wwwdir)/%.js:	%.js;	$(INSTALL_FILE) $? $@
 .PHONY: javascript-toc
 toc:	javascript-toc
 javascript-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(JS_SRC)
 #
 # javascript-src: --javascript-specific customisations for the "src" target.
@@ -22,7 +22,7 @@ javascript-toc:
 src:	javascript-src
 .PHONY:	javascript-src
 javascript-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn JS_SRC *.js
 
 #
@@ -31,5 +31,5 @@ javascript-src:
 .PHONY: javascript-todo
 todo:	javascript-todo
 javascript-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(JS_SRC) /dev/null || true

@@ -28,7 +28,7 @@ pre-build:	var-defined[PHP_SRC]
 .PHONY: php-toc
 toc:	php-toc
 php-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(PHP_SRC)
 
 #
@@ -37,7 +37,7 @@ php-toc:
 src:	php-src
 .PHONY:	php-src
 php-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn PHP_SRC *.php
 
 #
@@ -46,6 +46,6 @@ php-src:
 .PHONY: php-todo
 todo:	php-todo
 php-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(PHP_SRC) /dev/null || true
 

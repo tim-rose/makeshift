@@ -24,7 +24,7 @@ mk-toc:
 .PHONY: mk-todo
 todo:	mk-todo
 mk-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(MK_SRC) /dev/null || true
 
 #
@@ -37,7 +37,7 @@ mk-todo:
 # 
 .PHONY:	show-env
 show-env:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@echo "MAKE:           $(MAKE)"
 	@echo "MAKEFLAGS:      $(MAKEFLAGS)"
 	@echo "shell:          $(SHELL)"
@@ -50,7 +50,7 @@ show-env:
 # 
 .PHONY show-dirs:
 show-dirs:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@echo "DESTDIR:         $(DESTDIR)"
 	@echo "prefix:         $(prefix)"
 	@echo "opt:            $(opt)"

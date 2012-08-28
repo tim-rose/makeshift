@@ -32,7 +32,7 @@ python-clean:
 .PHONY: python-toc
 toc:	python-toc
 python-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(PY_SRC)
 
 #
@@ -49,5 +49,5 @@ python-src:
 .PHONY: python-todo
 todo:	python-todo
 python-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(PY_SRC) /dev/null || true

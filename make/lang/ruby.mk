@@ -32,7 +32,7 @@ ruby-clean:
 .PHONY: ruby-toc
 toc:	ruby-toc
 ruby-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(RB_SRC)
 
 #
@@ -49,5 +49,5 @@ ruby-src:
 .PHONY: ruby-todo
 todo:	ruby-todo
 ruby-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(RB_SRC) /dev/null || true

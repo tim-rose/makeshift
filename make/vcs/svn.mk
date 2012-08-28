@@ -21,7 +21,7 @@ vcs-status-ok:
 # vcs-tag: --Make a release tag in SVN.
 #
 vcs-tag[%]:	vcs-status-ok
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@url=$$(svn info|sed -n -e '/^URL:/s/URL: //p'); \
 	tag_url=$$(echo $$url | sed -e 's|trunk|tags/$*|'); \
 	if ! svn info $$tag_url 2>&1 | grep -q 'Not a valid URL'; then \

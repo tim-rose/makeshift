@@ -17,6 +17,6 @@ vcs-status-ok:
 # vcs-tag: --Make a release tag in GIT.
 #
 vcs-tag[%]:	vcs-status-ok
-	@$(ECHO) "++ make[$@]@$$PWD"
-	git tag 'v$*' -m '$(PACKAGE) release $*' && git push
+	$(ECHO_TARGET)
+	@echo "git tag 'v$*' -m '$(PACKAGE) release $*' && git push"
 

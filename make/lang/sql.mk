@@ -15,7 +15,7 @@ pre-build:	src-var-defined[SQL_SRC]
 .PHONY: sql-toc
 toc:	sql-toc
 sql-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(SQL_SRC)
 #
 # sql-src: --sql-specific customisations for the "src" target.
@@ -23,7 +23,7 @@ sql-toc:
 src:	sql-src
 .PHONY:	sql-src
 sql-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn SQL_SRC *.sql
 
 #
@@ -32,5 +32,5 @@ sql-src:
 .PHONY: sql-todo
 todo:	sql-todo
 sql-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(SQL_SRC) /dev/null || true

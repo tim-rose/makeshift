@@ -44,7 +44,7 @@ nroff-toc:
 src:	nroff-src
 .PHONY:	nroff-src
 nroff-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn MAN1_SRC *.1
 	@mk-filelist -qn MAN3_SRC *.3
 	@mk-filelist -qn MAN4_SRC *.4
@@ -68,5 +68,5 @@ nroff-clean:
 .PHONY: nroff-todo
 todo:	nroff-todo
 nroff-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(MAN1_SRC) $(MAN3_SRC) $(MAN4_SRC) /dev/null || true

@@ -41,7 +41,7 @@ $(archdir)/%: %.cpp $(archdir)/%.o
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
 #
 $(archdir)/%.o: %.cpp mkdir[$(archdir)]
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@echo $(CXX) $(CPPFLAGS) $(CXX_VIS_CFLAGS) -c -o $@ $<
 	@$(CXX) $(CPPFLAGS) $(CXX_ALL_CFLAGS) -c -o $@ \
 		-MMD -MF $(archdir)/$*-depend.mk $<	
@@ -63,7 +63,7 @@ build:	$(CXX_OBJ) $(CXX_MAIN)
 clean:	cxx-clean
 .PHONY:	cxx-clean
 cxx-clean:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(RM) $(archdir)/*.o $(CXX_MAIN)
 
 #
@@ -72,7 +72,7 @@ cxx-clean:
 tidy:	cxx-tidy
 .PHONY:	cxx-tidy
 cxx-tidy:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(HXX_SRC) $(CXX_SRC)
 #
 # cxx-toc: --Build the table-of-contents for CXX-ish files.
@@ -80,7 +80,7 @@ cxx-tidy:
 .PHONY: cxx-toc
 toc:	cxx-toc
 cxx-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(HXX_SRC) $(CXX_SRC)
 
 #
@@ -89,7 +89,7 @@ cxx-toc:
 src:	cxx-src
 .PHONY:	cxx-src
 cxx-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn CXX_SRC *.cpp
 	@mk-filelist -qn CXX_MAIN_SRC \
 		$$(grep -l '^ *int *main(' *.cpp 2>/dev/null)
@@ -101,7 +101,7 @@ cxx-src:
 .PHONY: cxx-tags
 tags:	cxx-tags
 cxx-tags:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	ctags 	$(HXX_SRC) $(CXX_SRC) && \
 	etags	$(HXX_SRC) $(CXX_SRC); true
 
@@ -111,5 +111,5 @@ cxx-tags:
 .PHONY: cxx-todo
 todo:	cxx-todo
 cxx-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(HXX_SRC) $(CXX_SRC) /dev/null || true

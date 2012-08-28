@@ -32,7 +32,7 @@
 deb:	control-ok $(PVRA).deb
 
 $(PVRA).deb:	debian-binary control.tar.gz data.tar.gz
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(FAKEROOT) mk-ar debian-binary control.tar.gz data.tar.gz >$@
 
 #
@@ -44,7 +44,7 @@ debian-binary:	;	echo "2.0" > $@
 # control.tar.gz: --Create the control tarball from the debian subdirectory.
 #
 control.tar.gz:	debian/md5sums debian/conffiles
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	(cd debian; \
 	    test -f Makefile && $(MAKE) $(MFLAGS) all; \
 	    $(FAKEROOT) tar zcf ../$@ --exclude 'Makefile' --exclude '*.*' *)
@@ -58,7 +58,7 @@ control.tar.gz:	debian/md5sums debian/conffiles
 # by the clean target.
 #
 data.tar.gz:	.data
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	(cd .data; $(FAKEROOT) tar zcf ../$@ *)
 
 #
@@ -77,7 +77,7 @@ data.tar.gz:	.data
 # md5sums: --Calculate the md5sums for all the installed files.
 #
 debian/md5sums: .data
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	find .data -type f | xargs md5sum | sed -e s@.data/@@ > $@
 	chmod 644 $@
 
@@ -113,7 +113,7 @@ control-ok:	debian/control
 # version-match: --Compare debian/control version with intrinsic Makefile.
 #
 version-match[%]:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@fgrep -q 'Version: $*' debian/control 
 
 #
@@ -142,7 +142,7 @@ perl-depend: .data
 #
 clean:	deb-clean
 deb-clean:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(RM) -r .data 
 	$(RM) debian-binary control.tar.gz data.tar.gz
 
@@ -151,5 +151,5 @@ deb-clean:
 #
 distclean:	deb-clean deb-distclean
 deb-distclean:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(RM) debian/conffiles debian/md5sums $(PVRA).deb

@@ -40,7 +40,7 @@ release: version-match[$(VERSION).$(RELEASE)] vcs-tag[$(VERSION).$(RELEASE)]
 #
 dist:	package-vars-ok $(PVR).tar.gz
 $(PVR).tar.gz:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(MAKE) $(MFLAGS) distclean
 	root=$$PWD; \
 	    cd ..; ln -s $$root $(PVR); \

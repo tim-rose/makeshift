@@ -35,7 +35,7 @@ build:	$(L_OBJ)
 clean:	lex-clean
 .PHONY:	lex-clean
 lex-clean:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(RM) $(L_OBJ)
 
 #
@@ -43,7 +43,7 @@ lex-clean:
 #
 src:	lex-src
 .PHONY:	lex-src
-lex-src:	;	@$(ECHO) "++ make[$@]@$$PWD"
+lex-src:	;	$(ECHO_TARGET)
 	@mk-filelist -qn L_SRC *.l
 
 #
@@ -52,5 +52,5 @@ lex-src:	;	@$(ECHO) "++ make[$@]@$$PWD"
 toc:	lex-toc
 .PHONY:	lex-toc
 lex-toc:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(L_SRC)

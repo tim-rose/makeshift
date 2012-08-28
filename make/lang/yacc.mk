@@ -41,7 +41,7 @@ build:	$(Y_OBJ)
 clean:	yacc-clean
 .PHONY:	yacc-clean
 yacc-clean:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(RM) $(Y_OBJ)
 
 #
@@ -50,7 +50,7 @@ yacc-clean:
 src:	yacc-src
 .PHONY:	yacc-src
 yacc-src:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn Y_SRC *.y
 
 #
@@ -59,5 +59,5 @@ yacc-src:
 toc:	yacc-toc
 .PHONY:	yacc-toc
 yacc-toc:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(Y_SRC)

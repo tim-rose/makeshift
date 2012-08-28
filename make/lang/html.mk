@@ -21,7 +21,7 @@ $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 .PHONY: html-toc
 toc:	html-toc
 html-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(HTML_SRC)
 #
 # html-src: --html-specific customisations for the "src" target.
@@ -29,7 +29,7 @@ html-toc:
 src:	html-src
 .PHONY:	html-src
 html-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn HTML_SRC *.html
 
 #
@@ -38,7 +38,7 @@ html-src:
 tidy:	html-tidy
 .PHONY:	html-tidy
 html-tidy:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	 tidy -config $(DEVKIT_HOME)/etc/tidy.conf $(HTML_SRC)
 
 #
@@ -47,6 +47,6 @@ html-tidy:
 .PHONY: html-todo
 todo:	html-todo
 html-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(HTML_SRC) /dev/null || true
 

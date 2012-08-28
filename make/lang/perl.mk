@@ -55,7 +55,7 @@ perl-clean:
 .PHONY:	perl-tidy
 tidy:	perl-tidy
 perl-tidy:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	perltidy --profile=$(DEVKIT_HOME)/etc/.perltidyrc $(PERL_SRC)
 
 #
@@ -64,7 +64,7 @@ perl-tidy:
 .PHONY: perl-toc
 toc:	perl-toc
 perl-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(PERL_SRC)
 
 #
@@ -73,7 +73,7 @@ perl-toc:
 .PHONY:	perl-src
 src:	perl-src
 perl-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn PL_SRC *.pl
 	@mk-filelist -qn PM_SRC *.pm
 	@mk-filelist -qn T_SRC *.t
@@ -84,7 +84,7 @@ perl-src:
 .PHONY: perl-todo
 todo:	perl-todo
 perl-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(PERL_SRC) /dev/null || true
 
 #

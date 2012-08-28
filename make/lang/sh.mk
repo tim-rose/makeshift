@@ -58,7 +58,7 @@ distclean:	shell-clean
 .PHONY: shell-toc
 toc:	shell-toc
 shell-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(SH_SRC) $(SHL_SRC) $(AWK_SRC)
 #
 # shell-src: --shell-specific customisations for the "src" target.
@@ -66,7 +66,7 @@ shell-toc:
 src:	shell-src
 .PHONY:	shell-src
 shell-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn SH_SRC *.sh
 	@mk-filelist -qn SHL_SRC *.shl
 	@mk-filelist -qn AWK_SRC *.awk
@@ -77,5 +77,5 @@ shell-src:
 .PHONY: shell-todo
 todo:	shell-todo
 shell-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(SH_SRC) $(SHL_SRC) $(AWK_SRC) /dev/null || true

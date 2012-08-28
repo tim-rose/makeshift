@@ -22,7 +22,7 @@ trim:	$(REPO_PKGS:%=trim[%])
 $(REPO_PKGS%=trim[%]):	pre-trim
 pre-trim:	;
 trim[%]:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@files=$$(ls $*_* | \
 	    sed -e s/_/./g | $(SORT_PKG_VERSION) | \
 	    sed -e '1,$(REPO_KEEP)d' -e 's/[.]/_/' \
@@ -40,7 +40,7 @@ build:	trim Packages.gz Contents.gz
 clean:	repo-clean
 .PHONY:	repo-clean
 repo-clean:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(RM) Packages* Contents*
 
 Contents:	;	apt-ftparchive contents . > $@

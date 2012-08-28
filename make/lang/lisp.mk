@@ -43,7 +43,7 @@ $(lispdir)/%.elc:	%.elc;	$(INSTALL_FILE) $? $@
 .PHONY: lisp-toc
 toc:	lisp-toc
 lisp-toc:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	mk-toc $(LISP_SRC)
 
 #
@@ -52,7 +52,7 @@ lisp-toc:
 src:	lisp-src
 .PHONY:	lisp-src
 lisp-src:	
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn LISP_SRC *.el
 
 #
@@ -61,5 +61,5 @@ lisp-src:
 .PHONY: lisp-todo
 todo:	lisp-todo
 lisp-todo:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(LISP_SRC) /dev/null || true

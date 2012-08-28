@@ -34,13 +34,14 @@ SUBDIRS := $(shell find . -maxdepth 1 -type d -name '[^.]*' | cut -d/ -f2)
 ECHO = :				# enable by: make ECHO=echo
 SHELL	= /bin/sh
 archdir	= $(OS)-$(ARCH)
+ECHO_TARGET = @$(ECHO) "++ make[$@]@$$PWD"
 
 .SUFFIXES:			# remove default suffix rules
 
 #
 # build: --The default target
 #
-build:	; 	@$(ECHO) "++ make[$@]@$$PWD"
+build:	; 	$(ECHO_TARGET)
 all:	build
 #
 # Standard directories
@@ -151,7 +152,7 @@ $(libexecdir)/%:	$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 clean:	devkit-clean
 .PHONY:	devkit-clean
 devkit-clean:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(RM) core *~ *.bak *.tmp *.out
 
 #
@@ -160,7 +161,7 @@ devkit-clean:
 distclean:	devkit-clean devkit-distclean
 .PHONY:	devkit-distclean
 devkit-distclean:
-	@$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	$(RM) tags TAGS
 	$(RM) -r $(OS) $(ARCH) $(archdir)
 
