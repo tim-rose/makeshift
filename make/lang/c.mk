@@ -58,7 +58,7 @@ $(archdir)/%.o: %.c mkdir[$(archdir)]
 #
 # %.h: --Rules for installing header files.
 #
-$(includedir)/%.h:	%.h;		$(INSTALL_DATA) $? $@
+$(includedir)/%.h:	%.h;		$(INSTALL_FILE) $? $@
 
 #
 # build: --c-specific customisations for the "build" target.

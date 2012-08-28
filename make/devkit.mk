@@ -119,7 +119,7 @@ $(archdir) $(bindir) $(sbindir) $(libexecdir) \
 #
 INSTALL 	  = install
 INSTALL_PROGRAM   = $(INSTALL) -m 755
-INSTALL_DATA      = $(INSTALL) -m 644
+INSTALL_FILE      = $(INSTALL) -m 644
 INSTALL_DIRECTORY = $(INSTALL) -d
 INSTALL_SCRIPT = install_script() { \
     echo "$(INSTALL_PROGRAM) $$2 $$3"; \

@@ -15,7 +15,7 @@ PHP_TRG = $(PHP_SRC:%.php=%)
 %:			%.php;	@$(INSTALL_SCRIPT) $(PHP_PATH) $? $@
 $(bindir)/%:		%.php;	@$(INSTALL_SCRIPT) $(PHP_PATH) $? $@
 $(libexecdir)/%:	%.php;	@$(INSTALL_SCRIPT) $(PHP_PATH) $? $@
-$(wwwdir)/%.php:	%.php;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.php:	%.php;	$(INSTALL_FILE) $? $@
 
 #
 # php-build: --Make scripts "executable".

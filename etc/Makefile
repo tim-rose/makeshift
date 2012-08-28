@@ -8,8 +8,8 @@ ETC_SRC = _astylerc _cvsignore _cvsrc _indent.pro _perltidyrc
 
 include devkit.mk
 
-$(sysconfdir)/%:	%;	$(INSTALL_DATA) $< $@
-$(sysconfdir)/.%:	_%;	$(INSTALL_DATA) $< $@
+$(sysconfdir)/%:	%;	$(INSTALL_FILE) $< $@
+$(sysconfdir)/.%:	_%;	$(INSTALL_FILE) $< $@
 
 installdirs:		$(sysconfdir)
 install:		$(CONF_SRC:%=$(sysconfdir)/%)

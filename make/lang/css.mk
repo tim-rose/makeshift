@@ -6,7 +6,7 @@
 # css-src: --css-specific customisations for the "src" target.
 # todo:    --Report unfinished work (identified by keyword comments)
 #
-$(wwwdir)/%.css:	%.css;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.css:	%.css;	$(INSTALL_FILE) $? $@
 
 #
 # css-toc: --Build the table-of-contents for shell, awk files.

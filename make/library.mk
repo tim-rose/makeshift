@@ -26,7 +26,7 @@
 # libdir/%.a: --install rule for libraries
 #
 $(libdir)/%.a:	$(archdir)/%.a
-	$(INSTALL_DATA) $? $@
+	$(INSTALL_FILE) $? $@
 	$(RANLIB) $@
 
 #

@@ -21,9 +21,9 @@
 # %.[1-9]:	--Rules for installing manual pages
 #
 
-$(man1dir)/%.1:	%.1;	$(INSTALL_DATA) $? $@
-$(man3dir)/%.3:	%.3;	$(INSTALL_DATA) $? $@
-$(man4dir)/%.4:	%.4;	$(INSTALL_DATA) $? $@
+$(man1dir)/%.1:	%.1;	$(INSTALL_FILE) $? $@
+$(man3dir)/%.3:	%.3;	$(INSTALL_FILE) $? $@
+$(man4dir)/%.4:	%.4;	$(INSTALL_FILE) $? $@
 
 %-1.pdf:	%.1;	man -t ./$*.1 | ps2pdf - - > $@
 %-3.pdf:	%.3;	man -t ./$*.3 | ps2pdf - - > $@

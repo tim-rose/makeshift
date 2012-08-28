@@ -12,7 +12,7 @@ subdir	= arch
 
 include devkit.mk 
 
-$(includedir)/%:	%;		$(INSTALL_DATA) $< $@
+$(includedir)/%:	%;		$(INSTALL_FILE) $< $@
 $(includedir)/.mk:	_mk.sh;		sh _mk.sh >$@
 
 installdirs:		$(includedir)

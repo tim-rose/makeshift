@@ -15,7 +15,7 @@ MK_SRC = build.mk database.mk deb.mk devkit.mk library.mk package.mk \
 
 include devkit.mk 
 
-$(includedir)/%:	%;		$(INSTALL_DATA) $< $@
+$(includedir)/%:	%;		$(INSTALL_FILE) $< $@
 installdirs:		$(includedir)
 install:		$(MK_SRC:%=$(includedir)/%)
 install:		$(includedir)/targets.mk

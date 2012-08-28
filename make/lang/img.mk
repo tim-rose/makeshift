@@ -6,10 +6,10 @@
 #
 IMG_SRC = $(PNG_SRC) $(GIF_SRC) $(JPG_SRC)
 
-$(wwwdir)/%.png:	%.png;	$(INSTALL_DATA) $? $@
-$(wwwdir)/%.gif:	%.gif;	$(INSTALL_DATA) $? $@
-$(wwwdir)/%.jpeg:	%.jpeg;	$(INSTALL_DATA) $? $@
-$(wwwdir)/%.jpg:	%.jpg;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.png:	%.png;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.gif:	%.gif;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.jpeg:	%.jpeg;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.jpg:	%.jpg;	$(INSTALL_FILE) $? $@
 
 #
 # img-src: --img-specific customisations for the "src" target.

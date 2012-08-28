@@ -49,7 +49,7 @@ $(archdir)/%.o: %.cpp mkdir[$(archdir)]
 #
 # %.hpp: --Rules for installing header files.
 #
-$(includedir)/%.hpp:	%.hpp;		$(INSTALL_DATA) $? $@
+$(includedir)/%.hpp:	%.hpp;		$(INSTALL_FILE) $? $@
 
 #
 # build: --cxx-specific customisations for the "build" target.

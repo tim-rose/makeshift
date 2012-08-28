@@ -9,7 +9,7 @@ subdir	= lang
 
 include devkit.mk 
 
-$(includedir)/%:	%;		$(INSTALL_DATA) $< $@
+$(includedir)/%:	%;		$(INSTALL_FILE) $< $@
 
 installdirs:		$(includedir)
 install:		$(MK_SRC:%=$(includedir)/%)

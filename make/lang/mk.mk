@@ -6,7 +6,7 @@
 # show-env:  --Print the current make environment.
 # show-dirs: --Print the current make directory macros.
 #
-$(libexecdir)/%.mk:	%.mk;	$(INSTALL_DATA) $< $@
+$(libexecdir)/%.mk:	%.mk;	$(INSTALL_FILE) $< $@
 
 .PHONY: mk-src
 src:	mk-src

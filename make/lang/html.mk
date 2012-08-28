@@ -7,7 +7,7 @@
 # tidy:     --html-specific customisations for the "tidy" target.
 # todo:     --Report unfinished work (identified by keyword comments)
 #
-$(wwwdir)/%.html:	%.html;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 
 %.html:	%.md
 	if markdown < $*.md >$*-body; then \

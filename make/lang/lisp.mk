@@ -34,8 +34,8 @@ distclean:	lisp-clean
 #
 # %.el:		--Rules for installing lisp scripts
 #
-$(lispdir)/%.el:	%.el;	$(INSTALL_DATA) $? $@
-$(lispdir)/%.elc:	%.elc;	$(INSTALL_DATA) $? $@
+$(lispdir)/%.el:	%.el;	$(INSTALL_FILE) $? $@
+$(lispdir)/%.elc:	%.elc;	$(INSTALL_FILE) $? $@
 
 #
 # lisp-toc: --Build the table-of-contents for LISP-ish files.

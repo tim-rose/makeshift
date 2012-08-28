@@ -6,7 +6,7 @@
 # javascript-src: --javascript-specific customisations for the "src" target.
 # todo:           --Report unfinished work (identified by keyword comments)
 #
-$(wwwdir)/%.js:	%.js;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.js:	%.js;	$(INSTALL_FILE) $? $@
 
 #
 # javascript-toc: --Build the table-of-contents for shell, awk files.

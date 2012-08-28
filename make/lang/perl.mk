@@ -20,7 +20,7 @@ PERL_TRG = $(PL_SRC:%.pl=%)
 $(bindir)/%:		%.pl;	@$(INSTALL_SCRIPT) $(PERL_PATH) $? $@
 $(libexecdir)/%:	%.pl;	@$(INSTALL_SCRIPT) $(PERL_PATH) $? $@
 $(sysconfdir)/%:	%.pl;	@$(INSTALL_SCRIPT) $(PERL_PATH) $? $@
-$(perllibdir)/%.pm:	%.pm;	$(INSTALL_DATA) $? $@
+$(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
 
 #
 # perl-build: --Make scripts "executable".
