@@ -4,7 +4,7 @@
 # Remarks:
 # This directory contains shell library code.
 #
-LANG=sh
+SRC_LANG=sh
 SHL_SRC = tap.shl
 
 include devkit.mk

@@ -12,7 +12,7 @@
 # TODO: add "package" target to make RPM for linux systems.
 # TODO: add a wiki page describing make usage, and the standard targets.
 #
-LANG=sh
+SRC_LANG=sh
 SH_SRC = devkit-bootstrap.sh
 
 include devkit.mk

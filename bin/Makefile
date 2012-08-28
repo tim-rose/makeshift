@@ -1,7 +1,7 @@
 #
 # Makefile --Build rules the make directory of devkit.
 #
-LANG	= sh
+SRC_LANG	= sh
 MAKEFLAGS = -I ../make
 
 SH_SRC = echo+.sh mk-ar.sh mk-filelist.sh mk-toc.sh svn-checkout.sh \
