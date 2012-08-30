@@ -18,5 +18,9 @@ vcs-status-ok:
 #
 vcs-tag[%]:	vcs-status-ok
 	$(ECHO_TARGET)
-	@echo "git tag 'v$*' -m '$(PACKAGE) release $*' && git push"
+	@if [ "$(git tag | grep "^v$*$$"|wc -l)" != "0" ]; then \
+	    echo "release $* already exists"; false; \
+	else \
+	    echo "git tag 'v$*' -m '$(PACKAGE) release $*' && git push --tags"; \
+	fi
 
