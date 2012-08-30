@@ -5,7 +5,7 @@
 # ruby-clean: --Remove script executables.
 # ruby-toc:   --Build the table-of-contents for RUBY-ish files.
 # ruby-src:   --ruby-specific customisations for the "src" target.
-# todo:         --Report unfinished work (identified by keyword comments)
+# todo:       --Report unfinished work (identified by keyword comments)
 #
 # %.rb:		--Rules for installing ruby scripts
 #

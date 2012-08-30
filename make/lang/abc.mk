@@ -2,6 +2,9 @@
 # ABC.MK --Rules for working with ABC files.
 #
 # Contents:
+# %pdf:     --Build a printable document from an abc file.
+# %-8va:    --Shift by octaves
+# %-Db.abc: --Transposition rules.
 #
 
 # 
