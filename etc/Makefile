@@ -16,7 +16,7 @@ install:		$(CONF_SRC:%=$(sysconfdir)/%)
 install:		$(ETC_SRC:_%=$(sysconfdir)/.%)
 
 toc:
-	mk-toc $(ETC_SRC)
+	mk-toc -t .sh $(ETC_SRC)
 
 src:
 	mk-filelist -n ETC_SRC _*
