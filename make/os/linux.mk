@@ -15,7 +15,9 @@ GREP		= grep
 
 PKG_TYPE	= deb
 
+SH_PATH		= /bin/sh
+AWK_PATH	= /usr/bin/awk
+SED_PATH	= /bin/sed
 PERL_PATH	= /usr/bin/perl
 PYTHON_PATH	= /usr/bin/python
-SH_PATH		= /bin/sh
 
