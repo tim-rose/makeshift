@@ -7,6 +7,11 @@
 # todo:    --Report unfinished work (identified by keyword comments)
 #
 
+#
+# %.sql: --Rules for installing SQL scripts into libexec
+#
+$(libexecdir)/%.sql:	%.sql;	$(INSTALL_FILE) $? $@
+
 pre-build:	src-var-defined[SQL_SRC]
 
 #
@@ -20,8 +25,8 @@ sql-toc:
 #
 # sql-src: --sql-specific customisations for the "src" target.
 #
-src:	sql-src
 .PHONY:	sql-src
+src:	sql-src
 sql-src:	
 	$(ECHO_TARGET)
 	@mk-filelist -qn SQL_SRC *.sql
