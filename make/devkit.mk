@@ -123,7 +123,7 @@ INSTALL_PROGRAM   = $(INSTALL) -m 755
 INSTALL_FILE      = $(INSTALL) -m 644
 INSTALL_DIRECTORY = $(INSTALL) -d
 INSTALL_SCRIPT = install_script() { \
-    echo "$(INSTALL_PROGRAM) $$2 $$3"; \
+    echo "$(INSTALL_PROGRAM) \"$$2\" \"$$3\""; \
     <$$2 sed -e "1s|!.*|!$$1|" > $$$$.tmp \
     && $(INSTALL_PROGRAM) $$$$.tmp $$3 \
     && $(RM) $$$$.tmp; }; install_script
