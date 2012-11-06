@@ -13,7 +13,7 @@ usage="Usage: mk-archive file..."
 
 log_message() { printf "$@"; printf "\n"; } >&2
 notice() { log_message "$@"; }
-info()   { if [ "$verbose" -o "$debug" ]; then log_message "$@"; fi; }
+info()   { if [ "$verbose" ]; then log_message "$@"; fi; }
 debug()  { if [ "$debug" ]; then log_message "$@"; fi; }
 
 while getopts "vq_" c
@@ -21,7 +21,7 @@ do
     case $c in
     v)  verbose=1;;
     q)  quiet=1;;
-    _)  debug=1;;
+    _)  debug=1; verbose=1;;
     \?)	echo $usage >&2
 	exit 2;;
     esac
