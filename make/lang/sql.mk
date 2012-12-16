@@ -2,6 +2,7 @@
 # SQL.MK --Rules for dealing with SQL files.
 #
 # Contents:
+# %.sql:   --Rules for installing SQL scripts into libexec
 # sql-toc: --Build the table-of-contents for shell, awk files.
 # sql-src: --sql-specific customisations for the "src" target.
 # todo:    --Report unfinished work (identified by keyword comments)

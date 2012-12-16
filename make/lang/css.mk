@@ -24,6 +24,7 @@ src:	css-src
 css-src:	
 	$(ECHO_TARGET)
 	@mk-filelist -qn CSS_SRC *.css
+	@mk-filelist -qn SCSS_SRC *.scss
 
 #
 # todo: --Report unfinished work (identified by keyword comments)

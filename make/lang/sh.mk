@@ -1,9 +1,10 @@
 #
-# SHELL.MK --Rules for building shell, awk scripts andk libraries.
+# SHELL.MK --Rules for building shell, awk scripts and libraries.
 #
 # Contents:
 # %.sh:                --Rules for installing shell scripts, libraries
 # %.awk:               --Rules for installing awk scripts
+# %.sed:               --Rules for installing sed scripts
 # shell-build:         --Make scripts "executable".
 # shell-src-var-defined: --Test if "enough" of the shell SRC vars. are defined.
 # shell-clean:         --Remove script executables.
