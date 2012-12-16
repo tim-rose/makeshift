@@ -3,31 +3,28 @@
 # TAP.SHL --Test-Anything-Protocol functions.
 #
 # Contents:
-# diag()             --Print a diagnostic line comment line.
-# TAP_BEGIN()        --startup code for the TAP module.
-# TAP_EXIT()         --Write some summary diagnostics of the test run.
-# plan()             --Declare the number of tests.
-# ok()               --Check a process result, and emit TAP output.
-# nok()              --Check a process result, and emit TAP output.
-# skip_begin()       --Start skipping some tests, with a reason...
-# skip_end()         --finish skipping tests.
-# skip()             --Conditionally Skip one test, with a reason.
-# todo()             --Run a test that is expected to fail, emit "TODO" directive.
-# ok_eq()            --compare two strings for equality, report differences.
-# ok_match()         --compare a string to a glob-pattern, report differences.
-# ok_grep()          --look for a pattern, report differences.
-# _tap_test_msg()    --Common function to report on tests.
-# _tap_report_diff() --Report differences between two strings.
+# diag()            --Print a diagnostic line comment line.
+# TAP_BEGIN()       --startup code for the TAP module.
+# TAP_EXIT()        --Write some summary diagnostics of the test run.
+# plan()            --Declare the number of tests.
+# ok()              --Check a process result, and emit TAP output.
+# nok()             --Check a process result, and emit TAP output.
+# ok_eq()           --compare two strings for equality, report differences.
+# ok_match()        --compare a string to a glob-pattern, report differences.
+# ok_grep()         --look for a pattern, report differences.
+# todo()            --Mark the start/end of a "todo" block.
+# tap_test_msg()    --Common function to report on tests.
+# tap_report_diff() --Report differences between two strings.
 #
 # Remarks:
 # This library is an implementation Perl's TAP system for shell scripts.
+# TODO: skip
 #
-_tap_test=0
-_tap_skip_mode=
-_tap_skip_reason=
-_tap_plan=0
-_tap_fail=0
-_tap_version=dunno
+tap_test=0
+tap_todo_reason=
+tap_plan=0
+tap_fail=0
+tap_version='?'
 
 #
 # diag() --Print a diagnostic line comment line.
@@ -44,7 +41,7 @@ TAP_BEGIN()
 {
     diag "Current time local: %s" "$(date)"
     diag "Current time GMT:   %s" "$(TZ=UTC date)"
-    diag "Using tap.sh version %s" "$_tap_version"
+    diag "Using tap.sh version %s" "$tap_version"
     trap TAP_EXIT 0
 }
 TAP_BEGIN
@@ -56,19 +53,18 @@ TAP_EXIT()
 {
     local s=
     local status=1
-    if [ $_tap_test -ne $_tap_plan ]; then
-	s=; test $_tap_plan -ne 1 && s=s
+    if [ $tap_test -ne $tap_plan ]; then
+	s=; test $tap_plan -ne 1 && s=s
 	diag "Looks like you planned %d test%s but ran %d." \
-	    "$_tap_plan" "$s"  "$_tap_test"
+	    "$tap_plan" "$s"  "$tap_test"
     fi
-    if [ $_tap_fail -ne 0 ]; then
-	s=; test $_tap_fail -gt 1 && s=s
+    if [ $tap_fail -ne 0 ]; then
+	s=; test $tap_fail -gt 1 && s=s
 	diag "Looks like you failed %d test%s of %d run." \
-	"$_tap_fail" "$s" "$_tap_test"
+	"$tap_fail" "$s" "$tap_test"
     else
 	status=0
     fi
-    exit $status
 }
 
 #
@@ -77,11 +73,11 @@ TAP_EXIT()
 plan() 
 { 
     if [ $# -ne 0 ]; then
-	_tap_plan=$1
+	tap_plan=$1
 	echo "1..$1"
     else
-	echo "1..$_tap_test";
-	_tap_plan=$_tap_test
+	echo "1..$tap_test";
+	tap_plan=$tap_test
     fi
 }
 
@@ -90,7 +86,7 @@ plan()
 #
 ok()
 {
-    _tap_test_msg "$@"
+    tap_test_msg "$@"
 }
 
 #
@@ -98,63 +94,14 @@ ok()
 #
 nok()
 {
-   _tap_status=$1; shift
-   if [ $_tap_status -eq 0 ]; then _tap_status=1; else  _tap_status=0; fi
-    _tap_test_msg $_tap_status "$@"
-}
+   local tap_status=$1; shift
 
-#
-# skip_begin() --Start skipping some tests, with a reason...
-#
-# Parameters:
-# $*	--printf-ish reason for skip
-#
-# Remarks:
-# This just stashes the count and reason for use by ok().
-#
-skip_begin()
-{
-    _tap_skip_mode=1
-    if [ $# -ne 0 ]; then
-	_tap_skip_reason=$(printf "$@")
-    fi
-}
-
-#
-# skip_end() --finish skipping tests.
-#
-skip_end()
-{
-    _tap_skip_mode=
-    _tap_skip_reason=
-}
-
-#
-# skip() --Conditionally Skip one test, with a reason.
-#
-# Parameters:
-# $1	--the skip reason as a simple text string
-# $*	--arguments passed/forwarded to ok().
-#
-skip()
-{
-    local reason=$1; shift;
-
-    if [ "$reason" ]; then
-	skip_begin "%s" $reason; _tap_test_msg 0 "$@"; skip_end
-    else
-	_tap_test_msg "$@"
-    fi
-}
-
-#
-# todo() --Run a test that is expected to fail, emit "TODO" directive.
-#
-todo()
-{
-    local reason=$1; shift
-
-    _tap_test_msg "$@" | sed -e "1s/$/ # TODO $reason/"
+   if [ $tap_status -eq 0 ]; then
+       tap_status=1;
+   else
+       tap_status=0;
+   fi
+   tap_test_msg $tap_status "$@"
 }
 
 #
@@ -166,7 +113,7 @@ ok_eq()
     local expect="$1"; shift
 
     test "$have" = "$expect";
-    _tap_test_msg $? "$@" || _tap_report_diff "$have" "$expect" && false
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect" && false
 }
 
 #
@@ -181,7 +128,7 @@ ok_match()
     $expect) true;;
      *) false;;
     esac
-    _tap_test_msg $? "$@" || _tap_report_diff "$have" "$expect" && false
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect" && false
 }
 
 #
@@ -193,17 +140,27 @@ ok_grep()
     local expect="$1"; shift
 
     echo "$have" | grep -q "$expect"
-    _tap_test_msg $? "$@" || _tap_report_diff "$have" "$expect" && false
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect" && false
 }
 
 #
-# _tap_test_msg() --Common function to report on tests.
+# todo() --Mark the start/end of a "todo" block.
 #
-_tap_test_msg()
+todo()
+{
+    tap_todo_reason="$1"; shift
+}
+
+#
+# tap_test_msg() --Common function to report on tests.
+#
+tap_test_msg()
 {
     local result=$1; shift
     local msg=
     local status=ok
+
+    tap_test=$(( $tap_test + 1))
 
     if [ $# -gt 0 ]; then
 	if [ $# -gt 1 ]; then
@@ -213,37 +170,37 @@ _tap_test_msg()
 	fi
 	msg=" - $msg"
     fi
-    _tap_test=$(( $_tap_test + 1))
-
-    if [ "$_tap_skip_mode" ]; then
-	msg="$msg # skip $_tap_skip_reason"
-    elif [ $result -ne 0 ]; then
-	status="not ok"
-	_tap_fail=$(( $_tap_fail + 1))
+    if [ "$tap_todo_reason" ]; then
+	msg="$msg  # TODO $tap_todo_reason"
     fi
-    printf "%s %d%s\n" "$status" $_tap_test "$msg"
-    if [ $result -ne 0 ]; then
-	local file=$(caller 1|cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
-	local line=$(caller 1|cut -d' ' -f1)
 
-	diag "   Failed test %s" "$_tap_test" 
+    if [ $result -ne 0 ]; then
+	status="not ok"
+	if [ ! "$tap_todo_reason" ]; then
+	    tap_fail=$(( $tap_fail + 1))
+	fi
+    fi
+    printf "%s %d%s\n" "$status" $tap_test "$msg"
+    if [ $result -ne 0 ]; then
+	local file=$(caller 1 | cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
+	local line=$(caller 1 | cut -d' ' -f1)
+
+	diag "   Failed test %s" "$tap_test" 
 	diag "   in %s at line %d" "$file" "$line"
     fi
     return $result
 }
 
 #
-# _tap_report_diff() --Report differences between two strings.
+# tap_report_diff() --Report differences between two strings.
 #
 # Remarks:
 # I'm eschewing diag() here because I don't know how many lines
 # are in the various strings, so it's easier/safer to simply
 # post-process the output.
 #
-_tap_report_diff()
+tap_report_diff()
 {
-    {
-	echo "         got: '$1'"
-	echo "    expected: '$2'" 
-    } | sed -e 's/^/#  /'
+    diag "        got: '$1'"
+    diag "   expected: '$2'" 
 }
