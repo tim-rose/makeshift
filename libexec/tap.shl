@@ -24,7 +24,7 @@ tap_test=0
 tap_todo_reason=
 tap_plan=0
 tap_fail=0
-tap_version='?'
+tap_version='?.?.?'
 
 #
 # diag() --Print a diagnostic line comment line.
@@ -40,7 +40,7 @@ diag()
 TAP_BEGIN()
 {
     diag "Current time local: %s" "$(date)"
-    diag "Current time GMT:   %s" "$(TZ=UTC date)"
+    diag "Current time UTC:   %s" "$(TZ=UTC date)"
     diag "Using tap.sh version %s" "$tap_version"
     trap TAP_EXIT 0
 }
@@ -51,8 +51,9 @@ TAP_BEGIN
 #
 TAP_EXIT()
 {
-    local s=
+    local s=			# plural-suffix
     local status=1
+
     if [ $tap_test -ne $tap_plan ]; then
 	s=; test $tap_plan -ne 1 && s=s
 	diag "Looks like you planned %d test%s but ran %d." \
@@ -126,7 +127,7 @@ ok_match()
 
     case "$have" in
     $expect) true;;
-     *) false;;
+    *) false;;
     esac
     tap_test_msg $? "$@" || tap_report_diff "$have" "$expect" && false
 }
@@ -193,11 +194,6 @@ tap_test_msg()
 
 #
 # tap_report_diff() --Report differences between two strings.
-#
-# Remarks:
-# I'm eschewing diag() here because I don't know how many lines
-# are in the various strings, so it's easier/safer to simply
-# post-process the output.
 #
 tap_report_diff()
 {
