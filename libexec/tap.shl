@@ -201,6 +201,6 @@ tap_test_msg()
 #
 tap_report_diff()
 {
-    diag "        got: '$1'"
-    diag "   expected: '$2'" 
+    diag "%12s: '%s'" 'got' "$1"
+    diag "%12s: '%s'" 'expected' "$2"
 }
