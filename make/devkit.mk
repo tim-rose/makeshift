@@ -89,8 +89,13 @@ lispdir		= $(rootdir_opt)/share/emacs/site-lisp
 includedir	= $(rootdir_opt)/include/$(subdir)
 mandir		= $(datadir)/man
 man1dir		= $(mandir)/man1
+man2dir		= $(mandir)/man2
 man3dir		= $(mandir)/man3
 man4dir		= $(mandir)/man4
+man5dir		= $(mandir)/man5
+man6dir		= $(mandir)/man6
+man7dir		= $(mandir)/man7
+man8dir		= $(mandir)/man8
 
 #
 # STD_DIR: --The standard target directories are built as needed.
@@ -107,7 +112,9 @@ $(archdir) $(bindir) $(sbindir) $(libexecdir) \
     $(sharedstatedir) $(localstatedir) \
     $(datadir) $(srvdir) $(wwwdir) \
     $(libdir) $(perllibdir) $(infodir) $(lispdir) \
-    $(includedir) $(mandir) $(man1dir) $(man3dir) $(man4dir):
+    $(includedir) $(mandir) \
+    $(man1dir) $(man2dir) $(man3dir) $(man4dir) \
+    $(man5dir) $(man6dir) $(man7dir) $(man8dir):
 	test -d '$@' || $(INSTALL_DIRECTORY) $@
 
 #
