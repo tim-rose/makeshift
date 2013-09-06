@@ -6,14 +6,14 @@
 # Remarks:
 # THe "toc" target cannot be run until things have been installed in DEV_HOME.
 #
-STD_TRG = all install installdirs uninstall install-strip \
+STD_TRG = install installdirs uninstall install-strip \
 	clean distclean tags dist
 DEVKIT_TRG = build src depend test toc tidy doc todo
 
 MK_SRC = build.mk database.mk deb.mk devkit.mk library.mk package.mk \
-    repository.mk tap.mk valid.mk
+    repository.mk tap.mk targets.mk valid.mk
 
-include devkit.mk 
+include devkit.mk
 
 $(includedir)/%:	%;		$(INSTALL_FILE) $< $@
 installdirs:		$(includedir)
@@ -36,9 +36,9 @@ targets.mk:
 	@printf "#\n# $@ --auto-recursive targets, generated %s\n#\n" "$$(date '+%c')" > $@
 	@for t in $(STD_TRG) $(DEVKIT_TRG); do \
 	    printf "\n#\n# $$t: --auto-recursive target\n#\n"; \
-	    printf ".PHONY:\t$$t\n"; \
+	    printf ".PHONY:\t$$t pre-$$t\n"; \
 	    printf "$$t:\t\$$(SUBDIRS:%%=$$t@%%)\n"; \
+	    printf "pre-$$t:\t;\t\$$(ECHO_TARGET)\n"; \
 	    printf "\$$(SUBDIRS:%%=$$t@%%):\tpre-$$t\n"; \
-	    printf "pre-$$t:\t;\n"; \
-	    printf "$$t@%%:\n\t@if [ -e \$$*/Makefile ]; then cd \$$* && \$$(MAKE) $$t; fi\n"; \
+	    printf "$$t@%%:\n\t@if [ -e \$$*/Makefile ]; then \$$(ECHO) \$$@; cd \$$* && \$$(MAKE) $$t; fi\n"; \
 	done >> $@
