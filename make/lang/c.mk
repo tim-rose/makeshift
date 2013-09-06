@@ -70,6 +70,7 @@ build:	$(C_OBJ) $(C_MAIN)
 # c-src-var-defined: --Test if "enough" of the C SRC variables are defined
 #
 c-src-var-defined:
+	$(ECHO_TARGET)
 	@test -n "$(C_SRC)" -o -n "$(H_SRC)" || \
 	    { $(VAR_UNDEFINED) "C_SRC or H_SRC"; }
 
@@ -104,7 +105,7 @@ c-toc:
 #
 src:	c-src
 .PHONY:	c-src
-c-src:	
+c-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qn C_SRC *.c
 	@mk-filelist -qn C_MAIN_SRC \
@@ -113,7 +114,7 @@ c-src:
 
 #
 # tags: --Build vi, emacs tags files.
-# 
+#
 .PHONY: c-tags
 tags:	c-tags
 c-tags:
@@ -123,7 +124,7 @@ c-tags:
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: c-todo
 todo:	c-todo
 c-todo:
