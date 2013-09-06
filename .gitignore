@@ -1,1 +1,4 @@
 /make/targets.mk
+.DS_Store
+*.bak
+*~
