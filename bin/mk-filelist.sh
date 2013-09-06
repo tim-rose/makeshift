@@ -10,7 +10,7 @@
 # It copes OK with continuations etc. (I think!)  Note that the
 # makefile is updated in-place, and the original makefile is saved as
 # makefile.bak.
-# 
+#
 #
 PATH=$PATH:/usr/libexec:/usr/local/libexec
 tmp=${TMPDIR:-/tmp}/$$
@@ -21,18 +21,38 @@ name=FILES
 wrap=60
 usage="Usage: mk-filelist file..."
 
-log_message() { printf "$@"; printf "\n"; } >&2
+log_message()
+{
+    if [ ! "$quiet" ]; then
+	printf "mk-filelist: ";
+	printf "$@";
+	printf "\n";
+    fi
+} >&2
 notice()      { log_message "$@"; }
 info()        { if [ "$verbose" -o "$debug" ]; then log_message "$@"; fi; }
 debug()       { if [ "$debug" ]; then log_message "$@"; fi; }
 
-while getopts "b:df:n:w:vq_" c
+#
+# list_files() --List the files named on the command line, possibly filtered
+#
+list_files()
+{
+    if [ "$phony" ]; then
+	echo $*
+    else
+	ls $ls_opts $*
+    fi
+}
+
+while getopts "b:df:n:pw:vq_" c
 do
     case $c in
     b)  backup="$OPTARG" ;;
     d)  directories=1 ;;
     f)  file="$OPTARG" ;;
     n)  name="$OPTARG" ;;
+    p)  phony=1;;
     w)  wrap="$OPTARG" ;;
     v)  verbose=1;;
     q)  quiet=1;;
@@ -44,7 +64,7 @@ done
 shift $(($OPTIND - 1))
 
 if [ $# -eq 0 ]; then
-    notice '%s: no files' "$name"
+    info '%s: no files' "$name"
     exit 0
 fi
 
@@ -60,8 +80,8 @@ fi
 #
 # construct the new name-list, into $tmp-def.mk
 #
-ls $ls_opts $* 2>/dev/null |	# echo, but one per line
-    sed -e 's/^\.\///g' -e 's/ \.\// /g' | # trim any "./" 
+list_files $* 2>/dev/null |	# echo, but one per line
+    sed -e 's/^\.\///g' -e 's/ \.\// /g' | # trim any "./"
     fmt -w $wrap |			   # wrap as a paragraph, then mung...
     sed -e "1,1s/^/${name} = /" \
           -e '2,$s/^/    /' \
