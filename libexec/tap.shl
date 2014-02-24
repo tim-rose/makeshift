@@ -31,7 +31,7 @@ tap_version='?.?.?'
 #
 diag()
 {
-    printf "$@" | sed -e 's/^/# /'
+    { printf "$@"; printf "\n"; } | sed -e 's/^/# /'
 }
 
 #
@@ -71,8 +71,8 @@ TAP_EXIT()
 #
 # plan() --Declare the number of tests.
 #
-plan() 
-{ 
+plan()
+{
     if [ $# -ne 0 ]; then
 	tap_plan=$1
 	echo "1..$1"
@@ -186,7 +186,7 @@ tap_test_msg()
 	local file=$(caller 1 | cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
 	local line=$(caller 1 | cut -d' ' -f1)
 
-	diag "   Failed test %s" "$tap_test" 
+	diag "   Failed test %s" "$tap_test"
 	diag "   in %s at line %d" "$file" "$line"
     fi
     return $result
