@@ -12,8 +12,11 @@
 # in the including makefile).
 #
 LIB_INCLUDEDIR=$(LIB_ROOT)/$(subdir)/include
+LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%)
+
 $(LIB_INCLUDEDIR):	;		$(INSTALL_DIRECTORY) $@
 $(LIB_INCLUDEDIR)/%.h:	%.h;		$(INSTALL_FILE) $*.h $@
+#$(LIB_INCLUDE_SRC):     mkdir[$(LIB_INCLUDEDIR)]
 
 #
 # libdir/%.a: --install rule for libraries
@@ -22,6 +25,8 @@ $(libdir)/%.a:	$(archdir)/%.a
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 	$(RANLIB) $@
+
+pre-build:      $(LIB_INCLUDE_SRC)
 
 #
 # build: --build the library ".a"
@@ -55,7 +60,8 @@ $(archdir)/$(LIB):	$(LIB_OBJ) $(SUBLIB_SRC)
 clean:	clean-library
 clean-library:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/$(LIB)
+	$(RM) $(archdir)/$(LIB) $(LIB_INCLUDE_SRC)
+
 
 #
 # src-library: --get a list of sub-directories that are libraries.
