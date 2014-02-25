@@ -21,6 +21,6 @@ SED_PATH	= /usr/bin/sed -f
 PERL_PATH	= /usr/bin/perl -f
 PYTHON_PATH	= /usr/bin/python -f
 
-clean:	clean-darwin
+c-clean:	clean-darwin
 clean-darwin:
 	$(RM) -r *.dSYM
