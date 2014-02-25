@@ -114,7 +114,7 @@ ok_eq()
     local expect="$1"; shift
 
     test "$have" = "$expect";
-    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect" && false
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
 }
 
 #
@@ -129,7 +129,7 @@ ok_match()
     $expect) true;;
     *) false;;
     esac
-    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect" && false
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
 }
 
 #
@@ -141,7 +141,7 @@ ok_grep()
     local expect="$1"; shift
 
     echo "$have" | grep -q "$expect"
-    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect" && false
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
 }
 
 #
@@ -199,4 +199,5 @@ tap_report_diff()
 {
     diag "%12s: '%s'" 'got' "$1"
     diag "%12s: '%s'" 'expected' "$2"
+    false
 }
