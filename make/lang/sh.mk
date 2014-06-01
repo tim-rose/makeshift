@@ -21,6 +21,7 @@ $(bindir)/%:		%.sh;	$(INSTALL_PROGRAM) $? $@
 $(sbindir)/%:		%.sh;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%.shl:	%.shl;	$(INSTALL_FILE) $? $@
+$(libdir)/%.shl:	%.shl;	$(INSTALL_FILE) $? $@
 $(sysconfdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 
 #
@@ -29,6 +30,7 @@ $(sysconfdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 %:			%.awk;	@$(INSTALL_SCRIPT) "$(AWK_PATH)" $? $@
 $(bindir)/%:		%.awk;	@$(INSTALL_SCRIPT) "$(AWK_PATH)" $? $@
 $(libexecdir)/%:	%.awk;	$(INSTALL_PROGRAM) $? $@
+$(libdir)/%.awk:	%.awk;	$(INSTALL_FILE) $? $@
 
 #
 # %.sed: --Rules for installing sed scripts
@@ -36,6 +38,7 @@ $(libexecdir)/%:	%.awk;	$(INSTALL_PROGRAM) $? $@
 %:			%.sed;	@$(INSTALL_SCRIPT) "$(SED_PATH)" $? $@
 $(bindir)/%:		%.sed;	@$(INSTALL_SCRIPT) "$(SED_PATH)" $? $@
 $(libexecdir)/%:	%.sed;	$(INSTALL_PROGRAM) $? $@
+$(libdir)/%.sed:        %.sed;	$(INSTALL_FILE) $? $@
 
 #
 # shell-build: --Make scripts "executable".
