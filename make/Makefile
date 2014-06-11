@@ -10,8 +10,8 @@ STD_TRG = install installdirs uninstall install-strip \
 	clean distclean tags dist
 DEVKIT_TRG = build src depend test toc tidy doc todo
 
-MK_SRC = build.mk database.mk deb.mk devkit.mk library.mk package.mk \
-    repository.mk tap.mk targets.mk valid.mk
+MK_SRC = build.mk database.mk deb.mk deploy.mk devkit.mk library.mk \
+    package.mk repository.mk tap.mk targets.mk valid.mk
 
 include devkit.mk
 
