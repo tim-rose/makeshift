@@ -81,7 +81,6 @@ wwwdir 		= $(rootdir)/srv/www/$(subdir)
 
 #libdir		= $(exec_prefix)/lib/$(archdir)	# (GNU std)
 libdir		= $(exec_prefix)/lib/$(subdir)
-perllibdir	= $(exec_prefix)/lib/perl5/$(subdir)
 infodir		= $(rootdir_opt)/info
 lispdir		= $(rootdir_opt)/share/emacs/site-lisp
 
@@ -124,10 +123,10 @@ $(archdir) $(bindir) $(sbindir) $(libexecdir) \
 # first-line '#!' magic to the target host's script-path.
 # REVISIT: consider using "#!/env", instead of this silliness.
 #
-INSTALL 	  = install
+INSTALL 	  = install -D
 INSTALL_PROGRAM   = $(INSTALL) -m 755
 INSTALL_FILE      = $(INSTALL) -m 644
-INSTALL_DIRECTORY = $(INSTALL) -d
+INSTALL_DIRECTORY = $(INSTALL)
 INSTALL_SCRIPT = install_script() { \
     echo "$(INSTALL_PROGRAM) \"$$2\" \"$$3\""; \
     <$$2 sed -e "1s|!.*|!$$1|" > $$$$.tmp \

@@ -10,6 +10,7 @@
 # perl-src:            --perl-specific customisations for the "src" target.
 # todo:                --Report unfinished work (identified by keyword comments)
 #
+perllibdir      = $(exec_prefix)/lib/perl5/$(subdir)
 PERL_SRC=$(PL_SRC) $(PM_SRC) $(T_SRC)
 PERL_TRG = $(PL_SRC:%.pl=%)
 

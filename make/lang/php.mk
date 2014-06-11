@@ -7,7 +7,8 @@
 # php-src:   --php-specific customisations for the "src" target.
 # todo:      --Report unfinished work (identified by keyword comments)
 #
-PHP_TRG = $(PHP_SRC:%.php=%)
+phplibdir      = $(exec_prefix)/lib/php/$(subdir)
+PHP_PATH = /usr/bin/php
 
 #
 # %.php:		--Rules for installing php scripts
@@ -15,6 +16,7 @@ PHP_TRG = $(PHP_SRC:%.php=%)
 %:			%.php;	@$(INSTALL_SCRIPT) $(PHP_PATH) $? $@
 $(bindir)/%:		%.php;	@$(INSTALL_SCRIPT) $(PHP_PATH) $? $@
 $(libexecdir)/%:	%.php;	@$(INSTALL_SCRIPT) $(PHP_PATH) $? $@
+$(phplibdir)/%.php:    	%.php;	$(INSTALL_FILE) $? $@
 $(wwwdir)/%.php:	%.php;	$(INSTALL_FILE) $? $@
 
 #
@@ -48,4 +50,3 @@ todo:	php-todo
 php-todo:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(PHP_SRC) /dev/null || true
-
