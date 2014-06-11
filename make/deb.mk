@@ -25,7 +25,7 @@
 #
 # Remarks:
 # because the tests are "phony", they must be associated with
-# (i.e. dependents of) a phony target only, or we re-build stuff to
+# (i.e. dependents of) a phony target only, or we re-build stuff too
 # often.
 #
 .PHONY:	deb
@@ -86,7 +86,7 @@ debian/md5sums: .data
 #
 # Remarks:
 # This rule makes the file if it doesn't exist, but if it's
-# subsequently modified it won't be trashed by this rule.  
+# subsequently modified it won't be trashed by this rule.
 #
 debian/conffiles: .data
 	@touch $@
@@ -114,13 +114,13 @@ control-ok:	debian/control
 #
 version-match[%]:
 	$(ECHO_TARGET)
-	@fgrep -q 'Version: $*' debian/control 
+	@fgrep -q 'Version: $*' debian/control
 
 #
 # perl-depend: --Calculate perl dependencies.
 #
 # Remarks:
-# 
+#
 # This is is MUCH less useful than I had first thought, because
 # "deb.mk" is only included in the top-level makefile, and so only
 # finds dependencies on stuff in the current directory.  Either
@@ -143,7 +143,7 @@ perl-depend: .data
 clean:	deb-clean
 deb-clean:
 	$(ECHO_TARGET)
-	$(RM) -r .data 
+	$(RM) -r .data
 	$(RM) debian-binary control.tar.gz data.tar.gz
 
 #
