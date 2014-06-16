@@ -6,6 +6,15 @@
 $(libdir)/%.xsl:	%.xsl;	$(INSTALL_FILE) $? $@
 
 #
+# xsl-src: --xsl-specific customisations for the "src" target.
+#
+src:	xsl-src
+.PHONY:	xsl-src
+xsl-src:
+	$(ECHO_TARGET)
+	@mk-filelist -qn XSL_SRC *.xsl
+
+#
 # todo: --Report unfinished work (identified by keyword comments)
 #
 .PHONY: xsl-todo

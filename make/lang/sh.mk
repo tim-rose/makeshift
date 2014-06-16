@@ -12,7 +12,7 @@
 # shell-src:           --shell-specific customisations for the "src" target.
 # todo:                --Report unfinished work (identified by keyword comments)
 #
-SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%) 
+SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
 #
 # %.sh: --Rules for installing shell scripts, libraries
 #
@@ -76,7 +76,7 @@ shell-toc:
 #
 src:	shell-src
 .PHONY:	shell-src
-shell-src:	
+shell-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qn SH_SRC *.sh
 	@mk-filelist -qn SHL_SRC *.shl
@@ -85,7 +85,7 @@ shell-src:
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: shell-todo
 todo:	shell-todo
 shell-todo:
