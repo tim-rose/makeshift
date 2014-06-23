@@ -21,7 +21,8 @@ C_WARN_FLAGS	= -O -pedantic -Wall -Wmissing-prototypes \
 	-Wmissing-declarations 	-Wimplicit -Wpointer-arith \
 	-Wwrite-strings -Waggregate-return -Wnested-externs \
 	-Wcast-align -Wshadow -Wstrict-prototypes -Wredundant-decls \
-	-Wuninitialized -Wunused-parameter
+	-Wuninitialized -Wunused-parameter \
+        -Wno-gnu-zero-variadic-macro-arguments
 C_VIS_CFLAGS	= -std=c99 $(C_DEFS) $(C_OS_FLAGS) $(C_ARCH_FLAGS) $(CFLAGS)
 C_ALL_CFLAGS	= $(C_VIS_CFLAGS) $(C_WARN_FLAGS)
 
@@ -54,6 +55,11 @@ $(archdir)/%.o: %.c mkdir[$(archdir)]
 	@echo $(CC) $(CPPFLAGS) $(C_VIS_CFLAGS) -c -o $(archdir)/$*.o $<
 	@$(CC) $(CPPFLAGS) $(C_ALL_CFLAGS) -c -o $@ \
 		-MMD -MF $(archdir)/$*-depend.mk $<
+
+#
+# compile: --Convenience target to build one C file.
+#
+compile[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 
 #
 # %.h: --Rules for installing header files.
@@ -90,7 +96,7 @@ tidy:	c-tidy
 .PHONY:	c-tidy
 c-tidy:
 	$(ECHO_TARGET)
-	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(H_SRC) $(C_SRC)
+	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro $(INDENT) $(H_SRC) $(C_SRC)
 #
 # c-toc: --Build the table-of-contents for C-ish files.
 #
