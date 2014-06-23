@@ -12,6 +12,7 @@ CXX_OS_DEFS	= -D__Linux__ -D_BSD_SOURCE -D_XOPEN_SOURCE
 RANLIB		= ranlib
 FAKEROOT	= fakeroot
 GREP		= grep
+INDENT          = indent
 
 PKG_TYPE	= deb
 

@@ -11,6 +11,7 @@ CXX_OS_DEFS	= -D__Windows_NT__
 RANLIB		= ranlib
 FAKEROOT	= fakeroot
 GREP		= grep
+INDENT          = indent
 
 PKG_TYPE	= deb
 

@@ -14,6 +14,7 @@ CXX_OS_DEFS 	= -D__Darwin__
 RANLIB		= ranlib
 GREP		= grep
 PKG_TYPE	= deb
+INDENT          = gnuindent
 
 SH_PATH		= /bin/sh
 AWK_PATH	= /usr/bin/awk

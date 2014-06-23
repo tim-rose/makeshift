@@ -5,6 +5,7 @@ C_OS_DEFS = -D__solaris__
 CXX_OS_DEFS = -D__solaris__
 
 GREP		= grep
+INDENT          = indent
 
 SH_PATH		= /bin/sh
 AWK_PATH	= /usr/bin/awk
