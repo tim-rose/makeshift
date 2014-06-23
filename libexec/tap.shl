@@ -31,7 +31,11 @@ tap_version='?.?.?'
 #
 diag()
 {
-    { printf "$@"; printf "\n"; } | sed -e 's/^/# /'
+    if [ $# -gt 0 ]; then
+        { printf "$@"; printf "\n"; } | sed -e 's/^/# /'
+    else
+        sed -e 's/^/# /'
+    fi
 }
 
 #
