@@ -3,7 +3,6 @@
 #
 # Contents:
 # build:     --The default target
-# STD_DIR:   --The standard target directories are built as needed.
 # INSTALL_*: --Specialised install commands.
 # src:       --Make sure the src target can write to the Makefile
 # %.gz:      --Rules for building compressed/summarised data.
@@ -34,7 +33,7 @@ SUBDIRS := $(shell find . -maxdepth 1 -type d -name '[^.]*' | cut -d/ -f2)
 ECHO = :				# enable by: make ECHO=echo
 SHELL	= /bin/sh
 archdir	= $(OS)-$(ARCH)
-ECHO_TARGET = @$(ECHO) "++ make[$@]@$$PWD"
+ECHO_TARGET = @$(ECHO) "++ make $@ (in $$PWD)"
 
 .SUFFIXES:			# remove default suffix rules
 
@@ -96,26 +95,6 @@ man7dir		= $(mandir)/man7
 man8dir		= $(mandir)/man8
 
 #
-# STD_DIR: --The standard target directories are built as needed.
-#
-# Remarks:
-# Note that we avoid using "mkdir -p", but use "install -d" instead,
-# mainly because the GNU Make doc.s deprecate "mkdir -p".
-#
-# This target obviates the need for installdirs (mostly), provided
-# the install targets themselves declare a dependency on the directory.
-#
-$(archdir) $(bindir) $(sbindir) $(libexecdir) \
-    $(sysconfdir) $(divertdir) \
-    $(sharedstatedir) $(localstatedir) \
-    $(datadir) $(srvdir) $(wwwdir) \
-    $(libdir) $(perllibdir) $(infodir) $(lispdir) \
-    $(includedir) $(mandir) \
-    $(man1dir) $(man2dir) $(man3dir) $(man4dir) \
-    $(man5dir) $(man6dir) $(man7dir) $(man8dir):
-	test -d '$@' || $(INSTALL_DIRECTORY) $@
-
-#
 # INSTALL_*: --Specialised install commands.
 #
 # Remarks:
@@ -126,7 +105,7 @@ $(archdir) $(bindir) $(sbindir) $(libexecdir) \
 INSTALL 	  = install -D
 INSTALL_PROGRAM   = $(INSTALL) -m 755
 INSTALL_FILE      = $(INSTALL) -m 644
-INSTALL_DIRECTORY = $(INSTALL)
+INSTALL_DIRECTORY = $(INSTALL) -d
 INSTALL_SCRIPT = install_script() { \
     echo "$(INSTALL_PROGRAM) \"$$2\" \"$$3\""; \
     <$$2 sed -e "1s|!.*|!$$1|" > $$$$.tmp \
