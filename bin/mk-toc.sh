@@ -115,7 +115,7 @@ set_type()
     local suffix=$(echo $1| sed -e 's/.*\([.][^.][^.]*\)$/\1/')
     info 'setting style for "%s"' $suffix
     case $suffix in
-	.c|.h.css)
+	.c|.h|.css)
 	    comment_prefix=' * '
 	    ;;
 	.c++|.cpp|.C|.js)
