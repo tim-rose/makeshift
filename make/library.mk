@@ -26,7 +26,15 @@ $(libdir)/%.a:	$(archdir)/%.a
 	$(INSTALL_FILE) $? $@
 	$(RANLIB) $@
 
+#
+# pre-build: --Install the include files
+#
 pre-build:      $(LIB_INCLUDE_SRC)
+
+#
+# %/lib.a: --Build the library via build in its subdirectory.
+#
+%/$(archdir)/lib.a:     build@%;     $(ECHO_TARGET)
 
 #
 # build: --build the library ".a"
@@ -46,8 +54,6 @@ install-man:		$(man3dir)/$(MAN3_SRC)
 
 $(libdir)/$(LIB):	$(archdir)/$(LIB)
 
-installdirs:	$(libdir) $(includedir) $(man3dir)
-
 #
 # archdir-LIB: --Rules for building/updating the library.
 #
@@ -62,7 +68,6 @@ clean-library:
 	$(ECHO_TARGET)
 	$(RM) $(archdir)/$(LIB) $(LIB_INCLUDE_SRC)
 
-
 #
 # src-library: --get a list of sub-directories that are libraries.
 #
@@ -76,4 +81,7 @@ src-library:
 	        $(MAKE) -s print-lib-target| sed -e "s/^/$$d\//"; ) \
 	    done)
 
+#
+# print-lib-target: --print the current library target in this directory
+#
 print-lib-target:	;	@echo "$(archdir)/$(LIB)"

@@ -2,6 +2,10 @@
 # DEPLOY.MK --devkit/deploy targets.
 #
 # Contents:
+# deploy:    --Install stuff, and perform actions to re-start/re-init.
+# deploy:    --Cleanup deploy's staging root directory.
+# deploy[%]: --Deploy to a particular (possibly non-local) host.
+# .deploy:   --Create the staging root for deployments.
 #
 # Remarks:
 # The deploy targets are useful for development in the absence of a

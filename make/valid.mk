@@ -46,7 +46,7 @@ var-absolute-path[%]:
 # file-writable[%]: --Test if a file is writable
 #
 file-writable[%]:
-	@if [ ! -w $* ]; then \
+	@if [ ! -w "$*" ]; then \
 	    echo "Error: $* is not writable"; \
 	    false; \
 	fi
@@ -55,7 +55,7 @@ file-writable[%]:
 # file-exists[%]: --Test if a file exists.
 #
 file-exists[%]:
-	@if [ ! -f $* ]; then \
+	@if [ ! -f "$*" ]; then \
 	    echo "Error: file $* does not exist"; \
 	    false; \
 	fi
@@ -64,7 +64,7 @@ file-exists[%]:
 # dir-exists[%]: --Test if a directory exists.
 #
 dir-exists[%]:
-	@if [ ! -d $* ]; then \
+	@if [ ! -d "$*" ]; then \
 	    echo "Error: directory $* does not exist"; \
 	    false; \
 	fi
@@ -73,6 +73,6 @@ dir-exists[%]:
 # mkdir[%]: --Create a directory if needed.
 #
 mkdir[%]:
-	@if [ ! -d $* ]; then \
-	    $(INSTALL_DIRECTORY) $*; \
+	@if [ ! -d "$*" ]; then \
+	    $(INSTALL_DIRECTORY) "$*"; \
 	fi

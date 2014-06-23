@@ -11,6 +11,5 @@ include devkit.mk
 
 $(includedir)/%:	%;		$(INSTALL_FILE) $< $@
 
-installdirs:		$(includedir)
 install:		$(MK_SRC:%=$(includedir)/%)
 

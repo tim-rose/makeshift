@@ -67,10 +67,9 @@ data.tar.gz:	.data
 # Remarks:
 # This target runs make in a special way, but it needs to make
 # sure that the system is already built in the "standard" way
-# (i.e. build must be done before installdirs/install)
 #
 .data:	build
-	$(MAKE) $(MFLAGS) installdirs install \
+	$(MAKE) $(MFLAGS) install \
 		 DESTDIR=$$(pwd)/.data prefix= usr=usr
 
 #

@@ -2,7 +2,6 @@
 # Contents:
 # install:          --xxx-specific customisations for the "install" target.
 # install:          --xxx-specific customisations for the "install" target.
-# installdirs:      --xxx-specific customisations for the "installdirs" target.
 # uninstall:        --xxx-specific customisations for the "uninstall" target.
 # install-strip:    --xxx-specific customisations for the "install-strip" target.
 # clean:            --xxx-specific customisations for the "clean" target.
@@ -31,13 +30,6 @@ xxx-all:	;	$(ECHO_TARGET)
 install:	xxx-install
 .PHONY:	xxx-install
 xxx-install:	;	$(ECHO_TARGET)
-
-#
-# installdirs: --xxx-specific customisations for the "installdirs" target.
-#
-installdirs:	xxx-installdirs
-.PHONY:	xxx-installdirs
-xxx-installdirs:	;	$(ECHO_TARGET)
 
 #
 # uninstall: --xxx-specific customisations for the "uninstall" target.
