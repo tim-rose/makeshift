@@ -19,7 +19,9 @@ C_DEFS	= $(C_OS_DEFS) $(C_ARCH_DEFS) -D__$(OS)__ -D__$(ARCH)__
 CXX_WARN_FLAGS  = -O -pedantic -Wall \
         -Wpointer-arith -Wwrite-strings \
         -Wcast-align -Wshadow -Wredundant-decls \
-        -Wuninitialized -Wunused-parameter
+        -Wuninitialized -Wunused-parameter \
+        -Wno-gnu-zero-variadic-macro-arguments
+
 CXX_VIS_CFLAGS	= -std=c++0x $(CXX_DEFS) $(CXX_OS_FLAGS) $(CXX_ARCH_FLAGS) $(CFLAGS)
 CXX_ALL_CFLAGS	= $(CXX_VIS_CFLAGS) $(CXX_WARN_FLAGS)
 
@@ -44,7 +46,7 @@ $(archdir)/%.o: %.cpp mkdir[$(archdir)]
 	$(ECHO_TARGET)
 	@echo $(CXX) $(CPPFLAGS) $(CXX_VIS_CFLAGS) -c -o $@ $<
 	@$(CXX) $(CPPFLAGS) $(CXX_ALL_CFLAGS) -c -o $@ \
-		-MMD -MF $(archdir)/$*-depend.mk $<	
+		-MMD -MF $(archdir)/$*-depend.mk $<
 
 #
 # %.hpp: --Rules for installing header files.
@@ -88,7 +90,7 @@ cxx-toc:
 #
 src:	cxx-src
 .PHONY:	cxx-src
-cxx-src:	
+cxx-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qn CXX_SRC *.cpp
 	@mk-filelist -qn CXX_MAIN_SRC \
@@ -97,7 +99,7 @@ cxx-src:
 
 #
 # tags: --Build vi, emacs tags files.
-# 
+#
 .PHONY: cxx-tags
 tags:	cxx-tags
 cxx-tags:
@@ -107,7 +109,7 @@ cxx-tags:
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: cxx-todo
 todo:	cxx-todo
 cxx-todo:

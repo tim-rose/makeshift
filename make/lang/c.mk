@@ -17,17 +17,20 @@
 -include $(C_SRC:%.c=$(archdir)/%-depend.mk)
 
 C_DEFS	= $(C_OS_DEFS) $(C_ARCH_DEFS) -D__$(OS)__ -D__$(ARCH)__
-C_WARN_FLAGS	= -O -pedantic -Wall -Wmissing-prototypes \
+C_FLAGS = $(C_OS_FLAGS) $(C_ARCH_FLAGS) $(CFLAGS)
+C_WARN_FLAGS = -pedantic -Wall -Wmissing-prototypes \
 	-Wmissing-declarations 	-Wimplicit -Wpointer-arith \
 	-Wwrite-strings -Waggregate-return -Wnested-externs \
 	-Wcast-align -Wshadow -Wstrict-prototypes -Wredundant-decls \
 	-Wuninitialized -Wunused-parameter \
-        -Wno-gnu-zero-variadic-macro-arguments
-C_VIS_CFLAGS	= -std=c99 $(C_DEFS) $(C_OS_FLAGS) $(C_ARCH_FLAGS) $(CFLAGS)
-C_ALL_CFLAGS	= $(C_VIS_CFLAGS) $(C_WARN_FLAGS)
+        -Wno-gnu-zero-variadic-macro-arguments \
+	$(C_OS_WARN_FLAGS) $(C_ARCH_WARN_FLAGS)
 
-CPPFLAGS 	= -I. -I$(includedir) -I$(DEVKIT_HOME)/include
-LDFLAGS		= -L$(libdir) $(CFLAGS)
+CPP_FLAGS = $(CPPFLAGS) -I. -I$(includedir)
+LD_FLAGS = -L$(libdir) $(LD_OS_FLAGS) $(LD_ARCH_FLAGS) $(LDFLAGS)
+
+C_ALL_FLAGS	= -std=c99 $(CPP_FLAGS) $(C_DEFS) $(C_FLAGS)
+LD_LIBS	= $(LOADLIBES) $(LDLIBS)
 
 C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
@@ -36,10 +39,10 @@ C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 # main: --rules for building executables from a file containing "main()".
 #
 $(archdir)/%: %.c $(archdir)/%.o
-	@echo $(CC) $(CPPFLAGS) $(C_VIS_CFLAGS) $(LDFLAGS) $(archdir)/$*.o \
-		$(LOADLIBES) $(LDLIBS)
-	@$(CC) -o $@ $(C_ALL_CFLAGS) $(LDFLAGS) $(archdir)/$*.o \
-		$(LOADLIBES) $(LDLIBS)
+	$(ECHO_TARGET)
+	@echo $(CC) $(C_ALL_FLAGS) $(LD_FLAGS) $(archdir)/$*.o $(LD_LIBS)
+
+	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(LD_FLAGS) $(archdir)/$*.o $(LD_LIBS)
 
 #
 # %.o: --Compile a C file into an arch-specific sub-directory.
@@ -52,9 +55,9 @@ $(archdir)/%: %.c $(archdir)/%.o
 #
 $(archdir)/%.o: %.c mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@echo $(CC) $(CPPFLAGS) $(C_VIS_CFLAGS) -c -o $(archdir)/$*.o $<
-	@$(CC) $(CPPFLAGS) $(C_ALL_CFLAGS) -c -o $@ \
-		-MMD -MF $(archdir)/$*-depend.mk $<
+	@echo $(CC) $(C_ALL_FLAGS) -c -o $(archdir)/$*.o $<
+	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ \
+	    -MMD -MF $(archdir)/$*-depend.mk $<
 
 #
 # compile: --Convenience target to build one C file.
