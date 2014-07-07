@@ -8,15 +8,21 @@
 # src-library:     --get a list of sub-directories that are libraries.
 #
 # Remarks:
+# This is an attempt to manage a collection of object files (i.e. ".o" files)
+# as an object library (i.e. ".a").  The library can be structured
+# as a collection of "sub" libraries built from code in sub-directories.
+# The top-level directory delegates building of the sub-libraries to
+# recursive make targets, and then assembles them all into one
+# master library.
+#
 # These rules require that LIB and OBJ are already defined (usually
 # in the including makefile).
 #
 LIB_INCLUDEDIR=$(LIB_ROOT)/$(subdir)/include
-LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%)
+LIB_INCLUDE_SRC = $(H_SRC:%.h=$(LIB_INCLUDEDIR)/%.h)
 
 $(LIB_INCLUDEDIR):	;		$(INSTALL_DIRECTORY) $@
 $(LIB_INCLUDEDIR)/%.h:	%.h;		$(INSTALL_FILE) $*.h $@
-#$(LIB_INCLUDE_SRC):     mkdir[$(LIB_INCLUDEDIR)]
 
 #
 # libdir/%.a: --install rule for libraries
@@ -32,7 +38,7 @@ $(libdir)/%.a:	$(archdir)/%.a
 pre-build:      $(LIB_INCLUDE_SRC)
 
 #
-# %/lib.a: --Build the library via build in its subdirectory.
+# %/lib.a: --Build the library in its subdirectory.
 #
 %/$(archdir)/lib.a:     build@%;     $(ECHO_TARGET)
 
@@ -48,7 +54,7 @@ build:	var-defined[LIB_ROOT] var-defined[LIB] var-defined[LIB_OBJ] \
 # install-man:	--install manual pages for the library
 #
 #install:	install-lib install-include install-man
-install-include:	$(H_SRC:%=$(includedir)/%)
+install-include:	$(H_SRC:%.h=$(includedir)/%.h)
 install-lib:		$(libdir)/$(LIB) install-include
 install-man:		$(man3dir)/$(MAN3_SRC)
 
@@ -64,9 +70,16 @@ $(archdir)/$(LIB):	$(LIB_OBJ) $(SUBLIB_SRC)
 	$(RANLIB) $@
 
 clean:	clean-library
+
+distclean: clean-library clean-include
+
 clean-library:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/$(LIB) $(LIB_INCLUDE_SRC)
+	$(RM) $(archdir)/$(LIB)
+
+clean-include:
+	$(ECHO_TARGET)
+	$(RM) $(LIB_INCLUDE_SRC)
 
 #
 # src-library: --get a list of sub-directories that are libraries.
@@ -85,3 +98,5 @@ src-library:
 # print-lib-target: --print the current library target in this directory
 #
 print-lib-target:	;	@echo "$(archdir)/$(LIB)"
+
++help:  +help-library

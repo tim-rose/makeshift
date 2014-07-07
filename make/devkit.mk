@@ -10,7 +10,7 @@
 # distclean: --devkit-specific customisations for the "distclean" target.
 #
 # Remarks:
-# These makefiles taken together define a build system that extends
+# The devkit makefiles together define a build system that extends
 # the "standard" targets (as documented by GNU make) with a few extras
 # for performing common maintenance functions.  The basic principles
 # are:
@@ -29,7 +29,7 @@
 # I avoid the $(archdir) suffix, for most of the installation directories.
 # I'm sure this will come back to bite me later...
 #
-SUBDIRS := $(shell find . -maxdepth 1 -type d -name '[^.]*' | cut -d/ -f2)
+SUBDIRS := $(shell find * -type d -prune)
 ECHO = :				# enable by: make ECHO=echo
 SHELL	= /bin/sh
 archdir	= $(OS)-$(ARCH)
@@ -129,6 +129,7 @@ $(libexecdir)/%:	$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 %.gz:			%;		gzip -9 <$* >$@
 %.gpg:			%;		gpg -b -o $* $@
 %.sum:			%;		sum $* | sed -e 's/ .*//' >$@
+%.md5:			%;		md5sum $* | sed -e 's/ .*//' >$@
 
 #
 # clean: --Devkit-specific customisations for the "clean" target.
@@ -156,9 +157,20 @@ include arch/$(ARCH).mk
 include vcs/$(VCS).mk
 
 #
-# print-%:	pattern rule to print a make variable.
+# var[%]:	--pattern rule to print a make variable.
 #
-print-%:
-	@echo "# in $(origin $*):"
-	@echo "# $* = $(value $*)"
+var[%]:
+	@echo "# $(origin $*) variable \"$*\":"
 	@echo "$* = $($*)"
+
+#
+# +help-%:	--pattern rule to display help pages extracted from MK files.
+#
++help-%:
+	@if [ -e $(DEVKIT_HOME)/help/$*.txt ]; then \
+	    echo "# $*\n"; \
+	    cat $(DEVKIT_HOME)/help/$*.txt; \
+	else \
+	    echo 'There is no help for "$*"'; \
+	fi
++help:  +help-devkit

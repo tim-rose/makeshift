@@ -12,6 +12,9 @@
 # packaging system.  They allow installation to multiple locations,
 # and running arbitrary scripts post-install.
 #
+# To use this module, you must define the DEPLOY_HOSTS variable,
+# as a list of hosts to deploy to.
+#
 
 #
 # deploy: --Install stuff, and perform actions to re-start/re-init.
@@ -58,3 +61,5 @@ deploy-clean:
 	$(RM) -r .deploy
 
 distclean:	deploy-clean
+
++help:  +help-deploy

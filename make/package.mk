@@ -8,14 +8,11 @@
 # package-vars-ok: --Test that "PACKAGE" and other variables are defined.
 #
 # Remarks:
-# This sets up some common definitions and then passes off to a
-# package-specific makefile, which must define a top-level
+# The package module sets up some common definitions and then passes 
+# off to a package-specific makefile, which must define a top-level
 # package-building rule named after the package type (i.e. "deb",
-# "rpm", etc.).  For now, I'm hard-coding the package type to
-# "debian".
+# "rpm", etc.). 
 #
-#PKG_TYPE= deb
-VENDOR	= envato
 PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
 PVRA	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
@@ -74,3 +71,4 @@ $(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE):	$(PACKAGE_DIR) $(PVRA).$(PKG_TYPE)
 	cp $(PVRA).$(PKG_TYPE) $@;
 	cd $(PACKAGE_DIR); $(MAKE) -f $(DEVKIT_HOME)/include/repository.mk clean all
 
++help:  +help-package
