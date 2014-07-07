@@ -22,7 +22,6 @@ CXX_WARN_FLAGS  = -O -pedantic -Wall \
         -Wpointer-arith -Wwrite-strings \
         -Wcast-align -Wshadow -Wredundant-decls \
         -Wuninitialized -Wunused-parameter \
-        -Wno-gnu-zero-variadic-macro-arguments \
 	$(CXX_OS_WARN_FLAGS) $(CXX_ARCH_WARN_FLAGS)
 
 CXX_CPP_FLAGS = $(CPPFLAGS) -I. -I$(includedir) $(CXX_OS_CPP_FLAGS) $(CXX_OS_ARCH_FLAGS)
