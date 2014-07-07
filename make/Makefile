@@ -4,24 +4,21 @@
 # Contents:
 #
 # Remarks:
-# THe "toc" target cannot be run until things have been installed in DEV_HOME.
+# The "toc" target cannot be run until things have been installed in DEV_HOME.
 #
 STD_TRG = install uninstall install-strip \
 	clean distclean tags dist
 DEVKIT_TRG = build src depend test toc tidy doc todo
 
 MK_SRC = build.mk database.mk deb.mk deploy.mk devkit.mk library.mk \
-    package.mk repository.mk tap.mk targets.mk valid.mk
+    package.mk repository.mk tap.mk valid.mk
 
 include devkit.mk
 
 $(includedir)/%:	%;		$(INSTALL_FILE) $< $@
-install:		$(MK_SRC:%=$(includedir)/%)
+install:		$(MK_SRC:%.mk=$(includedir)/%.mk)
 install:		$(includedir)/targets.mk
-
-clean:			clean-make
-dist-clean:		clean-make
-clean-make:		;		$(RM) targets.mk
+install:		$(MK_SRC:%.mk=$(DEVKIT_HOME)/help/%.txt)
 
 #
 # tarkets.mk:	--Build the standard auto-recursive targets file.
@@ -30,7 +27,9 @@ clean-make:		;		$(RM) targets.mk
 # The auto-recursive rule pattern is a bit tedious to write by hand,
 # so I've written a make target to generate them automatically.
 #
-targets.mk:
+targets.mk:	$(includedir)/targets.mk
+$(includedir)/targets.mk:	Makefile
+$(includedir)/targets.mk:
 	@$(ECHO) "++ make[$@]"
 	@printf "#\n# $@ --auto-recursive targets, generated %s\n#\n" "$$(date '+%c')" > $@
 	@for t in $(STD_TRG) $(DEVKIT_TRG); do \
@@ -39,5 +38,8 @@ targets.mk:
 	    printf "$$t:\t\$$(SUBDIRS:%%=$$t@%%); \$$(ECHO_TARGET)\n"; \
 	    printf "pre-$$t:\t;\t\$$(ECHO_TARGET)\n"; \
 	    printf "$$t \$$(SUBDIRS:%%=$$t@%%):\tpre-$$t\n"; \
-	    printf "$$t@%%:\n\t@if [ -e \$$*/Makefile ]; then \$$(ECHO) ++ make: recursively building \$$@; cd \$$* && \$$(MAKE) $$t; fi\n"; \
+	    printf "$$t@%%:\n\t@\$$(ECHO_TARGET)\n\t@if [ -e \$$*/Makefile ]; then \$$(ECHO) ++ make: recursively building \$$@; cd \$$* && \$$(MAKE) $$t; fi\n"; \
 	done >> $@
+
+$(DEVKIT_HOME)/help/%.txt:	%.mk
+	sed -e '1,/# Remarks:/d' -e '/^[^#]/,$$d' -e '/^$$/,$$d' -e 's/^#//' <$*.mk >$@
