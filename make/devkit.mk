@@ -83,7 +83,7 @@ libdir		= $(exec_prefix)/lib/$(subdir)
 infodir		= $(rootdir_opt)/info
 lispdir		= $(rootdir_opt)/share/emacs/site-lisp
 
-includedir	= $(rootdir_opt)/include/$(subdir)
+includedir	= $(rootdir_opt)/$(usr)/include/$(subdir)
 mandir		= $(datadir)/man
 man1dir		= $(mandir)/man1
 man2dir		= $(mandir)/man2
@@ -159,13 +159,15 @@ include vcs/$(VCS).mk
 #
 # var[%]:	--pattern rule to print a make variable.
 #
+vars:   $(.VARIABLES:%=var[%])
 var[%]:
 	@echo "# $(origin $*) variable \"$*\":"
-	@echo "$* = $($*)"
+	@echo "$* = '$($*)'"
 
 #
 # +help-%:	--pattern rule to display help pages extracted from MK files.
 #
++help-%:        mkdir[$(DEVKIT_HOME)/help]
 +help-%:
 	@if [ -e $(DEVKIT_HOME)/help/$*.txt ]; then \
 	    echo "# $*\n"; \
