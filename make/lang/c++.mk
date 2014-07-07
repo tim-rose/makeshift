@@ -15,18 +15,21 @@
 #
 -include $(CXX_SRC:%.cpp=$(archdir)/%-depend.mk)
 
-C_DEFS	= $(C_OS_DEFS) $(C_ARCH_DEFS) -D__$(OS)__ -D__$(ARCH)__
+CXX_DEFS	= $(CXX_OS_DEFS) $(CXX_ARCH_DEFS) -D__$(OS)__ -D__$(ARCH)__
+CXX_FLAGS = $(CXX_OS_FLAGS) $(CXX_ARCH_FLAGS) $(CFLAGS) $(CXXFLAGS)
+
 CXX_WARN_FLAGS  = -O -pedantic -Wall \
         -Wpointer-arith -Wwrite-strings \
         -Wcast-align -Wshadow -Wredundant-decls \
         -Wuninitialized -Wunused-parameter \
-        -Wno-gnu-zero-variadic-macro-arguments
+        -Wno-gnu-zero-variadic-macro-arguments \
+	$(CXX_OS_WARN_FLAGS) $(CXX_ARCH_WARN_FLAGS)
 
-CXX_VIS_CFLAGS	= -std=c++0x $(CXX_DEFS) $(CXX_OS_FLAGS) $(CXX_ARCH_FLAGS) $(CFLAGS)
-CXX_ALL_CFLAGS	= $(CXX_VIS_CFLAGS) $(CXX_WARN_FLAGS)
+CXX_CPP_FLAGS = $(CPPFLAGS) -I. -I$(includedir) $(CXX_OS_CPP_FLAGS) $(CXX_OS_ARCH_FLAGS)
+CXX_ALL_FLAGS = -std=c++0x $(CXX_CPP_FLAGS) $(CXX_DEFS) $(CXX_FLAGS)
 
-CPPFLAGS 	= -I. -I$(includedir)
-LDFLAGS		= -L$(libdir) $(CFLAGS)
+CXX_LDFLAGS = -L$(libdir) $(CFLAGS)
+C_LD_LIBS	= $(LOADLIBES) $(LDLIBS)
 
 CXX_OBJ	= $(CXX_SRC:%.cpp=$(archdir)/%.o)
 CXX_MAIN = $(CXX_MAIN_SRC:%.cpp=$(archdir)/%)
@@ -35,18 +38,32 @@ CXX_MAIN = $(CXX_MAIN_SRC:%.cpp=$(archdir)/%)
 # main: --rules for building executables from a file containing "main()".
 #
 $(archdir)/%: %.cpp $(archdir)/%.o
-	@echo $(CXX) $(CPPFLAGS) $(CXX_VIS_CFLAGS) $(LDFLAGS) $(archdir)/$*.o \
-		$(LOADLIBES) $(LDLIBS)
-	@$(CXX) -o $@ $(CXX_ALL_CFLAGS) $(LDFLAGS) $(archdir)/$*.o \
-		$(LOADLIBES) $(LDLIBS)
+	$(ECHO_TARGET)
+	@echo $(CXX) $(CXX_ALL_FLAGS) $(CXX_LD_FLAGS) \
+	    $(archdir)/$*.o $(CXX_LD_LIBS)
+	@$(CXX) -o $@ $(CXX_WARN_FLAGS) $(CXX_ALL_FLAGS) $(CXX_LD_FLAGS) \
+	    $(archdir)/$*.o $(CXX_LD_LIBS)
+
+$(archdir)/%.o: %.cpp mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	@echo $(CXX) $(CXX_ALL_FLAGS) -c -o $(archdir)/$*.o $<
+	@$(CXX) $(CXX_WARN_FLAGS) $(CXX_ALL_FLAGS) -c -o $@ \
+	    -MMD -MF $(archdir)/$*-depend.mk $<
+
+#
+# build: --Convenience target to build one C file.
+#
+build[%.cpp]:   $(archdir)/%.o; $(ECHO_TARGET)
+
+
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
 #
 $(archdir)/%.o: %.cpp mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@echo $(CXX) $(CPPFLAGS) $(CXX_VIS_CFLAGS) -c -o $@ $<
-	@$(CXX) $(CPPFLAGS) $(CXX_ALL_CFLAGS) -c -o $@ \
-		-MMD -MF $(archdir)/$*-depend.mk $<
+	@echo $(CXX) $(CXX_ALL_FLAGS) -c -o $(archdir)/$*.o $<
+	@$(CXX) $(CXX_WARN_FLAGS) $(CXX_ALL_FLAGS) -c -o $@ \
+	    -MMD -MF $(archdir)/$*-depend.mk $<
 
 #
 # %.hpp: --Rules for installing header files.

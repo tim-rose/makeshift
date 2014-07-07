@@ -26,11 +26,12 @@ C_WARN_FLAGS = -pedantic -Wall -Wmissing-prototypes \
         -Wno-gnu-zero-variadic-macro-arguments \
 	$(C_OS_WARN_FLAGS) $(C_ARCH_WARN_FLAGS)
 
-CPP_FLAGS = $(CPPFLAGS) -I. -I$(includedir)
-LD_FLAGS = -L$(libdir) $(LD_OS_FLAGS) $(LD_ARCH_FLAGS) $(LDFLAGS)
+C_CPP_FLAGS = $(CPPFLAGS) -I. -I$(includedir) $(C_OS_CPP_FLAGS) $(C_OS_ARCH_FLAGS)
 
-C_ALL_FLAGS	= -std=c99 $(CPP_FLAGS) $(C_DEFS) $(C_FLAGS)
-LD_LIBS	= $(LOADLIBES) $(LDLIBS)
+C_ALL_FLAGS	= -std=c99 $(C_CPP_FLAGS) $(C_DEFS) $(C_FLAGS)
+
+C_LD_FLAGS = -L$(libdir) $(LD_OS_FLAGS) $(LD_ARCH_FLAGS) $(LDFLAGS)
+C_LD_LIBS	= $(LOADLIBES) $(LDLIBS)
 
 C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
@@ -40,9 +41,10 @@ C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 #
 $(archdir)/%: %.c $(archdir)/%.o
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS) $(LD_FLAGS) $(archdir)/$*.o $(LD_LIBS)
+	@echo $(CC) $(C_ALL_FLAGS) $(C_LD_FLAGS) $(archdir)/$*.o $(C_LD_LIBS)
 
-	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(LD_FLAGS) $(archdir)/$*.o $(LD_LIBS)
+	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_LD_FLAGS) \
+	    $(archdir)/$*.o $(C_LD_LIBS)
 
 #
 # %.o: --Compile a C file into an arch-specific sub-directory.
@@ -60,9 +62,9 @@ $(archdir)/%.o: %.c mkdir[$(archdir)]
 	    -MMD -MF $(archdir)/$*-depend.mk $<
 
 #
-# compile: --Convenience target to build one C file.
+# build: --Convenience target to build one C file.
 #
-compile[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
+build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 
 #
 # %.h: --Rules for installing header files.
