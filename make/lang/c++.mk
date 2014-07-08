@@ -15,20 +15,20 @@
 #
 -include $(CXX_SRC:%.cpp=$(archdir)/%-depend.mk)
 
-CXX_DEFS	= $(CXX_OS_DEFS) $(CXX_ARCH_DEFS) -D__$(OS)__ -D__$(ARCH)__
+CXX_DEFS = $(CXX_OS_DEFS) $(CXX_ARCH_DEFS) -D__$(OS)__ -D__$(ARCH)__
 CXX_FLAGS = $(CXX_OS_FLAGS) $(CXX_ARCH_FLAGS) $(CFLAGS) $(CXXFLAGS)
 
-CXX_WARN_FLAGS  = -O -pedantic -Wall \
+CXX_WARN_FLAGS  = -O -pedantic -Wall -Wextra \
         -Wpointer-arith -Wwrite-strings \
         -Wcast-align -Wshadow -Wredundant-decls \
-        -Wuninitialized -Wunused-parameter \
+	-Wno-variadic-macros \
 	$(CXX_OS_WARN_FLAGS) $(CXX_ARCH_WARN_FLAGS)
 
-CXX_CPP_FLAGS = $(CPPFLAGS) -I. -I$(includedir) $(CXX_OS_CPP_FLAGS) $(CXX_OS_ARCH_FLAGS)
+CXX_CPP_FLAGS = $(CPPFLAGS) -I$(includedir) $(CXX_OS_CPP_FLAGS) $(CXX_OS_ARCH_FLAGS)
 CXX_ALL_FLAGS = -std=c++0x $(CXX_CPP_FLAGS) $(CXX_DEFS) $(CXX_FLAGS)
 
 CXX_LDFLAGS = -L$(libdir) $(CFLAGS)
-C_LD_LIBS	= $(LOADLIBES) $(LDLIBS)
+C_LD_LIBS = $(LOADLIBES) $(LDLIBS)
 
 CXX_OBJ	= $(CXX_SRC:%.cpp=$(archdir)/%.o)
 CXX_MAIN = $(CXX_MAIN_SRC:%.cpp=$(archdir)/%)
@@ -70,13 +70,13 @@ $(archdir)/%.o: %.cpp mkdir[$(archdir)]
 $(includedir)/%.hpp:	%.hpp;		$(INSTALL_FILE) $? $@
 
 #
-# build: --cxx-specific customisations for the "build" target.
+# build: --Build the know C++ files (as defined by CXX_SRC, CXX_MAIN_SRC)
 #
 pre-build:	src-var-defined[CXX_SRC]
 build:	$(CXX_OBJ) $(CXX_MAIN)
 
 #
-# clean: --cxx-specific customisations for the "clean" target.
+# clean: --Remove objects and executables created from C++ files.
 #
 clean:	cxx-clean
 .PHONY:	cxx-clean
@@ -85,7 +85,7 @@ cxx-clean:
 	$(RM) $(archdir)/*.o $(CXX_MAIN)
 
 #
-# tidy: --cxx-specific customisations for the "tidy" target.
+# tidy: --Reformat C++ files consistently.
 #
 tidy:	cxx-tidy
 .PHONY:	cxx-tidy
@@ -93,7 +93,7 @@ cxx-tidy:
 	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(HXX_SRC) $(CXX_SRC)
 #
-# cxx-toc: --Build the table-of-contents for CXX-ish files.
+# cxx-toc: --Build the table-of-contents for C++ files.
 #
 .PHONY: cxx-toc
 toc:	cxx-toc
@@ -102,7 +102,7 @@ cxx-toc:
 	mk-toc $(HXX_SRC) $(CXX_SRC)
 
 #
-# cxx-src: --cxx-specific customisations for the "src" target.
+# cxx-src: --Update the CXX_SRC, HXX_SRC, CXX_MAIN_SRC macros.
 #
 src:	cxx-src
 .PHONY:	cxx-src
@@ -114,7 +114,7 @@ cxx-src:
 	@mk-filelist -qn HXX_SRC *.hpp
 
 #
-# tags: --Build vi, emacs tags files.
+# tags: --Build vi, emacs tags files for C++ files.
 #
 .PHONY: cxx-tags
 tags:	cxx-tags
@@ -124,7 +124,7 @@ cxx-tags:
 	etags	$(HXX_SRC) $(CXX_SRC); true
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
+# todo: --Find "unfinished work" comments in C++ files.
 #
 .PHONY: cxx-todo
 todo:	cxx-todo

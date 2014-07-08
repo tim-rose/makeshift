@@ -18,17 +18,15 @@
 
 C_DEFS	= $(C_OS_DEFS) $(C_ARCH_DEFS) -D__$(OS)__ -D__$(ARCH)__
 C_FLAGS = $(C_OS_FLAGS) $(C_ARCH_FLAGS) $(CFLAGS)
-C_WARN_FLAGS = -pedantic -Wall -Wmissing-prototypes \
+C_WARN_FLAGS = -pedantic -Wall -Wextra -Wmissing-prototypes \
 	-Wmissing-declarations 	-Wimplicit -Wpointer-arith \
 	-Wwrite-strings -Waggregate-return -Wnested-externs \
 	-Wcast-align -Wshadow -Wstrict-prototypes -Wredundant-decls \
-	-Wuninitialized -Wunused-parameter \
         -Wno-gnu-zero-variadic-macro-arguments \
 	$(C_OS_WARN_FLAGS) $(C_ARCH_WARN_FLAGS)
 
-C_CPP_FLAGS = $(CPPFLAGS) -I. -I$(includedir) $(C_OS_CPP_FLAGS) $(C_OS_ARCH_FLAGS)
-
-C_ALL_FLAGS	= -std=c99 $(C_CPP_FLAGS) $(C_DEFS) $(C_FLAGS)
+C_CPP_FLAGS = $(CPPFLAGS) -I$(includedir) $(C_OS_CPP_FLAGS) $(C_OS_ARCH_FLAGS)
+C_ALL_FLAGS = -std=c99 $(C_CPP_FLAGS) $(C_DEFS) $(C_FLAGS)
 
 C_LD_FLAGS = -L$(libdir) $(LD_OS_FLAGS) $(LD_ARCH_FLAGS) $(LDFLAGS)
 C_LD_LIBS	= $(LOADLIBES) $(LDLIBS)

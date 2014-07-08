@@ -7,7 +7,8 @@
 # whatever needs to be done, and the build rules will apply
 # it if defined.
 #
-CXX_OS_CPP_FLAGS = -I/usr/include/c++/4.2.1
+C_OS_CPP_FLAGS = -I/usr/local/include
+CXX_OS_CPP_FLAGS = -I/usr/local/include -I/usr/include/c++/4.2.1
 CXX_OS_FLAGS 	= -std=c++98 -Wno-dollar-in-identifier-extension -Wno-c++11-long-long
 
 RANLIB		= ranlib

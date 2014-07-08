@@ -19,7 +19,7 @@
 # in the including makefile).
 #
 LIB_INCLUDEDIR=$(LIB_ROOT)/$(subdir)/include
-LIB_INCLUDE_SRC = $(H_SRC:%.h=$(LIB_INCLUDEDIR)/%.h)
+LIB_INCLUDE_SRC = $(H_SRC:%.h=$(LIB_INCLUDEDIR)/%.h) $(HXX_SRC:%.hpp=$(LIB_INCLUDEDIR)/%.hpp)
 
 $(LIB_INCLUDEDIR):	;		$(INSTALL_DIRECTORY) $@
 $(LIB_INCLUDEDIR)/%.h:	%.h;		$(INSTALL_FILE) $*.h $@
@@ -55,6 +55,7 @@ build:	var-defined[LIB_ROOT] var-defined[LIB] var-defined[LIB_OBJ] \
 #
 #install:	install-lib install-include install-man
 install-include:	$(H_SRC:%.h=$(includedir)/%.h)
+install-include:	$(HXX_SRC:%.hpp=$(includedir)/%.hpp)
 install-lib:		$(libdir)/$(LIB) install-include
 install-man:		$(man3dir)/$(MAN3_SRC)
 
@@ -87,7 +88,7 @@ clean-include:
 src:	src-library
 src-library:
 	$(ECHO_TARGET)
-	mk-filelist -qpn SUBLIB_SRC $$( \
+	@mk-filelist -qpn SUBLIB_SRC $$( \
 	    grep -l '^include.* library.mk' */Makefile 2>/dev/null | \
 	    while read file; do \
 	        ( d=$$(dirname $$file); cd $$d >/dev/null && \
