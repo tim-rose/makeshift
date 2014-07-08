@@ -18,11 +18,12 @@
 # These rules require that LIB and OBJ are already defined (usually
 # in the including makefile).
 #
-LIB_INCLUDEDIR=$(LIB_ROOT)/$(subdir)/include
+LIB_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
 LIB_INCLUDE_SRC = $(H_SRC:%.h=$(LIB_INCLUDEDIR)/%.h) $(HXX_SRC:%.hpp=$(LIB_INCLUDEDIR)/%.hpp)
 
 $(LIB_INCLUDEDIR):	;		$(INSTALL_DIRECTORY) $@
 $(LIB_INCLUDEDIR)/%.h:	%.h;		$(INSTALL_FILE) $*.h $@
+$(LIB_INCLUDEDIR)/%.hpp:	%.hpp;		$(INSTALL_FILE) $*.hpp $@
 
 #
 # libdir/%.a: --install rule for libraries

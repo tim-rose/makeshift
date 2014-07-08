@@ -27,8 +27,8 @@ CXX_WARN_FLAGS  = -O -pedantic -Wall -Wextra \
 CXX_CPP_FLAGS = $(CPPFLAGS) -I$(includedir) $(CXX_OS_CPP_FLAGS) $(CXX_OS_ARCH_FLAGS)
 CXX_ALL_FLAGS = -std=c++0x $(CXX_CPP_FLAGS) $(CXX_DEFS) $(CXX_FLAGS)
 
-CXX_LDFLAGS = -L$(libdir) $(CFLAGS)
-C_LD_LIBS = $(LOADLIBES) $(LDLIBS)
+CXX_LD_FLAGS = -L$(libdir) $(LDFLAGS)
+CXX_LD_LIBS = $(LOADLIBES) $(LDLIBS)
 
 CXX_OBJ	= $(CXX_SRC:%.cpp=$(archdir)/%.o)
 CXX_MAIN = $(CXX_MAIN_SRC:%.cpp=$(archdir)/%)
