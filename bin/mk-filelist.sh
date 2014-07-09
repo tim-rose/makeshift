@@ -21,14 +21,7 @@ name=FILES
 wrap=60
 usage="Usage: mk-filelist file..."
 
-log_message()
-{
-    if [ ! "$quiet" ]; then
-	printf "mk-filelist: ";
-	printf "$@";
-	printf "\n";
-    fi
-} >&2
+log_message() {	printf "mk-filelist: ";	printf "$@"; printf "\n"; } >&2
 notice()      { log_message "$@"; }
 info()        { if [ "$verbose" -o "$debug" ]; then log_message "$@"; fi; }
 debug()       { if [ "$debug" ]; then log_message "$@"; fi; }
@@ -48,15 +41,15 @@ list_files()
 while getopts "b:df:n:pw:vq_" c
 do
     case $c in
-    b)  backup="$OPTARG" ;;
-    d)  directories=1 ;;
-    f)  file="$OPTARG" ;;
-    n)  name="$OPTARG" ;;
+    b)  backup="$OPTARG";;
+    d)  directories=1;;
+    f)  file="$OPTARG";;
+    n)  name="$OPTARG";;
     p)  phony=1;;
-    w)  wrap="$OPTARG" ;;
-    v)  verbose=1;;
-    q)  quiet=1;;
-    _)  debug=1;;
+    w)  wrap="$OPTARG";;
+    v)  verbose=1 debug=;;
+    q)  verbose=  debug=;;
+    _)  verbose=1 debug=1;;
     \?)	echo $usage >&2
 	exit 2;;
     esac

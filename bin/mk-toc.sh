@@ -8,7 +8,7 @@
 #
 usage="Usage: mk-toc [options] file..."
 
-log_message() { printf "$@"; printf "\n"; } >&2
+log_message() { printf "mk-toc: "; printf "$@"; printf "\n"; } >&2
 notice()      { log_message "$@"; }
 info()        { if [ "$verbose" ]; then log_message "$@"; fi; }
 debug()       { if [ "$debug" ]; then log_message "$@"; fi; }
@@ -150,18 +150,18 @@ comment_prefix=''
 # table-of-contents entry.  For most languages, this will be a
 # language identifier, but for makefiles we want to allow the extended
 # characters that targets can have (e.g. '%'), as well as common
-# filesystem characters (e.g. ".") too. Furthermore, the trailing
+# filesystem characters (e.g. ".", "/") too. Furthermore, the trailing
 # punctuation should support some meaningful variations used to
 # indicate type/scope in some languages.  Some illustrative examples:
 #
-#  * function() --describe a function
-#  * variable[] --describe an array
-#  * variable{} --describe a hash/struct
-#  * $variable: --describe a variable, in some languages
-#  * @variable: --describe an instance variable or an array, in some languages
-#  * %variable: --describe a perl hash?
-#  * install:   --describe a make target
-#  * %.o:       --describe a make pattern rule
+#  * function()  --describe a function
+#  * variable[]  --describe an array
+#  * variable{}  --describe a hash/struct
+#  * $variable:  --describe a variable, in some languages
+#  * @variable:  --describe an instance variable or an array, in some languages
+#  * %variable:  --describe a perl hash?
+#  * install:    --describe a make target
+#  * objdir/%.o: --describe a make pattern rule
 #  * etc.
 #
 # Still confused? Oh well, sorry 'bout that.
