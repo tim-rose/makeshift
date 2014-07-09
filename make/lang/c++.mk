@@ -34,7 +34,7 @@ CXX_OBJ	= $(CXX_SRC:%.cpp=$(archdir)/%.o)
 CXX_MAIN = $(CXX_MAIN_SRC:%.cpp=$(archdir)/%)
 
 #
-# main: --rules for building executables from a file containing "main()".
+# main: --Build a program from a file that contains "main".
 #
 $(archdir)/%: %.cpp $(archdir)/%.o
 	$(ECHO_TARGET)
@@ -42,18 +42,6 @@ $(archdir)/%: %.cpp $(archdir)/%.o
 	    $(archdir)/$*.o $(CXX_LD_LIBS)
 	@$(CXX) -o $@ $(CXX_WARN_FLAGS) $(CXX_ALL_FLAGS) $(CXX_LD_FLAGS) \
 	    $(archdir)/$*.o $(CXX_LD_LIBS)
-
-$(archdir)/%.o: %.cpp mkdir[$(archdir)]
-	$(ECHO_TARGET)
-	@echo $(CXX) $(CXX_ALL_FLAGS) -c -o $(archdir)/$*.o $<
-	@$(CXX) $(CXX_WARN_FLAGS) $(CXX_ALL_FLAGS) -c -o $@ \
-	    -MMD -MF $(archdir)/$*-depend.mk $<
-
-#
-# build: --Convenience target to build one C file.
-#
-build[%.cpp]:   $(archdir)/%.o; $(ECHO_TARGET)
-
 
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
@@ -65,12 +53,19 @@ $(archdir)/%.o: %.cpp mkdir[$(archdir)]
 	    -MMD -MF $(archdir)/$*-depend.mk $<
 
 #
-# %.hpp: --Rules for installing header files.
+# build[%]: --Build a C++ file's related object.
+#
+build[%.cpp]:   $(archdir)/%.o; $(ECHO_TARGET)
+
+
+
+#
+# %.hpp: --Install a C++ header (.hpp) file.
 #
 $(includedir)/%.hpp:	%.hpp;		$(INSTALL_FILE) $? $@
 
 #
-# build: --Build the know C++ files (as defined by CXX_SRC, CXX_MAIN_SRC)
+# build: --Build the C++ files (as defined by CXX_SRC, CXX_MAIN_SRC)
 #
 pre-build:	src-var-defined[CXX_SRC]
 build:	$(CXX_OBJ) $(CXX_MAIN)
@@ -93,7 +88,7 @@ cxx-tidy:
 	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(HXX_SRC) $(CXX_SRC)
 #
-# cxx-toc: --Build the table-of-contents for C++ files.
+# toc: --Build the table-of-contents for C++ files.
 #
 .PHONY: cxx-toc
 toc:	cxx-toc
@@ -102,7 +97,7 @@ cxx-toc:
 	mk-toc $(HXX_SRC) $(CXX_SRC)
 
 #
-# cxx-src: --Update the CXX_SRC, HXX_SRC, CXX_MAIN_SRC macros.
+# src: --Update the CXX_SRC, HXX_SRC, CXX_MAIN_SRC macros.
 #
 src:	cxx-src
 .PHONY:	cxx-src

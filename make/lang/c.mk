@@ -35,7 +35,7 @@ C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 
 #
-# main: --rules for building executables from a file containing "main()".
+# main: --Build a program from a file that contains "main".
 #
 $(archdir)/%: %.c $(archdir)/%.o
 	$(ECHO_TARGET)
@@ -60,12 +60,12 @@ $(archdir)/%.o: %.c mkdir[$(archdir)]
 	    -MMD -MF $(archdir)/$*-depend.mk $<
 
 #
-# build: --Convenience target to build one C file.
+# build[%]: --Build a C++ file's related object.
 #
 build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 
 #
-# %.h: --Rules for installing header files.
+# %.h: --Install a C header (.h) file.
 #
 $(includedir)/%.h:	%.h;		$(INSTALL_FILE) $? $@
 
@@ -84,7 +84,7 @@ c-src-var-defined:
 	    { $(VAR_UNDEFINED) "C_SRC or H_SRC"; }
 
 #
-# clean: --c-specific customisations for the "clean" target.
+# clean: --Remove objects and executables created from C files.
 #
 clean:	c-clean
 .PHONY:	c-clean
@@ -93,7 +93,7 @@ c-clean:
 	$(RM) $(archdir)/*.o $(C_MAIN)
 
 #
-# tidy: --c-specific customisations for the "tidy" target.
+# tidy: --Reformat C files consistently.
 #
 tidy:	c-tidy
 .PHONY:	c-tidy
@@ -101,7 +101,7 @@ c-tidy:
 	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro $(INDENT) $(H_SRC) $(C_SRC)
 #
-# c-toc: --Build the table-of-contents for C-ish files.
+# toc: --Build the table-of-contents for C files.
 #
 .PHONY: c-toc
 toc:	c-toc
@@ -110,7 +110,7 @@ c-toc:
 	mk-toc $(H_SRC) $(C_SRC)
 
 #
-# c-src: --c-specific customisations for the "src" target.
+# src: --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
 #
 src:	c-src
 .PHONY:	c-src
@@ -132,7 +132,7 @@ c-tags:
 	etags	$(H_SRC) $(C_SRC); true
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
+# todo: --Report "unfinished work" comments in C files.
 #
 .PHONY: c-todo
 todo:	c-todo
