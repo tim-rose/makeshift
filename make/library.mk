@@ -15,18 +15,21 @@
 # recursive make targets, and then assembles them all into one
 # master library.
 #
-# These rules require that LIB and OBJ are already defined (usually
-# in the including makefile).
+# These rules require that following variables are defined:
+#
+#  * LIB_ROOT --the root location of the main top-level library
+#  * LIB      --the name of the library to build
+#  * LIB_OBJ  --the objects to put into the library.
 #
 LIB_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
-LIB_INCLUDE_SRC = $(H_SRC:%.h=$(LIB_INCLUDEDIR)/%.h) $(HXX_SRC:%.hpp=$(LIB_INCLUDEDIR)/%.hpp)
+LIB_INCLUDE_SRC = $(H_SRC:%.h=$(LIB_INCLUDEDIR)/%.h) \
+    $(HXX_SRC:%.hpp=$(LIB_INCLUDEDIR)/%.hpp)
 
-$(LIB_INCLUDEDIR):	;		$(INSTALL_DIRECTORY) $@
-$(LIB_INCLUDEDIR)/%.h:	%.h;		$(INSTALL_FILE) $*.h $@
+$(LIB_INCLUDEDIR)/%.h:		%.h;		$(INSTALL_FILE) $*.h $@
 $(LIB_INCLUDEDIR)/%.hpp:	%.hpp;		$(INSTALL_FILE) $*.hpp $@
 
 #
-# libdir/%.a: --install rule for libraries
+# libdir/%.a: --Install a static (.a)library
 #
 $(libdir)/%.a:	$(archdir)/%.a
 	$(ECHO_TARGET)
@@ -39,66 +42,68 @@ $(libdir)/%.a:	$(archdir)/%.a
 pre-build:      $(LIB_INCLUDE_SRC)
 
 #
-# %/lib.a: --Build the library in its subdirectory.
+# %/lib.a: --Build the sub-librar(ies) in its subdirectory.
 #
 %/$(archdir)/lib.a:     build@%;     $(ECHO_TARGET)
 
 #
-# build: --build the library ".a"
+# build: --Build this directory's library.
 #
 build:	var-defined[LIB_ROOT] var-defined[LIB] var-defined[LIB_OBJ] \
-	$(archdir)/$(LIB)
+	$(archdir)/lib$(LIB).a
 
 #
-# install-include: --install the include files, if any.
-# install-lib:	--install the library files.
-# install-man:	--install manual pages for the library
+# lib-install-lib:	--Install the library (and include files).
+# lib-install-include:	--Install the library include files.
+# lib-install-man:	--Install manual pages for the library.
 #
-#install:	install-lib install-include install-man
-install-include:	$(H_SRC:%.h=$(includedir)/%.h)
-install-include:	$(HXX_SRC:%.hpp=$(includedir)/%.hpp)
-install-lib:		$(libdir)/$(LIB) install-include
-install-man:		$(man3dir)/$(MAN3_SRC)
+lib-install-lib:	$(libdir)/lib$(LIB).a lib-install-include
+lib-install-include:	$(H_SRC:%.h=$(includedir)/%.h)
+lib-install-include:	$(HXX_SRC:%.hpp=$(includedir)/%.hpp)
+lib-install-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3)
 
-$(libdir)/$(LIB):	$(archdir)/$(LIB)
+$(libdir)/lib$(LIB).a:	$(archdir)/lib$(LIB).a
 
 #
-# archdir-LIB: --Rules for building/updating the library.
+# archdir/%a: --(re)build a library.
 #
-$(archdir)/$(LIB):	$(LIB_OBJ) $(SUBLIB_SRC)
+$(archdir)/lib.a:	$(LIB_OBJ) $(SUBLIB_SRC)
 	$(ECHO_TARGET)
 	$(AR) $(ARFLAGS) $@ $(LIB_OBJ)
 	ar-merge -v $@ $(SUBLIB_SRC)
 	$(RANLIB) $@
 
-clean:	clean-library
-
-distclean: clean-library clean-include
-
-clean-library:
+$(archdir)/lib$(LIB).a:	$(archdir)/lib.a
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/$(LIB)
+	cp $< $@
+	$(RANLIB) $@
 
-clean-include:
+
+clean:	lib-clean
+distclean: lib-clean lib-distclean
+
+#
+# lib-clean: --Remove the library file.
+#
+lib-clean:
+	$(ECHO_TARGET)
+	$(RM) $(archdir)/lib$(LIB).a $(archdir)/lib.a
+
+#
+# lib-distclean: --Remove the include files installed at $LIB_ROOT/include.
+#
+lib-distclean:
 	$(ECHO_TARGET)
 	$(RM) $(LIB_INCLUDE_SRC)
 
 #
-# src-library: --get a list of sub-directories that are libraries.
+# lib-src: --Get a list of sub-directories that are libraries.
 #
-src:	src-library
-src-library:
+src:	lib-src
+lib-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qpn SUBLIB_SRC $$( \
 	    grep -l '^include.* library.mk' */Makefile 2>/dev/null | \
-	    while read file; do \
-	        ( d=$$(dirname $$file); cd $$d >/dev/null && \
-	        $(MAKE) -s print-lib-target| sed -e "s/^/$$d\//"; ) \
-	    done)
-
-#
-# print-lib-target: --print the current library target in this directory
-#
-print-lib-target:	;	@echo "$(archdir)/$(LIB)"
+	    sed -e 's|Makefile|$$(archdir)/lib.a|g')
 
 +help:  +help-library
