@@ -31,12 +31,12 @@ toc_split()
 	"$comment_prefix" "$comment_prefix_rgx"
     debug 'toc_label="%s"' "$toc_label"
     awk "
-function info(str) { 
+function info(str) {
     if (\"$verbose\") {
         printf(\"%s\n\", str);
     }
 }
-function debug(str) { 
+function debug(str) {
     if (\"$debug\") {
         printf(\"line %d: %s\n\", NR, str);
     }
@@ -72,7 +72,7 @@ BEGIN {
             entry += 1;
         }
     }
-}    
+}
 
 # Print each line to the current (mode-specific) output file
 {
@@ -86,7 +86,7 @@ BEGIN {
 
 # Summarise the TOC entries found in the entire file
 END {
-    max = 0; 
+    max = 0;
     for (i=0; i<entry; ++i) {
         if (length(name[i]) > max) {
             max = length(name[i]);
@@ -153,7 +153,7 @@ comment_prefix=''
 # filesystem characters (e.g. ".") too. Furthermore, the trailing
 # punctuation should support some meaningful variations used to
 # indicate type/scope in some languages.  Some illustrative examples:
-# 
+#
 #  * function() --describe a function
 #  * variable[] --describe an array
 #  * variable{} --describe a hash/struct
@@ -166,7 +166,7 @@ comment_prefix=''
 #
 # Still confused? Oh well, sorry 'bout that.
 #
-name_rgx='[a-zA-Z0-9_.$%@*][-a-zA-Z0-9_.$%@*]*[][{}():%*][][{}():%*]*'
+name_rgx='[a-zA-Z0-9_.$%@*/][-a-zA-Z0-9_.$%@*/]*[][{}():%*][][{}():%*]*'
 
 #
 # process command-line options
@@ -196,7 +196,7 @@ for file; do
     if [ ! "$type" ]; then
 	set_type $file
     fi
-    info 'file: %s' $file 
+    info 'file: %s' $file
 
     if toc_split $file; then
 	if [ "$backup" ]; then

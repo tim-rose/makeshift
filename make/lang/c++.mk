@@ -2,16 +2,17 @@
 # C++.MK --Rules for building C++ objects and programs.
 #
 # Contents:
-# main:    --rules for building executables from a file containing "main()".
-# %.o:     --Compile a C++ file into an arch-specific sub-directory.
-# %.hpp:   --Rules for installing header files.
-# build:   --cxx-specific customisations for the "build" target.
-# clean:   --cxx-specific customisations for the "clean" target.
-# tidy:    --cxx-specific customisations for the "tidy" target.
-# cxx-toc: --Build the table-of-contents for CXX-ish files.
-# cxx-src: --cxx-specific customisations for the "src" target.
-# tags:    --Build vi, emacs tags files.
-# todo:    --Report unfinished work (identified by keyword comments)
+# main:     --Build a program from a file that contains "main".
+# %.o:      --Compile a C++ file into an arch-specific sub-directory.
+# build[%]: --Build a C++ file's related object.
+# %.hpp:    --Install a C++ header (.hpp) file.
+# build:    --Build the C++ files (as defined by CXX_SRC, CXX_MAIN_SRC)
+# clean:    --Remove objects and executables created from C++ files.
+# tidy:     --Reformat C++ files consistently.
+# toc:      --Build the table-of-contents for C++ files.
+# src:      --Update the CXX_SRC, HXX_SRC, CXX_MAIN_SRC macros.
+# tags:     --Build vi, emacs tags files for C++ files.
+# todo:     --Find "unfinished work" comments in C++ files.
 #
 -include $(CXX_SRC:%.cpp=$(archdir)/%-depend.mk)
 

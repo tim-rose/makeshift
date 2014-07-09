@@ -2,10 +2,17 @@
 # LIBRARY.MK: rules to build and install a library composed of a set of objects.
 #
 # Contents:
-# build:           --build the library ".a"
-# install-include: --install the include files, if any.
-# archdir-LIB:     --Rules for building/updating the library.
-# src-library:     --get a list of sub-directories that are libraries.
+# libdir/%.a:          --Install a static (.a)library
+# pre-build:           --Install the include files
+# %/lib.a:             --Build the sub-librar(ies) in its subdirectory.
+# build:               --Build this directory's library.
+# lib-install-lib:     --Install the library (and include files).
+# lib-install-include: --Install the library include files.
+# lib-install-man:     --Install manual pages for the library.
+# archdir/%.a:         --(re)build a library.
+# clean:               --Remove the library file.
+# distclean:           --Remove the include files installed at $LIB_ROOT/include.
+# src:                 --Get a list of sub-directories that are libraries.
 #
 # Remarks:
 # This is an attempt to manage a collection of object files (i.e. ".o" files)
@@ -53,9 +60,9 @@ build:	var-defined[LIB_ROOT] var-defined[LIB] var-defined[LIB_OBJ] \
 	$(archdir)/lib$(LIB).a
 
 #
-# lib-install-lib:	--Install the library (and include files).
-# lib-install-include:	--Install the library include files.
-# lib-install-man:	--Install manual pages for the library.
+# lib-install-lib: --Install the library (and include files).
+# lib-install-include: --Install the library include files.
+# lib-install-man: --Install manual pages for the library.
 #
 lib-install-lib:	$(libdir)/lib$(LIB).a lib-install-include
 lib-install-include:	$(H_SRC:%.h=$(includedir)/%.h)
@@ -65,7 +72,7 @@ lib-install-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3)
 $(libdir)/lib$(LIB).a:	$(archdir)/lib$(LIB).a
 
 #
-# archdir/%a: --(re)build a library.
+# archdir/%.a: --(re)build a library.
 #
 $(archdir)/lib.a:	$(LIB_OBJ) $(SUBLIB_SRC)
 	$(ECHO_TARGET)
@@ -78,26 +85,24 @@ $(archdir)/lib$(LIB).a:	$(archdir)/lib.a
 	cp $< $@
 	$(RANLIB) $@
 
-
+#
+# clean: --Remove the library file.
+#
 clean:	lib-clean
-distclean: lib-clean lib-distclean
-
-#
-# lib-clean: --Remove the library file.
-#
 lib-clean:
 	$(ECHO_TARGET)
 	$(RM) $(archdir)/lib$(LIB).a $(archdir)/lib.a
 
 #
-# lib-distclean: --Remove the include files installed at $LIB_ROOT/include.
+# distclean: --Remove the include files installed at $LIB_ROOT/include.
 #
+distclean: lib-clean lib-distclean
 lib-distclean:
 	$(ECHO_TARGET)
 	$(RM) $(LIB_INCLUDE_SRC)
 
 #
-# lib-src: --Get a list of sub-directories that are libraries.
+# src: --Get a list of sub-directories that are libraries.
 #
 src:	lib-src
 lib-src:
