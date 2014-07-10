@@ -3,6 +3,7 @@
 # AR-MERGE --Merge ".a" format archives
 #
 # Remarks:
+# TODO: allow the target-lib to be empty/non-existent.
 #
 usage="Usage: ar-merge target-lib.a lib1.a lib2.a..."
 
@@ -10,14 +11,7 @@ tmp=${TMPDIR:-/tmp}/$$
 trap "rm -rf $tmp" 0
 mkdir $tmp
 
-log_message()
-{
-    if [ ! "$quiet" ]; then
-	printf "ar-merge: ";
-	printf "$@";
-	printf "\n";
-    fi
-} >&2
+log_message() {	printf "ar-merge: "; printf "$@"; printf "\n"; } >&2
 notice()      { log_message "$@"; }
 info()        { if [ "$verbose" -o "$debug" ]; then log_message "$@"; fi; }
 debug()       { if [ "$debug" ]; then log_message "$@"; fi; }
@@ -25,9 +19,9 @@ debug()       { if [ "$debug" ]; then log_message "$@"; fi; }
 while getopts "vq_" c
 do
     case $c in
-    v)  verbose=1;;
-    q)  quiet=1;;
-    _)  debug=1;;
+    v)  verbose=1 debug=;;
+    q)  verbose=  debug=;;
+    _)  verbose=1 debug=1;;
     \?)	echo $usage >&2
 	exit 2;;
     esac
