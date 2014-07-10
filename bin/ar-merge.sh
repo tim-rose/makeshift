@@ -2,19 +2,23 @@
 #
 # AR-MERGE --Merge ".a" format archives
 #
-# Remarks:
-# TODO: allow the target-lib to be empty/non-existent.
-#
 usage="Usage: ar-merge target-lib.a lib1.a lib2.a..."
-
-tmp=${TMPDIR:-/tmp}/$$
-trap "rm -rf $tmp" 0
-mkdir $tmp
 
 log_message() {	printf "ar-merge: "; printf "$@"; printf "\n"; } >&2
 notice()      { log_message "$@"; }
 info()        { if [ "$verbose" -o "$debug" ]; then log_message "$@"; fi; }
 debug()       { if [ "$debug" ]; then log_message "$@"; fi; }
+
+#
+# mung_lib_name() --convert "foo/bar/libxyzzy.a" to "foo-bar-xyzzy".
+#
+mung_lib_name()
+{
+    echo $* |
+        sed -e 's/lib//' -e 's/\.a//' -e 's/\//-/g' \
+	    -e "s/${OS:-^}/-/" -e "s/${ARCH:-^}/-/" \
+	    -e 's/--*/-/g' -e 's/-$//g'
+}
 
 while getopts "vq_" c
 do
@@ -33,29 +37,20 @@ if [ $# -eq 0 ]; then
     exit 2
 fi
 
+tmp=${TMPDIR:-/tmp}/$$
+trap "rm -rf $tmp" 0
+mkdir $tmp
+
 target_lib=$1; shift
-if [ ! -f "$target_lib" ]; then
-    notice "%s: target archive doesn't exist" "$target_lib"
-    exit 1
+if [ ! -f "$target_lib" ]; then	# target lib doesn't exist?
+    cp $1 $target_lib           # ..."create" the lib from first to-merge lib.
 fi
-
-#
-# mung_lib_name() --convert "foo/bar/libxyzzy.a" to "foo-bar-xyzzy".
-#
-mung_lib_name()
-{
-    echo $* |
-        sed -e 's/lib//' -e 's/\.a//' -e 's/\//-/g' \
-	    -e "s/${OS:-^}/-/" -e "s/${ARCH:-^}/-/" \
-	    -e 's/--*/-/g' -e 's/-$//g'
-}
-
 tmp_target_lib=$$-all.a
 cp $target_lib $tmp/$tmp_target_lib
 
 for lib; do
     if [ -f $lib ]; then
-	info 'importing %s' $lib
+	info 'merging "%s"' $lib
     else
 	info '%s: no such file' $lib
 	continue
@@ -66,7 +61,7 @@ for lib; do
 	cd $tmp
 	ar x $tmp_lib $(ar t $tmp_lib| grep '.*\.o')
 	prefix=$(mung_lib_name $lib)
-	debug 'prefix: %s' $prefix
+	debug 'prefix: "%s"' $prefix
 	for obj in *.o; do
 	    mv $obj $prefix-$obj
 	done
@@ -75,4 +70,3 @@ for lib; do
     )
 done
 cp $tmp/$tmp_target_lib $target_lib
-exit 0
