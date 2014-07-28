@@ -30,11 +30,16 @@
 # I avoid the $(archdir) suffix, for most of the installation directories.
 # I'm sure this will come back to bite me later...
 #
+
+
 SUBDIRS := $(shell find * -type d -prune)
 ECHO = :				# enable by: make ECHO=echo
-SHELL	= /bin/sh
-archdir	= $(OS)-$(ARCH)
+
 ECHO_TARGET = @$(ECHO) "++ make $@ (in $$PWD)"
+ifdef MK_DEBUG
+MK_SHELL := $(SHELL)
+SHELL = $(warning target:$@ newer-dependents:$^ all-dependents:$?)$(MK_SHELL) -x
+endif
 
 .SUFFIXES:			# remove default suffix rules
 
@@ -61,6 +66,7 @@ all:	build
 # install devkit into $HOME, you must use/alias make as
 # "make -I$HOME/include".
 #
+archdir         = $(OS)-$(ARCH)
 rootdir 	= $(DESTDIR)/$(prefix)
 rootdir_opt 	= $(DESTDIR)/$(prefix)/$(opt)
 #exec_prefix = $(rootdir)/$(archdir)	# (GNU std)
@@ -160,8 +166,8 @@ include vcs/$(VCS).mk
 #
 # var[%]:	--pattern rule to print a make variable.
 #
-vars:   $(.VARIABLES:%=var[%])
-var[%]:
++vars:   $(.VARIABLES:%=+var[%])
++var[%]:
 	@echo "# $(origin $*) variable \"$*\":"
 	@echo "$* = '$($*)'"
 
