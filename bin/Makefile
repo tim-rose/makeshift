@@ -4,8 +4,8 @@
 SRC_LANG	= sh
 MAKEFLAGS = -I ../make
 
-SH_SRC = ar-merge.sh echo+.sh mk-ar-merge.sh mk-ar.sh mk-filelist.sh \
-    mk-toc.sh skel.sh svn-checkout.sh svn-edit.sh svn-import.sh \
+SH_SRC = echo+.sh mk-ar-merge.sh mk-ar.sh mk-filelist.sh mk-toc.sh \
+    skel.sh svn-checkout.sh svn-edit.sh svn-import.sh \
     svn-keyword.sh svn-releases.sh
 
 include devkit.mk

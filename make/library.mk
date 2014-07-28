@@ -46,7 +46,15 @@ $(libdir)/%.a:	$(archdir)/%.a
 #
 # pre-build: --Install the include files
 #
-pre-build:      $(LIB_INCLUDE_SRC)
+pre-build:      lib-src-var-defined $(LIB_INCLUDE_SRC)
+
+#
+# lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
+#
+lib-src-var-defined:
+	$(ECHO_TARGET)
+	@test -n "$(LIB_OBJ)" -o -n "$(SUBLIB_SRC)" || \
+	    { $(VAR_UNDEFINED) "LIB_OBJ or SUBLIB_SRC"; }
 
 #
 # %/lib.a: --Build the sub-librar(ies) in its subdirectory.
@@ -56,7 +64,7 @@ pre-build:      $(LIB_INCLUDE_SRC)
 #
 # build: --Build this directory's library.
 #
-build:	var-defined[LIB_ROOT] var-defined[LIB] var-defined[LIB_OBJ] \
+build:	var-defined[LIB_ROOT] var-defined[LIB] lib-src-var-defined \
 	$(archdir)/lib$(LIB).a
 
 #
@@ -74,10 +82,11 @@ $(libdir)/lib$(LIB).a:	$(archdir)/lib$(LIB).a
 #
 # archdir/%.a: --(re)build a library.
 #
+# $(AR) $(ARFLAGS) $@ $(LIB_OBJ)
+#
 $(archdir)/lib.a:	$(LIB_OBJ) $(SUBLIB_SRC)
 	$(ECHO_TARGET)
-	$(AR) $(ARFLAGS) $@ $(LIB_OBJ)
-	ar-merge -v $@ $(SUBLIB_SRC)
+	mk-ar-merge $(ARFLAGS) $@ $(LIB_OBJ) $(SUBLIB_SRC)
 	$(RANLIB) $@
 
 $(archdir)/lib$(LIB).a:	$(archdir)/lib.a
