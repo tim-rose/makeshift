@@ -16,11 +16,6 @@ GREP		= grep
 PKG_TYPE	= deb
 INDENT          = gnuindent
 
-SH_PATH		= /bin/sh
-AWK_PATH	= /usr/bin/awk
-SED_PATH	= /usr/bin/sed -f
-PERL_PATH	= /usr/bin/perl -f
-PYTHON_PATH	= /usr/bin/python -f
 
 c-clean:	clean-darwin
 clean-darwin:

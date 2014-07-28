@@ -27,16 +27,16 @@ $(sysconfdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 #
 # %.awk: --Rules for installing awk scripts
 #
-%:			%.awk;	@$(INSTALL_SCRIPT) "$(AWK_PATH)" $? $@
-$(bindir)/%:		%.awk;	@$(INSTALL_SCRIPT) "$(AWK_PATH)" $? $@
+%:			%.awk;	@$(INSTALL_SCRIPT) $? $@
+$(bindir)/%:		%.awk;	@$(INSTALL_SCRIPT) $? $@
 $(libexecdir)/%:	%.awk;	$(INSTALL_PROGRAM) $? $@
 $(libdir)/%.awk:	%.awk;	$(INSTALL_FILE) $? $@
 
 #
 # %.sed: --Rules for installing sed scripts
 #
-%:			%.sed;	@$(INSTALL_SCRIPT) "$(SED_PATH)" $? $@
-$(bindir)/%:		%.sed;	@$(INSTALL_SCRIPT) "$(SED_PATH)" $? $@
+%:			%.sed;	@$(INSTALL_SCRIPT) $? $@
+$(bindir)/%:		%.sed;	@$(INSTALL_SCRIPT) $? $@
 $(libexecdir)/%:	%.sed;	$(INSTALL_PROGRAM) $? $@
 $(libdir)/%.sed:        %.sed;	$(INSTALL_FILE) $? $@
 

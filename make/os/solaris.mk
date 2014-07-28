@@ -7,8 +7,3 @@ CXX_OS_DEFS = -D__solaris__
 GREP		= grep
 INDENT          = indent
 
-SH_PATH		= /bin/sh
-AWK_PATH	= /usr/bin/awk
-SED_PATH	= /usr/bin/sed
-PERL_PATH	= /usr/bin/perl
-PYTHON_PATH	= /usr/bin/python

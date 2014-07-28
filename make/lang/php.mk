@@ -13,9 +13,9 @@ PHP_PATH = /usr/bin/php
 #
 # %.php:		--Rules for installing php scripts
 #
-%:			%.php;	@$(INSTALL_SCRIPT) $(PHP_PATH) $? $@
-$(bindir)/%:		%.php;	@$(INSTALL_SCRIPT) $(PHP_PATH) $? $@
-$(libexecdir)/%:	%.php;	@$(INSTALL_SCRIPT) $(PHP_PATH) $? $@
+%:			%.php;	@$(INSTALL_SCRIPT) $? $@
+$(bindir)/%:		%.php;	@$(INSTALL_SCRIPT) $? $@
+$(libexecdir)/%:	%.php;	@$(INSTALL_SCRIPT) $? $@
 $(phplibdir)/%.php:    	%.php;	$(INSTALL_FILE) $? $@
 $(wwwdir)/%.php:	%.php;	$(INSTALL_FILE) $? $@
 
@@ -38,13 +38,13 @@ php-toc:
 #
 src:	php-src
 .PHONY:	php-src
-php-src:	
+php-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qn PHP_SRC *.php
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: php-todo
 todo:	php-todo
 php-todo:

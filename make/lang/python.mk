@@ -11,9 +11,9 @@
 #
 PY_TRG = $(PY_SRC:%.py=%)
 
-%:			%.py;	@$(INSTALL_SCRIPT) $(PYTHON_PATH) $? $@
-$(bindir)/%:		%.py;	@$(INSTALL_SCRIPT) $(PYTHON_PATH) $? $@
-$(libexecdir)/%:	%.py;	@$(INSTALL_SCRIPT) $(PYTHON_PATH) $? $@
+%:			%.py;	@$(INSTALL_SCRIPT) $? $@
+$(bindir)/%:		%.py;	@$(INSTALL_SCRIPT) $? $@
+$(libexecdir)/%:	%.py;	@$(INSTALL_SCRIPT) $? $@
 
 pre-build:	src-var-defined[PY_SRC]
 build:	$(PY_TRG)
@@ -40,12 +40,12 @@ python-toc:
 #
 .PHONY:	python-src
 src:	python-src
-python-src:	
+python-src:
 	$(ECHO) "++ make[$@]@$$PWD"
 	@mk-filelist -qn PY_SRC *.py
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: python-todo
 todo:	python-todo
 python-todo:

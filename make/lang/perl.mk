@@ -17,10 +17,10 @@ PERL_TRG = $(PL_SRC:%.pl=%)
 #
 # %.pl:		--Rules for installing perl scripts
 #
-%:			%.pl;	@$(INSTALL_SCRIPT) $(PERL_PATH) $? $@
-$(bindir)/%:		%.pl;	@$(INSTALL_SCRIPT) $(PERL_PATH) $? $@
-$(libexecdir)/%:	%.pl;	@$(INSTALL_SCRIPT) $(PERL_PATH) $? $@
-$(sysconfdir)/%:	%.pl;	@$(INSTALL_SCRIPT) $(PERL_PATH) $? $@
+%:			%.pl;	@$(INSTALL_SCRIPT) $? $@
+$(bindir)/%:		%.pl;	@$(INSTALL_SCRIPT) $? $@
+$(libexecdir)/%:	%.pl;	@$(INSTALL_SCRIPT) $? $@
+$(sysconfdir)/%:	%.pl;	@$(INSTALL_SCRIPT) $? $@
 $(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
 
 #
@@ -73,7 +73,7 @@ perl-toc:
 #
 .PHONY:	perl-src
 src:	perl-src
-perl-src:	
+perl-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qn PL_SRC *.pl
 	@mk-filelist -qn PM_SRC *.pm
@@ -81,7 +81,7 @@ perl-src:
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: perl-todo
 todo:	perl-todo
 perl-todo:

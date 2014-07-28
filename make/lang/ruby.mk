@@ -11,9 +11,9 @@
 #
 RB_TRG = $(RB_SRC:%.rb=%)
 
-%:			%.rb;	@$(INSTALL_SCRIPT) $(RUBY_PATH) $? $@
-$(bindir)/%:		%.rb;	@$(INSTALL_SCRIPT) $(RUBY_PATH) $? $@
-$(libexecdir)/%:	%.rb;	@$(INSTALL_SCRIPT) $(RUBY_PATH) $? $@
+%:			%.rb;	@$(INSTALL_SCRIPT) $? $@
+$(bindir)/%:		%.rb;	@$(INSTALL_SCRIPT) $? $@
+$(libexecdir)/%:	%.rb;	@$(INSTALL_SCRIPT) $? $@
 
 pre-build:	src-var-defined[RB_SRC]
 build:	$(RB_TRG)
@@ -40,12 +40,12 @@ ruby-toc:
 #
 .PHONY:	ruby-src
 src:	ruby-src
-ruby-src:	
+ruby-src:
 	$(ECHO) "++ make[$@]@$$PWD"
 	@mk-filelist -qn RB_SRC *.rb
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: ruby-todo
 todo:	ruby-todo
 ruby-todo:
