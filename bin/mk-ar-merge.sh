@@ -72,4 +72,5 @@ for file; do
     esac
 done
 
+mkdir -p $(dirname $library)
 ar $ar_flags $library $tmpdir/*.o
