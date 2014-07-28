@@ -35,11 +35,7 @@
 SUBDIRS := $(shell find * -type d -prune)
 ECHO = :				# enable by: make ECHO=echo
 
-ECHO_TARGET = @$(ECHO) "++ make $@ (in $$PWD)"
-ifdef MK_DEBUG
-MK_SHELL := $(SHELL)
-SHELL = $(warning target:$@ newer-dependents:$^ all-dependents:$?)$(MK_SHELL) -x
-endif
+ECHO_TARGET = @$(ECHO) "++ $$PWD:target $@ < $^"
 
 .SUFFIXES:			# remove default suffix rules
 
