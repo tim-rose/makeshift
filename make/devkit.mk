@@ -35,7 +35,7 @@
 SUBDIRS := $(shell find * -type d -prune)
 ECHO = :				# enable by: make ECHO=echo
 
-ECHO_TARGET = @$(ECHO) "++ $$PWD:target $@ < $^"
+ECHO_TARGET = @$(ECHO) "++ $$PWD:target $@ < $?"
 
 .SUFFIXES:			# remove default suffix rules
 
