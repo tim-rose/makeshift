@@ -84,7 +84,7 @@ $(libdir)/lib$(LIB).a:	$(archdir)/lib$(LIB).a
 #
 # $(AR) $(ARFLAGS) $@ $(LIB_OBJ)
 #
-$(archdir)/lib.a:	$(LIB_OBJ) $(SUBLIB_SRC)
+$(archdir)/lib.a:	mkdir[$(archdir)] $(LIB_OBJ) $(SUBLIB_SRC)
 	$(ECHO_TARGET)
 	mk-ar-merge $(ARFLAGS) $@ $(LIB_OBJ) $(SUBLIB_SRC)
 	$(RANLIB) $@
