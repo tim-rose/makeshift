@@ -2,6 +2,10 @@
 # 
 # SVN-EDIT --Edit a sub-version commit message, using a template. 
 # 
+# Remarks:
+# Unfortunately, this is invoked for merges as well as mundane
+# commits.  Until I can work out how to fix that, I recommend
+# *against* using this script...
 # 
 if [ $# != 1 ]; then
     echo "usage: $0 file" 
