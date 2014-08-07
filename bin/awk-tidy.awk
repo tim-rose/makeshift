@@ -1,4 +1,4 @@
-#!/usr/local/bin/gawk -f
+#!/usr/bin/awk -f
 #
 #@ This program came from: ftp://ftp.armory.com/pub/scripts/fmtawksh
 #@ Look there for the latest version.

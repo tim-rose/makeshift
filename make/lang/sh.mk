@@ -27,16 +27,16 @@ $(sysconfdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
 #
 # %.awk: --Rules for installing awk scripts
 #
-%:			%.awk;	@$(INSTALL_SCRIPT) $? $@
-$(bindir)/%:		%.awk;	@$(INSTALL_SCRIPT) $? $@
+%:			%.awk;	$(INSTALL_SCRIPT) $? $@
+$(bindir)/%:		%.awk;	$(INSTALL_SCRIPT) $? $@
 $(libexecdir)/%:	%.awk;	$(INSTALL_PROGRAM) $? $@
 $(libdir)/%.awk:	%.awk;	$(INSTALL_FILE) $? $@
 
 #
 # %.sed: --Rules for installing sed scripts
 #
-%:			%.sed;	@$(INSTALL_SCRIPT) $? $@
-$(bindir)/%:		%.sed;	@$(INSTALL_SCRIPT) $? $@
+%:			%.sed;	$(INSTALL_SCRIPT) $? $@
+$(bindir)/%:		%.sed;	$(INSTALL_SCRIPT) $? $@
 $(libexecdir)/%:	%.sed;	$(INSTALL_PROGRAM) $? $@
 $(libdir)/%.sed:        %.sed;	$(INSTALL_FILE) $? $@
 
@@ -63,6 +63,14 @@ shell-clean:
 
 distclean:	shell-clean
 
+#
+# awk-tidy: --reformat/cleanup awk scripts
+#
+tidy:	$(AWK_SRC:%=awk-tidy[%])
+awk-tidy[%]:
+	$(ECHO_TARGET)
+	awk-tidy $* >$*.tmp && mv $*.tmp $*
+#
 #
 # shell-toc: --Build the table-of-contents for shell, awk files.
 #
