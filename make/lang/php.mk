@@ -8,14 +8,10 @@
 # todo:      --Report unfinished work (identified by keyword comments)
 #
 phplibdir      = $(exec_prefix)/lib/php/$(subdir)
-PHP_PATH = /usr/bin/php
 
 #
 # %.php:		--Rules for installing php scripts
 #
-%:			%.php;	@$(INSTALL_SCRIPT) $? $@
-$(bindir)/%:		%.php;	@$(INSTALL_SCRIPT) $? $@
-$(libexecdir)/%:	%.php;	@$(INSTALL_SCRIPT) $? $@
 $(phplibdir)/%.php:    	%.php;	$(INSTALL_FILE) $? $@
 $(wwwdir)/%.php:	%.php;	$(INSTALL_FILE) $? $@
 

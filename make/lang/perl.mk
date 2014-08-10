@@ -15,12 +15,9 @@ PERL_SRC=$(PL_SRC) $(PM_SRC) $(T_SRC)
 PERL_TRG = $(PL_SRC:%.pl=%)
 
 #
-# %.pl:		--Rules for installing perl scripts
+# %.pm:		--Rules for installing perl libraries
 #
-%:			%.pl;	@$(INSTALL_SCRIPT) $? $@
-$(bindir)/%:		%.pl;	@$(INSTALL_SCRIPT) $? $@
-$(libexecdir)/%:	%.pl;	@$(INSTALL_SCRIPT) $? $@
-$(sysconfdir)/%:	%.pl;	@$(INSTALL_SCRIPT) $? $@
+%:			%.pl;	$(INSTALL_PROGRAM) $? $@
 $(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
 
 #
@@ -33,9 +30,11 @@ build:	$(PERL_TRG)
 # perl-src-var-defined: --Test if "enough" of the perl SRC vars. are defined.
 #
 perl-src-var-defined:
-	@test -n "$(PL_SRC)" -o -n "$(PM_SRC)" -o -n "$(T_SRC)" || \
-	    { $(VAR_UNDEFINED) "PL_SRC, PM_SRC or T_SRC"; }
-
+	@if [ -z '$(PL_SRC)$(PM_SRC)$(T_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "PL_SRC, PM_SRC or T_SRC"
+	    echo 'run "make src" to define them'; \
+	    false; \
+	fi >&2
 #
 # xgettext support
 #

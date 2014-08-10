@@ -18,7 +18,6 @@ include devkit.mk
 $(includedir)/%:	%;		$(INSTALL_FILE) $< $@
 install:		$(MK_SRC:%.mk=$(includedir)/%.mk)
 install:		$(includedir)/targets.mk
-install:		$(MK_SRC:%.mk=$(DEVKIT_HOME)/help/%.txt)
 
 #
 # tarkets.mk:	--Build the standard auto-recursive targets file.
@@ -40,6 +39,3 @@ $(includedir)/targets.mk:
 	    printf "$$t \$$(SUBDIRS:%%=$$t@%%):\tpre-$$t\n"; \
 	    printf "$$t@%%:\n\t@\$$(ECHO_TARGET)\n\t@if [ -e \$$*/Makefile ]; then \$$(ECHO) ++ make: recursively building \$$@; cd \$$* && \$$(MAKE) $$t; fi\n"; \
 	done >> $@
-
-$(DEVKIT_HOME)/help/%.txt:	%.mk
-	sed -e '1,/# Remarks:/d' -e '/^[^#]/,$$d' -e '/^$$/,$$d' -e 's/^#//' <$*.mk >$@

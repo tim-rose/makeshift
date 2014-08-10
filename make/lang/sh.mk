@@ -3,42 +3,24 @@
 #
 # Contents:
 # %.sh:                --Rules for installing shell scripts, libraries
-# %.awk:               --Rules for installing awk scripts
-# %.sed:               --Rules for installing sed scripts
 # shell-build:         --Make scripts "executable".
 # shell-src-var-defined: --Test if "enough" of the shell SRC vars. are defined.
 # shell-clean:         --Remove script executables.
+# awk-tidy:            --reformat/cleanup awk scripts
 # shell-toc:           --Build the table-of-contents for shell, awk files.
 # shell-src:           --shell-specific customisations for the "src" target.
 # todo:                --Report unfinished work (identified by keyword comments)
 #
+shlibdir      = $(exec_prefix)/lib/sh/$(subdir)
 SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
 #
 # %.sh: --Rules for installing shell scripts, libraries
 #
-%:			%.sh;	$(INSTALL_PROGRAM) $? $@
-$(bindir)/%:		%.sh;	$(INSTALL_PROGRAM) $? $@
-$(sbindir)/%:		%.sh;	$(INSTALL_PROGRAM) $? $@
-$(libexecdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
-$(libexecdir)/%.shl:	%.shl;	$(INSTALL_FILE) $? $@
-$(libdir)/%.shl:	%.shl;	$(INSTALL_FILE) $? $@
-$(sysconfdir)/%:	%.sh;	$(INSTALL_PROGRAM) $? $@
+%:			%.sh;	$(INSTALL_PROGRAM) $*.sh $@
+%:			%.awk;	$(INSTALL_PROGRAM) $*.awk $@
+%:			%.sed;	$(INSTALL_PROGRAM) $*.sed $@
+$(shlibdir)/%.shl:	%.shl;	$(INSTALL_FILE) $*.shl $@
 
-#
-# %.awk: --Rules for installing awk scripts
-#
-%:			%.awk;	$(INSTALL_SCRIPT) $? $@
-$(bindir)/%:		%.awk;	$(INSTALL_SCRIPT) $? $@
-$(libexecdir)/%:	%.awk;	$(INSTALL_PROGRAM) $? $@
-$(libdir)/%.awk:	%.awk;	$(INSTALL_FILE) $? $@
-
-#
-# %.sed: --Rules for installing sed scripts
-#
-%:			%.sed;	$(INSTALL_SCRIPT) $? $@
-$(bindir)/%:		%.sed;	$(INSTALL_SCRIPT) $? $@
-$(libexecdir)/%:	%.sed;	$(INSTALL_PROGRAM) $? $@
-$(libdir)/%.sed:        %.sed;	$(INSTALL_FILE) $? $@
 
 #
 # shell-build: --Make scripts "executable".
@@ -50,9 +32,11 @@ build:	$(SHELL_TRG)
 # shell-src-var-defined: --Test if "enough" of the shell SRC vars. are defined.
 #
 shell-src-var-defined:
-	@test -n "$(SH_SRC)" -o -n "$(SHL_SRC)" -o -n "$(AWK_SRC)" -o -n "$(SED_SRC)" || \
-	    { $(VAR_UNDEFINED) "SH_SRC, SHL_SRC, AWK_SRC or SED_SRC"; }
-
+	@if [ -z '$(SH_SRC)$(SHL_SRC)$(AWK_SRC)$(SED_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "SH_SRC, SHL_SRC, AWK_SRC or SED_SRC"; \
+	    echo 'run "make src" to define them'; \
+	    false; \
+	fi >&2
 #
 # shell-clean: --Remove script executables.
 #

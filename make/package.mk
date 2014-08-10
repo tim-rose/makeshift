@@ -8,10 +8,10 @@
 # package-vars-ok: --Test that "PACKAGE" and other variables are defined.
 #
 # Remarks:
-# The package module sets up some common definitions and then passes 
+# The package module sets up some common definitions and then passes
 # off to a package-specific makefile, which must define a top-level
 # package-building rule named after the package type (i.e. "deb",
-# "rpm", etc.). 
+# "rpm", etc.).
 #
 PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
@@ -70,5 +70,3 @@ publish:	var-defined[PACKAGE_DIR] $(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE)
 $(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE):	$(PACKAGE_DIR) $(PVRA).$(PKG_TYPE)
 	cp $(PVRA).$(PKG_TYPE) $@;
 	cd $(PACKAGE_DIR); $(MAKE) -f $(DEVKIT_HOME)/include/repository.mk clean all
-
-+help:  +help-package

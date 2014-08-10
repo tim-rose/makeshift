@@ -8,30 +8,31 @@
 # file-writable[%]:   --Test if a file is writable
 # file-exists[%]:     --Test if a file exists.
 # dir-exists[%]:      --Test if a directory exists.
-# mkdir[%]:           --Create a directory if needed.
+# mkdir[%]:           --Create a directory.
 #
 # Remarks:
-# This file contains various validation tests of the makefile system
-# in the form of make targets.
+# The "valid" module is a library of validation tests in the form of
+# make targets.  These are used by various metarules in the build
+# system.
 #
-VAR_UNDEFINED = var_undefined() { \
-	echo "Error: $$1 variable(s) not defined"; shift; \
-	for msg in "$$@"; do echo "$$msg"; done; \
-	false; \
-    }; var_undefined
+VAR_UNDEF = 'Error: %s variable(s) not defined\n'
 #
 # var-defined[%]: --Test that a variable is defined.
 #
 var-defined[%]:
-	@test -n '$(value $*)' || { $(VAR_UNDEFINED) "$*"; }
-
+	@if [ -z '$(value $*)' ]; then \
+	    printf $VAR_UNDEF "$*"; \
+	    false; \
+	fi >&2
 #
 # src-var-defined[%]: --Test that a source variable is defined.
 #
 src-var-defined[%]:
-	@test -n '$(value $*)' || \
-	{ $(VAR_UNDEFINED) "$*" 'run "make src" to define it'; }
-
+	@if [ -z '$(value $*)' ]; then \
+	    printf $VAR_UNDEF "$*"; \
+	    echo 'run "make src" to define it'; \
+	    false; \
+	fi >&2
 #
 # absolute-path[%] --Test that a string defines an absolute file path.
 #
@@ -70,7 +71,11 @@ dir-exists[%]:
 	fi
 
 #
-# mkdir[%]: --Create a directory if needed.
+# mkdir[%]: --Create a directory.
+#
+# Remarks:
+# This rule doesn't work as a dependency in the simple sense, but is
+# still useful as an abstraction to portably make a directory.
 #
 mkdir[%]:
 	@if [ ! -d "$*" ]; then \

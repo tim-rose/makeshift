@@ -15,22 +15,34 @@
 # tags:              --Build vi, emacs tags files.
 # todo:              --Report "unfinished work" comments in C files.
 #
+# Remarks:
+# The "lang/c" module provides support for the "C" programming language.
+# It requires some of the following variables to be defined:
+#
+#  * H_SRC	--C header files
+#  * C_SRC	--C source files
+#  * C_MAIN_SRC	--C source files that define a main() function.
+#
 -include $(C_SRC:%.c=$(archdir)/%-depend.mk)
 
-C_DEFS	= $(C_OS_DEFS) $(C_ARCH_DEFS) -D__$(OS)__ -D__$(ARCH)__
-C_FLAGS = $(C_OS_FLAGS) $(C_ARCH_FLAGS) $(CFLAGS)
+C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS) -D__$(OS)__ -D__$(ARCH)__
+C_FLAGS = $(OS.CFLAGS) $(ARCH.CFLAGS) $(LOCAL.CFLAGS) $(TARGET.CFLAGS) $(CFLAGS)
 C_WARN_FLAGS = -pedantic -Wall -Wextra -Wmissing-prototypes \
 	-Wmissing-declarations 	-Wimplicit -Wpointer-arith \
 	-Wwrite-strings -Waggregate-return -Wnested-externs \
 	-Wcast-align -Wshadow -Wstrict-prototypes -Wredundant-decls \
         -Wno-gnu-zero-variadic-macro-arguments \
-	$(C_OS_WARN_FLAGS) $(C_ARCH_WARN_FLAGS)
+	$(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS)
 
-C_CPP_FLAGS = $(CPPFLAGS) -I$(includedir) $(C_OS_CPP_FLAGS) $(C_OS_ARCH_FLAGS)
-C_ALL_FLAGS = -std=c99 $(C_CPP_FLAGS) $(C_DEFS) $(C_FLAGS)
+C_CPPFLAGS = $(CPPFLAGS) -I$(includedir) \
+	$(OS.C_CPPFLAGS) $(ARCH.CPPFLAGS) \
+	$(LOCAL.C_CPPFLAGS) $(TARGET.C_CPPFLAGS)
+C_ALL_FLAGS = -std=c99 $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
-C_LD_FLAGS = -L$(libdir) $(LD_OS_FLAGS) $(LD_ARCH_FLAGS) $(LDFLAGS)
-C_LD_LIBS	= $(LOADLIBES) $(LDLIBS)
+C_LDFLAGS = -L$(libdir) $(OS.LDFLAGS) $(ARCH.LDFLAGS) \
+	$(LOCAL.LDFLAGS) $(TARGET.LDFLAGS) $(LDFLAGS)
+C_LDLIBS = $(LOADLIBES) $(LDLIBS) \
+	$(OS.LDLIBS) $(ARCH.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
 
 C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
@@ -40,10 +52,10 @@ C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 #
 $(archdir)/%: %.c $(archdir)/%.o
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS) $(C_LD_FLAGS) $(archdir)/$*.o $(C_LD_LIBS)
+	@echo $(CC) $(C_ALL_FLAGS) $(C_LDFLAGS) $(archdir)/$*.o $(C_LDLIBS)
 
-	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_LD_FLAGS) \
-	    $(archdir)/$*.o $(C_LD_LIBS)
+	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_LDFLAGS) \
+	    $(archdir)/$*.o $(C_LDLIBS)
 
 #
 # %.o: --Compile a C file into an arch-specific sub-directory.
@@ -80,10 +92,11 @@ build:	$(C_OBJ) $(C_MAIN)
 # c-src-var-defined: --Test if "enough" of the C SRC variables are defined
 #
 c-src-var-defined:
-	$(ECHO_TARGET)
-	@test -n "$(C_SRC)" -o -n "$(H_SRC)" || \
-	    { $(VAR_UNDEFINED) "C_SRC or H_SRC"; }
-
+	@if [ -z '$(C_SRC)$(H_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "C_SRC, H_SRC"; \
+	    echo 'run "make src" to define them'; \
+	    false; \
+	fi >&2
 #
 # clean: --Remove objects and executables created from C files.
 #

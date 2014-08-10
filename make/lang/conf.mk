@@ -33,9 +33,11 @@ pre-build:	conf-src-var-defined
 # conf-src-var-defined: --Test if "enough" of the conf SRC vars. are defined.
 #
 conf-src-var-defined:
-	@test -n "$(CONF_SRC)" -o -n "$(CFG_SRC)" || \
-	    { $(VAR_UNDEFINED) "CONF_SRC or CFG_SRC"; }
-
+	@if [ -z '$(CONF_SRC)$(CFG_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "CONF_SRC, CFG_SRC"; \
+	    echo 'run "make src" to define them'; \
+	    false; \
+	fi >&2
 #
 # conf-toc: --Build the table-of-contents for conf, awk files.
 #
@@ -50,7 +52,7 @@ conf-toc:
 #
 src:	conf-src
 .PHONY:	conf-src
-conf-src:	
+conf-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qn CONF_SRC *.conf
 	@mk-filelist -qn CFG_SRC *.cfg
@@ -58,7 +60,7 @@ conf-src:
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: conf-todo
 todo:	conf-todo
 conf-todo:

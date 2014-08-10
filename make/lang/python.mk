@@ -7,13 +7,18 @@
 # python-src:   --python-specific customisations for the "src" target.
 # todo:         --Report unfinished work (identified by keyword comments)
 #
+# Remarks:
+# I haven't used python yet...
+#
+
+#
 # %.py:		--Rules for installing python scripts
 #
+pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
 PY_TRG = $(PY_SRC:%.py=%)
 
-%:			%.py;	@$(INSTALL_SCRIPT) $? $@
-$(bindir)/%:		%.py;	@$(INSTALL_SCRIPT) $? $@
-$(libexecdir)/%:	%.py;	@$(INSTALL_SCRIPT) $? $@
+%:			%.py;	$(INSTALL_PROGRAM) $? $@
+$(pythonlibdir)/%.py:	%.py;	$(INSTALL_FILE) $? $@
 
 pre-build:	src-var-defined[PY_SRC]
 build:	$(PY_TRG)

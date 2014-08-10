@@ -6,51 +6,56 @@
 # %.o:      --Compile a C++ file into an arch-specific sub-directory.
 # build[%]: --Build a C++ file's related object.
 # %.hpp:    --Install a C++ header (.hpp) file.
-# build:    --Build the C++ files (as defined by CXX_SRC, CXX_MAIN_SRC)
+# build:    --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
 # clean:    --Remove objects and executables created from C++ files.
 # tidy:     --Reformat C++ files consistently.
 # toc:      --Build the table-of-contents for C++ files.
-# src:      --Update the CXX_SRC, HXX_SRC, CXX_MAIN_SRC macros.
+# src:      --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
 # tags:     --Build vi, emacs tags files for C++ files.
 # todo:     --Find "unfinished work" comments in C++ files.
 #
--include $(CXX_SRC:%.cpp=$(archdir)/%-depend.mk)
+-include $(C++_SRC:%.cpp=$(archdir)/%-depend.mk)
+C++	= $(CXX)
+C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS) -D__$(OS)__ -D__$(ARCH)__
+C++_FLAGS = $(OS.C++FLAGS) $(ARCH.C++FLAGS) \
+	$(LOCAL.C++FLAGS) $(TARGET.C++FLAGS) \
+	$(C++FLAGS) $(CFLAGS)
 
-CXX_DEFS = $(CXX_OS_DEFS) $(CXX_ARCH_DEFS) -D__$(OS)__ -D__$(ARCH)__
-CXX_FLAGS = $(CXX_OS_FLAGS) $(CXX_ARCH_FLAGS) $(CFLAGS) $(CXXFLAGS)
-
-CXX_WARN_FLAGS  = -O -pedantic -Wall -Wextra \
+C++_WARN_FLAGS  = -O -pedantic -Wall -Wextra \
         -Wpointer-arith -Wwrite-strings \
         -Wcast-align -Wshadow -Wredundant-decls \
 	-Wno-variadic-macros \
-	$(CXX_OS_WARN_FLAGS) $(CXX_ARCH_WARN_FLAGS)
+	$(OS.C++_WARN_FLAGS) $(ARCH.C++_WARN_FLAGS)
 
-CXX_CPP_FLAGS = $(CPPFLAGS) -I$(includedir) $(CXX_OS_CPP_FLAGS) $(CXX_OS_ARCH_FLAGS)
-CXX_ALL_FLAGS = -std=c++0x $(CXX_CPP_FLAGS) $(CXX_DEFS) $(CXX_FLAGS)
+C++_CPPFLAGS = $(CPPFLAGS) -I$(includedir) \
+	$(OS.C++_CPPFLAGS) $(ARCH.C++_CPPFLAGS) \
+	$(LOCAL.C++_CPPFLAGS) $(TARGET.C++_CPPFLAGS)
+C++_ALL_FLAGS = -std=c++0x $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
-CXX_LD_FLAGS = -L$(libdir) $(LDFLAGS)
-CXX_LD_LIBS = $(LOADLIBES) $(LDLIBS)
+C++_LDFLAGS = -L$(libdir) $(LDFLAGS)
+C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
+	$(OS.LDLIBS) $(ARCH.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
 
-CXX_OBJ	= $(CXX_SRC:%.cpp=$(archdir)/%.o)
-CXX_MAIN = $(CXX_MAIN_SRC:%.cpp=$(archdir)/%)
+C++_OBJ	= $(C++_SRC:%.cpp=$(archdir)/%.o)
+C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
 
 #
 # main: --Build a program from a file that contains "main".
 #
 $(archdir)/%: %.cpp $(archdir)/%.o
 	$(ECHO_TARGET)
-	@echo $(CXX) $(CXX_ALL_FLAGS) $(CXX_LD_FLAGS) \
-	    $(archdir)/$*.o $(CXX_LD_LIBS)
-	@$(CXX) -o $@ $(CXX_WARN_FLAGS) $(CXX_ALL_FLAGS) $(CXX_LD_FLAGS) \
-	    $(archdir)/$*.o $(CXX_LD_LIBS)
+	@echo $(C++) $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
+	    $(archdir)/$*.o $(C++_LDLIBS)
+	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
+	    $(archdir)/$*.o $(C++_LDLIBS)
 
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
 #
 $(archdir)/%.o: %.cpp mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@echo $(CXX) $(CXX_ALL_FLAGS) -c -o $(archdir)/$*.o $<
-	@$(CXX) $(CXX_WARN_FLAGS) $(CXX_ALL_FLAGS) -c -o $@ \
+	@echo $(C++) $(C++_ALL_FLAGS) -c -o $(archdir)/$*.o $<
+	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ \
 	    -MMD -MF $(archdir)/$*-depend.mk $<
 
 #
@@ -66,64 +71,73 @@ build[%.cpp]:   $(archdir)/%.o; $(ECHO_TARGET)
 $(includedir)/%.hpp:	%.hpp;		$(INSTALL_FILE) $? $@
 
 #
-# build: --Build the C++ files (as defined by CXX_SRC, CXX_MAIN_SRC)
+# build: --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
 #
-pre-build:	src-var-defined[CXX_SRC]
-build:	$(CXX_OBJ) $(CXX_MAIN)
+pre-build:	src-var-defined[C++_SRC]
+build:	$(C++_OBJ) $(C++_MAIN)
 
+#
+# c++-src-var-defined: --Test if "enough" of the C++ SRC variables are defined
+#
+c++-src-var-defined:
+	@if [ -z '$(C++_SRC)$(H++_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "C++_SRC, H++_SRC"; \
+	    echo 'run "make src" to define them'; \
+	    false; \
+	fi >&2
 #
 # clean: --Remove objects and executables created from C++ files.
 #
-clean:	cxx-clean
-.PHONY:	cxx-clean
-cxx-clean:
+clean:	c++-clean
+.PHONY:	c++-clean
+c++-clean:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/*.o $(CXX_MAIN)
+	$(RM) $(archdir)/*.o $(C++_MAIN)
 
 #
 # tidy: --Reformat C++ files consistently.
 #
-tidy:	cxx-tidy
-.PHONY:	cxx-tidy
-cxx-tidy:
+tidy:	c++-tidy
+.PHONY:	c++-tidy
+c++-tidy:
 	$(ECHO_TARGET)
-	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(HXX_SRC) $(CXX_SRC)
+	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(H++_SRC) $(C++_SRC)
 #
 # toc: --Build the table-of-contents for C++ files.
 #
-.PHONY: cxx-toc
-toc:	cxx-toc
-cxx-toc:
+.PHONY: c++-toc
+toc:	c++-toc
+c++-toc:
 	$(ECHO_TARGET)
-	mk-toc $(HXX_SRC) $(CXX_SRC)
+	mk-toc $(H++_SRC) $(C++_SRC)
 
 #
-# src: --Update the CXX_SRC, HXX_SRC, CXX_MAIN_SRC macros.
+# src: --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
 #
-src:	cxx-src
-.PHONY:	cxx-src
-cxx-src:
+src:	c++-src
+.PHONY:	c++-src
+c++-src:
 	$(ECHO_TARGET)
-	@mk-filelist -qn CXX_SRC *.cpp
-	@mk-filelist -qn CXX_MAIN_SRC \
+	@mk-filelist -qn C++_SRC *.cpp
+	@mk-filelist -qn C++_MAIN_SRC \
 		$$(grep -l '^ *int *main(' *.cpp 2>/dev/null)
-	@mk-filelist -qn HXX_SRC *.hpp
+	@mk-filelist -qn H++_SRC *.hpp
 
 #
 # tags: --Build vi, emacs tags files for C++ files.
 #
-.PHONY: cxx-tags
-tags:	cxx-tags
-cxx-tags:
+.PHONY: c++-tags
+tags:	c++-tags
+c++-tags:
 	$(ECHO_TARGET)
-	ctags 	$(HXX_SRC) $(CXX_SRC) && \
-	etags	$(HXX_SRC) $(CXX_SRC); true
+	ctags 	$(H++_SRC) $(C++_SRC) && \
+	etags	$(H++_SRC) $(C++_SRC); true
 
 #
 # todo: --Find "unfinished work" comments in C++ files.
 #
-.PHONY: cxx-todo
-todo:	cxx-todo
-cxx-todo:
+.PHONY: c++-todo
+todo:	c++-todo
+c++-todo:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(HXX_SRC) $(CXX_SRC) /dev/null || true
+	@$(GREP) -e TODO -e FIXME -e REVISIT $(H++_SRC) $(C++_SRC) /dev/null || true

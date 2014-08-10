@@ -26,5 +26,3 @@ distclean:	clean-tap
 .PHONY:		clean-tap
 clean-tap:
 	$(RM) $(TAP_TRG)
-
-+help:  +help-tap

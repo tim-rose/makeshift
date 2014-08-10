@@ -7,13 +7,10 @@
 # ruby-src:   --ruby-specific customisations for the "src" target.
 # todo:       --Report unfinished work (identified by keyword comments)
 #
-# %.rb:		--Rules for installing ruby scripts
-#
+rubylibdir      = $(exec_prefix)/lib/ruby/$(subdir)
 RB_TRG = $(RB_SRC:%.rb=%)
 
-%:			%.rb;	@$(INSTALL_SCRIPT) $? $@
-$(bindir)/%:		%.rb;	@$(INSTALL_SCRIPT) $? $@
-$(libexecdir)/%:	%.rb;	@$(INSTALL_SCRIPT) $? $@
+$(rubylibdir)/%.rb:	%.rb;	$(INSTALL_FILE) $? $@
 
 pre-build:	src-var-defined[RB_SRC]
 build:	$(RB_TRG)

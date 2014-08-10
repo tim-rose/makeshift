@@ -4,6 +4,7 @@
 # Contents:
 # libdir/%.a:          --Install a static (.a)library
 # pre-build:           --Install the include files
+# lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
 # %/lib.a:             --Build the sub-librar(ies) in its subdirectory.
 # build:               --Build this directory's library.
 # lib-install-lib:     --Install the library (and include files).
@@ -15,12 +16,12 @@
 # src:                 --Get a list of sub-directories that are libraries.
 #
 # Remarks:
-# This is an attempt to manage a collection of object files (i.e. ".o" files)
-# as an object library (i.e. ".a").  The library can be structured
-# as a collection of "sub" libraries built from code in sub-directories.
-# The top-level directory delegates building of the sub-libraries to
-# recursive make targets, and then assembles them all into one
-# master library.
+# The "library" module provides rules for managing a collection of
+# object files (i.e. ".o" files) as an object library (i.e. ".a").
+# The library can be structured as a collection of "sub" libraries
+# built from code in sub-directories.  The top-level directory
+# delegates building of the sub-libraries to recursive make targets,
+# and then assembles them all into one master library.
 #
 # These rules require that following variables are defined:
 #
@@ -42,7 +43,6 @@ $(libdir)/%.a:	$(archdir)/%.a
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 	$(RANLIB) $@
-
 #
 # pre-build: --Install the include files
 #
@@ -52,10 +52,10 @@ pre-build:      lib-src-var-defined $(LIB_INCLUDE_SRC)
 # lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
 #
 lib-src-var-defined:
-	$(ECHO_TARGET)
-	@test -n "$(LIB_OBJ)" -o -n "$(SUBLIB_SRC)" || \
-	    { $(VAR_UNDEFINED) "LIB_OBJ or SUBLIB_SRC"; }
-
+	@if [ -z '$(LIB_OBJ)$(SUBLIB_SRC)' ]; then \
+	    printf $(VAR_UNDEF) 'LIB_OBJ or SUBLIB_SRC'; \
+	    false; \
+	fi >&2
 #
 # %/lib.a: --Build the sub-librar(ies) in its subdirectory.
 #
@@ -76,8 +76,6 @@ lib-install-lib:	$(libdir)/lib$(LIB).a lib-install-include
 lib-install-include:	$(H_SRC:%.h=$(includedir)/%.h)
 lib-install-include:	$(HXX_SRC:%.hpp=$(includedir)/%.hpp)
 lib-install-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3)
-
-$(libdir)/lib$(LIB).a:	$(archdir)/lib$(LIB).a
 
 #
 # archdir/%.a: --(re)build a library.
@@ -119,5 +117,3 @@ lib-src:
 	@mk-filelist -qpn SUBLIB_SRC $$( \
 	    grep -l '^include.* library.mk' */Makefile 2>/dev/null | \
 	    sed -e 's|Makefile|$$(archdir)/lib.a|g')
-
-+help:  +help-library

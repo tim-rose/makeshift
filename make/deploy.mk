@@ -61,5 +61,3 @@ deploy-clean:
 	$(RM) -r .deploy
 
 distclean:	deploy-clean
-
-+help:  +help-deploy
