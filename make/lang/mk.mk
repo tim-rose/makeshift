@@ -2,9 +2,7 @@
 # MK.MK --devkit rules for manipulating ".mk" files.
 #
 # Contents:
-# todo:      --Report unfinished work (identified by keyword comments)
-# show-env:  --Print the current make environment.
-# show-dirs: --Print the current make directory macros.
+# todo: --Report unfinished work (identified by keyword comments)
 #
 # Remarks:
 # "lang/mk" contains rules for managing makefiles.  These are just
