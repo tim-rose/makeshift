@@ -17,9 +17,9 @@
 -include $(C++_SRC:%.cpp=$(archdir)/%-depend.mk)
 C++	= $(CXX)
 C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS) -D__$(OS)__ -D__$(ARCH)__
-C++_FLAGS = $(OS.C++FLAGS) $(ARCH.C++FLAGS) \
-	$(LOCAL.C++FLAGS) $(TARGET.C++FLAGS) \
-	$(C++FLAGS) $(CFLAGS)
+C++_FLAGS = $(OS.CXXFLAGS) $(ARCH.CXXFLAGS) \
+	$(LOCAL.CXXFLAGS) $(TARGET.CXXFLAGS) \
+	$(CXXFLAGS) $(CFLAGS) $(CXXFLAGS)
 
 C++_WARN_FLAGS  = -O -pedantic -Wall -Wextra \
         -Wpointer-arith -Wwrite-strings \
