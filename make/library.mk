@@ -31,7 +31,7 @@
 #
 LIB_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
 LIB_INCLUDE_SRC = $(H_SRC:%.h=$(LIB_INCLUDEDIR)/%.h) \
-    $(HXX_SRC:%.hpp=$(LIB_INCLUDEDIR)/%.hpp)
+    $(H++_SRC:%.hpp=$(LIB_INCLUDEDIR)/%.hpp)
 
 $(LIB_INCLUDEDIR)/%.h:		%.h;		$(INSTALL_FILE) $*.h $@
 $(LIB_INCLUDEDIR)/%.hpp:	%.hpp;		$(INSTALL_FILE) $*.hpp $@
@@ -74,7 +74,7 @@ build:	var-defined[LIB_ROOT] var-defined[LIB] lib-src-var-defined \
 #
 lib-install-lib:	$(libdir)/lib$(LIB).a lib-install-include
 lib-install-include:	$(H_SRC:%.h=$(includedir)/%.h)
-lib-install-include:	$(HXX_SRC:%.hpp=$(includedir)/%.hpp)
+lib-install-include:	$(H++_SRC:%.hpp=$(includedir)/%.hpp)
 lib-install-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3)
 
 #
