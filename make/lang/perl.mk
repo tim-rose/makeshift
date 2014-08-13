@@ -31,7 +31,7 @@ build:	$(PERL_TRG)
 #
 perl-src-var-defined:
 	@if [ -z '$(PL_SRC)$(PM_SRC)$(T_SRC)' ]; then \
-	    printf $(VAR_UNDEF) "PL_SRC, PM_SRC or T_SRC"
+	    printf $(VAR_UNDEF) "PL_SRC, PM_SRC or T_SRC" \
 	    echo 'run "make src" to define them'; \
 	    false; \
 	fi >&2
