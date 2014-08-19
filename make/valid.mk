@@ -21,7 +21,7 @@ VAR_UNDEF = 'Error: %s variable(s) not defined\n'
 #
 var-defined[%]:
 	@if [ -z '$(value $*)' ]; then \
-	    printf $VAR_UNDEF "$*"; \
+	    printf $(VAR_UNDEF) "$*"; \
 	    false; \
 	fi >&2
 #
@@ -29,7 +29,7 @@ var-defined[%]:
 #
 src-var-defined[%]:
 	@if [ -z '$(value $*)' ]; then \
-	    printf $VAR_UNDEF "$*"; \
+	    printf $(VAR_UNDEF) "$*"; \
 	    echo 'run "make src" to define it'; \
 	    false; \
 	fi >&2

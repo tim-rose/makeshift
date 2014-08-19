@@ -20,7 +20,8 @@ SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
 %:			%.awk;	$(INSTALL_PROGRAM) $*.awk $@
 %:			%.sed;	$(INSTALL_PROGRAM) $*.sed $@
 $(shlibdir)/%.shl:	%.shl;	$(INSTALL_FILE) $*.shl $@
-
+$(shlibdir)/%.awk:	%.awk;	$(INSTALL_FILE) $*.awk $@
+$(shlibdir)/%.sed:	%.sed;	$(INSTALL_FILE) $*.sed $@
 
 #
 # shell-build: --Make scripts "executable".

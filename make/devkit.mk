@@ -35,7 +35,7 @@ SUBDIRS := $(shell find * -type d -prune)
 # ECHO is a shell no-op by default, define it to "echo" for debugging output.
 #
 ECHO = :
-ECHO_TARGET = @$(ECHO) "++ $$PWD $@ < $?"
+ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ < $?"
 
 .SUFFIXES:			# remove default suffix rules
 

@@ -51,7 +51,7 @@ src:	java-src
 .PHONY:	java-src
 java-src:
 	$(ECHO_TARGET)
-	@mk-filelist -qn JAVA_SRC *.java
+	@mk-filelist -qn JAVA_SRC $(find * -name *.java)
 #
 # tags: --Build vi, emacs tags files.
 #
