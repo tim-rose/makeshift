@@ -9,6 +9,4 @@ SHL_SRC = tap.shl
 
 include devkit.mk
 
-installdirs:	$(bindir)
 install:	$(SHL_SRC:%=$(libexecdir)/%)
-

@@ -11,7 +11,6 @@ include devkit.mk
 $(sysconfdir)/%:	%;	$(INSTALL_FILE) $< $@
 $(sysconfdir)/.%:	_%;	$(INSTALL_FILE) $< $@
 
-installdirs:		$(sysconfdir)
 install:		$(CONF_SRC:%=$(sysconfdir)/%)
 install:		$(ETC_SRC:_%=$(sysconfdir)/.%)
 

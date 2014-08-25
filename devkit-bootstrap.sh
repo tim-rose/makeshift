@@ -63,7 +63,7 @@ export prefix=$(
     prompt "where will devkit install software?" ${prefix:-/usr/local}) || exit
 export VCS=$(
     prompt 'what version-control system are you using?' ${VCS:-'git'}) || exit
-if ! make -I $PWD/make installdirs install; then
+if ! make -I $PWD/make install; then
     echo "whoops.  It looks like that didn't work."
 else
     cat <<EOF

@@ -17,7 +17,6 @@ SH_SRC = devkit-bootstrap.sh
 
 include devkit.mk
 install:
-installdirs:
 
 targets.mk:
 	cd make && $(MAKE) targets.mk
