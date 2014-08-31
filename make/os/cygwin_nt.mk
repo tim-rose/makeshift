@@ -1,5 +1,5 @@
 #
-# WINDOWS_NT.MK	--Macros and definitions for (Cygwin) Windows_NT
+# CYGWIN_NT.MK	--Macros and definitions for (Cygwin) Windows_NT
 #
 # Remarks:
 #
@@ -15,4 +15,3 @@ GREP		= grep
 indent          = indent
 
 PKG_TYPE	= deb
-
