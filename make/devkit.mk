@@ -162,11 +162,11 @@ include vcs/$(VCS).mk
 #
 +vars:   $(.VARIABLES:%=+var[%])
 +var[%]:
-	@echo "# $(origin $*) variable \"$*\":"
-	@echo "$* = '$($*)'"
+	@$(ECHO) "# $(origin $*) variable \"$*\":"
+	@echo "$*='$($*)'"
 +var[ECHO_TARGET]:
 	@echo "# $(origin ECHO_TARGET) variable \"ECHO_TARGET\":"
-	@echo "ECHO_TARGET = (unprintable)"
+	@echo "ECHO_TARGET=(unprintable)"
 
 #
 # +help: --Output some help text extracted from the included makefiles.

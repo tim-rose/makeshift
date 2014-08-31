@@ -19,6 +19,8 @@ $(includedir)/%:	%;		$(INSTALL_FILE) $< $@
 install:		$(MK_SRC:%.mk=$(includedir)/%.mk)
 install:		$(includedir)/targets.mk
 
+mk-src: rm-targets.mk
+rm-targets.mk:		;		@$(RM) targets.mk
 #
 # tarkets.mk:	--Build the standard auto-recursive targets file.
 #
@@ -26,9 +28,7 @@ install:		$(includedir)/targets.mk
 # The auto-recursive rule pattern is a bit tedious to write by hand,
 # so I've written a make target to generate them automatically.
 #
-targets.mk:	$(includedir)/targets.mk
-$(includedir)/targets.mk:	Makefile
-$(includedir)/targets.mk:
+targets.mk:
 	@$(ECHO) "++ make[$@]"
 	@printf "#\n# $@ --auto-recursive targets, generated %s\n#\n" "$$(date '+%c')" > $@
 	@for t in $(STD_TRG) $(DEVKIT_TRG); do \
