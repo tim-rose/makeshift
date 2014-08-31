@@ -59,7 +59,6 @@ It looks like your system might be:
     OS=$(uname -s|tr A-Z a-z|sed -e 's/-.*//')
     ARCH=$(uname -m)
 EOF
-    if [ "$OS" ]; then return 0; fi
 }
 
 if install_self && install_all; then
