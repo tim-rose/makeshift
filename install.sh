@@ -15,8 +15,8 @@
 #
 mk_args="OS=linux ARCH=all $*"
 
-install_self() ( cd make && make -I$PWD $mk_args )
-install_all() { make -I$PWD/make install $mk_args; }
+install_self() ( cd make && make build -I$PWD $mk_args )
+install_all() { make -I$PWD/make build install $mk_args; }
 
 prefix_warning()
 {
