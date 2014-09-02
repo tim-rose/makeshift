@@ -4,7 +4,6 @@
 # Remarks:
 # THe "toc" target cannot be run until things have been installed in DEV_HOME.
 #
-MAKEFLAGS=-I..
 MK_SRC = all.mk arm.mk avr.mk i386.mk i386_64.mk i686.mk i686_64.mk \
     x86_64.mk
 ALL_SRC = $(MK_SRC) .mk

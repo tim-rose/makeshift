@@ -4,7 +4,6 @@
 # Remarks:
 # THe "toc" target cannot be run until things have been installed in DEV_HOME.
 #
-MAKEFLAGS=-I..
 MK_SRC = git.mk svn.mk
 ALL_SRC = $(MK_SRC) .mk
 subdir	= vcs

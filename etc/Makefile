@@ -2,7 +2,6 @@
 # Makefile --Build rules the make directory of devkit.
 #
 SRC_LANG	= conf
-MAKEFLAGS = -I ../make
 CONF_SRC = subversion.conf tidy.conf
 ETC_SRC = _astylerc _cvsignore _cvsrc _indent.pro _perltidyrc
 

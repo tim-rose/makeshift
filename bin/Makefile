@@ -1,7 +1,6 @@
 #
 # Makefile --Build rules devkit/bin.
 #
-MAKEFLAGS = -I ../make
 SRC_LANG	= sh
 
 AWK_SRC = awk-tidy.awk
