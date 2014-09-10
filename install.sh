@@ -18,27 +18,6 @@ mk_args="OS=linux ARCH=all $*"
 install_self() ( cd make && make build -I$PWD $mk_args )
 install_all() { make -I$PWD/make build install $mk_args; }
 
-prefix_warning()
-{
-    if [ "$prefix" != '/usr/local' ]; then
-    cat <<EOF
-
-You have installed devkit into "$prefix".
-To use the devkit you just installed you will need to invoke make as:
-
-    make -I$prefix
-EOF
-    fi
-    cat <<EOF
-
-Some of the tool-related targets will reference configuration
-files in "$prefix/etc".  For these targets to work, you will need to
-define the DEVKIT_HOME variable, e.g.:
-
-    export DEVKIT_HOME=$prefix
-EOF
-}
-
 os_warning()
 {
     cat <<EOF
@@ -58,6 +37,27 @@ or
 It looks like your system might be:
     OS=$(uname -s|tr A-Z a-z|sed -e 's/-.*//')
     ARCH=$(uname -m)
+EOF
+}
+
+prefix_warning()
+{
+    if [ "$prefix" != '/usr/local' ]; then
+    cat <<EOF
+
+You have installed devkit into "$prefix".
+To use the devkit you just installed you will need to invoke make as:
+
+    make -I$prefix
+EOF
+    fi
+    cat <<EOF
+
+Some of the tool-related targets will reference configuration
+files in "$prefix/etc".  For these targets to work, you will need to
+define the DEVKIT_HOME variable, e.g.:
+
+    export DEVKIT_HOME=$prefix
 EOF
 }
 
