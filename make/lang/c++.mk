@@ -27,9 +27,10 @@ C++_WARN_FLAGS  = -O -pedantic -Wall -Wextra \
 	-Wno-variadic-macros \
 	$(OS.C++_WARN_FLAGS) $(ARCH.C++_WARN_FLAGS)
 
-C++_CPPFLAGS = $(CPPFLAGS) -I$(includedir) \
+C++_CPPFLAGS = $(CPPFLAGS) \
 	$(OS.C++_CPPFLAGS) $(ARCH.C++_CPPFLAGS) \
-	$(LOCAL.C++_CPPFLAGS) $(TARGET.C++_CPPFLAGS)
+	$(LOCAL.C++_CPPFLAGS) $(TARGET.C++_CPPFLAGS) \
+        -I$(includedir)
 C++_ALL_FLAGS = -std=c++0x $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
 C++_LDFLAGS = -L$(libdir) $(OS.LDFLAGS) $(ARCH.LDFLAGS) \
@@ -61,6 +62,15 @@ $(archdir)/%.o: %.cpp mkdir[$(archdir)]
 	    -MMD -MF $(archdir)/$*-depend.mk $<
 
 #
+# %.o: --Compile an arch-specific C++ file into an arch-specific sub-directory.
+#
+$(archdir)/%.o: $(archdir)/%.cpp
+	$(ECHO_TARGET)
+	@echo $(C++) $(C++_ALL_FLAGS) -c -o $(archdir)/$*.o $<
+	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ \
+	    -MMD -MF $(archdir)/$*-depend.mk $<
+
+#
 # build[%]: --Build a C++ file's related object.
 #
 build[%.cpp]:   $(archdir)/%.o; $(ECHO_TARGET)
@@ -71,11 +81,12 @@ build[%.cpp]:   $(archdir)/%.o; $(ECHO_TARGET)
 # %.hpp: --Install a C++ header (.hpp) file.
 #
 $(includedir)/%.hpp:	%.hpp;		$(INSTALL_FILE) $? $@
+$(includedir)/%.hpp:	$(archdir)/%.hpp;	$(INSTALL_FILE) $? $@
 
 #
 # build: --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
 #
-pre-build:	src-var-defined[C++_SRC]
+pre-build:
 build:	$(C++_OBJ) $(C++_MAIN)
 
 #

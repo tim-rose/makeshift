@@ -153,9 +153,8 @@ devkit-distclean:
 
 include targets.mk valid.mk
 include lang/mk.mk $(SRC_LANG:%=lang/%.mk)
-include os/$(OS).mk
-include arch/$(ARCH).mk
-include vcs/$(VCS).mk
+include os/$(OS).mk arch/$(ARCH).mk
+#include vcs/$(VCS).mk
 
 #
 # var[%]:	--pattern rule to print a make variable.

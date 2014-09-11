@@ -34,9 +34,10 @@ C_WARN_FLAGS = -pedantic -Wall -Wextra -Wmissing-prototypes \
         -Wno-gnu-zero-variadic-macro-arguments \
 	$(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS)
 
-C_CPPFLAGS = $(CPPFLAGS) -I$(includedir) \
+C_CPPFLAGS = $(CPPFLAGS) \
 	$(OS.C_CPPFLAGS) $(ARCH.CPPFLAGS) \
-	$(LOCAL.C_CPPFLAGS) $(TARGET.C_CPPFLAGS)
+	$(LOCAL.C_CPPFLAGS) $(TARGET.C_CPPFLAGS) \
+	-I$(includedir)
 C_ALL_FLAGS = -std=c99 $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
 C_LDFLAGS = -L$(libdir) $(OS.LDFLAGS) $(ARCH.LDFLAGS) \
@@ -72,6 +73,12 @@ $(archdir)/%.o: %.c mkdir[$(archdir)]
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ \
 	    -MMD -MF $(archdir)/$*-depend.mk $<
 
+$(archdir)/%.o: $(archdir)/%.c
+	$(ECHO_TARGET)
+	@echo $(CC) $(C_ALL_FLAGS) -c -o $(archdir)/$*.o $<
+	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ \
+	    -MMD -MF $(archdir)/$*-depend.mk $<
+
 #
 # build[%]: --Build a C file's related object.
 #
@@ -81,11 +88,12 @@ build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 # %.h: --Install a C header (.h) file.
 #
 $(includedir)/%.h:	%.h;		$(INSTALL_FILE) $? $@
+$(includedir)/%.hpp:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 
 #
 # build: --c-specific customisations for the "build" target.
 #
-pre-build:	c-src-var-defined
+pre-build:
 build:	$(C_OBJ) $(C_MAIN)
 
 #

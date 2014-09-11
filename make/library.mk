@@ -36,6 +36,9 @@ LIB_INCLUDE_SRC = $(H_SRC:%.h=$(LIB_INCLUDEDIR)/%.h) \
 $(LIB_INCLUDEDIR)/%.h:		%.h;		$(INSTALL_FILE) $*.h $@
 $(LIB_INCLUDEDIR)/%.hpp:	%.hpp;		$(INSTALL_FILE) $*.hpp $@
 
+$(LIB_INCLUDEDIR)/%.h:		$(archdir)/%.h;	$(INSTALL_FILE) $? $@
+$(LIB_INCLUDEDIR)/%.hpp:	$(archdir)/%.hpp;	$(INSTALL_FILE) $? $@
+
 #
 # libdir/%.a: --Install a static (.a)library
 #
