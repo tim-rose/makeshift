@@ -42,7 +42,19 @@ $(LIB_INCLUDEDIR)/%.hpp:	$(archdir)/%.hpp;	$(INSTALL_FILE) $? $@
 #
 # libdir/%.a: --Install a static (.a)library
 #
+# Remarks:
+# In the process of building, ".a" files are copied around a little,
+# depending on the final composition/breakdown of sub-libraries.
+#
 $(libdir)/%.a:	$(archdir)/%.a
+	$(ECHO_TARGET)
+	$(INSTALL_FILE) $? $@
+	$(RANLIB) $@
+$(libbasedir)/%.a:	$(archdir)/%.a
+	$(ECHO_TARGET)
+	$(INSTALL_FILE) $? $@
+	$(RANLIB) $@
+../$(archdir)/%.a:	$(archdir)/%.a
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 	$(RANLIB) $@
