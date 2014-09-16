@@ -61,7 +61,7 @@ $(libbasedir)/%.a:	$(archdir)/%.a
 #
 # pre-build: --Install the include files
 #
-pre-build:      lib-src-var-defined $(LIB_INCLUDE_SRC)
+pre-build:      lib-src-var-defined $(LIB_INCLUDE_SRC) $(LIB_OBJ)
 
 #
 # lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
