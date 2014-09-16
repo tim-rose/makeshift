@@ -10,43 +10,30 @@
 $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 
 %.html:	%.md
-	if markdown < $*.md >$*-body; then \
+	if markdown $*.md >$*-body; then \
 	    { echo "<html><body>"; cat $*-body; echo "</body></html>"; } >$@ ; \
 	    $(RM) $*-body; \
 	fi
 
-#
-# html-toc: --Build the table-of-contents for shell, awk files.
-#
-.PHONY: html-toc
-toc:	html-toc
-html-toc:
-	$(ECHO_TARGET)
-	mk-toc $(HTML_SRC)
-#
-# html-src: --html-specific customisations for the "src" target.
-#
-src:	html-src
-.PHONY:	html-src
-html-src:	
-	$(ECHO_TARGET)
-	@mk-filelist -qn HTML_SRC *.html
+%.html:	%.mmd
+	multimarkdown $*.mmd > $@
 
+build:	$(MD_SRC:%.md=%.html) $(MMD_SRC:%.mmd=%.html)
 #
-# tidy: --html-specific customisations for the "tidy" target.
+# md-src: --markdown-specific customisations for the "src" target.
 #
-tidy:	html-tidy
-.PHONY:	html-tidy
-html-tidy:
+src:	md-src
+.PHONY:	md-src
+md-src:
 	$(ECHO_TARGET)
-	 tidy -config $(DEVKIT_HOME)/etc/tidy.conf $(HTML_SRC)
+	@mk-filelist -qn MD_SRC *.md
+	@mk-filelist -qn MMD_SRC *.mmd
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
-.PHONY: html-todo
-todo:	html-todo
-html-todo:
+#
+.PHONY: md-todo
+todo:	md-todo
+md-todo:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(HTML_SRC) /dev/null || true
-
+	@$(GREP) -e TODO -e FIXME -e REVISIT $(MD_SRC) $(MMD_SRC) /dev/null || true
