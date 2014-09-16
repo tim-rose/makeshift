@@ -83,6 +83,7 @@ wwwdir 		= $(rootdir)/srv/www/$(subdir)
 
 #libdir		= $(exec_prefix)/lib/$(archdir)	# (GNU std)
 libdir		= $(exec_prefix)/lib/$(subdir)
+libbasedir	= $(exec_prefix)/lib
 infodir		= $(rootdir_opt)/info
 lispdir		= $(rootdir_opt)/share/emacs/site-lisp
 
@@ -154,6 +155,8 @@ devkit-distclean:
 include targets.mk valid.mk
 include lang/mk.mk $(SRC_LANG:%=lang/%.mk)
 include os/$(OS).mk arch/$(ARCH).mk
+-include project/$(PROJECT).mk
+
 #include vcs/$(VCS).mk
 
 #

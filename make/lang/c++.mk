@@ -16,28 +16,31 @@
 #
 -include $(C++_SRC:%.cpp=$(archdir)/%-depend.mk)
 C++	= $(CXX)
-C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS) -D__$(OS)__ -D__$(ARCH)__
-C++_FLAGS = $(OS.CXXFLAGS) $(ARCH.CXXFLAGS) \
-	$(LOCAL.CXXFLAGS) $(TARGET.CXXFLAGS) \
-	$(CXXFLAGS) $(CFLAGS) $(CXXFLAGS)
+C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS)\
+	$(PROJECT.C++_DEFS) $(LOCAL.C++_DEFS) $(TARGET.C++_DEFS) \
 
-C++_WARN_FLAGS  = -O -pedantic -Wall -Wextra \
-        -Wpointer-arith -Wwrite-strings \
-        -Wcast-align -Wshadow -Wredundant-decls \
-	-Wno-variadic-macros \
-	$(OS.C++_WARN_FLAGS) $(ARCH.C++_WARN_FLAGS)
+C++_FLAGS = $(OS.CXXFLAGS) $(ARCH.CXXFLAGS) \
+	$(PROJECT.CXXFLAGS) $(LOCAL.CXXFLAGS) $(TARGET.CXXFLAGS) \
+	$(CFLAGS) $(CXXFLAGS)
+
+C++_WARN_FLAGS  = $(OS.C++_WARN_FLAGS) $(ARCH.C++_WARN_FLAGS) \
+	$(PROJECT.C++_WARN_FLAGS)
 
 C++_CPPFLAGS = $(CPPFLAGS) \
-	$(OS.C++_CPPFLAGS) $(ARCH.C++_CPPFLAGS) \
-	$(LOCAL.C++_CPPFLAGS) $(TARGET.C++_CPPFLAGS) \
+	$(TARGET.C++_CPPFLAGS) $(LOCAL.C++_CPPFLAGS) $(PROJECT.C++_CPPFLAGS) \
+	$(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
         -I$(includedir)
-C++_ALL_FLAGS = -std=c++0x $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
-C++_LDFLAGS = -L$(libdir) $(OS.LDFLAGS) $(ARCH.LDFLAGS) \
-	$(LOCAL.LDFLAGS) $(TARGET.LDFLAGS) $(LDFLAGS)
+C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
+
+C++_LDFLAGS = $(LDFLAGS) \
+	$(ARCH.LDFLAGS) $(OS.LDFLAGS) \
+	$(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) $(PROJECT.LDFLAGS) \
+	-L$(libdir)
 
 C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
-	$(OS.LDLIBS) $(ARCH.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
+	$(OS.LDLIBS) $(ARCH.LDLIBS) \
+	$(PROJECT.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
 
 C++_OBJ	= $(C++_SRC:%.cpp=$(archdir)/%.o)
 C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)

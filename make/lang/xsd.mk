@@ -12,6 +12,8 @@
 # to install ".hpp" files in the "pre-build" phase, just like the library
 # module does.
 #
+-include $(XSD_SRC:%.xsd=$(archdir)/%-depend.mk)
+
 XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
 XSD_H++ = $(XSD_SRC:%.xsd=$(archdir)/%.hpp)
 XSD_C++ = $(XSD_SRC:%.xsd=$(archdir)/%.cpp)
@@ -20,13 +22,16 @@ XSD_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
 XSD_INCLUDE_SRC = $(XSD_H++:$(archdir)/%.hpp=$(XSD_INCLUDEDIR)/%.hpp) \
 	$(XSD_INCLUDEDIR)/XmlSchema.hpp
 
+XSD.FLAGS = $(OS.XSDFLAGS) $(ARCH.XSDFLAGS) \
+	$(PROJECT.XSDFLAGS) $(LOCAL.XSDFLAGS) $(TARGET.XSDFLAGS) $(XSDFLAGS)
+
 $(XSD_INCLUDEDIR)/%.hpp: $(archdir)/%.hpp
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 
 $(archdir)/%.cpp $(archdir)/%.hpp:	%.xsd mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	xsd cxx-tree --output-dir $(archdir) $(XSDFLAGS) --extern-xml-schema $(archdir)/XmlSchema.hpp $*.xsd
+	xsd cxx-tree --output-dir $(archdir) $(XSD.FLAGS) --extern-xml-schema $(archdir)/XmlSchema.hpp $*.xsd
 #
 # build: --xsd-specific customisations for the "build" target.
 #

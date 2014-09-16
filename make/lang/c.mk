@@ -25,25 +25,29 @@
 #
 -include $(C_SRC:%.c=$(archdir)/%-depend.mk)
 
-C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS) -D__$(OS)__ -D__$(ARCH)__
-C_FLAGS = $(OS.CFLAGS) $(ARCH.CFLAGS) $(LOCAL.CFLAGS) $(TARGET.CFLAGS) $(CFLAGS)
-C_WARN_FLAGS = -pedantic -Wall -Wextra -Wmissing-prototypes \
-	-Wmissing-declarations 	-Wimplicit -Wpointer-arith \
-	-Wwrite-strings -Waggregate-return -Wnested-externs \
-	-Wcast-align -Wshadow -Wstrict-prototypes -Wredundant-decls \
-        -Wno-gnu-zero-variadic-macro-arguments \
-	$(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS)
+C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS)\
+	$(PROJECT.C_DEFS) $(LOCAL.C_DEFS) $(TARGET.C_DEFS)
+
+C_FLAGS = $(OS.CFLAGS) $(ARCH.CFLAGS) \
+	$(PROJECT.CFLAGS) $(LOCAL.CFLAGS) $(TARGET.CFLAGS) $(CFLAGS)
+
+C_WARN_FLAGS = $(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS) $(PROJECT.C_WARN_FLAGS)
 
 C_CPPFLAGS = $(CPPFLAGS) \
-	$(OS.C_CPPFLAGS) $(ARCH.CPPFLAGS) \
-	$(LOCAL.C_CPPFLAGS) $(TARGET.C_CPPFLAGS) \
-	-I$(includedir)
-C_ALL_FLAGS = -std=c99 $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
+	$(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) $(PROJECT.C_CPPFLAGS) \
+	$(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
+        -I$(includedir)
 
-C_LDFLAGS = -L$(libdir) $(OS.LDFLAGS) $(ARCH.LDFLAGS) \
-	$(LOCAL.LDFLAGS) $(TARGET.LDFLAGS) $(LDFLAGS)
+C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
+
+C_LDFLAGS = $(LDFLAGS) \
+	$(ARCH.LDFLAGS) $(OS.LDFLAGS) \
+	$(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) $(PROJECT.LDFLAGS) \
+	-L$(libdir)
+
 C_LDLIBS = $(LOADLIBES) $(LDLIBS) \
-	$(OS.LDLIBS) $(ARCH.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
+	$(OS.LDLIBS) $(ARCH.LDLIBS) \
+	$(PROJECT.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
 
 C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
