@@ -89,7 +89,6 @@ $(includedir)/%.hpp:	$(archdir)/%.hpp;	$(INSTALL_FILE) $? $@
 #
 # build: --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
 #
-pre-build:
 build:	$(C++_OBJ) $(C++_MAIN)
 
 #

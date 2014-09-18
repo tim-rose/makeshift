@@ -34,8 +34,8 @@ mk-todo:
 #
 # +dirs: --Print the current make directory macros.
 #
-.PHONY +dirs:
-+dirs:
+.PHONY +stddirs:
++stddirs:
 	@echo "DESTDIR:        $(DESTDIR)"
 	@echo "prefix:         $(prefix)"
 	@echo "opt:            $(opt)"

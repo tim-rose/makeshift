@@ -97,7 +97,6 @@ $(includedir)/%.hpp:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 #
 # build: --c-specific customisations for the "build" target.
 #
-pre-build:
 build:	$(C_OBJ) $(C_MAIN)
 
 #
