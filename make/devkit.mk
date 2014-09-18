@@ -35,7 +35,8 @@ SUBDIRS := $(shell find * -type d -prune)
 # ECHO is a shell no-op by default, define it to "echo" for debugging output.
 #
 ECHO = :
-ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ < $?"
+ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ older-than $?"
+#ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ depends-on $^"
 
 .SUFFIXES:			# remove default suffix rules
 
@@ -112,6 +113,7 @@ $(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
 $(libdir)/%:		%;	$(INSTALL_FILE) $? $@
+$(datadir)/%:		%;	$(INSTALL_FILE) $? $@
 
 #
 # src: --Make sure the src target can write to the Makefile
@@ -173,5 +175,7 @@ include os/$(OS).mk arch/$(ARCH).mk
 #
 # +help: --Output some help text extracted from the included makefiles.
 #
-+help:
-	@mk-help $(MAKEFILE_LIST)
++help:		;	@mk-help $(MAKEFILE_LIST)
++features:	;	@echo $(.FEATURES)
++dirs:		;	@echo $(.INCLUDE_DIRS)
++files:		;	@echo $(MAKEFILE_LIST)
