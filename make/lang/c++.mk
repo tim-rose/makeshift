@@ -78,8 +78,6 @@ $(archdir)/%.o: $(archdir)/%.cpp
 #
 build[%.cpp]:   $(archdir)/%.o; $(ECHO_TARGET)
 
-
-
 #
 # %.hpp: --Install a C++ header (.hpp) file.
 #
