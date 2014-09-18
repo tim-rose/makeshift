@@ -19,7 +19,24 @@ directories=
 file=Makefile
 name=FILES
 wrap=60
-usage="Usage: mk-filelist file..."
+usage()
+{
+    cat <<EOF
+mk-filelist --Update a Makefile macro with a list of files
+
+Usage:
+    mk-filelist [options] file-or-directory...
+
+Options:
+    -b <ext>	make a backup with the specified extension (default: "$backup")
+    -d 	        treat directories as files, not the files within
+    -f <file>   modify <file> instead of "Makefile"
+    -n <name>   modified the specified macro (default: $name)
+    -p		just use the file names as given (don't expand via ls)
+    -w <length>	wrap the macro definition at <length> (default: $wrap)
+
+EOF
+}
 
 log_message() {	printf "mk-filelist: ";	printf "$@"; printf "\n"; } >&2
 notice()      { log_message "$@"; }
@@ -50,11 +67,16 @@ do
     v)  verbose=1 debug=;;
     q)  verbose=  debug=;;
     _)  verbose=1 debug=1;;
-    \?)	echo $usage >&2
+    \?)	usage >&2
 	exit 2;;
     esac
 done
 shift $(($OPTIND - 1))
+
+if grep "^${name}[ 	]*[:+?]*=[ 	]*\$(" $file >/dev/null; then
+    info '%s: dynamic %s definition (skipped)' "$file" "$name"
+    exit 0
+fi
 
 if [ $# -eq 0 ]; then
     info '%s: no files' "$name"
@@ -90,7 +112,7 @@ fi
 # Strip off the existing NAME= stuff in the .post file by deleting up to
 # the first line that isn't a continuation.
 #
-sed  -e "/^${name}[ 	]*=/,\$d" <$file >$tmp-pre.mk
+sed  -e "/^${name}[ 	]*[:+?]*=/,\$d" <$file >$tmp-pre.mk
 sed  -n -e "/^${name}/,\$p" <$file > $tmp-def+post.mk
 
 if [ -s $tmp-def+post.mk ]; then
