@@ -2,10 +2,8 @@
 # HTML.MK --Rules for dealing with HTML files.
 #
 # Contents:
-# html-toc: --Build the table-of-contents for shell, awk files.
-# html-src: --html-specific customisations for the "src" target.
-# tidy:     --html-specific customisations for the "tidy" target.
-# todo:     --Report unfinished work (identified by keyword comments)
+# md-src: --markdown-specific customisations for the "src" target.
+# todo:   --Report unfinished work (identified by keyword comments)
 #
 $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 

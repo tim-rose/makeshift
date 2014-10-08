@@ -4,6 +4,7 @@
 # Contents:
 # main:     --Build a program from a file that contains "main".
 # %.o:      --Compile a C++ file into an arch-specific sub-directory.
+# %.o:      --Compile an arch-specific C++ file into an arch-specific sub-directory.
 # build[%]: --Build a C++ file's related object.
 # %.hpp:    --Install a C++ header (.hpp) file.
 # build:    --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
