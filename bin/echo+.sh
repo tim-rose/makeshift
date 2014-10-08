@@ -5,16 +5,19 @@
 # Remarks:
 # This script is useful for mocking up behaviour in testing.
 #
-error=""
-signal=""
-status=0
-verbose=0
-opts="e:s:x:v"
-usage="Usage:\necho+ [-e stderr-message] [-s signal] [-x status] message"
+log_message() { printf "$@"; printf "\n"; } >&2
+notice() { log_message "$@"; }
+info()   { if [ "$verbose" ]; then log_message "$@"; fi; }
 
-while getopts $opts c
-do
+delay=
+signal=
+status=0
+verbose=
+usage="Usage:\necho+ [-d delay] [-e stderr-message] [-s signal] [-x status] message"
+
+while getopts "d:e:s:x:v" c; do
     case $c in
+    d)	delay=$OPTARG;;
     e)	echo $OPTARG >&2;;
     s)	signal=$OPTARG;;
     x)	status=$OPTARG;;
@@ -23,10 +26,17 @@ do
 	exit 2;;
     esac
 done
-shift `expr $OPTIND - 1`
+shift $(($OPTIND - 1))
+
+if [ "$delay" ]; then
+    info 'sleeping for %ds' "$delay"
+    sleep $delay
+fi
+
 echo $*
-if [ "$signal" != "" ]; then
-    test $verbose -eq 0 || echo "sending signal $signal to self..."
+
+if [ "$signal" ]; then
+    info 'sending %s signal to %s...' "$signal" "$$"
     kill -s $signal $$
 fi
 exit $status
