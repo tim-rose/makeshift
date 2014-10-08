@@ -116,6 +116,8 @@ $(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
 $(libdir)/%:		%;	$(INSTALL_FILE) $? $@
 $(datadir)/%:		%;	$(INSTALL_FILE) $? $@
+$(sharedstatedir)/%:	%;	$(INSTALL_FILE) $? $@
+$(localstatedir)/%:	%;	$(INSTALL_FILE) $? $@
 
 #
 # src: --Make sure the src target can write to the Makefile
