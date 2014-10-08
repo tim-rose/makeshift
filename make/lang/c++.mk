@@ -49,6 +49,11 @@ C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
 #
 # main: --Build a program from a file that contains "main".
 #
+# Remarks:
+# This isn't as useful as you might think, because it doesn't include
+# any other objects explicitly (although you can reference objects
+# indirectly via a (sub) library.
+#
 $(archdir)/%: %.cpp $(archdir)/%.o
 	$(ECHO_TARGET)
 	@echo $(C++) $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
@@ -88,7 +93,10 @@ $(includedir)/%.hpp:	$(archdir)/%.hpp;	$(INSTALL_FILE) $? $@
 #
 # build: --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
 #
-build:	$(C++_OBJ) $(C++_MAIN)
+# Remarks:
+# Note that C++_MAIN isn't built
+#
+build:	$(C++_OBJ)
 
 #
 # c++-src-var-defined: --Test if "enough" of the C++ SRC variables are defined
