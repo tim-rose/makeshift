@@ -40,6 +40,7 @@ mk-todo:
 	@echo "prefix:         $(prefix)"
 	@echo "opt:            $(opt)"
 	@echo "usr:            $(usr)"
+	@echo "subdir:         $(subdir)"
 	@echo "archdir:        $(archdir)"
 	@echo "rootdir:        $(rootdir)"
 	@echo "bindir:         $(bindir)"
