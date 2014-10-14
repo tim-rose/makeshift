@@ -57,10 +57,9 @@ C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 #
 $(archdir)/%: %.c $(archdir)/%.o
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS) $(C_LDFLAGS) $(archdir)/$*.o $(C_LDLIBS)
-
+	@echo $(CC) $(C_ALL_FLAGS) $(C_LDFLAGS) $(C_OBJ) $(C_LDLIBS)
 	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_LDFLAGS) \
-	    $(archdir)/$*.o $(C_LDLIBS)
+	    $(C_OBJ) $(C_LDLIBS)
 
 #
 # %.o: --Compile a C file into an arch-specific sub-directory.
@@ -115,7 +114,7 @@ clean:	c-clean
 .PHONY:	c-clean
 c-clean:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/*.o $(C_MAIN)
+	$(RM) $(archdir)/$(C_OBJ) $(C_MAIN)
 
 #
 # tidy: --Reformat C files consistently.

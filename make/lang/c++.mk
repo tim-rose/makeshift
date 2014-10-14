@@ -57,9 +57,9 @@ C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
 $(archdir)/%: %.cpp $(archdir)/%.o
 	$(ECHO_TARGET)
 	@echo $(C++) $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
-	    $(archdir)/$*.o $(C++_LDLIBS)
+	    $(C++_OBJ) $(C++_LDLIBS)
 	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
-	    $(archdir)/$*.o $(C++_LDLIBS)
+	    $(C++_OBJ) $(C++_LDLIBS)
 
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
@@ -114,7 +114,7 @@ clean:	c++-clean
 .PHONY:	c++-clean
 c++-clean:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/*.o $(C++_MAIN)
+	$(RM) $(C++_OBJ) $(C++_MAIN)
 
 #
 # tidy: --Reformat C++ files consistently.
