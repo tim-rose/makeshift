@@ -7,12 +7,12 @@
 #
 build: $(archdir)/gtest
 
-$(archdir)/gtest:	$(TEST_OBJ)
+$(archdir)/gtest:	$(TEST_OBJ) $(TEST_LIBS)
 	$(ECHO_TARGET)
 	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
-		    $(TEST_OBJ) $(C++_LDLIBS) -lgtest_main -lgtest -ldl -lutil
+	    $(TEST_OBJ) $(TEST_LIBS) $(C++_LDLIBS) -lgtest_main -lgtest -ldl -lutil
 	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
-		    $(TEST_OBJ) $(C++_LDLIBS) -lgtest_main -lgtest -ldl -lutil
+	    $(TEST_OBJ) $(TEST_LIBS) $(C++_LDLIBS) -lgtest_main -lgtest -ldl -lutil
 
 test:	google-test
 
