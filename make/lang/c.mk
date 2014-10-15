@@ -55,11 +55,10 @@ C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 #
 # main: --Build a program from a file that contains "main".
 #
-$(archdir)/%: %.c $(archdir)/%.o
+$(archdir)/%: $(archdir)/%.o
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS) $(C_LDFLAGS) $(C_OBJ) $(C_LDLIBS)
-	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_LDFLAGS) \
-	    $(C_OBJ) $(C_LDLIBS)
+	@echo $(CC) -o $@ $(C_ALL_FLAGS) $(C_LDFLAGS) $^ $(C_LDLIBS)
+	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_LDFLAGS) $^ $(C_LDLIBS)
 
 #
 # %.o: --Compile a C file into an arch-specific sub-directory.

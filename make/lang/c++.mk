@@ -44,6 +44,7 @@ C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
 	$(PROJECT.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
 
 C++_OBJ	= $(C++_SRC:%.cpp=$(archdir)/%.o)
+C++_MAIN_OBJ = $(C++_MAIN_SRC:%.cpp=$(archdir)/%.o)
 C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
 
 #
@@ -54,12 +55,10 @@ C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
 # any other objects explicitly (although you can reference objects
 # indirectly via a (sub) library.
 #
-$(archdir)/%: %.cpp $(archdir)/%.o
+$(archdir)/%: $(archdir)/%.o
 	$(ECHO_TARGET)
-	@echo $(C++) $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
-	    $(C++_OBJ) $(C++_LDLIBS)
-	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
-	    $(C++_OBJ) $(C++_LDLIBS)
+	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $(C++_LDFLAGS) $^ $(C++_LDLIBS)
+	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(C++_LDFLAGS) $^ $(C++_LDLIBS)
 
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
