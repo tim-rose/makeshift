@@ -12,6 +12,8 @@
 # to install ".hpp" files in the "pre-build" phase, just like the library
 # module does.
 #
+# REVISIT: XmlSchema.hpp behaviour is broken: install triggers build!
+#
 -include $(XSD_SRC:%.xsd=$(archdir)/%-depend.mk)
 
 XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
@@ -31,10 +33,12 @@ $(XSD_INCLUDEDIR)/%.hpp: $(archdir)/%.hpp
 
 $(archdir)/%.cpp $(archdir)/%.hpp:	%.xsd mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	xsd cxx-tree --output-dir $(archdir) $(XSD.FLAGS) --extern-xml-schema $(archdir)/XmlSchema.hpp $*.xsd
+	xsd cxx-tree --output-dir $(archdir) $(XSD.FLAGS) \
+	    --extern-xml-schema $(archdir)/XmlSchema.hpp $*.xsd
 #
 # build: --xsd-specific customisations for the "build" target.
 #
+$(XSD_OBJ):	$(XSD_INCLUDE_SRC)
 pre-build:      var-defined[XSD_INCLUDEDIR] $(XSD_INCLUDE_SRC)
 build:	$(XSD_OBJ)
 

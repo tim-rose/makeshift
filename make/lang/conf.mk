@@ -33,8 +33,8 @@ pre-build:	conf-src-var-defined
 # conf-src-var-defined: --Test if "enough" of the conf SRC vars. are defined.
 #
 conf-src-var-defined:
-	@if [ -z '$(CONF_SRC)$(CFG_SRC)' ]; then \
-	    printf $(VAR_UNDEF) "CONF_SRC, CFG_SRC"; \
+	@if [ -z '$(CONF_SRC)$(CFG_SRC)$(INI_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "CONF_SRC, CFG_SRC, INI_SRC"; \
 	    echo 'run "make src" to define them'; \
 	    false; \
 	fi >&2

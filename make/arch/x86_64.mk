@@ -1,4 +1,5 @@
 #
 # x86_64 --Definitions for 64-bit Intel architectures.
 #
-C_ARCH_DEFS = -m64
+ARCH.C_DEFS = -m64
+ARCH.C++_DEFS = -m64
