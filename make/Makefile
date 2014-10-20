@@ -6,13 +6,13 @@
 # Remarks:
 # The "toc" target cannot be run until things have been installed in DEV_HOME.
 #
-STD_TRG = install uninstall install-strip \
-	clean distclean tags dist
-DEVKIT_TRG = build src depend test toc tidy doc todo
+STD_TRG = build install test uninstall install-strip \
+	clean distclean tags dist doc
+DEVKIT_TRG = src toc tidy todo
 
-MK_SRC = build.mk database.mk deb.mk deploy.mk devkit.mk doxygen.mk \
-    googletest.mk library.mk package.mk repository.mk tap.mk \
-    valid.mk
+MK_SRC = build.mk coverage.mk database.mk deb.mk deploy.mk \
+    devkit.mk doxygen.mk googletest.mk library.mk package.mk \
+    repository.mk tap.mk valid.mk
 
 include devkit.mk
 
@@ -27,7 +27,8 @@ rm-targets.mk:		;		@$(RM) targets.mk
 #
 # Remarks:
 # The auto-recursive rule pattern is a bit tedious to write by hand,
-# so I've written a make target to generate them automatically.
+# so I've written a make target to generate them automatically. Even so,
+# it's incredibly dense; it might be better as a separate script?
 #
 targets.mk:
 	@$(ECHO) "++ make[$@]"
