@@ -45,13 +45,14 @@ $(archdir)/%.gcda:	;	@:
 #
 $(archdir)/coverage.trace:	$(GCOV_GCDA_FILES)
 	lcov --capture $(LCOV_EXCLUDE) --directory . >$@
-	lcov --remove $@ /usr
+	lcov --remove $@ '/usr/include/*' >$$$$.tmp && mv $$$$.tmp $@
 
 #
 # coverage/index.html: --Create the html-formatted coverage reports.
 #
 $(archdir)/coverage/index.html:	$(archdir)/coverage.trace
-	genhtml --output-directory $(archdir)/coverage $(archdir)/coverage.trace
+	genhtml --demangle-cpp --output-directory $(archdir)/coverage \
+	    $(archdir)/coverage.trace
 
 #
 # clean: --Remove the coverage data and reports

@@ -24,8 +24,8 @@
 #
 # Generate coverage reports using gcov, lcov.
 #
-GCOV_FILES = $(C++SRC:%.cpp=%.cpp.gcov)
-GCOV_GCDA_FILES = $(C++SRC:%.cpp=$(archdir)/%.gcda)
+GCOV_FILES = $(C++_SRC:%.cpp=%.cpp.gcov)
+GCOV_GCDA_FILES = $(C++_SRC:%.cpp=$(archdir)/%.gcda)
 include coverage.mk
 
 C++	= $(CXX)
