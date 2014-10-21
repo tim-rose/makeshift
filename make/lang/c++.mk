@@ -15,6 +15,10 @@
 # tags:     --Build vi, emacs tags files for C++ files.
 # todo:     --Find "unfinished work" comments in C++ files.
 #
+# Remarks:
+# The C++ module provides rules and targets for building software
+# in using the C++ language.
+#
 
 #
 # Include any dependency information that's available.

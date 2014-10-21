@@ -5,21 +5,26 @@
 # The googletest rules assume that you're developing C++ code, and
 # make reference to make variables defined in the lang/c++ module.
 #
-build: $(archdir)/gtest
+TEST_LIBS googltest_main googletest dl util
 
-$(archdir)/gtest:	$(TEST_OBJ) $(TEST_LIBS)
+build: $(archdir)/googletest
+
+$(archdir)/googletest:	$(TEST_OBJ) $(TEST_LIBS)
 	$(ECHO_TARGET)
 	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
-	    $(TEST_OBJ) $(TEST_LIBS) $(C++_LDLIBS) -lgtest_main -lgtest -ldl -lutil
+	    $^ $(C++_LDLIBS) $(TEST_LIBS:%=-l%)
 	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
-	    $(TEST_OBJ) $(TEST_LIBS) $(C++_LDLIBS) -lgtest_main -lgtest -ldl -lutil
+	    $^ $(C++_LDLIBS) $(TEST_LIBS:%=-l%)
 
+#
+# google-test: --Run googletest with arch defined in the environment.
+#
+.PHONY:	google-test
 test:	google-test
-
 google-test:
-	archdir=$(archdir) $(archdir)/gtest
+	archdir=$(archdir) $(archdir)/googletest
 
-clean:	clean-gtest
-
-clean-gtest:
-	$(RM) $(archdir)/gtest
+.PHONY:	clean-googletest
+clean:	clean-googletest
+clean-googletest:
+	$(RM) $(archdir)/googletest

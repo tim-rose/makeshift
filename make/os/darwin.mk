@@ -10,7 +10,7 @@
 #
 OS.C_CPPFLAGS = -I/usr/local/include
 OS.C++_CPPFLAGS = -I/usr/local/include -I/usr/include/c++/4.2.1
-OS.C++FLAGS 	= -std=c++98 -Wno-dollar-in-identifier-extension -Wno-c++11-long-long
+OS.CXXFLAGS 	= -stdlib=libstdc++
 
 RANLIB		= ranlib
 GREP		= grep
