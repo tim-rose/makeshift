@@ -23,7 +23,18 @@
 #  * C_SRC	--C source files
 #  * C_MAIN_SRC	--C source files that define a main() function.
 #
+
+#
+# Include any dependency information that's available.
+#
 -include $(C_SRC:%.c=$(archdir)/%-depend.mk)
+
+#
+# Generate coverage reports using gcov, lcov.
+#
+GCOV_FILES = $(C_SRC:%.c=%.c.gcov)
+GCOV_GCDA_FILES = $(C_SRC:%.c=$(archdir)/%.gcda)
+include coverage.mk
 
 C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS)\
 	$(PROJECT.C_DEFS) $(LOCAL.C_DEFS) $(TARGET.C_DEFS)
@@ -42,7 +53,7 @@ C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
 C_LDFLAGS = $(LDFLAGS) \
 	$(ARCH.LDFLAGS) $(OS.LDFLAGS) \
-	$(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) $(PROJECT.LDFLAGS) \
+	$(PROJECT.LDFLAGS) $(LOCAL.LDFLAGS) $(TARGET.LDFLAGS) \
 	-L$(libdir)
 
 C_LDLIBS = $(LOADLIBES) $(LDLIBS) \
@@ -106,6 +117,7 @@ c-src-var-defined:
 	    echo 'run "make src" to define them'; \
 	    false; \
 	fi >&2
+
 #
 # clean: --Remove objects and executables created from C files.
 #

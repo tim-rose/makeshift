@@ -7,7 +7,7 @@
 # The "toc" target cannot be run until things have been installed in DEV_HOME.
 #
 STD_TRG = build install test uninstall install-strip \
-	clean distclean tags dist doc
+	clean distclean tags dist doc coverage
 DEVKIT_TRG = src toc tidy todo
 
 MK_SRC = build.mk coverage.mk database.mk deb.mk deploy.mk \

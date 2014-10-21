@@ -15,7 +15,19 @@
 # tags:     --Build vi, emacs tags files for C++ files.
 # todo:     --Find "unfinished work" comments in C++ files.
 #
+
+#
+# Include any dependency information that's available.
+#
 -include $(C++_SRC:%.cpp=$(archdir)/%-depend.mk)
+
+#
+# Generate coverage reports using gcov, lcov.
+#
+GCOV_FILES = $(C++SRC:%.cpp=%.cpp.gcov)
+GCOV_GCDA_FILES = $(C++SRC:%.cpp=$(archdir)/%.gcda)
+include coverage.mk
+
 C++	= $(CXX)
 C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS)\
 	$(PROJECT.C++_DEFS) $(LOCAL.C++_DEFS) $(TARGET.C++_DEFS) \
@@ -36,7 +48,7 @@ C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
 C++_LDFLAGS = $(LDFLAGS) \
 	$(ARCH.LDFLAGS) $(OS.LDFLAGS) \
-	$(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) $(PROJECT.LDFLAGS) \
+	$(PROJECT.LDFLAGS) $(LOCAL.LDFLAGS) $(TARGET.LDFLAGS) \
 	-L$(libdir)
 
 C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
@@ -106,6 +118,7 @@ c++-src-var-defined:
 	    echo 'run "make src" to define them'; \
 	    false; \
 	fi >&2
+
 #
 # clean: --Remove objects and executables created from C++ files.
 #
