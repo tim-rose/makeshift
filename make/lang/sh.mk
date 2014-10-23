@@ -63,7 +63,7 @@ awk-tidy[%]:
 toc:	shell-toc
 shell-toc:
 	$(ECHO_TARGET)
-	mk-toc $(SH_SRC) $(SHL_SRC) $(AWK_SRC)
+	mk-toc $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC)
 #
 # shell-src: --shell-specific customisations for the "src" target.
 #
