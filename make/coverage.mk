@@ -57,8 +57,7 @@ $(archdir)/coverage/index.html:	$(archdir)/coverage.trace
 #
 # clean: --Remove the coverage data and reports
 #
-clean:	clean-coverage
-distclean:	clean-coverage
 .PHONY:	clean-coverage
+clean:	clean-coverage
 clean-coverage:
 	$(RM) -r $(GCOV_FILES) $(archdir)/coverage.trace $(archdir)/coverage
