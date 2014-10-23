@@ -41,7 +41,8 @@ C++_FLAGS = $(OS.CXXFLAGS) $(ARCH.CXXFLAGS) \
 	$(CFLAGS) $(CXXFLAGS)
 
 C++_WARN_FLAGS  = $(OS.C++_WARN_FLAGS) $(ARCH.C++_WARN_FLAGS) \
-	$(PROJECT.C++_WARN_FLAGS)
+	$(PROJECT.C++_WARN_FLAGS) $(LOCAL.C++_WARN_FLAGS) \
+	$(TARGET.C++_WARN_FLAGS)
 
 C++_CPPFLAGS = $(CPPFLAGS) \
 	$(TARGET.C++_CPPFLAGS) $(LOCAL.C++_CPPFLAGS) $(PROJECT.C++_CPPFLAGS) \
@@ -73,8 +74,8 @@ C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
 #
 $(archdir)/%: $(archdir)/%.o
 	$(ECHO_TARGET)
-	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $(C++_LDFLAGS) $^ $(C++_LDLIBS)
-	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(C++_LDFLAGS) $^ $(C++_LDLIBS)
+	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $^ $(C++_LDFLAGS) $(C++_LDLIBS)
+	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $^ $(C++_LDFLAGS) $(C++_LDLIBS)
 
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.

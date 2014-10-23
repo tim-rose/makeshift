@@ -42,7 +42,8 @@ C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS)\
 C_FLAGS = $(OS.CFLAGS) $(ARCH.CFLAGS) \
 	$(PROJECT.CFLAGS) $(LOCAL.CFLAGS) $(TARGET.CFLAGS) $(CFLAGS)
 
-C_WARN_FLAGS = $(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS) $(PROJECT.C_WARN_FLAGS)
+C_WARN_FLAGS = $(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS) \
+        $(PROJECT.C_WARN_FLAGS) $(LOCAL.C_WARN_FLAGS) $(TARGET.C_WARN_FLAGS)
 
 C_CPPFLAGS = $(CPPFLAGS) \
 	$(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) $(PROJECT.C_CPPFLAGS) \
@@ -68,8 +69,8 @@ C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 #
 $(archdir)/%: $(archdir)/%.o
 	$(ECHO_TARGET)
-	@echo $(CC) -o $@ $(C_ALL_FLAGS) $(C_LDFLAGS) $^ $(C_LDLIBS)
-	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_LDFLAGS) $^ $(C_LDLIBS)
+	@echo $(CC) -o $@ $(C_ALL_FLAGS) $^ $(C_LDFLAGS) $(C_LDLIBS)
+	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $^ $(C_LDFLAGS) $(C_LDLIBS)
 
 #
 # %.o: --Compile a C file into an arch-specific sub-directory.
