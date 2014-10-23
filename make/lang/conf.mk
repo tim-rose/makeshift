@@ -65,4 +65,4 @@ conf-src:
 todo:	conf-todo
 conf-todo:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(CONF_SRC) $(CFG_SRC) /dev/null || true
+	@$(GREP) -e TODO -e FIXME -e REVISIT $(CONF_SRC) $(CFG_SRC) $(INI_SRC) /dev/null || true
