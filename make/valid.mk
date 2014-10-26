@@ -8,6 +8,7 @@
 # file-writable[%]:   --Test if a file is writable
 # file-exists[%]:     --Test if a file exists.
 # dir-exists[%]:      --Test if a directory exists.
+# cmd-exists[%]:      --Test if a command exists.
 # mkdir[%]:           --Create a directory.
 #
 # Remarks:
@@ -67,6 +68,15 @@ file-exists[%]:
 dir-exists[%]:
 	@if [ ! -d "$*" ]; then \
 	    echo "Error: directory $* does not exist"; \
+	    false; \
+	fi
+
+#
+# cmd-exists[%]: --Test if a command exists.
+#
+cmd-exists[%]:
+	@if  ! type "$*" >/dev/null 2>&1; then \
+	    echo "Error: command \"$*\" does not exist"; \
 	    false; \
 	fi
 
