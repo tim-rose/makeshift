@@ -23,8 +23,10 @@ QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
 # build: --Build the Qt files
 #
 build:	$(QT_OBJ)
-$(archdir)/%.cpp:	%.qrc;	$(RCC) $? >$@
-$(archdir)/moc-%.cpp:	%.hpp;	$(MOC) -o $@ $?
+$(archdir)/%.cpp:	%.qrc mkdir[$(archdir)]
+	$(RCC) $< >$@
+$(archdir)/moc-%.cpp:	%.hpp mkdir[$(archdir)]
+	$(MOC) -o $@ $<
 
 #
 # clean: --Remove objects and intermediats created from Qt files.
