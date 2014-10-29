@@ -2,35 +2,41 @@
 # CSS.MK --Rules for dealing with CSS files.
 #
 # Contents:
-# css-toc: --Build the table-of-contents for shell, awk files.
-# css-src: --css-specific customisations for the "src" target.
-# todo:    --Report unfinished work (identified by keyword comments)
+# src-css: --Update the CSS_SRC, SCSS_SRC macros.
+# toc-css: --Build the table-of-contents for CSS files.
+# todo:    --Report "unfinished work" comments in CSS files.
 #
+
 $(wwwdir)/%.css:	%.css;	$(INSTALL_FILE) $? $@
 
+%.css:	%.scss;	scss $? >$@
+%.css:	%.less;	less $? >$@
+
 #
-# css-toc: --Build the table-of-contents for shell, awk files.
+# src-css: --Update the CSS_SRC, SCSS_SRC macros.
 #
-.PHONY: css-toc
-toc:	css-toc
-css-toc:
-	$(ECHO_TARGET)
-	mk-toc $(CSS_SRC)
-#
-# css-src: --css-specific customisations for the "src" target.
-#
-src:	css-src
-.PHONY:	css-src
-css-src:	
+src:	src-css
+.PHONY:	src-css
+src-css:
 	$(ECHO_TARGET)
 	@mk-filelist -qn CSS_SRC *.css
 	@mk-filelist -qn SCSS_SRC *.scss
+	@mk-filelist -qn LESS_SRC *.less
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
-# 
-.PHONY: css-todo
-todo:	css-todo
-css-todo:
+# toc-css: --Build the table-of-contents for CSS files.
+#
+.PHONY: toc-css
+toc:	toc-css
+toc-css:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(CSS_SRC) /dev/null || true
+	mk-toc $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC)
+
+#
+# todo: --Report "unfinished work" comments in CSS files.
+#
+.PHONY: todo-css
+todo:	todo-css
+todo-css:
+	$(ECHO_TARGET)
+	@$(GREP) -e TODO -e FIXME -e REVISIT $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC) /dev/null || true

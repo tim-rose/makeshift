@@ -51,24 +51,26 @@ $(archdir)/XmlSchema.hpp:	mkdir[$(archdir)]
 	    --generate-xml-schema XmlSchema.hpp
 
 #
-# clean: --xsd-specific customisations for the "clean" target.
+# clean: --Remove XSD's object files.
 #
-clean:	xsd-clean
-.PHONY:	xsd-clean
-xsd-clean:
-	$(ECHO_TARGET)
+clean:	clean-xsd
+.PHONY:	clean-xsd
+clean-xsd:
 	$(RM) $(XSD_OBJ)
 
-distclean:	xsd-distclean xsd-clean
-.PHONY:	xsd-distclean
-xsd-distclean:
+#
+# distclean: --Remove XSD-generated include files.
+#
+distclean:	distclean-xsd clean-xsd
+.PHONY:	distclean-xsd
+distclean-xsd:
 	$(RM) $(XSD_INCLUDE_SRC)
 
 #
-# src: --xsd-specific customisations for the "src" target.
+# src: --Update the XSD_SRC target.
 #
-src:	xsd-src
-.PHONY:	xsd-src
-xsd-src:
+src:	src-xsd
+.PHONY:	src-xsd
+src-xsd:
 	$(ECHO_TARGET)
 	@mk-filelist -qn XSD_SRC *.xsd

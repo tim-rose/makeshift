@@ -3,11 +3,11 @@
 #
 # Contents:
 # %.conf:              --Rules for installing config files.
-# shell-build:         --Make scripts "executable".
-# conf-src-var-defined: --Test if "enough" of the conf SRC vars. are defined.
-# conf-toc:            --Build the table-of-contents for conf, awk files.
-# conf-src:            --conf-specific customisations for the "src" target.
-# todo:                --Report unfinished work (identified by keyword comments)
+# pre-build:           --Make sure that config SRC macros are defined.
+# conf-src-var-defined: --Test if any of the conf SRC vars. are defined.
+# toc-conf:            --Build the table-of-contents for config files.
+# src-conf:            --Update definitions of CONF_SRC, CFG_SRC, INI_SRC
+# todo:                --Report "unfinished work" comments in config files.
 #
 
 #
@@ -25,12 +25,12 @@ $(divertdir)/%.cfg:	%.cfg;		$(INSTALL_FILE) $? $@
 $(divertdir)/%.ini:	%.ini;		$(INSTALL_FILE) $? $@
 
 #
-# shell-build: --Make scripts "executable".
+# pre-build: --Make sure that config SRC macros are defined.
 #
 pre-build:	conf-src-var-defined
 
 #
-# conf-src-var-defined: --Test if "enough" of the conf SRC vars. are defined.
+# conf-src-var-defined: --Test if any of the conf SRC vars. are defined.
 #
 conf-src-var-defined:
 	@if [ -z '$(CONF_SRC)$(CFG_SRC)$(INI_SRC)' ]; then \
@@ -39,30 +39,30 @@ conf-src-var-defined:
 	    false; \
 	fi >&2
 #
-# conf-toc: --Build the table-of-contents for conf, awk files.
+# toc-conf: --Build the table-of-contents for config files.
 #
-.PHONY: conf-toc
-toc:	conf-toc
-conf-toc:
+.PHONY: toc-conf
+toc:	toc-conf
+toc-conf:
 	$(ECHO_TARGET)
 	mk-toc $(CONF_SRC) $(CFG_SRC) $(INI_SRC)
 
 #
-# conf-src: --conf-specific customisations for the "src" target.
+# src-conf: --Update definitions of CONF_SRC, CFG_SRC, INI_SRC
 #
-src:	conf-src
-.PHONY:	conf-src
-conf-src:
+src:	src-conf
+.PHONY:	src-conf
+src-conf:
 	$(ECHO_TARGET)
 	@mk-filelist -qn CONF_SRC *.conf
 	@mk-filelist -qn CFG_SRC *.cfg
 	@mk-filelist -qn INI_SRC *.ini
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
+# todo: --Report "unfinished work" comments in config files.
 #
-.PHONY: conf-todo
-todo:	conf-todo
-conf-todo:
+.PHONY: todo-conf
+todo:	todo-conf
+todo-conf:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(CONF_SRC) $(CFG_SRC) $(INI_SRC) /dev/null || true
