@@ -2,40 +2,42 @@
 # LISP.MK --Rules for (emacs) lisp stuff.
 #
 # Contents:
-# lisp-clean: --Remove lisp binaries built from source.
+# %.el:       --Rules for installing lisp scripts
+# build:      --Compile lisp files using the emacs byte compiler.
+# lisp-clean: --Remove lisp objects
 # lisp-toc:   --Build the table-of-contents for LISP-ish files.
-# lisp-src:   --lisp-specific customisations for the "src" target.
-# todo:       --Report unfinished work (identified by keyword comments)
+# lisp-src:   --Update the LISP_SRC macro.
+# todo:       --Report "unfinished work" comments in lisp files.
 #
 # Remarks:
 # One day when I get back to some serious lisp development I'll
 # probably rename this to elisp.mk...
 #
-LISP_TRG = $(LISP_SRC:%.el=%.elc)
 
 #
-# lisp-build:	--Compile lisp files using the emacs byte compiler.
+# %.el: --Rules for installing lisp scripts
+#
+$(lispdir)/%.el:	%.el;	$(INSTALL_FILE) $? $@
+$(lispdir)/%.elc:	%.elc;	$(INSTALL_FILE) $? $@
+
+LISP_OBJ = $(LISP_SRC:%.el=%.elc)
+
+#
+# build: --Compile lisp files using the emacs byte compiler.
 #
 %.elc:	%.el
 	emacs -batch -f batch-byte-compile $*.el
 pre-build:	src-var-defined[LISP_SRC]
-build:	$(LISP_TRG)
+build:	$(LISP_OBJ)
 
 #
-# lisp-clean: --Remove lisp binaries built from source.
+# lisp-clean: --Remove lisp objects
 #
-.PHONY: lisp-clean
-clean:	lisp-clean
-lisp-clean:
-	$(RM) $(LISP_TRG)
-
 distclean:	lisp-clean
-
-#
-# %.el:		--Rules for installing lisp scripts
-#
-$(lispdir)/%.el:	%.el;	$(INSTALL_FILE) $? $@
-$(lispdir)/%.elc:	%.elc;	$(INSTALL_FILE) $? $@
+clean:	lisp-clean
+.PHONY: lisp-clean
+lisp-clean:
+	$(RM) $(LISP_OBJ)
 
 #
 # lisp-toc: --Build the table-of-contents for LISP-ish files.
@@ -47,17 +49,17 @@ lisp-toc:
 	mk-toc $(LISP_SRC)
 
 #
-# lisp-src: --lisp-specific customisations for the "src" target.
+# lisp-src: --Update the LISP_SRC macro.
 #
 src:	lisp-src
 .PHONY:	lisp-src
-lisp-src:	
+lisp-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qn LISP_SRC *.el
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
-# 
+# todo: --Report "unfinished work" comments in lisp files.
+#
 .PHONY: lisp-todo
 todo:	lisp-todo
 lisp-todo:

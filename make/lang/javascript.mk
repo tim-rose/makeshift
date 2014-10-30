@@ -1,15 +1,15 @@
 #
-# JAVASCRIPT.MK --Rules for dealing with JAVASCRIPT files.
+# JAVASCRIPT.MK --Rules for dealing with JavaScript files.
 #
 # Contents:
-# javascript-toc: --Build the table-of-contents for shell, awk files.
-# javascript-src: --javascript-specific customisations for the "src" target.
-# todo:           --Report unfinished work (identified by keyword comments)
+# javascript-toc: --Build the table-of-contents for JavaScript files.
+# javascript-src: --Update the JS_SRC macro.
+# todo:           --Report "unfinished work" comments in JavaScript files.
 #
 $(wwwdir)/%.js:	%.js;	$(INSTALL_FILE) $? $@
 
 #
-# javascript-toc: --Build the table-of-contents for shell, awk files.
+# javascript-toc: --Build the table-of-contents for JavaScript files.
 #
 .PHONY: javascript-toc
 toc:	javascript-toc
@@ -17,17 +17,17 @@ javascript-toc:
 	$(ECHO_TARGET)
 	mk-toc $(JS_SRC)
 #
-# javascript-src: --javascript-specific customisations for the "src" target.
+# javascript-src: --Update the JS_SRC macro.
 #
 src:	javascript-src
 .PHONY:	javascript-src
-javascript-src:	
+javascript-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qn JS_SRC *.js
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
-# 
+# todo: --Report "unfinished work" comments in JavaScript files.
+#
 .PHONY: javascript-todo
 todo:	javascript-todo
 javascript-todo:

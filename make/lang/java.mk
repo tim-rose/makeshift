@@ -3,11 +3,11 @@
 #
 # Contents:
 # %.class: --Compile a java file into an arch-specific sub-directory.
-# build:   --java-specific customisations for the "build" target.
-# clean:   --Remove objects and executables created from C files.
-# src:     --Update the JAVA_SRC, H_SRC, JAVA_MAIN_SRC macros.
+# build:   --Compile all the JAV_SRC files.
+# clean:   --Remove The Java package.
+# src:     --Update the JAVA_SRC macro.
 # tags:    --Build vi, emacs tags files.
-# todo:    --Report "unfinished work" comments in C files.
+# todo:    --Report "unfinished work" comments in Java files.
 #
 # Remarks:
 # The "lang/java" module provides support for the "java" programming language.
@@ -32,20 +32,21 @@ $(archdir)/%.class: %.java mkdir[$(archdir)] var_defined[PACKAGE]
 	$(JAVAC) $(JAVA_FLAGS) -d $(archdir) $*.java
 
 #
-# build: --java-specific customisations for the "build" target.
+# build: --Compile all the JAV_SRC files.
 #
 build:	$(JAVA_OBJ) var-defined[JAVA_SRC]
 
 #
-# clean: --Remove objects and executables created from C files.
+# clean: --Remove The Java package.
 #
 clean:	java-clean
 .PHONY:	java-clean
 java-clean:
 	$(ECHO_TARGET)
 	$(RM) $(archdir)/$(PACKAGE)
+
 #
-# src: --Update the JAVA_SRC, H_SRC, JAVA_MAIN_SRC macros.
+# src: --Update the JAVA_SRC macro.
 #
 src:	java-src
 .PHONY:	java-src
@@ -63,7 +64,7 @@ java-tags:
 	etags $(JAVA_SRC); true
 
 #
-# todo: --Report "unfinished work" comments in C files.
+# todo: --Report "unfinished work" comments in Java files.
 #
 .PHONY: java-todo
 todo:	java-todo

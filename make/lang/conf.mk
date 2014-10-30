@@ -9,6 +9,12 @@
 # src-conf:            --Update definitions of CONF_SRC, CFG_SRC, INI_SRC
 # todo:                --Report "unfinished work" comments in config files.
 #
+# Remarks:
+# Config files can have a variety of extensions (".conf", ".ini",
+# ".cfg").  The conf module supports all of these via the macros
+# CONF_SRC, INI_SRC, CFG_SRC.  It defines rules for installing the
+# config files into $(sysconfdir), and $(divertdir).
+#
 
 #
 # %.conf: --Rules for installing config files.

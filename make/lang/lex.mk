@@ -1,12 +1,12 @@
 #
-# LEX.MK --Rules for working with LEX objects.
+# LEX.MK --Rules for working with LEX files.
 #
 # Contents:
 # %.l:   --lex-related build rules.
-# build: --lex-specific customisations for the "build" target.
-# clean: --lex-specific customisations for the "clean" target.
-# src:   --lex-specific customisations for the "src" target.
-# toc:   --lex-specific customisations for the "toc" target.
+# build: --Compile LEX_SRC to object code.
+# clean: --Remove lex-derived objects.
+# src:   --Update the LEX_SRC macro.
+# toc:   --Update the table of contents in lex files.
 #
 # Remarks:
 # LEX files are pre-processed into "C" files which are then handled
@@ -14,43 +14,44 @@
 # contains patterns to define the pre-processing transformation only.
 #
 
--include $(L_SRC:%.l=$(archdir)/%.mk)
+-include $(LEX_SRC:%.l=$(archdir)/%_l-depend.mk)
 
 #
 # %.l: --lex-related build rules.
 #
-L_OBJ	= $(L_SRC:%.l=$(archdir)/%.o)
+LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%.o)
 %.c:	%.l
 	$(LEX) $(LFLAGS) -t $< | sed -e "s/yy/$*_/g" >$*_l.c
 
 #
-# build: --lex-specific customisations for the "build" target.
+# build: --Compile LEX_SRC to object code.
 #
-pre-build:	src-var-defined[L_SRC]
-build:	$(L_OBJ)
+pre-build:	src-var-defined[LEX_SRC]
+build:	$(LEX_OBJ)
 
 #
-# clean: --lex-specific customisations for the "clean" target.
+# clean: --Remove lex-derived objects.
 #
 clean:	lex-clean
 .PHONY:	lex-clean
 lex-clean:
 	$(ECHO_TARGET)
-	$(RM) $(L_OBJ)
+	$(RM) $(LEX_OBJ)
 
 #
-# src: --lex-specific customisations for the "src" target.
+# src: --Update the LEX_SRC macro.
 #
 src:	lex-src
 .PHONY:	lex-src
-lex-src:	;	$(ECHO_TARGET)
-	@mk-filelist -qn L_SRC *.l
+lex-src:
+	$(ECHO_TARGET)
+	@mk-filelist -qn LEX_SRC *.l
 
 #
-# toc: --lex-specific customisations for the "toc" target.
+# toc: --Update the table of contents in lex files.
 #
 toc:	lex-toc
 .PHONY:	lex-toc
-lex-toc:	
+lex-toc:
 	$(ECHO_TARGET)
-	mk-toc $(L_SRC)
+	mk-toc $(LEX_SRC)
