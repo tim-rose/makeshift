@@ -104,7 +104,7 @@ man8dir		= $(mandir)/man8
 #
 # INSTALL_*: --Specialised install commands.
 #
-INSTALL 	   = install -CD
+INSTALL 	   = install -D
 INSTALL_PROGRAM   = $(INSTALL) -m 755
 INSTALL_FILE      = $(INSTALL) -m 644
 INSTALL_DIRECTORY = $(INSTALL) -d
