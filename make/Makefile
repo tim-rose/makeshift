@@ -39,5 +39,5 @@ targets.mk:
 	    printf "$$t:\t\$$(SUBDIRS:%%=$$t@%%); \$$(ECHO_TARGET)\n"; \
 	    printf "pre-$$t:\t;\t\$$(ECHO_TARGET)\n"; \
 	    printf "$$t \$$(SUBDIRS:%%=$$t@%%):\tpre-$$t\n"; \
-	    printf "$$t@%%:\n\t@\$$(ECHO_TARGET)\n\t@if [ -e \$$*/Makefile ]; then \$$(ECHO) ++ make: recursively building \$$@; cd \$$* && \$$(MAKE) $$t; fi\n"; \
+	    printf "$$t@%%:\n\t@\$$(ECHO_TARGET)\n\t@if [ -e \$$*/Makefile ]; then \$$(ECHO) ++ make: recursively building \$$@; cd \$$* >/dev/null && \$$(MAKE) $$t; fi\n"; \
 	done >> $@
