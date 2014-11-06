@@ -6,10 +6,12 @@
 # make reference to make variables defined in the lang/c++ module.
 #
 GTEST_LIBS = gtest_main gtest dl util
+TEST_XML = test-results.xml
+TEST_EXE = $(archdir)/googletest
 
 build: $(archdir)/googletest
 
-$(archdir)/googletest:	$(TEST_OBJ)
+$(TEST_EXE):	$(TEST_OBJ)
 	$(ECHO_TARGET)
 	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $(C++_LDFLAGS) \
 	    $^ $(C++_LDLIBS) $(TEST_LIBS:%=-l%)
@@ -19,12 +21,12 @@ $(archdir)/googletest:	$(TEST_OBJ)
 #
 # google-test: --Run googletest with arch defined in the environment.
 #
-.PHONY:	google-test
-test:	google-test
-google-test:
-	archdir=$(archdir) $(archdir)/googletest
+.PHONY:	test-google
+test:	test-google
+test-google:
+	archdir=$(archdir) $(TEST_EXE) --gtest_output=xml:$(TEST_XML)
 
-.PHONY:	clean-googletest
-clean:	clean-googletest
-clean-googletest:
-	$(RM) $(archdir)/googletest
+.PHONY:	googletest-clean
+clean:	googletest-clean
+googletest-clean:
+	$(RM) $(TEST_EXE) $(TEST_XML)
