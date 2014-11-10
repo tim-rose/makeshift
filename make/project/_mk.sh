@@ -22,8 +22,7 @@ PROJECT.CFLAGS = -std=c99 -O
 PROJECT.C_WARN_FLAGS = -pedantic -Wall -Wextra -Wmissing-prototypes \\
 	-Wmissing-declarations 	-Wimplicit -Wpointer-arith \\
 	-Wwrite-strings -Waggregate-return -Wnested-externs \\
-	-Wcast-align -Wshadow -Wstrict-prototypes -Wredundant-decls \\
-        -Wno-gnu-zero-variadic-macro-arguments
+	-Wcast-align -Wshadow -Wstrict-prototypes -Wredundant-decls
 
 PROJECT.CXXFLAGS = -std=c++0x -O
 PROJECT.C++_WARN_FLAGS = -pedantic -Wall -Wextra \\
