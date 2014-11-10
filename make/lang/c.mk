@@ -126,7 +126,7 @@ clean:	c-clean
 .PHONY:	c-clean
 c-clean:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/$(C_OBJ) $(C_MAIN)
+	$(RM) $(C_OBJ) $(C_MAIN)
 
 #
 # tidy: --Reformat C files consistently.
