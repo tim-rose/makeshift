@@ -9,8 +9,10 @@
 # if defined.
 #
 OS.C_WARN_FLAGS = -Wno-gnu-zero-variadic-macro-arguments
-OS.C_CPPFLAGS = -I/usr/local/include
+OS.C_CPPFLAGS   = -I/usr/local/include
+OS.C_DEFS       = -D__Darwin__
 OS.C++_CPPFLAGS = -I/usr/local/include -I/usr/include/c++/4.2.1
+OS.C++_DEFS     = -D__Darwin__
 OS.CXXFLAGS 	= -stdlib=libstdc++
 RANLIB		= ranlib
 GREP		= grep
