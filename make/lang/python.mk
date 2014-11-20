@@ -46,7 +46,7 @@ python-toc:
 .PHONY:	python-src
 src:	python-src
 python-src:
-	$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn PY_SRC *.py
 #
 # todo: --Report unfinished work (identified by keyword comments)
