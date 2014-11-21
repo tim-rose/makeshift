@@ -38,7 +38,7 @@ ruby-toc:
 .PHONY:	ruby-src
 src:	ruby-src
 ruby-src:
-	$(ECHO) "++ make[$@]@$$PWD"
+	$(ECHO_TARGET)
 	@mk-filelist -qn RB_SRC *.rb
 #
 # todo: --Report unfinished work (identified by keyword comments)

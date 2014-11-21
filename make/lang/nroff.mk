@@ -34,7 +34,7 @@ $(man8dir)/%.8:	%.8;	$(INSTALL_FILE) $? $@
 .PHONY: nroff-toc
 toc:	nroff-toc
 nroff-toc:
-	@$(ECHO) "++ make[$@]: rebuilding table-of-contents"
+	@$(ECHO_TARGET)
 	mk-toc $(MAN1_SRC) $(MAN3_SRC) $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC)
 
 #
