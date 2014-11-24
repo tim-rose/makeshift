@@ -176,6 +176,8 @@ include os/$(OS).mk arch/$(ARCH).mk
 	@echo "# $(origin ECHO_TARGET) variable \"ECHO_TARGET\":"
 	@echo "ECHO_TARGET=(unprintable)"
 
++var[.VARIABLES]:;@: # avoid listing a list of all the variables
+
 #
 # +help: --Output some help text extracted from the included makefiles.
 #
