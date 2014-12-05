@@ -2,6 +2,53 @@
 #
 # _MK.SH	--Create the fallback ".mk" file for the OS directory
 #
+# Remarks:
+# Consider using these flags too...
+#    -Wuseless-cast
+#    -Wzero-as-null-pointer-constant
+#
+# See Also:
+# http://stackoverflow.com/questions/5088460/flags-to-enable-thorough-and-verbose-g-warnings/9862800#9862800
+#
+cpp_flags=$(cat <<EOF
+    -Wctor-dtor-privacy \\
+    -Weffc++ \\
+    -Winit-self \\
+    -Wlogical-op \\
+    -Wno-variadic-macros \\
+    -Wnoexcept \\
+    -Wold-style-cast \\
+    -Woverloaded-virtual \\
+    -Wstrict-null-sentinel
+EOF
+)
+c_flags=$(cat <<EOF
+    -Waggregate-return \\
+    -Wcast-align \\
+    -Wcast-qual \\
+    -Wdisabled-optimization \\
+    -Wformat=2 \\
+    -Wimplicit \\
+    -Wmissing-declarations \\
+    -Wmissing-include-dirs \\
+    -Wmissing-prototypes \\
+    -Wnested-externs \\
+    -Wpointer-arith \\
+    -Wredundant-decls \\
+    -Wshadow \\
+    -Wsign-conversion \\
+    -Wsign-promo \\
+    -Wstack-protector \\
+    -Wstrict-overflow=5 \\
+    -Wstrict-prototypes \\
+    -Wswitch-enum \\
+    -Wswitch-default \\
+    -Wundef \\
+    -Wwrite-strings
+EOF
+)
+
+
 date=$(date)
 cat <<EOF
 #
@@ -19,14 +66,7 @@ PROJECT.C_DEFS =
 PROJECT.C++_DEFS =
 
 PROJECT.CFLAGS = -std=c99 -O
-PROJECT.C_WARN_FLAGS = -pedantic -Wall -Wextra -Wmissing-prototypes \\
-	-Wmissing-declarations 	-Wimplicit -Wpointer-arith \\
-	-Wwrite-strings -Waggregate-return -Wnested-externs \\
-	-Wcast-align -Wshadow -Wstrict-prototypes -Wredundant-decls
-
+PROJECT.C_WARN_FLAGS = -pedantic -Wall -Wextra $c_flags
 PROJECT.CXXFLAGS = -std=c++0x -O
-PROJECT.C++_WARN_FLAGS = -pedantic -Wall -Wextra \\
-        -Wpointer-arith -Wwrite-strings \\
-        -Wcast-align -Wshadow -Wredundant-decls \\
-	-Wno-variadic-macros
+PROJECT.C++_WARN_FLAGS = -pedantic -Wall -Wextra $cpp_flags $c_flags
 EOF
