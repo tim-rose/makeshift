@@ -2,7 +2,6 @@
 # MARKDOWN.MK --Rules for dealing with markdown files.
 #
 # Contents:
-# %-md.html: --Rule for converting MD to a "full" HTML document.
 # build:     --Create HTML documents from MMD_SRC.
 # clean:     --Clean up MMD_SRC derived files.
 # src:       --Update MD_SRC, MMD_SRC macros.
@@ -28,13 +27,6 @@ $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 	multimarkdown $*.mmd > $@
 
 #
-# %-md.html: --Rule for converting MD to a "full" HTML document.
-#
-%-md.html:	%.md %.html
-	$(ECHO_TARGET)
-	{ echo "<html><body>"; cat $*.html; echo "</body></html>"; } >$@
-
-#
 # build: --Create HTML documents from MMD_SRC.
 #
 build:	$(MMD_SRC:%.mmd=%.html) cmd-exists[multimarkdown]
@@ -46,7 +38,7 @@ clean:	clean-markdown
 .PHONY:	clean-markdown
 clean-markdown:
 	$(ECHO_TARGET)
-	$(RM) $(MMD_SRC:%.mmd=%.html) $(MD_SRC:%-md.md=%.html)
+	$(RM) $(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html)
 
 
 #
