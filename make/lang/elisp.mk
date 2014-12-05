@@ -1,67 +1,63 @@
 #
-# LISP.MK --Rules for (emacs) lisp stuff.
+# ELISP.MK --Rules for emacs lisp stuff.
 #
 # Contents:
-# %.el:       --Rules for installing lisp scripts
-# build:      --Compile lisp files using the emacs byte compiler.
-# lisp-clean: --Remove lisp objects
-# lisp-toc:   --Build the table-of-contents for LISP-ish files.
-# lisp-src:   --Update the LISP_SRC macro.
-# todo:       --Report "unfinished work" comments in lisp files.
-#
-# Remarks:
-# One day when I get back to some serious lisp development I'll
-# probably rename this to elisp.mk...
+# %.el:        --Rules for installing elisp scripts.
+# build:       --Compile elisp files using the emacs byte compiler.
+# clean-elisp: --Remove byte-compiled elisp.
+# toc-elisp:   --Build the table-of-contents for emacs lisp files.
+# src-elisp:   --Update the ELISP_SRC macro with a list of ".el" files.
+# todo:        --Report "unfinished work" comments in elisp files.
 #
 
 #
-# %.el: --Rules for installing lisp scripts
+# %.el: --Rules for installing elisp scripts.
 #
-$(lispdir)/%.el:	%.el;	$(INSTALL_FILE) $? $@
-$(lispdir)/%.elc:	%.elc;	$(INSTALL_FILE) $? $@
+$(elispdir)/%.el:	%.el;	$(INSTALL_FILE) $? $@
+$(elispdir)/%.elc:	%.elc;	$(INSTALL_FILE) $? $@
 
-LISP_OBJ = $(LISP_SRC:%.el=%.elc)
+ELISP_OBJ = $(ELISP_SRC:%.el=%.elc)
 
 #
-# build: --Compile lisp files using the emacs byte compiler.
+# build: --Compile elisp files using the emacs byte compiler.
 #
 %.elc:	%.el
 	emacs -batch -f batch-byte-compile $*.el
-pre-build:	src-var-defined[LISP_SRC]
-build:	$(LISP_OBJ)
+pre-build:	src-var-defined[ELISP_SRC]
+build:	$(ELISP_OBJ)
 
 #
-# lisp-clean: --Remove lisp objects
+# clean-elisp: --Remove byte-compiled elisp.
 #
-distclean:	lisp-clean
-clean:	lisp-clean
-.PHONY: lisp-clean
-lisp-clean:
-	$(RM) $(LISP_OBJ)
+distclean:	clean-elisp
+clean:	clean-elisp
+.PHONY: clean-elisp
+clean-elisp:
+	$(RM) $(ELISP_OBJ)
 
 #
-# lisp-toc: --Build the table-of-contents for LISP-ish files.
+# toc-elisp: --Build the table-of-contents for emacs lisp files.
 #
-.PHONY: lisp-toc
-toc:	lisp-toc
-lisp-toc:
+.PHONY: toc-elisp
+toc:	toc-elisp
+toc-elisp:
 	$(ECHO_TARGET)
-	mk-toc $(LISP_SRC)
+	mk-toc $(ELISP_SRC)
 
 #
-# lisp-src: --Update the LISP_SRC macro.
+# src-elisp: --Update the ELISP_SRC macro with a list of ".el" files.
 #
-src:	lisp-src
-.PHONY:	lisp-src
-lisp-src:
+src:	src-elisp
+.PHONY:	src-elisp
+src-elisp:
 	$(ECHO_TARGET)
-	@mk-filelist -qn LISP_SRC *.el
+	@mk-filelist -qn ELISP_SRC *.el
 
 #
-# todo: --Report "unfinished work" comments in lisp files.
+# todo: --Report "unfinished work" comments in elisp files.
 #
-.PHONY: lisp-todo
-todo:	lisp-todo
-lisp-todo:
+.PHONY: todo-elisp
+todo:	todo-elisp
+todo-elisp:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(LISP_SRC) /dev/null || true
+	@$(GREP) -e TODO -e FIXME -e REVISIT $(ELISP_SRC) /dev/null || true
