@@ -2,7 +2,6 @@
 # C++.MK --Rules for building C++ objects and programs.
 #
 # Contents:
-# main:     --Build a program from a file that contains "main".
 # %.o:      --Compile a C++ file into an arch-specific sub-directory.
 # %.o:      --Compile an arch-specific C++ file into an arch-specific sub-directory.
 # build[%]: --Build a C++ file's related object.
@@ -33,6 +32,9 @@ GCOV_GCDA_FILES = $(C++_SRC:%.cpp=$(archdir)/%.gcda)
 include coverage.mk
 
 C++	= $(CXX)
+LD	= $(CXX)
+LANG.LDFLAGS = -stdlib=libstdc++
+
 C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS)\
 	$(PROJECT.C++_DEFS) $(LOCAL.C++_DEFS) $(TARGET.C++_DEFS) \
 
@@ -63,19 +65,6 @@ C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
 C++_OBJ	= $(C++_SRC:%.cpp=$(archdir)/%.o)
 C++_MAIN_OBJ = $(C++_MAIN_SRC:%.cpp=$(archdir)/%.o)
 C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
-
-#
-# main: --Build a program from a file that contains "main".
-#
-# Remarks:
-# This isn't as useful as you might think, because it doesn't include
-# any other objects explicitly (although you can reference objects
-# indirectly via a (sub) library.
-#
-$(archdir)/%: $(archdir)/%.o
-	$(ECHO_TARGET)
-	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $^ $(C++_LDFLAGS) $(C++_LDLIBS)
-	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $^ $(C++_LDFLAGS) $(C++_LDLIBS)
 
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.

@@ -159,7 +159,7 @@ devkit-distclean:
 	$(RM) -r $(OS) $(ARCH) $(archdir)
 
 include targets.mk valid.mk
-include lang/mk.mk $(SRC_LANG:%=lang/%.mk)
+include lang/mk.mk $(SRC_LANG:%=lang/%.mk) ld.mk
 include os/$(OS).mk arch/$(ARCH).mk
 -include project/$(PROJECT).mk
 

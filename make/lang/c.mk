@@ -2,7 +2,6 @@
 # C.MK --Rules for building C objects and programs.
 #
 # Contents:
-# main:              --Build a program from a file that contains "main".
 # %.o:               --Compile a C file into an arch-specific sub-directory.
 # build[%]:          --Build a C file's related object.
 # %.h:               --Install a C header (.h) file.
@@ -52,25 +51,8 @@ C_CPPFLAGS = $(CPPFLAGS) \
 
 C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
-C_LDFLAGS = $(LDFLAGS) \
-	$(ARCH.LDFLAGS) $(OS.LDFLAGS) \
-	$(PROJECT.LDFLAGS) $(LOCAL.LDFLAGS) $(TARGET.LDFLAGS) \
-	-L$(libdir)
-
-C_LDLIBS = $(LOADLIBES) $(LDLIBS) \
-	$(OS.LDLIBS) $(ARCH.LDLIBS) \
-	$(PROJECT.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
-
 C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
-
-#
-# main: --Build a program from a file that contains "main".
-#
-$(archdir)/%: $(archdir)/%.o
-	$(ECHO_TARGET)
-	@echo $(CC) -o $@ $(C_ALL_FLAGS) $^ $(C_LDFLAGS) $(C_LDLIBS)
-	@$(CC) -o $@ $(C_WARN_FLAGS) $(C_ALL_FLAGS) $^ $(C_LDFLAGS) $(C_LDLIBS)
 
 #
 # %.o: --Compile a C file into an arch-specific sub-directory.
