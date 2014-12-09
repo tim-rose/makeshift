@@ -2,10 +2,10 @@
 # MARKDOWN.MK --Rules for dealing with markdown files.
 #
 # Contents:
-# build:     --Create HTML documents from MMD_SRC.
-# clean:     --Clean up MMD_SRC derived files.
-# src:       --Update MD_SRC, MMD_SRC macros.
-# todo:      --Report unfinished work in markdown files.
+# build: --Create HTML documents from MMD_SRC.
+# clean: --Clean up MMD_SRC derived files.
+# src:   --Update MD_SRC, MMD_SRC macros.
+# todo:  --Report unfinished work in markdown files.
 #
 # Remarks:
 # The markdown module recognises both "original" markdown files

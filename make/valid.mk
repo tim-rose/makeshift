@@ -13,8 +13,26 @@
 #
 # Remarks:
 # The "valid" module is a library of validation tests in the form of
-# make targets.  These are used by various metarules in the build
-# system.
+# make targets.  These are used by various pattern rules in the devkit
+# build system.
+#
+# Example: the following definition will fail if the macro $(INPUT_FILES)
+# is not defined, or if there is no command *my-frobnicate*:
+#
+# ```
+# my-target: var-defined[INPUT_FILES] cmd-exists[frobnicate]
+#         frobnicate $(INPUT_FILES) > $@
+# ```
+#
+# Note that the target will fail anyway if *frobnicate* doesn't exist,
+# and probably *frobnicate* will generate some error if the supplied
+# $(INPUT_FILES) is empty, however with these dependents the error
+# messages will likely make more sense:
+#
+# ```
+# Error: INPUT_FILES variable(s) not defined
+# Error: command "frobnicate" does not exist
+# ```
 #
 VAR_UNDEF = 'Error: %s variable(s) not defined\n'
 #
