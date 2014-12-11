@@ -1,5 +1,8 @@
 #!/bin/sh
-usage="Usage: remake [-c command] files..."
+#
+# REMAKE --Watch some files, and run a "make" command when they change.
+#
+usage="Usage: remake [-c command] [-d delay] files..."
 
 log_message() { printf "remake: "; printf "$@"; printf "\n"; } >&2
 notice()      { log_message "$@"; }
@@ -26,12 +29,17 @@ do
 done
 shift $(($OPTIND - 1))
 
+if [ $# -le 0 ]; then
+    log_quit 'no files'
+fi
+
 now=0
 while :; do
     debug '%d: reference' $now
     for file; do
         mtime=$(stat -c '%Y' "$file")
         debug '%d: %s' $mtime "$file"
+
         if [ $mtime -gt $now ]; then
             info '"%s" has changed' "$file"
             $command
