@@ -12,7 +12,7 @@ VCS_EXCLUDES = --exclude .svn
 #
 .PHONY:		vcs-status-ok
 vcs-status-ok:
-	@export n=$$(svn status -u |grep -v '^[X?]' | wc -l); \
+	@n=$$(svn status -u |grep -v '^[X?]' | wc -l); \
 	if [ $$n -gt 1 ]; then \
 	    echo "There are $$(( $$n-1 )) unresolved changes"; \
 	    false; \
