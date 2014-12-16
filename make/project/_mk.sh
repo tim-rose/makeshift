@@ -3,9 +3,12 @@
 # _MK.SH	--Create the fallback ".mk" file for the OS directory
 #
 # Remarks:
-# Consider using these flags too...
+# Consider using these flags too, if/when they're available...
 #    -Wuseless-cast
 #    -Wzero-as-null-pointer-constant
+#    -Wlogical-op
+#    -Wnoexcept
+#     -Wstrict-null-sentinel
 #
 # See Also:
 # http://stackoverflow.com/questions/5088460/flags-to-enable-thorough-and-verbose-g-warnings/9862800#9862800
@@ -14,12 +17,9 @@ cpp_flags=$(cat <<EOF
     -Wctor-dtor-privacy \\
     -Weffc++ \\
     -Winit-self \\
-    -Wlogical-op \\
     -Wno-variadic-macros \\
-    -Wnoexcept \\
     -Wold-style-cast \\
-    -Woverloaded-virtual \\
-    -Wstrict-null-sentinel
+    -Woverloaded-virtual
 EOF
 )
 c_flags=$(cat <<EOF
