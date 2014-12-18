@@ -34,11 +34,18 @@ SUBDIRS := $(shell find * -type d -prune)
 PREFIX=/usr/local
 prefix=$(PREFIX)
 #
-# ECHO is a shell no-op by default, define it to "echo" for debugging output.
+# ECHO is a shell no-op by default, but can be redefined by setting "VERBOSE".
 #
-ECHO = :
-ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ older-than $?"
-#ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ depends-on $^"
+ifeq "$(VERBOSE)" "1"
+    ECHO = echo
+else ifeq "$(VERBOSE)" "color"
+    ECHO = colour_echo() { printf '\033[36m%s\033[m\n' "$$*"; }; colour_echo
+else
+    ECHO = :
+endif
+
+ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"
+#ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$^: $^"
 
 .SUFFIXES:			# remove default suffix rules
 
