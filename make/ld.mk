@@ -29,5 +29,4 @@ ALL_LDLIBS = $(LOADLIBES) $(LDLIBS) \
 #
 $(archdir)/%: $(archdir)/%.o
 	$(ECHO_TARGET)
-	@echo "..." $(LD) $(ALL_LDFLAGS) -o $@ $^ $(ALL_LDLIBS)
 	$(LD) $(ALL_LDFLAGS) -o $@ $^ $(ALL_LDLIBS)
