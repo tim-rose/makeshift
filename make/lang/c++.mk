@@ -22,7 +22,7 @@
 #
 # Include any dependency information that's available.
 #
--include $(C++_SRC:%.cpp=$(archdir)/%-depend.mk)
+-include $(C++_SRC:%.cpp=$(archdir)/%.d)
 
 #
 # Generate coverage reports using gcov, lcov.
@@ -71,18 +71,16 @@ C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
 #
 $(archdir)/%.o: %.cpp mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@echo $(C++) $(C++_ALL_FLAGS) -c -o $(archdir)/$*.o $<
-	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ \
-	    -MMD -MF $(archdir)/$*-depend.mk $<
+	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
+	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
 
 #
 # %.o: --Compile an arch-specific C++ file into an arch-specific sub-directory.
 #
 $(archdir)/%.o: $(archdir)/%.cpp
 	$(ECHO_TARGET)
-	@echo $(C++) $(C++_ALL_FLAGS) -c -o $(archdir)/$*.o $<
-	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ \
-	    -MMD -MF $(archdir)/$*-depend.mk $<
+	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
+	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
 
 #
 # build[%]: --Build a C++ file's related object.

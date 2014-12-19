@@ -26,7 +26,7 @@
 #
 # Include any dependency information that's available.
 #
--include $(C_SRC:%.c=$(archdir)/%-depend.mk)
+-include $(C_SRC:%.c=$(archdir)/%.d)
 
 #
 # Generate coverage reports using gcov, lcov.
@@ -65,15 +65,13 @@ C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 #
 $(archdir)/%.o: %.c mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS) -c -o $(archdir)/$*.o $<
-	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ \
-	    -MMD -MF $(archdir)/$*-depend.mk $<
+	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
+	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 
 $(archdir)/%.o: $(archdir)/%.c
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS) -c -o $(archdir)/$*.o $<
-	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ \
-	    -MMD -MF $(archdir)/$*-depend.mk $<
+	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
+	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 
 #
 # build[%]: --Build a C file's related object.

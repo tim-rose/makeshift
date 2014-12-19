@@ -7,8 +7,10 @@
 # include file sets up some definitions to assist building Debian
 # packages.
 #
+OS.CFLAGS 	= -MMD
 OS.C_DEFS	= -D__Linux__ -D_BSD_SOURCE -D_XOPEN_SOURCE
 OS.C++_DEFS	= -D__Linux__ -D_BSD_SOURCE -D_XOPEN_SOURCE
+OS.CXXFLAGS 	= -MMD -stdlib=libstdc++
 
 RANLIB		= ranlib
 FAKEROOT	= fakeroot

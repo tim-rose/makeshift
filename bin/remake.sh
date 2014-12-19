@@ -36,7 +36,10 @@ fi
 now=0
 while :; do
     debug '%d: reference' $now
-    for file; do
+    for file; do		# REVISIT: bulk compare with ls(1) output
+	if [ ! -e "$file" ]; then
+	    continue		# bad wildcard?
+	fi
         mtime=$(stat -c '%Y' "$file")
         debug '%d: %s' $mtime "$file"
 
