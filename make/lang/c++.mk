@@ -24,11 +24,10 @@
 #
 -include $(C++_SRC:%.cpp=$(archdir)/%.d)
 
-#
-# Generate coverage reports using gcov, lcov.
-#
-GCOV_FILES = $(C++_SRC:%.cpp=%.cpp.gcov)
-GCOV_GCDA_FILES = $(C++_SRC:%.cpp=$(archdir)/%.gcda)
+C++_OBJ	= $(C++_SRC:%.cpp=$(archdir)/%.o)
+C++_MAIN_OBJ = $(C++_MAIN_SRC:%.cpp=$(archdir)/%.o)
+C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
+
 include coverage.mk
 
 C++	= $(CXX)
@@ -53,18 +52,9 @@ C++_CPPFLAGS = $(CPPFLAGS) \
 
 C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
-C++_LDFLAGS = $(LDFLAGS) \
-	$(ARCH.LDFLAGS) $(OS.LDFLAGS) \
-	$(PROJECT.LDFLAGS) $(LOCAL.LDFLAGS) $(TARGET.LDFLAGS) \
-	-L$(libdir)
-
 C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
 	$(OS.LDLIBS) $(ARCH.LDLIBS) \
 	$(PROJECT.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
-
-C++_OBJ	= $(C++_SRC:%.cpp=$(archdir)/%.o)
-C++_MAIN_OBJ = $(C++_MAIN_SRC:%.cpp=$(archdir)/%.o)
-C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
 
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
@@ -92,6 +82,16 @@ build[%.cpp]:   $(archdir)/%.o; $(ECHO_TARGET)
 #
 $(includedir)/%.hpp:	%.hpp;		$(INSTALL_FILE) $? $@
 $(includedir)/%.hpp:	$(archdir)/%.hpp;	$(INSTALL_FILE) $? $@
+
+#
+# +c++-defines: --Print a list of predefined macros for the "C++" language.
+#
+# Remarks:
+# This target uses gcc-specific compiler options, so it may not work
+# on your compiler...
+#
++c++-defines:
+	@touch ..c;  $(C++) -E -dM ..c; $(RM) ..c
 
 #
 # build: --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)

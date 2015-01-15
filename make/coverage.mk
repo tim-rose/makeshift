@@ -5,16 +5,24 @@
 # The coverage module provides the phony targets "coverage" "html-coverage".
 # These targets build textual and html coverage reports respectively.
 #
-# The including makefile must define these macros:
-# GCOV_FILES	  --the ".gcov" files (e.g. $(C_SRC:%.c=%.c.gcov)
-# GCOV_GCDA_FILES --the ".gcda" files (e.g. $(C_SRC:%.cpp=$(archdir)/%.gcda))
-#
 # Coverage is tied fairly closely to gcov/lcov, and therefore the GCC
-# toolchain.  The "coverage" target is auto-recursive, and is used to
-# generate the text reports in the current directory.  The HTML reports
-# act on an entire tree, so they are not generated recursively; you must
-# move to the directory and "make html-coverage".
+# toolchain; you must add "--coverage" to $(CFLAGS) for the statistics
+# files to be generated, and to $(LDFLAGS) to link in the
+# statistics-gathering code.
 #
+# The "coverage" target is auto-recursive, and is used to
+# generate the text reports in the per directory.  The HTML reports
+# act on an entire tree, so they are not generated recursively; you must
+# move to a directory and "make html-coverage".
+#
+# The coverage target generates coverage data for the files specified
+# by $(GCOV_FILES), which is automatically defined via $(C_SRC) and
+# $(C++_SRC).
+#
+
+GCOV_FILES := $(C_SRC:%.c=%.c.gcov) $(C++_SRC:%.c=%.cpp.gcov)
+GCOV_GCDA_FILES := $(C_OBJ:%.o=%.gcda) $(C++_OBJ:%.o=%.gcda)
+
 .PHONY: coverage html-coverage
 coverage:	$(GCOV_FILES)
 html-coverage:	$(archdir)/coverage/index.html

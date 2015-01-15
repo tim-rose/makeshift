@@ -28,11 +28,10 @@
 #
 -include $(C_SRC:%.c=$(archdir)/%.d)
 
-#
-# Generate coverage reports using gcov, lcov.
-#
-GCOV_FILES = $(C_SRC:%.c=%.c.gcov)
-GCOV_GCDA_FILES = $(C_SRC:%.c=$(archdir)/%.gcda)
+C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
+C_MAIN_OBJ = $(C_MAIN_SRC:%.cpp=$(archdir)/%.o)
+C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
+
 include coverage.mk
 
 C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS)\
@@ -50,9 +49,6 @@ C_CPPFLAGS = $(CPPFLAGS) \
         -I$(includedir)
 
 C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
-
-C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
-C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 
 #
 # %.o: --Compile a C file into an arch-specific sub-directory.
@@ -83,6 +79,16 @@ build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 #
 $(includedir)/%.h:	%.h;		$(INSTALL_FILE) $? $@
 $(includedir)/%.hpp:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
+
+#
+# +c-defines: --Print a list of predefined macros for the "C" language.
+#
+# Remarks:
+# This target uses gcc-specific compiler options, so it may not work
+# on your compiler...
+#
++c-defines:
+	@touch ..c;  $(CC) -E -dM ..c; $(RM) ..c
 
 #
 # build: --c-specific customisations for the "build" target.
