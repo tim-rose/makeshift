@@ -15,7 +15,8 @@ OS.C_DEFS       = -D__Darwin__
 
 OS.C++_CPPFLAGS = -I/usr/local/include -I/usr/include/c++/4.2.1
 OS.C++_DEFS     = -D__Darwin__
-OS.CXXFLAGS 	= -MMD -stdlib=libstdc++
+OS.CXXFLAGS 	= -MMD
+OS.LDFLAGS	= -stdlib=libstdc++
 
 RANLIB		= ranlib
 GREP		= grep
