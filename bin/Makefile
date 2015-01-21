@@ -1,7 +1,7 @@
 #
 # Makefile --Build rules devkit/bin.
 #
-SRC_LANG	= sh
+language = sh
 
 AWK_SRC = awk-tidy.awk
 SH_SRC = echo+.sh mk-ar-merge.sh mk-ar.sh mk-filelist.sh \

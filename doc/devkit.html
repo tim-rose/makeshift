@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>Devkit</title>
+	<link type="text/css" rel="stylesheet" href="doc.css"/>
+	<link type="text/css" rel="stylesheet" href="file:///usr/local/lib/www/highlight/styles/default.css"/>
+<script src="file:///usr/local/lib/www/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+<h1 id="title">Devkit</h1>
+
+<h2 id="makefileconventions">Makefile Conventions</h2>
+
+<p>The <em>Makefile Conventions</em> section of the <em>GNU make</em> manual describes
+several features that are typical of <strong>make</strong> as used to build GNU software.
+Devkit makes it easy to support those conventions:</p>
+
+<ul>
+<li>special handling for <strong>make</strong>&#8217;s standard targets</li>
+<li>automatic definition of of <strong>make</strong>&#8217;s standard directories</li>
+<li>pattern rules for installing a projects artefacts into the standard directories.</li>
+</ul>
+
+<h3 id="standardtargets">Standard Targets</h3>
+
+<p><strong>make</strong> defines the following &#8220;standard&#8221; targets:</p>
+
+<ul>
+<li><code>all</code> &#8211;build all artefacts (also, <code>build</code>)</li>
+<li><code>install</code> &#8211;build and install everything to their location(s) for use</li>
+<li><code>clean</code> &#8211;delete files created in the normal process of building</li>
+<li><code>distclean</code> &#8211;delete everything else</li>
+<li><code>tags</code> &#8211;build a tags database of program symbols</li>
+<li><code>check</code> &#8211;perform self tests (also <code>test</code>).</li>
+</ul>
+
+<p>The summaries above are a simplification of these targets meanings,
+see the <em>GNU make</em> manual for full details. <strong>make</strong> defines even more
+targets than these, but they&#8217;re of m</p>
+
+<ul>
+<li>automatically recursive</li>
+<li>behaviour depends on language</li>
+<li>makefiles can do this too. In fact, &#8220;install&#8221; is intended for exactly this purpose.</li>
+</ul>
+
+<h3 id="standarddirectories">Standard Directories</h3>
+
+<ul>
+<li>DESTDIR, prefix</li>
+<li>usr, opt</li>
+<li>FSHS</li>
+</ul>
+
+<h3 id="patternrules">Pattern Rules</h3>
+
+<h2 id="customisation">Customisation</h2>
+
+<h3 id="scopedvariables">Scoped Variables</h3>
+
+<h4 id="targetlocalproject">TARGET, LOCAL, PROJECT</h4>
+
+<h3 id="os">OS</h3>
+
+<h3 id="arch">ARCH</h3>
+
+<h3 id="src_lang">SRC_LANG</h3>
+
+<h3 id="project">PROJECT</h3>
+
+<h2 id="helpanddebugging">Help and Debugging</h2>
+
+<p>Because building things with <strong>make</strong> is declarative, not procedural, it
+can at times be difficult to see how and why <strong>make</strong> has chosen to take
+some particular actions. Devkit provides some special targets and
+logging variables to help reveal what&#8217;s happening.</p>
+
+<h3 id="vars">+vars</h3>
+
+<p>The <code>+vars</code> target echoes a list of all the variables defined in
+<strong>make</strong>. It&#8217;s a big list &#8211; it&#8217;ll include <em>all</em> the variables
+defined in the environment, from the <strong>make</strong> command invocation, as
+well as the variables defined in the makefiles themselves. However,
+it&#8217;s straightforward to filter items of interest.</p>
+
+<p>E.g., to show the variables that define ways of using install:</p>
+
+<pre><code class="bash">$ make +vars | grep install
+INSTALL='install -D'
+INSTALL_DIRECTORY='install -D -d'
+INSTALL_FILE='install -D -m 644'
+INSTALL_PROGRAM='install -D -m 755'
+</code></pre>
+
+<p>Devkit also defines a pattern target for showing a single variable:
+<code>+var[%]</code>. E.g.:</p>
+
+<pre><code class="bash">$ make +var[CC] +var[AR] +var[libdir]
+CC='gcc'
+AR='ar'
+libdir='//usr/local///lib/'
+</code></pre>
+
+<p>If the <code>ECHO</code> variable is defined as &#8220;echo&#8221;, the origin of each
+variable is displayed as a comment:</p>
+
+<pre><code class="bash">$ make +var[CC] +var[AR] +var[libdir] ECHO=echo
+# environment variable &quot;CC&quot;:
+CC='gcc'
+# default variable &quot;AR&quot;:
+AR='ar'
+# file variable &quot;libdir&quot;:
+libdir='//usr/local///lib/'
+</code></pre>
+
+<p><code>ECHO</code> is described in more detail below.</p>
+
+<h3 id="help">+help</h3>
+
+<p>TBD</p>
+
+<h3 id="features">+features</h3>
+
+<p><strong>Make</strong> may be built with a number of optional features. It defines
+a special variable, <code>.FEATURES</code>, that describes which are active.</p>
+
+<pre><code class="bash">$ make +var[.FEATURES]
+.FEATURES='target-specific order-only second-expansion else-if archives jobserver check-symlink'
+</code></pre>
+
+<p>As a convenience, Devkit also defines a special target for this variable:</p>
+
+<pre><code class="bash">$ make +features
+target-specific order-only second-expansion else-if archives jobserver check-symlink
+</code></pre>
+
+<h3 id="dirs">+dirs</h3>
+
+<p>TBD</p>
+
+<h3 id="stddirs">+stddirs</h3>
+
+<p>Devkit defines a target to show the values of <strong>make</strong>&#8217;s &#8220;standard&#8221;
+installation directories.</p>
+
+<pre><code class="bash">$ make +stddirs
+DESTDIR:
+prefix:         /usr/local
+opt:
+usr:
+subdir:
+archdir:        darwin-x86_64
+rootdir:        //usr/local
+bindir:         //usr/local///bin
+sbindir:        //usr/local///sbin
+libexecdir:     //usr/local///libexec/
+datadir:        //usr/local///share/
+sysconfdir:     //usr/local/etc//
+divertdir:      //usr/local/var/lib/divert/
+sharedstatedir: //usr/local//com/
+localstatedir:  //usr/local/var//
+srvdir:         //usr/local/srv/
+wwwdir:         //usr/local/srv/www/
+libdir:         //usr/local///lib/
+infodir:        //usr/local//info
+lispdir:        //usr/local//share/emacs/site-lisp
+includedir:     //usr/local///include/
+mandir:         //usr/local///share//man
+</code></pre>
+
+<p>Note that the paths shown here have empty path elements (e.g. &#8220;//&#8221;).
+This is because these paths are defined in terms of several other
+variables, <code>DESTDIR</code>, <code>prefix</code>, <code>opt</code> and <code>usr</code>, and
+some of these may be unset. That&#8217;s not a problem in most cases
+because empty path elements are simply ignored. However, <strong>make</strong>
+running in a <em>Cygwin</em> context (a Unix compatibility system for
+Microsoft OSes) will treat two leading slashes (e.g. &#8220;//some/file/path&#8221;)
+specially and incorrectly as a UNC path.</p>
+
+<h3 id="echo">ECHO</h3>
+
+<p>Devkit defines a variable <code>ECHO</code> that is used for general logging.
+By default it is defined as &#8220;:&#8221;, the <strong>sh</strong> null command, but may be
+redefined to any command that accepts arbitrary arguments.</p>
+
+<p>Typical usage is to define <code>ECHO</code> as the <strong>echo</strong> command, when
+invoking <em>make</em>:</p>
+
+<pre><code class="bash">$ make install ECHO=echo
+++ /Users/timmo/github/devkit pre-install older-than
+++ /Users/timmo/github/devkit install@bin older-than pre-install
+++ make: recursively building install@bin
+/Users/timmo/github/devkit/bin
+++ /Users/timmo/github/devkit/bin pre-install older-than
+++ /Users/timmo/github/devkit/bin install older-than //usr/local///bin/echo+ //usr/local///bin/mk-ar-merge //usr/local///bin/mk-ar //
+...
+</code></pre>
+
+<h4 id="echo_target">ECHO_TARGET</h4>
+
+<p>In fact, the <code>ECHO</code> variable is mostly used by the
+<code>ECHO_TARGET</code> variable, which in turn is used to log the context
+of resolving a target. The format of the <code>ECHO_TARGET</code> message
+is:</p>
+
+<pre><code>++ &lt;directory&gt; &lt;target&gt; older-than &lt;prequisites&gt;...
+</code></pre>
+
+<p>This format is intended to be easier to parse and post-process than
+<strong>make</strong>&#8217;s debug output.</p>
+
+</body>
+</html>

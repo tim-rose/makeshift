@@ -166,7 +166,7 @@ comment_prefix=''
 #
 # Still confused? Oh well, sorry 'bout that.
 #
-name_rgx='[a-zA-Z0-9_.$%@*/][-a-zA-Z0-9_.$%@*/]*[][{}():%*][][{}():%*]*'
+name_rgx='[a-zA-Z0-9_.$%@*\/][-a-zA-Z0-9_.$%@*\/]*[][{}():%*][][{}():%*]*'
 
 #
 # process command-line options
