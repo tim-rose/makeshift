@@ -2,10 +2,10 @@
 # MARKDOWN.MK --Rules for dealing with markdown files.
 #
 # Contents:
-# build: --Create HTML documents from MMD_SRC.
-# clean: --Clean up MMD_SRC derived files.
-# src:   --Update MD_SRC, MMD_SRC macros.
-# todo:  --Report unfinished work in markdown files.
+# build:          --Create HTML documents from MMD_SRC.
+# clean-markdown: --Clean up MMD_SRC derived files.
+# src-markdown:   --Update MD_SRC, MMD_SRC macros.
+# todo-markdown:  --Report unfinished work in markdown files.
 #
 # Remarks:
 # The markdown module recognises both "original" markdown files
@@ -32,7 +32,7 @@ $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 build:	$(MMD_SRC:%.mmd=%.html) cmd-exists[multimarkdown]
 
 #
-# clean: --Clean up MMD_SRC derived files.
+# clean-markdown: --Clean up MMD_SRC derived files.
 #
 clean:	clean-markdown
 .PHONY:	clean-markdown
@@ -42,7 +42,7 @@ clean-markdown:
 
 
 #
-# src: --Update MD_SRC, MMD_SRC macros.
+# src-markdown: --Update MD_SRC, MMD_SRC macros.
 #
 src:	src-markdown
 .PHONY:	src-markdown
@@ -52,7 +52,7 @@ src-markdown:
 	@mk-filelist -qn MMD_SRC *.mmd
 
 #
-# todo: --Report unfinished work in markdown files.
+# todo-markdown: --Report unfinished work in markdown files.
 #
 todo:	todo-markdown
 .PHONY: todo-markdown

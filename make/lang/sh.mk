@@ -3,13 +3,13 @@
 #
 # Contents:
 # %.sh:                --Rules for installing shell scripts, libraries
-# shell-build:         --Make scripts "executable".
+# build-shell:         --Make scripts "executable".
 # shell-src-var-defined: --Test if "enough" of the shell SRC vars. are defined.
-# shell-clean:         --Remove script executables.
-# awk-tidy:            --reformat/cleanup awk scripts
-# shell-toc:           --Build the table-of-contents for shell, awk files.
-# shell-src:           --shell-specific customisations for the "src" target.
-# todo:                --Report unfinished work (identified by keyword comments)
+# clean-shell:         --Remove script executables.
+# tidy-awk:            --reformat/cleanup awk scripts
+# toc-shell:           --Build the table-of-contents for shell, awk files.
+# src-shell:           --shell-specific customisations for the "src" target.
+# todo-shell:          --Report unfinished work in shell code.
 #
 shlibdir      = $(exec_prefix)/lib/sh/$(subdir)
 SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
@@ -24,9 +24,9 @@ $(shlibdir)/%.awk:	%.awk;	$(INSTALL_FILE) $*.awk $@
 $(shlibdir)/%.sed:	%.sed;	$(INSTALL_FILE) $*.sed $@
 
 #
-# shell-build: --Make scripts "executable".
+# build-shell: --Make scripts "executable".
 #
-pre-build:	shell-src-var-defined
+pre-build:	src-shell-var-defined
 build:	$(SHELL_TRG)
 
 #
@@ -39,37 +39,37 @@ shell-src-var-defined:
 	    false; \
 	fi >&2
 #
-# shell-clean: --Remove script executables.
+# clean-shell: --Remove script executables.
 #
-.PHONY: shell-clean
-clean:	shell-clean
-shell-clean:
+.PHONY: clean-shell
+clean:	clean-shell
+clean-shell:
 	$(RM) $(SHELL_TRG)
 
-distclean:	shell-clean
+distclean:	clean-shell
 
 #
-# awk-tidy: --reformat/cleanup awk scripts
+# tidy-awk: --reformat/cleanup awk scripts
 #
-tidy:	$(AWK_SRC:%=awk-tidy[%])
-awk-tidy[%]:
+tidy:	$(AWK_SRC:%=tidy-awk[%])
+tidy-awk[%]:
 	$(ECHO_TARGET)
-	awk-tidy $* >$*.tmp && mv $*.tmp $*
+	tidy-awk $* >$*.tmp && mv $*.tmp $*
 #
 #
-# shell-toc: --Build the table-of-contents for shell, awk files.
+# toc-shell: --Build the table-of-contents for shell, awk files.
 #
-.PHONY: shell-toc
-toc:	shell-toc
-shell-toc:
+.PHONY: toc-shell
+toc:	toc-shell
+toc-shell:
 	$(ECHO_TARGET)
 	mk-toc $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC)
 #
-# shell-src: --shell-specific customisations for the "src" target.
+# src-shell: --shell-specific customisations for the "src" target.
 #
-src:	shell-src
-.PHONY:	shell-src
-shell-src:
+src:	src-shell
+.PHONY:	src-shell
+src-shell:
 	$(ECHO_TARGET)
 	@mk-filelist -qn SH_SRC *.sh
 	@mk-filelist -qn SHL_SRC *.shl
@@ -77,11 +77,11 @@ shell-src:
 	@mk-filelist -qn SED_SRC *.sed
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
+# todo-shell: --Report unfinished work in shell code.
 #
-.PHONY: shell-todo
-todo:	shell-todo
-shell-todo:
+.PHONY: todo-shell
+todo:	todo-shell
+todo-shell:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT \
 	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null || true

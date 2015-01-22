@@ -2,9 +2,9 @@
 # CSS.MK --Rules for dealing with CSS files.
 #
 # Contents:
-# src-css: --Update the CSS_SRC, SCSS_SRC macros.
-# toc-css: --Build the table-of-contents for CSS files.
-# todo:    --Report "unfinished work" comments in CSS files.
+# src-css:  --Update the CSS_SRC, SCSS_SRC macros.
+# toc-css:  --Build the table-of-contents for CSS files.
+# todo-css: --Report "unfinished work" comments in CSS files.
 #
 
 $(wwwdir)/%.css:	%.css;	$(INSTALL_FILE) $? $@
@@ -33,7 +33,7 @@ toc-css:
 	mk-toc $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC)
 
 #
-# todo: --Report "unfinished work" comments in CSS files.
+# todo-css: --Report "unfinished work" comments in CSS files.
 #
 .PHONY: todo-css
 todo:	todo-css
