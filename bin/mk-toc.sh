@@ -118,7 +118,7 @@ set_type()
 	.c|.h|.css)
 	    comment_prefix=' * '
 	    ;;
-	.c++|.cpp|.C|.js)
+	.c++|.cpp|.cxx|.C|.cc|.js)
 	    comment_prefix='// '
 	    ;;
 	Makefile|.mk|.conf|.cfg|.ini|.p[lm]|.sh*|.awk|.sed|.rb)
@@ -166,7 +166,7 @@ comment_prefix=''
 #
 # Still confused? Oh well, sorry 'bout that.
 #
-name_rgx='[a-zA-Z0-9_.$%@*\/][-a-zA-Z0-9_.$%@*\/]*[][{}():%*][][{}():%*]*'
+name_rgx='[a-zA-Z0-9_.$%@*\/+][-a-zA-Z0-9_.$%@*\/]*[][{}():%*][][{}():%*]*'
 
 #
 # process command-line options
