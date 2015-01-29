@@ -5,6 +5,7 @@
 # %.o:               --Compile a C file into an arch-specific sub-directory.
 # build[%]:          --Build a C file's related object.
 # %.h:               --Install a C header (.h) file.
+# +c-defines:        --Print a list of predefined macros for the "C" language.
 # build:             --c-specific customisations for the "build" target.
 # c-src-var-defined: --Test if "enough" of the C SRC variables are defined
 # clean:             --Remove objects and executables created from C files.
