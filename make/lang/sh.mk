@@ -26,7 +26,7 @@ $(shlibdir)/%.sed:	%.sed;	$(INSTALL_FILE) $*.sed $@
 #
 # build-shell: --Make scripts "executable".
 #
-pre-build:	src-shell-var-defined
+pre-build:	shell-src-var-defined
 build:	$(SHELL_TRG)
 
 #
