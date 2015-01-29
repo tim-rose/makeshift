@@ -5,7 +5,8 @@
 # This just installs a default project file, it's up to 
 # particular projects to copy in their own project-specific stuff.
 #
-SRC = .mk
+MK_SRC = project.mk
+SRC = $(MK_SRC) .mk
 subdir	= project
 
 include devkit.mk 
