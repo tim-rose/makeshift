@@ -20,7 +20,7 @@
 # $(C++_SRC).
 #
 
-GCOV_FILES := $(C_SRC:%.c=%.c.gcov) $(C++_SRC:%.c=%.cpp.gcov)
+GCOV_FILES := $(C_SRC:%.c=%.c.gcov) $(C++_SRC:%.cpp=%.cpp.gcov)
 GCOV_GCDA_FILES := $(C_OBJ:%.o=%.gcda) $(C++_OBJ:%.o=%.gcda)
 
 .PHONY: coverage html-coverage
