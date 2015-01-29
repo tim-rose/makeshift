@@ -2,32 +2,38 @@
 # MK.MK --devkit rules for manipulating ".mk" files.
 #
 # Contents:
-# todo: --Report unfinished work (identified by keyword comments)
+# src-mk:  --Update MK_SRC with the list of ".mk" files.
+# toc-mk:  --Rebuild a Makefile's table-of-contents.
+# todo-mk: --Report unfinished work in Makefiles.
+# +dirs:   --Print the current make directory macros.
 #
-# Remarks:
-# "lang/mk" contains rules for managing makefiles.  These are just
-# customisations of the standard make targets.
-#
-$(libexecdir)/%.mk:	%.mk;	$(INSTALL_FILE) $< $@
 
-src:	mk-src
-.PHONY: mk-src
-mk-src:
+$(includedir)/%.mk:	%.mk;	$(INSTALL_FILE) $< $@
+
+#
+# src-mk: --Update MK_SRC with the list of ".mk" files.
+#
+src:	src-mk
+.PHONY: src-mk
+src-mk:
 	$(ECHO_TARGET)
 	@mk-filelist -qn MK_SRC *.mk .mk
 
-toc:	_mk-toc
-.PHONY: _mk-toc
-_mk-toc:
+#
+# toc-mk: --Rebuild a Makefile's table-of-contents.
+#
+toc:	toc-mk
+.PHONY: toc-mk
+toc-mk:
 	$(ECHO_TARGET)
 	@mk-toc Makefile $(MK_SRC)
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
+# todo-mk: --Report unfinished work in Makefiles.
 #
-todo:	mk-todo
-.PHONY: mk-todo
-mk-todo:
+todo:	todo-mk
+.PHONY: todo-mk
+todo-mk:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(MK_SRC) /dev/null || true
 
