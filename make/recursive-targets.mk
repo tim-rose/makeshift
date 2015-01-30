@@ -6,6 +6,7 @@ std-targets = build install test uninstall install-strip \
 devkit-targets = src toc tidy todo
 recursive-targets = $(std-targets) $(devkit-targets)
 
++var[recursive_rule]:;# disable +var[%]
 define recursive_rule
 .PHONY:	$1 pre-$1
 $1:	$$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
