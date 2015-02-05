@@ -7,7 +7,7 @@ MK_SRC = asciidoc.mk c++.mk c.mk conf.mk css.mk elisp.mk img.mk \
     xml.mk xsd.mk xsl.mk yacc.mk
 subdir	= lang
 
-include devkit.mk 
+include devkit.mk
 
 $(includedir)/%:	%;		$(INSTALL_FILE) $< $@
 

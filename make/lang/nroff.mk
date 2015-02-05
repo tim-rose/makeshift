@@ -71,7 +71,7 @@ nroff-clean:
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: nroff-todo
 todo:	nroff-todo
 nroff-todo:

@@ -34,7 +34,7 @@ sql-src:
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
-# 
+#
 .PHONY: sql-todo
 todo:	sql-todo
 sql-todo:

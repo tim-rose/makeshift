@@ -93,7 +93,7 @@ C++_MAIN += $(C++_$1_MAIN_SRC:%.$1=$(archdir)/%)
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
 #
-$$(archdir)/%.o: %.$1 
+$$(archdir)/%.o: %.$1
 	$$(ECHO_TARGET)
 	@echo $$(C++) $$(C++_ALL_FLAGS) -c -o $$@ $$<
 	@$$(C++) $$(C++_WARN_FLAGS) $$(C++_ALL_FLAGS) -c -o $$@ $$<

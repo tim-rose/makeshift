@@ -25,7 +25,7 @@ GCOV_GCDA_FILES := $(C_OBJ:%.o=%.gcda) $(C++_OBJ:%.o=%.gcda)
 
 .PHONY: coverage html-coverage
 coverage:	$(GCOV_FILES)
-html-coverage:	$(archdir)/coverage/index.html 
+html-coverage:	$(archdir)/coverage/index.html
 
 #
 # the ".gcda" files won't exist if the code hasn't been run, so we

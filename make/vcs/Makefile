@@ -8,7 +8,7 @@ MK_SRC = git.mk svn.mk
 ALL_SRC = $(MK_SRC) .mk
 subdir	= vcs
 
-include devkit.mk 
+include devkit.mk
 
 $(includedir)/%:	%;		$(INSTALL_FILE) $* $@
 $(includedir)/.mk:	_mk.sh;		sh _mk.sh >$@

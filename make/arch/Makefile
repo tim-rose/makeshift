@@ -9,7 +9,7 @@ MK_SRC = all.mk arm.mk avr.mk i386.mk i386_64.mk i686.mk i686_64.mk \
 ALL_SRC = $(MK_SRC) .mk
 subdir	= arch
 
-include devkit.mk 
+include devkit.mk
 
 $(includedir)/%:	%;		$(INSTALL_FILE) $* $@
 $(includedir)/.mk:	_mk.sh;		sh _mk.sh >$@

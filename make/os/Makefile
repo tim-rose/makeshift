@@ -9,7 +9,7 @@ MK_SRC = cygwin_nt.mk darwin.mk linux.mk rtx.mk solaris.mk \
 ALL_SRC = $(MK_SRC) .mk
 subdir	= os
 
-include devkit.mk 
+include devkit.mk
 
 $(includedir)/%:	%;		$(INSTALL_FILE) $* $@
 $(includedir)/.mk:	_mk.sh;		sh _mk.sh >$@

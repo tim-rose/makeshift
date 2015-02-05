@@ -5,7 +5,7 @@
 # The project include file defines overall customisations for existing
 # rules. This is the "no-project" project, which contains some default
 # settings to consider as a template.
-# 
+#
 # Set the environment variable PROJECT to your project name, and create
 # the file /usr/local/include/project/$PROJECT.mk.
 #
