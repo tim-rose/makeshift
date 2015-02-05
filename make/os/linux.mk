@@ -18,4 +18,5 @@ FAKEROOT	= fakeroot
 GREP		= grep
 INDENT          = indent
 
+MOC = moc-qt4
 PKG_TYPE	= deb

@@ -166,7 +166,7 @@ devkit-distclean:
 	$(RM) tags TAGS
 	$(RM) -r $(OS) $(ARCH) $(archdir)
 
-include recursive-targets.mk valid.mk
+include recursive-targets.mk valid.mk coverage.mk
 include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 include os/$(OS).mk arch/$(ARCH).mk
 -include project/$(PROJECT).mk

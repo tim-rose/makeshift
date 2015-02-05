@@ -5,7 +5,6 @@
 # %.o:      --Compile a C++ file into an arch-specific sub-directory.
 # %.o:      --Compile an arch-specific C++ file into an arch-specific sub-directory.
 # build[%]: --Build a C++ file's related object.
-# %.hpp:    --Install a C++ header (.hpp) file.
 # build:    --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
 # clean:    --Remove objects and executables created from C++ files.
 # tidy:     --Reformat C++ files consistently.
@@ -16,7 +15,7 @@
 #
 # Remarks:
 # The C++ module provides rules and targets for building software
-# in using the C++ language.
+# using the C++ language.
 #
 
 #
@@ -24,11 +23,8 @@
 #
 -include $(C++_SRC:%.cpp=$(archdir)/%.d)
 
-C++_OBJ	= $(C++_SRC:%.cpp=$(archdir)/%.o)
-C++_MAIN_OBJ = $(C++_MAIN_SRC:%.cpp=$(archdir)/%.o)
-C++_MAIN = $(C++_MAIN_SRC:%.cpp=$(archdir)/%)
-
-include coverage.mk
+C++_SUFFIX ?= cc
+H++_SUFFIX ?= h
 
 C++	= $(CXX)
 LD	= $(CXX)
@@ -57,31 +53,88 @@ C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
 	$(PROJECT.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
 
 #
+# Initialise the derived-from-src variables, they are built up incrementally
+# by the cpp_compile_rules invocations.
+#
+C++_OBJ	:=
+C++_MAIN_OBJ :=
+C++_MAIN :=
+
+#
+# Alas, there's no agreed "standard" suffix for C++ files, so
+# we generate pattern rules for every reasonable possibility.
+# Along with the rules, we incrementally define the macros
+# C++_SRC, C++_OBJ, C++_MAIN to cover all the variations.
+#
+c++-suffix =  cc C cpp cxx c++
+h++-suffix = h hpp hxx h++
+
+#
+# cpp_compile_rules: --Dyamically generate rules for C++ files.
+#
+# Parameter:
+# $1 --the filename suffix for C++ files.
+#
+# Remarks:
+# This macro creates a set of pattern rules that describe how to compile
+# C++ files with the given file suffix.  It also appends to $(C++_SRC)
+# and $(C++_OBJ) so that these macros end up with a "complete" list of
+# all the C++ source.
+#
++var[cpp_compile_rules]:;# disable +var[%]
+define cpp_compile_rules
+
+-include $$(C++_$1_SRC:%.$1=$$(archdir)/%.d)
+
+C++_SRC  += $$(C++_$1_SRC)
+C++_OBJ  += $$(C++_$1_SRC:%.$1=$$(archdir)/%.o)
+C++_MAIN += $(C++_$1_MAIN_SRC:%.$1=$(archdir)/%)
+
+#
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
 #
-$(archdir)/%.o: %.cpp mkdir[$(archdir)]
-	$(ECHO_TARGET)
-	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
-	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
+$$(archdir)/%.o: %.$1 
+	$$(ECHO_TARGET)
+	@echo $$(C++) $$(C++_ALL_FLAGS) -c -o $$@ $$<
+	@$$(C++) $$(C++_WARN_FLAGS) $$(C++_ALL_FLAGS) -c -o $$@ $$<
 
 #
 # %.o: --Compile an arch-specific C++ file into an arch-specific sub-directory.
 #
-$(archdir)/%.o: $(archdir)/%.cpp
-	$(ECHO_TARGET)
-	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
-	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
-
+$$(archdir)/%.o: $$(archdir)/%.$1
+	$$(ECHO_TARGET)
+	@echo $$(C++) $$(C++_ALL_FLAGS) -c -o $$@ $$<
+	@$$(C++) $$(C++_WARN_FLAGS) $$(C++_ALL_FLAGS) -c -o $$@ $$<
 #
 # build[%]: --Build a C++ file's related object.
 #
-build[%.cpp]:   $(archdir)/%.o; $(ECHO_TARGET)
+build[%.$1]:   $$(archdir)/%.o; $$(ECHO_TARGET)
+
 
 #
-# %.hpp: --Install a C++ header (.hpp) file.
+# %.gcov: --Build a text-format coverage report.
 #
-$(includedir)/%.hpp:	%.hpp;		$(INSTALL_FILE) $? $@
-$(includedir)/%.hpp:	$(archdir)/%.hpp;	$(INSTALL_FILE) $? $@
+%.$1.gcov:	$$(archdir)/%.gcda
+	@echo gcov -o $$(archdir) $$*.$1
+	@gcov -o $$(archdir) $$*.$1 | sed -ne '/^Lines/s/.*:/gcov $$*.$1: /p'
+endef
+$(foreach suffix,$(c++-suffix),$(eval $(call cpp_compile_rules,$(suffix))))
+
+#
+# cpp_include_rules: --Dyamically generate rules for handling C++ headers.
+#
++var[cpp_include_rules]:;# disable +var[%]
+define cpp_include_rules
+
+H++_SRC += $$(H++_$1_SRC)
+
+#
+# %.h++: --Install a C++ header (.hpp) file.
+#
+$$(includedir)/%.$1:	%.$1;			$$(INSTALL_FILE) $$? $$@
+$$(includedir)/%.$1:	$$(archdir)/%.$1;	$$(INSTALL_FILE) $$? $$@
+endef
+$(foreach suffix,$(h++-suffix),$(eval $(call cpp_include_rules,$(suffix))))
 
 #
 # +c++-defines: --Print a list of predefined macros for the "C++" language.
@@ -114,47 +167,55 @@ c++-src-var-defined:
 #
 # clean: --Remove objects and executables created from C++ files.
 #
-clean:	c++-clean
-.PHONY:	c++-clean
-c++-clean:
+clean:	clean-c++
+.PHONY:	clean-c++
+clean-c++:
 	$(ECHO_TARGET)
 	$(RM) $(C++_OBJ) $(C++_MAIN)
 
 #
 # tidy: --Reformat C++ files consistently.
 #
-tidy:	c++-tidy
-.PHONY:	c++-tidy
-c++-tidy:
+tidy:	tidy-c++
+.PHONY:	tidy-c++
+tidy-c++:
 	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(H++_SRC) $(C++_SRC)
 #
 # toc: --Build the table-of-contents for C++ files.
 #
-.PHONY: c++-toc
-toc:	c++-toc
-c++-toc:
+.PHONY: toc-c++
+toc:	toc-c++
+toc-c++:
 	$(ECHO_TARGET)
 	mk-toc $(H++_SRC) $(C++_SRC)
 
 #
 # src: --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
 #
-src:	c++-src
-.PHONY:	c++-src
-c++-src:
+# Remarks:
+# Actually, for C++ this is a little involved, because we create
+# SRC macros for every variety of suffix.
+#
+src:	src-c++
+.PHONY:	src-c++
+src-c++:
 	$(ECHO_TARGET)
-	@mk-filelist -qn C++_SRC *.cpp
-	@mk-filelist -qn C++_MAIN_SRC \
-		$$(grep -l '^ *int *main(' *.cpp 2>/dev/null)
-	@mk-filelist -qn H++_SRC *.hpp
+	@for suffix in $(c++-suffix); do \
+	    mk-filelist -qn C++_$${suffix}_SRC *.$${suffix}; \
+	    mk-filelist -qn C++_$${suffix}_MAIN_SRC \
+		$$(grep -l '^ *int *main(' *.$${suffix} 2>/dev/null); \
+	done
+	@for suffix in $(h++-suffix); do \
+	    mk-filelist -qn H++_$${suffix}_SRC *.$${suffix}; \
+	done
 
 #
 # tags: --Build vi, emacs tags files for C++ files.
 #
-.PHONY: c++-tags
-tags:	c++-tags
-c++-tags:
+.PHONY: tags-c++
+tags:	tags-c++
+tags-c++:
 	$(ECHO_TARGET)
 	ctags 	$(H++_SRC) $(C++_SRC) && \
 	etags	$(H++_SRC) $(C++_SRC); true
@@ -162,8 +223,8 @@ c++-tags:
 #
 # todo: --Find "unfinished work" comments in C++ files.
 #
-.PHONY: c++-todo
-todo:	c++-todo
-c++-todo:
+.PHONY: todo-c++
+todo:	todo-c++
+todo-c++:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(H++_SRC) $(C++_SRC) /dev/null || true

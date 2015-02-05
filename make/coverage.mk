@@ -20,45 +20,30 @@
 # $(C++_SRC).
 #
 
-GCOV_FILES := $(C_SRC:%.c=%.c.gcov) $(C++_SRC:%.cpp=%.cpp.gcov)
+GCOV_FILES := $(C_SRC:%.c=%.c.gcov) $(C++_SRC:%=%.gcov)
 GCOV_GCDA_FILES := $(C_OBJ:%.o=%.gcda) $(C++_OBJ:%.o=%.gcda)
 
 .PHONY: coverage html-coverage
 coverage:	$(GCOV_FILES)
-html-coverage:	$(archdir)/coverage/index.html
+html-coverage:	$(archdir)/coverage/index.html 
 
 #
 # the ".gcda" files won't exist if the code hasn't been run, so we
 # have a dummy target that silently returns true.
 #
-$(archdir)/%.gcda:	;	@:
-
-#
-# %.c.gcov: --Build text-format reports as requested.
-#
-# Remarks:
-# The gcov tool outputs some progress information, most of which is
-# (transparently) discarded.
-#
-%.c.gcov:	$(archdir)/%.gcda
-	@echo gcov -o $(archdir) $*.c
-	@gcov -o $(archdir) $*.c | sed -ne '/^Lines/s/.*:/gcov $*.c: /p'
-
-%.cpp.gcov:	$(archdir)/%.gcda
-	@echo gcov -o $(archdir) $*.cpp
-	@gcov -o $(archdir) $*.cpp | sed -ne '/^Lines/s/.*:/gcov $*.cpp: /p'
+$(archdir)/%.gcda:;@:
 
 #
 # coverage.trace: --Collate the coverage data for this tree of files.
 #
-$(archdir)/coverage.trace:	$(GCOV_GCDA_FILES)
+$(archdir)/coverage.trace:	$(GCOV_GCDA_FILES) mkdir[$(archdir)]
 	lcov --capture $(LCOV_EXCLUDE) --directory . >$@
 	lcov --remove $@ '/usr/include/*' >$$$$.tmp && mv $$$$.tmp $@
 
 #
 # coverage/index.html: --Create the html-formatted coverage reports.
 #
-$(archdir)/coverage/index.html:	$(archdir)/coverage.trace
+$(archdir)/coverage/index.html:	$(archdir)/coverage.trace mkdir[$(archdir)]
 	genhtml --demangle-cpp --output-directory $(archdir)/coverage \
 	    $(archdir)/coverage.trace
 
@@ -68,4 +53,5 @@ $(archdir)/coverage/index.html:	$(archdir)/coverage.trace
 .PHONY:	clean-coverage
 clean:	clean-coverage
 clean-coverage:
+	$(ECHO_TARGET)
 	$(RM) -r $(GCOV_FILES) $(archdir)/coverage.trace $(archdir)/coverage

@@ -30,14 +30,11 @@
 #  * LIB_OBJ  --the objects to put into the library.
 #
 LIB_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
-LIB_INCLUDE_SRC = $(H_SRC:%.h=$(LIB_INCLUDEDIR)/%.h) \
-    $(H++_SRC:%.hpp=$(LIB_INCLUDEDIR)/%.hpp)
+LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%) \
+    $(H++_SRC:%=$(LIB_INCLUDEDIR)/%)
 
-$(LIB_INCLUDEDIR)/%.h:		%.h;		$(INSTALL_FILE) $*.h $@
-$(LIB_INCLUDEDIR)/%.hpp:	%.hpp;		$(INSTALL_FILE) $*.hpp $@
-
-$(LIB_INCLUDEDIR)/%.h:		$(archdir)/%.h;	$(INSTALL_FILE) $? $@
-$(LIB_INCLUDEDIR)/%.hpp:	$(archdir)/%.hpp;	$(INSTALL_FILE) $? $@
+$(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_FILE) $* $@
+$(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
 
 #
 # libdir/%.a: --Install a static (.a)library
@@ -91,7 +88,7 @@ build:	var-defined[LIB_ROOT] var-defined[LIB] lib-src-var-defined \
 #
 lib-install-lib:	$(libdir)/lib$(LIB).a lib-install-include
 lib-install-include:	$(H_SRC:%.h=$(includedir)/%.h)
-lib-install-include:	$(H++_SRC:%.hpp=$(includedir)/%.hpp)
+lib-install-include:	$(H++_SRC:%=$(includedir)/%)
 lib-install-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3)
 
 #

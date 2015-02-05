@@ -30,10 +30,8 @@
 -include $(C_SRC:%.c=$(archdir)/%.d)
 
 C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
-C_MAIN_OBJ = $(C_MAIN_SRC:%.cpp=$(archdir)/%.o)
+C_MAIN_OBJ = $(C_MAIN_SRC:%.c=$(archdir)/%.o)
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
-
-include coverage.mk
 
 C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS)\
 	$(PROJECT.C_DEFS) $(LOCAL.C_DEFS) $(TARGET.C_DEFS)
@@ -60,7 +58,7 @@ C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 # dependencies, and the "-include" command allows the files to
 # be absent, so this setup will avoid premature compilation.
 #
-$(archdir)/%.o: %.c mkdir[$(archdir)]
+$(archdir)/%.o: %.c 
 	$(ECHO_TARGET)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
@@ -79,7 +77,18 @@ build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 # %.h: --Install a C header (.h) file.
 #
 $(includedir)/%.h:	%.h;		$(INSTALL_FILE) $? $@
-$(includedir)/%.hpp:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
+$(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
+
+#
+# %.c.gcov: --Build a text-format coverage report.
+#
+# Remarks:
+# The gcov tool outputs some progress information, which is
+# mostly filtered out.
+#
+%.c.gcov:	$(archdir)/%.gcda
+	@echo gcov -o $(archdir) $*.c
+	@gcov -o $(archdir) $*.c | sed -ne '/^Lines/s/.*:/gcov $*.c: /p'
 
 #
 # +c-defines: --Print a list of predefined macros for the "C" language.
@@ -109,35 +118,35 @@ c-src-var-defined:
 #
 # clean: --Remove objects and executables created from C files.
 #
-clean:	c-clean
-.PHONY:	c-clean
-c-clean:
+clean:	clean-c
+.PHONY:	clean-c
+clean-c:
 	$(ECHO_TARGET)
 	$(RM) $(C_OBJ) $(C_MAIN)
 
 #
 # tidy: --Reformat C files consistently.
 #
-tidy:	c-tidy
-.PHONY:	c-tidy
-c-tidy:
+tidy:	tidy-c
+.PHONY:	tidy-c
+tidy-c:
 	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro $(INDENT) $(H_SRC) $(C_SRC)
 #
 # toc: --Build the table-of-contents for C files.
 #
-.PHONY: c-toc
-toc:	c-toc
-c-toc:
+.PHONY: toc-c
+toc:	toc-c
+toc-c:
 	$(ECHO_TARGET)
 	mk-toc $(H_SRC) $(C_SRC)
 
 #
 # src: --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
 #
-src:	c-src
-.PHONY:	c-src
-c-src:
+src:	src-c
+.PHONY:	src-c
+src-c:
 	$(ECHO_TARGET)
 	@mk-filelist -qn C_SRC *.c
 	@mk-filelist -qn C_MAIN_SRC \
@@ -147,9 +156,9 @@ c-src:
 #
 # tags: --Build vi, emacs tags files.
 #
-.PHONY: c-tags
-tags:	c-tags
-c-tags:
+.PHONY: tags-c
+tags:	tags-c
+tags-c:
 	$(ECHO_TARGET)
 	ctags 	$(H_SRC) $(C_SRC) && \
 	etags	$(H_SRC) $(C_SRC); true
@@ -157,8 +166,8 @@ c-tags:
 #
 # todo: --Report "unfinished work" comments in C files.
 #
-.PHONY: c-todo
-todo:	c-todo
-c-todo:
+.PHONY: todo-c
+todo:	todo-c
+todo-c:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(H_SRC) $(C_SRC) /dev/null || true

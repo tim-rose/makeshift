@@ -9,32 +9,36 @@
 # There's some dependency/fragility here, in that the XSD stuff assumes
 # that you're also including the C++ module, and the library module.
 # In particular, it assumes that $(LIB_ROOT) is defined, and it attempts
-# to install ".hpp" files in the "pre-build" phase, just like the library
+# to install ".$(H++_SUFFIX)" files in the "pre-build" phase, just like the library
 # module does.
 #
-# REVISIT: XmlSchema.hpp behaviour is broken: install triggers build!
+# REVISIT: XmlSchema.h behaviour is broken: install triggers build!
 #
 -include $(XSD_SRC:%.xsd=$(archdir)/%-depend.mk)
 
+C++_SUFFIX ?= cc
+H++_SUFFIX ?= h
+
 XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
-XSD_H++ = $(XSD_SRC:%.xsd=$(archdir)/%.hpp)
-XSD_C++ = $(XSD_SRC:%.xsd=$(archdir)/%.cpp)
+XSD_H++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(H++_SUFFIX))
+XSD_C++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(C++_SUFFIX))
 
 XSD_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
-XSD_INCLUDE_SRC = $(XSD_H++:$(archdir)/%.hpp=$(XSD_INCLUDEDIR)/%.hpp) \
-	$(XSD_INCLUDEDIR)/XmlSchema.hpp
+XSD_INCLUDE_SRC = $(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(XSD_INCLUDEDIR)/%.$(H++_SUFFIX)) \
+	$(XSD_INCLUDEDIR)/XmlSchema.$(H++_SUFFIX)
 
 XSD.FLAGS = $(OS.XSDFLAGS) $(ARCH.XSDFLAGS) \
 	$(PROJECT.XSDFLAGS) $(LOCAL.XSDFLAGS) $(TARGET.XSDFLAGS) $(XSDFLAGS)
 
-$(XSD_INCLUDEDIR)/%.hpp: $(archdir)/%.hpp
+$(XSD_INCLUDEDIR)/%.$(H++_SUFFIX): $(archdir)/%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 
-$(archdir)/%.cpp $(archdir)/%.hpp:	%.xsd mkdir[$(archdir)]
+$(archdir)/%.$(C++_SUFFIX) $(archdir)/%.$(H++_SUFFIX):	%.xsd
 	$(ECHO_TARGET)
+        mkdir -p $(archdir)
 	xsd cxx-tree --output-dir $(archdir) $(XSD.FLAGS) \
-	    --extern-xml-schema $(archdir)/XmlSchema.hpp $*.xsd
+	    --extern-xml-schema $(archdir)/XmlSchema.$(H++_SUFFIX) $*.xsd
 #
 # build: --xsd-specific customisations for the "build" target.
 #
@@ -42,13 +46,14 @@ $(XSD_OBJ):	$(XSD_INCLUDE_SRC)
 pre-build:      var-defined[XSD_INCLUDEDIR] $(XSD_INCLUDE_SRC)
 build:	$(XSD_OBJ)
 
-xsd-install-include:	$(XSD_H++:$(archdir)/%.hpp=$(includedir)/%.hpp)
+xsd-install-include:	$(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
 
-$(archdir)/XmlSchema.hpp:	mkdir[$(archdir)]
+$(archdir)/XmlSchema.$(H++_SUFFIX):
 	$(ECHO_TARGET)
+        mkdir -p $(archdir)
 	xsd cxx-tree --output-dir $(archdir) \
 	    --options-file XmlSchema.conf \
-	    --generate-xml-schema XmlSchema.hpp
+	    --generate-xml-schema XmlSchema.$(H++_SUFFIX)
 
 #
 # clean: --Remove XSD's object files.
