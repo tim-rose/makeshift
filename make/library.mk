@@ -60,7 +60,6 @@ $(libbasedir)/%.a:	$(archdir)/%.a
 #
 pre-build:      lib-src-var-defined $(LIB_INCLUDE_SRC)
 build:		$(archdir)/lib$(LIB).a
-$(LIB_OBJ):	$(LIB_INCLUDE_SRC)
 
 #
 # lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
