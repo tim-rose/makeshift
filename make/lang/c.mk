@@ -58,13 +58,15 @@ C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 # dependencies, and the "-include" command allows the files to
 # be absent, so this setup will avoid premature compilation.
 #
-$(archdir)/%.o: %.c
+$(archdir)/%.o: %.c 
 	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 
 $(archdir)/%.o: $(archdir)/%.c
 	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 

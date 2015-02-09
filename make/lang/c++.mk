@@ -95,6 +95,7 @@ C++_MAIN += $(C++_$1_MAIN_SRC:%.$1=$(archdir)/%)
 #
 $$(archdir)/%.o: %.$1
 	$$(ECHO_TARGET)
+	@mkdir -p $$(archdir)
 	@echo $$(C++) $$(C++_ALL_FLAGS) -c -o $$@ $$<
 	@$$(C++) $$(C++_WARN_FLAGS) $$(C++_ALL_FLAGS) -c -o $$@ $$<
 
@@ -103,6 +104,7 @@ $$(archdir)/%.o: %.$1
 #
 $$(archdir)/%.o: $$(archdir)/%.$1
 	$$(ECHO_TARGET)
+	@mkdir -p $$(archdir)
 	@echo $$(C++) $$(C++_ALL_FLAGS) -c -o $$@ $$<
 	@$$(C++) $$(C++_WARN_FLAGS) $$(C++_ALL_FLAGS) -c -o $$@ $$<
 #
@@ -115,6 +117,8 @@ build[%.$1]:   $$(archdir)/%.o; $$(ECHO_TARGET)
 # %.gcov: --Build a text-format coverage report.
 #
 %.$1.gcov:	$$(archdir)/%.gcda
+	$$(ECHO_TARGET)
+	@mkdir -p $$(archdir)
 	@echo gcov -o $$(archdir) $$*.$1
 	@gcov -o $$(archdir) $$*.$1 | sed -ne '/^Lines/s/.*:/gcov $$*.$1: /p'
 endef
