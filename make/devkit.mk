@@ -45,8 +45,9 @@ else
     ECHO = :
 endif
 
-ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"
+#ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"
 #ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$^: $^"
+ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
 
 .SUFFIXES:			# remove default suffix rules
 
