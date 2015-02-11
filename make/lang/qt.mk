@@ -7,6 +7,20 @@
 # src:   --Update the QTH_SRC, QTR_SRC macros.
 # todo:  --Find "unfinished work" comments in QT files.
 #
+# Remarks:
+# The qt module adds support for building Qt-related software.
+# It defines some pattern rules for compiling ".qrc" files,
+# and ".h" files that contain Qt definitions.  These rules 
+# will be applied to files defined by the macros:
+#
+#  * QTR_SRC -- ".qrc" files
+#  * QTH_SRC -- ".h" files containing QT_OBJECT usage.
+#
+# The "src" target will update the current makefile with suitable
+# definitions of these macros; it uses the value of $(H++_SUFFIX)
+# to find $(QTH_SRC) candidates, and $(C++_SUFFIX) to name 
+# generated C++ files.
+#
 #-include $(QTH_SRC:%.$(H++_SUFFIX)=$(archdir)/%-depend.mk)
 RCC	?= rcc
 MOC	?= moc
@@ -26,8 +40,10 @@ QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
 # build: --Build the Qt files
 #
 build:	$(QT_OBJ)
+
 $(archdir)/%.$(C++_SUFFIX):	%.qrc mkdir[$(archdir)]
 	$(RCC) $< >$@
+
 $(archdir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX) mkdir[$(archdir)]
 	$(MOC) -o $@ $<
 
