@@ -35,7 +35,7 @@ todo:	todo-mk
 .PHONY: todo-mk
 todo-mk:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(MK_SRC) /dev/null || true
+	@$(GREP) -e TODO -e FIXME -e REVISIT Makefile $(MK_SRC) /dev/null || true
 
 #
 # +dirs: --Print the current make directory macros.
