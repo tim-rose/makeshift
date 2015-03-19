@@ -2,10 +2,10 @@
 # YACC.MK --Rules for working with YACC objects.
 #
 # Contents:
-# build: --yacc-specific customisations for the "build" target.
-# clean: --yacc-specific customisations for the "clean" target.
-# src:   --yacc-specific customisations for the "src" target.
-# toc:   --yacc-specific customisations for the "toc" target.
+# build: --Compile yacc grammars into their object file(s).
+# clean: --Remove a yacc grammar's object file.
+# src:   --Get a list of the yacc grammars in this directory.
+# toc:   --Update the table-of-contents for a yacc grammar file.
 #
 # Remarks:
 # YACC files are pre-processed into "C" files which are then handled
@@ -30,13 +30,13 @@ Y_OBJ	= $(Y_SRC:%.y=$(archdir)/%.o)
 	$(RM) y.tab.c
 
 #
-# build: --yacc-specific customisations for the "build" target.
+# build: --Compile yacc grammars into their object file(s).
 #
 pre-build:	src-var-defined[Y_SRC]
 build:	$(Y_OBJ)
 
 #
-# clean: --yacc-specific customisations for the "clean" target.
+# clean: --Remove a yacc grammar's object file.
 #
 clean:	yacc-clean
 .PHONY:	yacc-clean
@@ -45,7 +45,7 @@ yacc-clean:
 	$(RM) $(Y_OBJ)
 
 #
-# src: --yacc-specific customisations for the "src" target.
+# src: --Get a list of the yacc grammars in this directory.
 #
 src:	yacc-src
 .PHONY:	yacc-src
@@ -54,7 +54,7 @@ yacc-src:
 	@mk-filelist -qn Y_SRC *.y
 
 #
-# toc: --yacc-specific customisations for the "toc" target.
+# toc: --Update the table-of-contents for a yacc grammar file.
 #
 toc:	yacc-toc
 .PHONY:	yacc-toc
