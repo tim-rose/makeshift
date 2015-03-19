@@ -17,7 +17,7 @@
 #
 
 #
-# %.conf: --Rules for installing config files.
+# %.conf: --Pattern rules for installing config files.
 #
 $(sysconfdir)/%:	%.conf;		$(INSTALL_FILE) $? $@
 $(divertdir)/%:		%.conf;		$(INSTALL_FILE) $? $@
@@ -36,7 +36,7 @@ $(divertdir)/%.ini:	%.ini;		$(INSTALL_FILE) $? $@
 pre-build:	conf-src-var-defined
 
 #
-# conf-src-var-defined: --Test if any of the conf SRC vars. are defined.
+# conf-src-var-defined: --Test if any of the "conf" SRC vars. are defined.
 #
 conf-src-var-defined:
 	@if [ -z '$(CONF_SRC)$(CFG_SRC)$(INI_SRC)' ]; then \
@@ -54,7 +54,7 @@ toc-conf:
 	mk-toc $(CONF_SRC) $(CFG_SRC) $(INI_SRC)
 
 #
-# src-conf: --Update definitions of CONF_SRC, CFG_SRC, INI_SRC
+# src-conf: --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
 #
 src:	src-conf
 .PHONY:	src-conf
