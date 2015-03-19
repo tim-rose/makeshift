@@ -26,15 +26,36 @@ tap_plan=0
 tap_fail=0
 tap_version='?.?.?'
 
+ok_style="m"
+fail_style="1;31m"
+log_style="1m"
+diag_style="36m"
+if [ -t 1 ]; then
+    isatty=1
+fi
+
+tty_filter()
+{
+    local style=$1; shift
+
+    if [ "$isatty" ]; then
+        while read line; do 
+            printf "\033[%s%s\033[m\n" "$style" "$line"
+        done
+    else
+        cat
+    fi
+}
+
 #
 # diag() --Print a diagnostic line comment line.
 #
 diag()
 {
     if [ $# -gt 0 ]; then
-        { printf "$@"; printf "\n"; } | sed -e 's/^/# /'
+        { printf "$@"; printf "\n"; } | sed -e "s/^/# "/ | tty_filter $diag_style
     else
-        sed -e 's/^/# /'
+        sed -e "s/^/# /"
     fi
 }
 
@@ -79,9 +100,9 @@ plan()
 {
     if [ $# -ne 0 ]; then
 	tap_plan=$1
-	echo "1..$1"
+	echo "1..$1" | tty_filter $log_style
     else
-	echo "1..$tap_test";
+	echo "1..$tap_test" | tty_filter $log_style
 	tap_plan=$tap_test
     fi
 }
@@ -164,6 +185,7 @@ tap_test_msg()
     local result=$1; shift
     local msg=
     local status=ok
+    local style=$ok_style
 
     tap_test=$(( $tap_test + 1))
 
@@ -181,11 +203,12 @@ tap_test_msg()
 
     if [ $result -ne 0 ]; then
 	status="not ok"
+        style=$fail_style
 	if [ ! "$tap_todo_reason" ]; then
 	    tap_fail=$(( $tap_fail + 1))
 	fi
     fi
-    printf "%s %d%s\n" "$status" $tap_test "$msg"
+    printf "%s %d%s\n" "$status" $tap_test "$msg" | tty_filter "$style"
     if [ $result -ne 0 ]; then
 	local file=$(caller 1 | cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
 	local line=$(caller 1 | cut -d' ' -f1)
