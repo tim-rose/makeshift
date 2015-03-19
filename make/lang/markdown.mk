@@ -17,6 +17,8 @@
 # default.
 #
 
+MMDFLAGS ?= --process-html
+
 $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 
 %.html:	%.md
@@ -24,7 +26,7 @@ $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 	markdown $*.md >$@
 %.html:	%.mmd
 	$(ECHO_TARGET)
-	multimarkdown $*.mmd > $@
+	multimarkdown $(MMDFLAGS) $*.mmd > $@
 
 #
 # build: --Create HTML documents from MMD_SRC.
