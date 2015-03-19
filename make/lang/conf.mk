@@ -2,11 +2,11 @@
 # CONF.MK --Rules for building config files.
 #
 # Contents:
-# %.conf:              --Rules for installing config files.
+# %.conf:              --Pattern rules for installing config files.
 # pre-build:           --Make sure that config SRC macros are defined.
-# conf-src-var-defined: --Test if any of the conf SRC vars. are defined.
+# conf-src-var-defined: --Test if any of the "conf" SRC vars. are defined.
 # toc-conf:            --Build the table-of-contents for config files.
-# src-conf:            --Update definitions of CONF_SRC, CFG_SRC, INI_SRC
+# src-conf:            --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
 # todo:                --Report "unfinished work" comments in config files.
 #
 # Remarks:

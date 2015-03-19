@@ -3,7 +3,7 @@
 #
 # Contents:
 # build: --Build the Qt files
-# clean: --Remove objects and intermediats created from Qt files.
+# clean: --Remove objects and intermediates created from Qt files.
 # src:   --Update the QTH_SRC, QTR_SRC macros.
 # todo:  --Find "unfinished work" comments in QT files.
 #

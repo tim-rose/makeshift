@@ -2,6 +2,7 @@
 # YACC.MK --Rules for working with YACC objects.
 #
 # Contents:
+# %.y:   --yacc-related build rules.
 # build: --Compile yacc grammars into their object file(s).
 # clean: --Remove a yacc grammar's object file.
 # src:   --Get a list of the yacc grammars in this directory.
@@ -16,7 +17,7 @@
 -include $(Y_SRC:%.y=$(archdir)/%.mk)
 
 #
-# %.y:	--yacc-related build rules.
+# %.y: --yacc-related build rules.
 #
 Y_OBJ	= $(Y_SRC:%.y=$(archdir)/%.o)
 %.h:	%.y
@@ -54,7 +55,7 @@ yacc-src:
 	@mk-filelist -qn Y_SRC *.y
 
 #
-# toc: --Update the table-of-contents for a yacc grammar file.
+# toc: --Update the Y_SRC macro with a list of yacc grammars.
 #
 toc:	yacc-toc
 .PHONY:	yacc-toc

@@ -2,16 +2,19 @@
 # C++.MK --Rules for building C++ objects and programs.
 #
 # Contents:
-# %.o:      --Compile a C++ file into an arch-specific sub-directory.
-# %.o:      --Compile an arch-specific C++ file into an arch-specific sub-directory.
-# build[%]: --Build a C++ file's related object.
-# build:    --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
-# clean:    --Remove objects and executables created from C++ files.
-# tidy:     --Reformat C++ files consistently.
-# toc:      --Build the table-of-contents for C++ files.
-# src:      --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
-# tags:     --Build vi, emacs tags files for C++ files.
-# todo:     --Find "unfinished work" comments in C++ files.
+# cpp_compile_rules: --Dyamically generate rules for C++ files.
+# %.o:               --Compile a C++ file into an arch-specific sub-directory.
+# %.o:               --Compile an arch-specific C++ file into an arch-specific sub-directory.
+# build[%]:          --Build a C++ file's related object.
+# %.gcov:            --Build a text-format coverage report.
+# cpp_include_rules: --Dyamically generate rules for handling C++ headers.
+# build:             --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
+# clean:             --Remove objects and executables created from C++ files.
+# tidy:              --Reformat C++ files consistently.
+# toc:               --Build the table-of-contents for C++ files.
+# src:               --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
+# tags:              --Build vi, emacs tags files for C++ files.
+# todo:              --Find "unfinished work" comments in C++ files.
 #
 # Remarks:
 # The C++ module provides rules and targets for building software
