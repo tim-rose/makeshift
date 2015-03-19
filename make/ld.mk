@@ -20,11 +20,10 @@ ALL_LDFLAGS = $(LDFLAGS) \
     $(LANG.LDFLAGS) \
     $(ARCH.LDFLAGS) $(OS.LDFLAGS) \
     $(PROJECT.LDFLAGS) $(LOCAL.LDFLAGS) $(TARGET.LDFLAGS) \
-    -L$(libdir)
 
-ALL_LDLIBS = $(LOADLIBES) $(LDLIBS) \
-    $(OS.LDLIBS) $(ARCH.LDLIBS) \
-    $(PROJECT.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS) \
+ALL_LDLIBS = $(TARGET.LDLIBS) $(LOCAL.LDLIBS) $(PROJECT.LDLIBS) \
+    $(ARCH.LDLIBS) $(OS.LDLIBS) $(LDLIBS) $(LOADLIBES) \
+    -L$(libdir)
 
 #
 # main: --Build a program from a file that contains "main".
