@@ -20,7 +20,10 @@ pre-$1:	;			$$(ECHO_TARGET)
 $1 $(SUBDIRS:%=$1@%):	pre-$1
 $1@%:
 	@$$(ECHO_TARGET)
-	@if [ -e $$*/Makefile-$(ARCH) ]; then \
+	@if [ -e $$*/Makefile-$(OS) ]; then \
+            $$(ECHO) ++ make: recursively building $$@; \
+            cd $$* >/dev/null && $$(MAKE) -f Makefile-$(OS) $1; \
+	elif [ -e $$*/Makefile-$(ARCH) ]; then \
             $$(ECHO) ++ make: recursively building $$@; \
             cd $$* >/dev/null && $$(MAKE) -f Makefile-$(ARCH) $1; \
         elif [ -e $$*/Makefile ]; then \
