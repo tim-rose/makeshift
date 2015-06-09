@@ -28,11 +28,11 @@ PROJECT.C_WARN_FLAGS = -pedantic -Wall -Wextra \
     -Waggregate-return  -Wcast-align  -Wcast-qual -Wdisabled-optimization \
     -Wformat=2  -Wimplicit -Wmissing-declarations  -Wmissing-include-dirs \
     -Wmissing-prototypes -Wnested-externs  -Wpointer-arith \
-    -Wredundant-decls -Wshadow  -Wsign-conversion  -Wsign-promo \
+    -Wredundant-decls -Wshadow  -Wsign-conversion \
     -Wstack-protector -Wstrict-overflow=5  -Wstrict-prototypes \
     -Wswitch-enum -Wswitch-default  -Wundef  -Wwrite-strings
 
 PROJECT.CXXFLAGS = -std=c++0x -O
 PROJECT.C++_WARN_FLAGS = $(PROJECT.C_WARN_FLAGS) \
-    -Wctor-dtor-privacy  -Weffc++  -Winit-self  -Wno-variadic-macros \
-    -Wold-style-cast  -Woverloaded-virtual
+    -Wctor-dtor-privacy  -Weffc++  -Winit-self -Wsign-promo \
+    -Wno-variadic-macros -Wold-style-cast  -Woverloaded-virtual
