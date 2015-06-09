@@ -57,6 +57,7 @@ C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
 
 -include $(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.d)
 C++_OBJ  = $(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
+C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
 C++_MAIN = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%)
 
 #
@@ -117,7 +118,7 @@ $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX)
 # Remarks:
 # Note that C++_MAIN isn't built
 #
-build:	$(C++_OBJ)
+build:	$(C++_OBJ) $(C++_MAIN)
 
 #
 # c++-src-var-defined: --Test if "enough" of the C++ SRC variables are defined
@@ -167,7 +168,7 @@ src:	src-c++
 src-c++:
 	$(ECHO_TARGET)
 	mk-filelist -qn C++_SRC *.$(C++_SUFFIX)
-	mk-filelist -qn C++__MAIN_SRC \
+	mk-filelist -qn C++_MAIN_SRC \
 		$$(grep -l '^ *int *main(' *.$(C++_SUFFIX) 2>/dev/null)
 	mk-filelist -qn H++_SRC *.$(H++_SUFFIX)
 
