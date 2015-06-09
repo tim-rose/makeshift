@@ -36,7 +36,7 @@ expand_ar()
 	log_cmd ln -s $PWD/$1 $tmpdir/$prefix/lib.a
 	cd $tmpdir/$prefix;
 	debug 'building library in "%s"' "$PWD"
-	$(ar) x lib.a
+	$ar x lib.a
 	for f in *.o; do
 	    mv $f ../${prefix}-$f
 	done
@@ -75,4 +75,4 @@ for file; do
 done
 
 mkdir -p $(dirname $library)
-$(ar) $ar_flags $library $tmpdir/*.o
+$ar $ar_flags $library $tmpdir/*.o
