@@ -5,6 +5,7 @@
 #
 usage="Usage: mk-ar-merge [options] [ar-flags] archive object+archive-files..."
 tmpdir=${TMPDIR:-/tmp}/mk-ar$$
+ar=${AR:-ar}
 
 log_message() { printf "$@"; printf "\n"; } >&2
 notice() { log_message "$@"; }
@@ -35,7 +36,7 @@ expand_ar()
 	log_cmd ln -s $PWD/$1 $tmpdir/$prefix/lib.a
 	cd $tmpdir/$prefix;
 	debug 'building library in "%s"' "$PWD"
-	ar x lib.a
+	$(ar) x lib.a
 	for f in *.o; do
 	    mv $f ../${prefix}-$f
 	done
@@ -43,9 +44,10 @@ expand_ar()
     rm -rf $tmpdir/$prefix
 }
 
-while getopts "vq_" c
+while getopts "x:vq_" c
 do
     case $c in
+    x)  ar="$OPTARG";;
     v)  verbose=1;;
     q)  quiet=1;;
     _)  debug=1; verbose=1;;
@@ -73,4 +75,4 @@ for file; do
 done
 
 mkdir -p $(dirname $library)
-ar $ar_flags $library $tmpdir/*.o
+$(ar) $ar_flags $library $tmpdir/*.o
