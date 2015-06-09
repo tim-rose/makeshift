@@ -177,7 +177,7 @@ include os/$(OS).mk arch/$(ARCH).mk
 #
 # var[%]:	--pattern rule to print a make variable.
 #
-+vars:   $(.VARIABLES:%=+var[%])
+#+vars:   $(.VARIABLES:%=+var[%])
 +var[%]:
 	@$(ECHO) "# $(origin $*) variable \"$*\":"
 	@echo "$*='$($*)'"
