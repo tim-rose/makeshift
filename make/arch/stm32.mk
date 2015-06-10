@@ -13,3 +13,5 @@ ARCH.C++_DEFS = -DARCH_ARM -DCPU_STM32
 
 CC = armcc
 CXX = armcc
+AR = armar
+LD = armlink
