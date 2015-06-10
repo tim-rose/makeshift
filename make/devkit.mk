@@ -32,8 +32,9 @@
 # installation directories.  This is more useful in practice.
 #
 SUBDIRS := $(shell find * -type d -prune)
-PREFIX=/usr/local
-prefix=$(PREFIX)
+DESTDIR ?= /
+PREFIX = /usr/local
+prefix = $(PREFIX)
 #
 # ECHO is a shell no-op by default, but can be redefined by setting "VERBOSE".
 #
