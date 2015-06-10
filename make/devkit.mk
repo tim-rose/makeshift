@@ -31,6 +31,9 @@
 # in particular I avoid the $(archdir) suffix, for most of the
 # installation directories.  This is more useful in practice.
 #
+# See Also:
+# http://www.gnu.org/software/make/manual/make.html#Variables-for-Specifying-Commands).
+#
 SUBDIRS := $(shell find * -type d -prune)
 DESTDIR ?= /
 PREFIX = /usr/local

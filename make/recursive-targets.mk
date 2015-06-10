@@ -3,8 +3,12 @@
 #
 # Remarks:
 # The recursive targets are invoked on all subdirectories that contain
-# a Makefile, named either as "Makefile", as "Makefile-<arch>", for some
-# value of ARCH.
+# a Makefile, named either as "Makefile", as "Makefile-<arch>", for
+# some value of ARCH.  These targets and their meaning are documented
+# in the GNU make manual.
+#
+# See Also:
+# http://www.gnu.org/software/make/manual/make.html#Standard-Targets
 #
 std-targets = build install test uninstall install-strip \
 	clean distclean tags dist doc coverage
