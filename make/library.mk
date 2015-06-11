@@ -29,6 +29,9 @@
 #  * LIB      --the name of the library to build
 #  * LIB_OBJ  --the objects to put into the library.
 #
+LIB_SUFFIX ?= a
+LIB_PREFIX ?= lib
+
 LIB_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
 LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%) \
     $(H++_SRC:%=$(LIB_INCLUDEDIR)/%)
@@ -37,21 +40,21 @@ $(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_FILE) $* $@
 $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
 
 #
-# libdir/%.a: --Install a static (.a)library
+# libdir/%.a: --Install a static (.a) library
 #
 # Remarks:
 # In the process of building, ".a" files are copied around a little,
 # depending on the final composition/breakdown of sub-libraries.
 #
-$(libdir)/%.a:	$(archdir)/%.a
+$(libdir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 	$(RANLIB) $@
-$(libbasedir)/%.a:	$(archdir)/%.a
+$(libbasedir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 	$(RANLIB) $@
-../$(archdir)/%.a:	$(archdir)/%.a
+../$(archdir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 	$(RANLIB) $@
@@ -59,7 +62,7 @@ $(libbasedir)/%.a:	$(archdir)/%.a
 # pre-build: --Install the include files
 #
 pre-build:      lib-src-var-defined $(LIB_INCLUDE_SRC)
-build:		$(archdir)/lib$(LIB).a
+build:		$(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
 
 #
 # lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
@@ -78,14 +81,14 @@ lib-src-var-defined:
 # build: --Build this directory's library.
 #
 build:	var-defined[LIB_ROOT] var-defined[LIB] lib-src-var-defined \
-	$(archdir)/lib$(LIB).a
+	$(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
 
 #
 # lib-install-lib: --Install the library (and include files).
 # lib-install-include: --Install the library include files.
 # lib-install-man: --Install manual pages for the library.
 #
-lib-install-lib:	$(libdir)/lib$(LIB).a lib-install-include
+lib-install-lib:	$(libdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX) lib-install-include
 lib-install-include:	$(H_SRC:%.h=$(includedir)/%.h)
 lib-install-include:	$(H++_SRC:%=$(includedir)/%)
 lib-install-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3)
@@ -93,14 +96,12 @@ lib-install-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3)
 #
 # archdir/%.a: --(re)build a library.
 #
-# $(AR) $(ARFLAGS) $@ $(LIB_OBJ)
-#
 $(archdir)/lib.a:	$(LIB_OBJ) $(SUBLIB_SRC)
 	$(ECHO_TARGET)
 	mk-ar-merge $(ARFLAGS) $@ $(LIB_OBJ) $(SUBLIB_SRC)
 	$(RANLIB) $@
 
-$(archdir)/lib$(LIB).a:	$(archdir)/lib.a
+$(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX):	$(archdir)/lib.a
 	$(ECHO_TARGET)
 	cp $< $@
 	$(RANLIB) $@
@@ -111,7 +112,7 @@ $(archdir)/lib$(LIB).a:	$(archdir)/lib.a
 clean:	lib-clean
 lib-clean:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/lib$(LIB).a $(archdir)/lib.a
+	$(RM) $(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX) $(archdir)/lib.a
 
 #
 # distclean: --Remove the include files installed at $LIB_ROOT/include.
