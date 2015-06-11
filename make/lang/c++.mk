@@ -72,7 +72,7 @@ $(archdir)/%.o: %.$(C++_SUFFIX)
 #
 # %.o: --Compile an arch-specific C++ file into an arch-specific sub-directory.
 #
-$(archdir)/%.o: $(archdir)/%.S(C++_SUFFIX)
+$(archdir)/%.o: $(archdir)/%.$(C++_SUFFIX)
 	$(ECHO_TARGET)
 	@mkdir -p $(archdir)
 	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
