@@ -14,8 +14,3 @@ ARCH.CFLAGS = -c $(ARMCC_FLAGS)
 
 ARCH.C_DEFS = -DARCH_ARM -DCPU_STM32
 ARCH.C++_DEFS = -DARCH_ARM -DCPU_STM32
-
-CC = armcc
-CXX = armcc
-AR = armar
-LD = armlink
