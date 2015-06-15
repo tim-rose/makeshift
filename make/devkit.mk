@@ -38,6 +38,14 @@ SUBDIRS := $(shell find * -type d -prune)
 DESTDIR ?= /
 PREFIX = /usr/local
 prefix = $(PREFIX)
+
+DEFAULT_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[0-9]*//')
+DEFAULT_ARCH := $(shell uname -m | tr A-Z a-z)
+
+OS ?= $(DEFAULT_OS)
+ARCH ?= $(DEFAULT_ARCH)
+PROJECT ?= default
+
 #
 # ECHO is a shell no-op by default, but can be redefined by setting "VERBOSE".
 #
