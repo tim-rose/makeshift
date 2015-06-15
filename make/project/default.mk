@@ -1,5 +1,5 @@
 #
-# PROJECT.MK	--per-project customisations
+# DEFAULT.MK	--Default per-project customisations.
 #
 # Remarks:
 # The project include file defines overall customisations for existing
@@ -14,7 +14,7 @@
 #    -Wzero-as-null-pointer-constant
 #    -Wlogical-op
 #    -Wnoexcept
-#     -Wstrict-null-sentinel
+#    -Wstrict-null-sentinel
 #
 # See Also:
 # http://stackoverflow.com/questions/5088460/flags-to-enable-thorough-and-verbose-g-warnings/9862800#9862800
