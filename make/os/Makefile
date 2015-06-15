@@ -6,12 +6,8 @@
 #
 MK_SRC = cygwin_nt.mk darwin.mk linux.mk rtx.mk solaris.mk \
     windows_nt.mk windriver-x.mk
-ALL_SRC = $(MK_SRC) .mk
 subdir	= os
 
 include devkit.mk
 
-$(includedir)/%:	%;		$(INSTALL_FILE) $* $@
-$(includedir)/.mk:	_mk.sh;		sh _mk.sh >$@
-
-install:		$(ALL_SRC:%=$(includedir)/%)
+install:		$(MK_SRC:%=$(includedir)/%)
