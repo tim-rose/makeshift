@@ -39,7 +39,7 @@ DESTDIR ?= /
 PREFIX = /usr/local
 prefix = $(PREFIX)
 
-DEFAULT_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[0-9]*//')
+DEFAULT_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
 DEFAULT_ARCH := $(shell uname -m | tr A-Z a-z)
 
 OS ?= $(DEFAULT_OS)
@@ -67,60 +67,6 @@ ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
 # build: --The default target
 #
 all:	build
-#
-# Standard directories
-#
-# Remarks:
-# These directories are set according to a blend of the following variables:
-# * DESTDIR	-- an alternative root (e.g. chroot jail, pkg-building root)
-# * prefix	-- the application's idea of its root installation directory
-# * opt		-- FSHS "opt" component (undefined if not FSHS)
-# * usr		-- bindir modfier: either undefined or "usr"
-# * archdir	-- system+architecture-specific bindir modifier (unused)
-#
-# In typical usage, DESTDIR should be undefined (it's explicitly set
-# as needed by some of the packaging targets), and prefix should be
-# set to either "/usr/local" or $HOME (or a subdirectory).  Note that
-# GNU make will search for include files in /usr/local/include, so
-# installing devkit itself into /usr/local is a win.  However if you
-# install devkit into $HOME, you must use/alias make as
-# "make -I$HOME/include".
-#
-archdir         = $(OS)-$(ARCH)
-rootdir 	= $(DESTDIR)/$(prefix)
-rootdir_opt 	= $(DESTDIR)/$(prefix)/$(opt)
-#exec_prefix = $(rootdir)/$(archdir)	# (GNU std)
-exec_prefix	= $(rootdir_opt)/$(usr)
-
-bindir		= $(exec_prefix)/bin
-sbindir 	= $(exec_prefix)/sbin
-#libexecdir	= $(exec_prefix)/libexec/$(archdir)	# (GNU std)
-libexecdir	= $(exec_prefix)/libexec/$(subdir)
-datadir		= $(exec_prefix)/share/$(subdir)
-
-sysconfdir	= $(rootdir)/etc/$(opt)/$(subdir)
-divertdir	= $(rootdir)/var/lib/divert/$(subdir)
-sharedstatedir	= $(rootdir_opt)/com/$(subdir)
-localstatedir	= $(rootdir)/var/$(opt)/$(subdir)
-srvdir 		= $(rootdir)/srv/$(subdir)
-wwwdir 		= $(rootdir)/srv/www/$(subdir)
-
-#libdir		= $(exec_prefix)/lib/$(archdir)	# (GNU std)
-libdir		= $(exec_prefix)/lib/$(subdir)
-libbasedir	= $(exec_prefix)/lib
-infodir		= $(rootdir_opt)/info
-lispdir		= $(rootdir_opt)/share/emacs/site-lisp
-
-includedir	= $(rootdir_opt)/$(usr)/include/$(subdir)
-mandir		= $(datadir)/man
-man1dir		= $(mandir)/man1
-man2dir		= $(mandir)/man2
-man3dir		= $(mandir)/man3
-man4dir		= $(mandir)/man4
-man5dir		= $(mandir)/man5
-man6dir		= $(mandir)/man6
-man7dir		= $(mandir)/man7
-man8dir		= $(mandir)/man8
 
 #
 # INSTALL_*: --Specialised install commands.
@@ -129,28 +75,13 @@ INSTALL 	   = install -D
 INSTALL_PROGRAM   = $(INSTALL) -m 755
 INSTALL_FILE      = $(INSTALL) -m 644
 INSTALL_DIRECTORY = $(INSTALL) -d
-#
-# Common patterns for installing stuff
-#
-$(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
-$(libdir)/%:		%;	$(INSTALL_FILE) $? $@
-$(datadir)/%:		%;	$(INSTALL_FILE) $? $@
-$(sharedstatedir)/%:	%;	$(INSTALL_FILE) $? $@
-$(localstatedir)/%:	%;	$(INSTALL_FILE) $? $@
+
+include std-directories.mk
 
 #
 # src: --Make sure the src target can write to the Makefile
 #
 src:			file-writable[Makefile]
-
-#
-# bindir/archdir: --rules for installing any executable in archdir.
-#
-$(bindir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
-$(libexecdir)/%:	$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
-#$(libdir)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
 
 #
 # %.gz: --Rules for building compressed/summarised data.
@@ -179,15 +110,9 @@ devkit-distclean:
 	$(RM) tags TAGS
 	$(RM) -r $(OS) $(ARCH) $(archdir)
 
-include recursive-targets.mk valid.mk coverage.mk
-include lang/mk.mk $(language:%=lang/%.mk) ld.mk
-include os/$(OS).mk arch/$(ARCH).mk
--include project/$(PROJECT).mk
-
-#include vcs/$(VCS).mk
 
 #
-# var[%]:	--pattern rule to print a make variable.
+# var[%]:	--Pattern rule to print a make variable.
 #
 #+vars:   $(.VARIABLES:%=+var[%])
 +var[%]:
@@ -206,3 +131,9 @@ include os/$(OS).mk arch/$(ARCH).mk
 +features:	;	@echo $(.FEATURES)
 +dirs:		;	@echo $(.INCLUDE_DIRS)
 +files:		;	@echo $(MAKEFILE_LIST)
+
+include recursive-targets.mk valid.mk coverage.mk
+include lang/mk.mk $(language:%=lang/%.mk) ld.mk
+include os/$(OS).mk arch/$(ARCH).mk
+-include project/$(PROJECT).mk
+#include vcs/$(VCS).mk

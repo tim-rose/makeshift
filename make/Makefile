@@ -8,7 +8,7 @@
 #
 MK_SRC = coverage.mk deb.mk deploy.mk devkit.mk doxygen.mk ld.mk \
     library.mk package.mk recursive-targets.mk repository.mk \
-    valid.mk
+    valid.mk std-directories.mk
 
 include devkit.mk
 
