@@ -167,10 +167,10 @@ src:	src-c++
 .PHONY:	src-c++
 src-c++:
 	$(ECHO_TARGET)
-	mk-filelist -qn C++_SRC *.$(C++_SUFFIX)
-	mk-filelist -qn C++_MAIN_SRC \
+	@mk-filelist -qn C++_SRC *.$(C++_SUFFIX)
+	@mk-filelist -qn C++_MAIN_SRC \
 		$$(grep -l '^ *int *main(' *.$(C++_SUFFIX) 2>/dev/null)
-	mk-filelist -qn H++_SRC *.$(H++_SUFFIX)
+	@mk-filelist -qn H++_SRC *.$(H++_SUFFIX)
 
 #
 # tags: --Build vi, emacs tags files for C++ files.
