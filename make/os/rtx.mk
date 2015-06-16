@@ -6,6 +6,8 @@ LIB_SUFFIX = lib
 
 OS.C++_DEFS = -DOS_RTX -D__RTX
 
+OS.C_DEFS = -DOS_RTX -D__RTX
+
 CC = armcc
 CXX = armcc
 AR = armar

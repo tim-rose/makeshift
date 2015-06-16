@@ -1,13 +1,13 @@
 #
-# CYGWIN_NT.MK	--Macros and definitions for (Cygwin) Windows_NT
+# CYGWIN_NT.MK	--Definitions for Windows using the Cygwin environment.
 #
 # Remarks:
 #
 OS.CFLAGS 	= -MMD
-OS.C_DEFS	= -D__Windows_NT__
+OS.C_DEFS	= -D__Cygwin_NT__
 
 OS.CXXFLAGS 	= -MMD
-OS.C++_DEFS	= -D__Windows_NT__
+OS.C++_DEFS	= -D__Cygwin_NT__
 
 DESTDIR		= /
 RANLIB		= ranlib
