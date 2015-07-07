@@ -121,7 +121,7 @@ set_type()
 	.c++|.cpp|.cxx|.C|.cc|.js)
 	    comment_prefix='// '
 	    ;;
-	Makefile|.mk|.conf|.cfg|.ini|.p[lm]|.sh*|.awk|.sed|.rb)
+	Makefile|.mk|.conf|.cfg|.ini|.p[lm]|.sh*|.awk|.sed|.rb|.py)
 	    comment_prefix='# '
 	    ;;
 	.sql|.ada|.htm|.html)
