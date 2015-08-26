@@ -46,7 +46,7 @@ nroff-toc:
 #
 src:	nroff-src
 .PHONY:	nroff-src
-nroff-src:	
+nroff-src:
 	$(ECHO_TARGET)
 	@mk-filelist -qn MAN1_SRC *.1
 	@mk-filelist -qn MAN3_SRC *.3
@@ -59,6 +59,12 @@ doc:	$(MAN1_SRC:%.1=%.1.pdf) \
 	$(MAN5_SRC:%.5=%.5.pdf) \
 	$(MAN7_SRC:%.7=%.7.pdf) \
 	$(MAN8_SRC:%.8=%.8.pdf)
+
+install:    $(MAN1_SRC:%=$(man1dir)/%) \
+    $(MAN3_SRC:%=$(man3dir)/%) \
+    $(MAN5_SRC:%=$(man5dir)/%) \
+    $(MAN7_SRC:%=$(man7dir)/%) \
+    $(MAN8_SRC:%=$(man8dir)/%)
 
 #
 # nroff-clean: --Cleanup nroff files.
