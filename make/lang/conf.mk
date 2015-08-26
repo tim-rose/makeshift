@@ -13,7 +13,9 @@
 # Config files can have a variety of extensions (".conf", ".ini",
 # ".cfg").  The conf module supports all of these via the macros
 # CONF_SRC, INI_SRC, CFG_SRC.  It defines rules for installing the
-# config files into $(sysconfdir), and $(divertdir).
+# config files into $(sysconfdir), and $(divertdir). FWIW, divertdir
+# is useful on debian-based systems; it helps support local
+# customisation of another package's config files.
 #
 
 #
