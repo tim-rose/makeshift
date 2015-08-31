@@ -35,9 +35,8 @@
 # http://www.gnu.org/software/make/manual/make.html#Variables-for-Specifying-Commands).
 #
 SUBDIRS := $(shell find * -type d -prune)
-DESTDIR ?= /
-PREFIX = /usr/local
-prefix = $(PREFIX)
+PREFIX ?= /usr/local
+prefix ?= $(PREFIX)
 
 DEFAULT_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
 DEFAULT_ARCH := $(shell uname -m | tr A-Z a-z)
