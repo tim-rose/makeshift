@@ -14,10 +14,14 @@ OS.C++_DEFS	= -D__Linux__ -D_BSD_SOURCE -D_XOPEN_SOURCE
 OS.CXXFLAGS 	= -MMD
 OS.LDFLAGS	= -stdlib=libstdc++
 
-RANLIB		= ranlib
+CHMOD		= chmod
+CP		= cp
 FAKEROOT	= fakeroot
 GREP		= grep
-INDENT          = indent
+INDENT          = gnuindent
+MV		= mv
+RANLIB		= ranlib
 
-MOC = moc-qt4
+MOC 		= moc-qt4
+
 PKG_TYPE	= deb

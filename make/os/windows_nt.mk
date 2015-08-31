@@ -8,10 +8,11 @@ OS.C_DEFS	= -D__Windows_NT__
 OS.C++_DEFS	= -D__Windows_NT__
 # -D_BSD_SOURCE -D_XOPEN_SOURCE
 
-RANLIB		= ranlib
-FAKEROOT	= fakeroot
+CHMOD		= chmod
+CP		= cp
 GREP		= grep
 INDENT          = indent
+MV		= mv
+RANLIB		= ranlib
 
 PKG_TYPE	= deb
-

@@ -10,9 +10,13 @@ OS.CXXFLAGS 	= -MMD
 OS.C++_DEFS	= -D__Cygwin_NT__
 
 DESTDIR		= /
-RANLIB		= ranlib
+
+CHMOD		= chmod
+CP		= cp
 FAKEROOT	= fakeroot
 GREP		= grep
-indent          = indent
+INDENT          = indent
+MV		= mv
+RANLIB		= ranlib
 
 PKG_TYPE	= deb

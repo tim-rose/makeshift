@@ -18,10 +18,14 @@ OS.C++_DEFS     = -D__Darwin__
 OS.CXXFLAGS 	= -MMD
 OS.LDFLAGS	= -stdlib=libstdc++
 
-RANLIB		= ranlib
+CHMOD		= chmod
+CP		= cp
 GREP		= grep
-PKG_TYPE	= deb
 INDENT          = gnuindent
+MV		= mv
+RANLIB		= ranlib
+
+PKG_TYPE	= deb
 
 clean:	clean-darwin
 .PHONY: clean-darwin

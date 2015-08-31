@@ -13,6 +13,9 @@ CXX = armcc
 AR = armar
 LD = armlink
 
+CHMOD		= chmod
+CP		= cp
+GREP		= grep
+INDENT          = gnuindent
+MV		= mv
 RANLIB = : $(AR) -s
-GREP = grep
-INDENT = indent

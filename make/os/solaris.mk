@@ -1,5 +1,9 @@
 #
-# SOLARIS.MK	--Macros and definitions for Solaris/sparc.
+# SOLARIS.MK	--Macros and definitions for Solaris.
 #
+CHMOD		= chmod
+CP		= cp
 GREP		= grep
-INDENT          = indent
+INDENT          = gnuindent
+MV		= mv
+RANLIB		= ranlib
