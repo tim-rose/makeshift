@@ -3,11 +3,12 @@
 #
 # Remarks:
 # These directories are set according to a blend of the following variables:
-# * DESTDIR	-- an alternative root (e.g. chroot jail, pkg-building root)
-# * prefix	-- the application's idea of its root installation directory
-# * opt		-- FSHS "opt" component (undefined if not FSHS)
-# * usr		-- bindir modfier: either undefined or "usr"
-# * archdir	-- system+architecture-specific bindir modifier (unused)
+#
+#  * DESTDIR	-- an alternative root (e.g. chroot jail, pkg-building root)
+#  * prefix	-- the application's idea of its root installation directory
+#  * opt	-- FSHS "opt" component (undefined if not FSHS)
+#  * usr	-- bindir modfier: either undefined or "usr"
+#  * archdir	-- system+architecture-specific bindir modifier (unused)
 #
 # In typical usage, DESTDIR should be undefined (it's explicitly set
 # as needed by some of the packaging targets), and prefix should be
