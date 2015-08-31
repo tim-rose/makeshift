@@ -23,11 +23,11 @@ $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 
 %.html:	%.md
 	$(ECHO_TARGET)
-	markdown $*.md >$@
-%.html:	%.mmd
-	$(ECHO_TARGET)
-	multimarkdown $(MMDFLAGS) $*.mmd > $@
+	multimarkdown $(MMDFLAGS) $*.md > $@
 
+%.pdf: %.html
+	$(ECHO_TARGET)
+	prince -s /usr/local/share/doc/css/print.css $*.html -o $@
 #
 # build: --Create HTML documents from MMD_SRC.
 #
