@@ -6,7 +6,7 @@
 # build: --Compile yacc grammars into their object file(s).
 # clean: --Remove a yacc grammar's object file.
 # src:   --Get a list of the yacc grammars in this directory.
-# toc:   --Update the table-of-contents for a yacc grammar file.
+# toc:   --Update the Y_SRC macro with a list of yacc grammars.
 #
 # Remarks:
 # YACC files are pre-processed into "C" files which are then handled

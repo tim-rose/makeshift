@@ -2,9 +2,10 @@
 # NROFF.MK --Rules for building nroff files.
 #
 # Contents:
-# nroff-toc:   --Build the table-of-contents for nroff files.
-# nroff-src:   --nroff-specific customisations for the "src" target.
-# nroff-clean: --Cleanup nroff files.
+# toc-nroff:   --Build the table-of-contents for nroff files.
+# src-nroff:   --specific-nroff customisations for the "src" target.
+# install-man: --install manual pages in their usual places.
+# clean-nroff: --Cleanup nroff files.
 # todo:        --Report unfinished work (identified by keyword comments)
 #
 
@@ -29,24 +30,24 @@ $(man8dir)/%.8:	%.8;	$(INSTALL_FILE) $? $@
 %.8.pdf:	%.8;	man -t ./$*.8 | ps2pdf - - > $@
 
 #
-# nroff-toc: --Build the table-of-contents for nroff files.
+# toc-nroff: --Build the table-of-contents for nroff files.
 #
-.PHONY: nroff-toc
-toc:	nroff-toc
-nroff-toc:
+.PHONY: toc-nroff
+toc:	toc-nroff
+toc-nroff:
 	@$(ECHO_TARGET)
 	mk-toc $(MAN1_SRC) $(MAN3_SRC) $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC)
 
 #
-# nroff-src: --nroff-specific customisations for the "src" target.
+# src-nroff: --specific-nroff customisations for the "src" target.
 #
 # We only really care about some of the manual sections; specifically
 # section 2 (system calls) and 4 (special files) are not something
 # we're likely to write.
 #
-src:	nroff-src
-.PHONY:	nroff-src
-nroff-src:
+src:	src-nroff
+.PHONY:	src-nroff
+src-nroff:
 	$(ECHO_TARGET)
 	@mk-filelist -qn MAN1_SRC *.1
 	@mk-filelist -qn MAN3_SRC *.3
@@ -60,26 +61,32 @@ doc:	$(MAN1_SRC:%.1=%.1.pdf) \
 	$(MAN7_SRC:%.7=%.7.pdf) \
 	$(MAN8_SRC:%.8=%.8.pdf)
 
-install:    $(MAN1_SRC:%=$(man1dir)/%) \
+install:        install-man
+
+#
+# install-man:  --install manual pages in their usual places.
+#
+.PHONY: install-man
+install-man:    $(MAN1_SRC:%=$(man1dir)/%) \
     $(MAN3_SRC:%=$(man3dir)/%) \
     $(MAN5_SRC:%=$(man5dir)/%) \
     $(MAN7_SRC:%=$(man7dir)/%) \
     $(MAN8_SRC:%=$(man8dir)/%)
 
 #
-# nroff-clean: --Cleanup nroff files.
+# clean-nroff: --Cleanup nroff files.
 #
-.PHONY: nroff-clean
-distclean:	nroff-clean
-clean:	nroff-clean
-nroff-clean:
+.PHONY: clean-nroff
+distclean:	clean-nroff
+clean:	clean-nroff
+clean-nroff:
 	$(RM) $(MAN1_SRC:%.1=%.1.pdf) $(MAN3_SRC:%.3=%.3.pdf) $(MAN5_SRC:%.5=%.5.pdf) $(MAN7_SRC:%.7=%.7.pdf) $(MAN8_SRC:%.8=%.8.pdf)
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
 #
-.PHONY: nroff-todo
-todo:	nroff-todo
-nroff-todo:
+.PHONY: todo-nroff
+todo:	todo-nroff
+todo-nroff:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(MAN1_SRC) $(MAN3_SRC) $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC) /dev/null || true
