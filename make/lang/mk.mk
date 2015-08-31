@@ -2,13 +2,20 @@
 # MK.MK --devkit rules for manipulating ".mk" files.
 #
 # Contents:
-# src-mk:  --Update MK_SRC with the list of ".mk" files.
-# toc-mk:  --Rebuild a Makefile's table-of-contents.
-# todo-mk: --Report unfinished work in Makefiles.
-# +dirs:   --Print the current make directory macros.
+# install-mk: --Install ".mk" files to their usual places
+# src-mk:     --Update MK_SRC with the list of ".mk" files.
+# toc-mk:     --Rebuild a Makefile's table-of-contents.
+# todo-mk:    --Report unfinished work in Makefiles.
+# +dirs:      --Print the current make directory macros.
 #
 
 $(includedir)/%.mk:	%.mk;	$(INSTALL_FILE) $< $@
+
+#
+# install-mk: --Install ".mk" files to their usual places
+#
+.PHONY: install-mk
+install-mk:     $(MK_SRC:%.mk=$(includedir)/%.mk)
 
 #
 # src-mk: --Update MK_SRC with the list of ".mk" files.
