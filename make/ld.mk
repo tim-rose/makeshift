@@ -30,4 +30,4 @@ ALL_LDLIBS = $(TARGET.LDLIBS) $(LOCAL.LDLIBS) $(PROJECT.LDLIBS) \
 #
 $(archdir)/%: $(archdir)/%.o
 	$(ECHO_TARGET)
-	$(LD) $(ALL_LDFLAGS) -o $@ $^ $(ALL_LDLIBS)
+	$(LD) -Wl,-map,$(archdir)/$*.map $(ALL_LDFLAGS) -o $@ $^ $(ALL_LDLIBS)
