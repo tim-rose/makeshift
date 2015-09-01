@@ -2,13 +2,12 @@
 # PYTHON.MK --Rules for building PYTHON objects and programs.
 #
 # Contents:
-# python-clean: --Remove script executables.
-# python-toc:   --Build the table-of-contents for PYTHON-ish files.
-# python-src:   --python-specific customisations for the "src" target.
-# todo:         --Report unfinished work (identified by keyword comments)
-#
-# Remarks:
-# I haven't used python yet...
+# install-python:     --Install python as executables.
+# install-python-lib: --Install python as library modules
+# clean-python:       --Remove script executables.
+# toc-python:         --Build the table-of-contents for ish-PYTHON files.
+# src-python:         --specific-python customisations for the "src" target.
+# todo:               --Report unfinished work (identified by keyword comments)
 #
 
 #
@@ -17,42 +16,55 @@
 pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
 PY_TRG = $(PY_SRC:%.py=%)
 
-%:			%.py;	$(INSTALL_PROGRAM) $? $@
+%:			%.py;	$(CP) $*.py $@ && $(CHMOD) +x $@
 $(pythonlibdir)/%.py:	%.py;	$(INSTALL_FILE) $? $@
 
 pre-build:	src-var-defined[PY_SRC]
-build:	$(PY_TRG)
+build-python:	$(PY_TRG)
 
 #
-# python-clean: --Remove script executables.
+# install-python: --Install python as executables.
 #
-.PHONY: python-clean
-clean:	python-clean
-python-clean:
-	$(RM) $(PY_TRG)
+.PHONY: install-python
+install-python: $(bindir)/$(PY_SRC:%.py=%)
 
 #
-# python-toc: --Build the table-of-contents for PYTHON-ish files.
+# install-python-lib: --Install python as library modules.
 #
-.PHONY: python-toc
-toc:	python-toc
-python-toc:
+.PHONY: install-python-lib
+install-python: $(pythonlibdir)/$(PY_SRC:%.py=%)
+
+#
+# clean-python: --Remove script executables.
+#
+.PHONY: clean-python
+clean:	clean-python
+clean-python:
+	$(RM) $(PY_SRC:%.py=%.py[co])
+
+#
+# toc-python: --Build the table-of-contents for ish-PYTHON files.
+#
+.PHONY: toc-python
+toc:	toc-python
+toc-python:
 	$(ECHO_TARGET)
 	mk-toc $(PY_SRC)
 
 #
-# python-src: --python-specific customisations for the "src" target.
+# src-python: --specific-python customisations for the "src" target.
 #
-.PHONY:	python-src
-src:	python-src
-python-src:
+.PHONY:	src-python
+src:	src-python
+src-python:
 	$(ECHO_TARGET)
 	@mk-filelist -qn PY_SRC *.py
+
 #
-# todo: --Report unfinished work (identified by keyword comments)
+# todo-python: --Report unfinished work (identified by keyword comments)
 #
-.PHONY: python-todo
-todo:	python-todo
-python-todo:
+.PHONY: todo-python
+todo:	todo-python
+todo-python:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(PY_SRC) /dev/null || true
