@@ -3,11 +3,11 @@
 #
 # Contents:
 # install-python:     --Install python as executables.
-# install-python-lib: --Install python as library modules
+# install-python-lib: --Install python as library modules.
 # clean-python:       --Remove script executables.
 # toc-python:         --Build the table-of-contents for ish-PYTHON files.
 # src-python:         --specific-python customisations for the "src" target.
-# todo:               --Report unfinished work (identified by keyword comments)
+# todo-python:        --Report unfinished work (identified by keyword comments)
 #
 
 #
