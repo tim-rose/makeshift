@@ -2,9 +2,9 @@
 # LEX.MK --Rules for working with LEX files.
 #
 # Contents:
-# %.l:   --lex-related build rules.
+# %.l:   --Compile the lex grammar into a ".c" file
 # build: --Compile LEX_SRC to object code.
-# clean: --Remove lex-derived objects.
+# clean: --Remove the lex grammar's object files.
 # src:   --Update the LEX_SRC macro.
 # toc:   --Update the table of contents in lex files.
 #
@@ -14,12 +14,13 @@
 # contains patterns to define the pre-processing transformation only.
 #
 
--include $(LEX_SRC:%.l=$(archdir)/%_l-depend.mk)
+-include $(LEX_SRC:%.l=$(archdir)/%_l.d)
+
+LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%.o)
 
 #
-# %.l: --lex-related build rules.
+# %.l: --Compile the lex grammar into a ".c" file
 #
-LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%.o)
 %.c:	%.l
 	$(LEX) $(LFLAGS) -t $< | sed -e "s/yy/$*_/g" >$*_l.c
 
@@ -30,28 +31,28 @@ pre-build:	src-var-defined[LEX_SRC]
 build:	$(LEX_OBJ)
 
 #
-# clean: --Remove lex-derived objects.
+# clean: --Remove the lex grammar's object files.
 #
-clean:	lex-clean
-.PHONY:	lex-clean
-lex-clean:
+clean:	clean-lex
+.PHONY:	clean-lex
+clean-lex:
 	$(ECHO_TARGET)
 	$(RM) $(LEX_OBJ)
 
 #
 # src: --Update the LEX_SRC macro.
 #
-src:	lex-src
-.PHONY:	lex-src
-lex-src:
+src:	src-lex
+.PHONY:	src-lex
+src-lex:
 	$(ECHO_TARGET)
 	@mk-filelist -qn LEX_SRC *.l
 
 #
 # toc: --Update the table of contents in lex files.
 #
-toc:	lex-toc
-.PHONY:	lex-toc
-lex-toc:
+toc:	toc-lex
+.PHONY:	toc-lex
+toc-lex:
 	$(ECHO_TARGET)
 	mk-toc $(LEX_SRC)
