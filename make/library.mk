@@ -2,7 +2,7 @@
 # LIBRARY.MK: rules to build and install a library composed of a set of objects.
 #
 # Contents:
-# libdir/%.a:          --Install a static (.a)library
+# libdir/%.a:          --Install a static (.a) library
 # pre-build:           --Install the include files
 # lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
 # %/lib.a:             --Build the sub-librar(ies) in its subdirectory.

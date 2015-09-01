@@ -2,13 +2,13 @@
 # devkit.mk --Recursive make considered useful.
 #
 # Contents:
-# build:          --The default target
-# INSTALL_*:      --Specialised install commands.
-# src:            --Make sure the src target can write to the Makefile
-# bindir/archdir: --rules for installing any executable in archdir.
-# %.gz:           --Rules for building compressed/summarised data.
-# clean:          --Devkit-specific customisations for the "clean" target.
-# distclean:      --Remove artefacts that devkit creates/updates.
+# build:     --The default target
+# INSTALL_*: --Specialised install commands.
+# src:       --Make sure the src target can write to the Makefile
+# clean:     --Devkit-specific customisations for the "clean" target.
+# distclean: --Remove artefacts that devkit creates/updates.
+# +help:     --Output some help text extracted from the included makefiles.
+# %.gz:      --Rules for building compressed/summarised data.
 #
 # Remarks:
 # The devkit makefiles together define a build system that extends
