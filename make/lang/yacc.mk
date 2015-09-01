@@ -20,15 +20,11 @@
 # %.y: --yacc-related build rules.
 #
 Y_OBJ	= $(Y_SRC:%.y=$(archdir)/%.o)
-%.h:	%.y
+%.h %_y.c:	%.y
 	$(YACC) -d $(YFLAGS) $<
 	sed -e "s/yy/$*_/g" <y.tab.h >$*.h
-	$(RM) y.tab.h
-
-%.c:	%.y
-	$(YACC) $(YFLAGS) $<
 	sed -e "s/yy/$*_/g" <y.tab.c >$*_y.c
-	$(RM) y.tab.c
+	$(RM) y.tab.[ch]
 
 #
 # build: --Compile yacc grammars into their object file(s).
@@ -59,6 +55,6 @@ yacc-src:
 #
 toc:	yacc-toc
 .PHONY:	yacc-toc
-yacc-toc:	
+yacc-toc:
 	$(ECHO_TARGET)
 	mk-toc $(Y_SRC)
