@@ -3,8 +3,18 @@
 #
 # Remarks:
 # The recursive targets are invoked on all subdirectories that contain
-# a Makefile, named either as "Makefile", as "Makefile-<arch>", for
-# some value of ARCH.  These targets and their meaning are documented
+# a Makefile matching the following patterns in order:
+#
+#  * Makefile-<OS> --OS-specific make rules (e.g. Makefile-linux)
+#  * Makefile-<ARCH> --architecture-specific make rules
+#  * Makefile --a "normal" make file.
+#
+# Note that if *any* of these files exist, the recursion will occur,
+# using the first Makefile that matches.  So, it is possible to
+# create sub-directories that are only processed for particular
+# OS or ARCH, or that have customised behaviour for OS, ARCH.
+#
+# The recursive targets and their meaning are documented
 # in the GNU make manual.
 #
 # See Also:
@@ -25,10 +35,10 @@ $1 $(SUBDIRS:%=$1@%):	pre-$1
 $1@%:
 	@$$(ECHO_TARGET)
 	@if [ -e $$*/Makefile-$(OS) ]; then \
-            $$(ECHO) ++ make: recursively building $$@; \
+            $$(ECHO) ++ make: recursively building $$@ for $(OS); \
             cd $$* >/dev/null && $$(MAKE) -f Makefile-$(OS) $1; \
 	elif [ -e $$*/Makefile-$(ARCH) ]; then \
-            $$(ECHO) ++ make: recursively building $$@; \
+            $$(ECHO) ++ make: recursively building $$@ for $(ARCH); \
             cd $$* >/dev/null && $$(MAKE) -f Makefile-$(ARCH) $1; \
         elif [ -e $$*/Makefile ]; then \
             $$(ECHO) ++ make: recursively building $$@; \
