@@ -37,8 +37,10 @@ install-python: $(pythonlibdir)/$(PY_SRC:%.py=%)
 #
 # clean-python: --Remove script executables.
 #
-.PHONY: clean-python
 clean:	clean-python
+distclean:	clean-python
+
+.PHONY: clean-python
 clean-python:
 	$(RM) $(PY_SRC:%.py=%.py[co])
 
