@@ -19,4 +19,6 @@ doc-dox:
 
 clean:	clean-dox
 distclean:	clean-dox
+
+.PHONY: clean-dox
 clean-dox:	;	$(RM) -r $(DOX_OUTPUT)

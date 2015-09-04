@@ -11,7 +11,7 @@
 # statistics-gathering code.
 #
 # The "coverage" target is auto-recursive, and is used to
-# generate the text reports in the per directory.  The HTML reports
+# generate the text reports per directory.  The HTML reports
 # act on an entire tree, so they are not generated recursively; you must
 # move to a directory and "make html-coverage".
 #

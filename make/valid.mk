@@ -26,7 +26,7 @@
 #
 # Note that the target will fail anyway if *frobnicate* doesn't exist,
 # and probably *frobnicate* will generate some error if the supplied
-# $(INPUT_FILES) is empty, however with these dependents the error
+# $(INPUT_FILES) is empty, however with these dependencies the error
 # messages will likely make more sense:
 #
 # ```
