@@ -17,7 +17,7 @@ PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
 PVRA	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
 
-include $(PKG_TYPE).mk
+include package/$(PKG_TYPE).mk
 
 #
 # package: --Build a package for the current module.
