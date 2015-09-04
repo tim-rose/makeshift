@@ -22,7 +22,7 @@
 #
 std-targets = build install test uninstall install-strip \
 	clean distclean tags dist doc coverage
-devkit-targets = src toc tidy todo
+devkit-targets = src toc lint tidy todo
 recursive-targets = $(std-targets) $(devkit-targets)
 
 +var[recursive_rule]:;@: # disable +var[recursive_rule]

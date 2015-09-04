@@ -45,7 +45,7 @@ clean-python:
 	$(RM) $(PY_SRC:%.py=%.py[co])
 
 #
-# toc-python: --Build the table-of-contents for ish-PYTHON files.
+# toc-python: --Build the table-of-contents for python files.
 #
 .PHONY: toc-python
 toc:	toc-python
@@ -61,7 +61,6 @@ src:	src-python
 src-python:
 	$(ECHO_TARGET)
 	@mk-filelist -qn PY_SRC *.py
-
 #
 # todo-python: --Report unfinished work (identified by keyword comments)
 #
@@ -70,3 +69,19 @@ todo:	todo-python
 todo-python:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(PY_SRC) /dev/null || true
+
+#
+# lint-python: --Run a static analyser over the PY_SRC.
+#
+# Remarks:
+# There are several static analysers for python, for now I'm using pep8 with
+# relaxed line-length restrictions.  The following errors are excluded:
+#
+# * E402 module level import not at top of file
+# * E721 do not compare types, use 'isinstance()'
+#
+.PHONY: lint-python
+lint:	lint-python
+lint-python:    cmd-exists[pep8]
+	$(ECHO_TARGET)
+	-pep8 --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
