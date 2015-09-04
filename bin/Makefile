@@ -1,3 +1,4 @@
+SED_SRC = mk-rpm-files.sed
 #
 # Makefile --Build rules devkit/bin.
 #
