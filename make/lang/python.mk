@@ -5,9 +5,10 @@
 # install-python:     --Install python as executables.
 # install-python-lib: --Install python as library modules.
 # clean-python:       --Remove script executables.
-# toc-python:         --Build the table-of-contents for ish-PYTHON files.
+# toc-python:         --Build the table-of-contents for python files.
 # src-python:         --specific-python customisations for the "src" target.
 # todo-python:        --Report unfinished work (identified by keyword comments)
+# lint-python:        --Run a static analyser over the PY_SRC.
 #
 # See Also:
 # Exercises in Programming Style, Cristina Videira Lopes

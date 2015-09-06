@@ -3,6 +3,7 @@
 #
 # Contents:
 # package:         --Build a package for the current module.
+# staging-root:    --Install the package in a staged root directory.
 # release:         --Mark the current version of this package as "released".
 # distclean:       --Remove the tarball created by "dist".
 # package-vars-ok: --Test that "PACKAGE" and other variables are defined.

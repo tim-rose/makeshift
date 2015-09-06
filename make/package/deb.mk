@@ -2,7 +2,7 @@
 # DEB.MK --Targets for building Debian packages.
 #
 # Contents:
-# deb:            --Tests and dependencies for building a debian archive.
+# deb:            --Build a debian package for the current version/release/arch.
 # debian-binary:  --Create the "debian-binary" file automatically.
 # control.tar.gz: --Create the control tarball from the debian subdirectory.
 # data.tar.gz:    --Create the installed binary tarball.
@@ -10,8 +10,7 @@
 # md5sums:        --Calculate the md5sums for all the installed files.
 # conffiles:      --Make "conffiles" as required.
 # control-ok:     --Test that the control file has the correct information.
-# version-match:  --Compare debian/control version with intrinsic Makefile.
-# perl-depend:    --Calculate perl dependencies.
+# deb-version-ok: --Compare debian/control's version with Makefile definitions.
 # clean:          --Remove derived files created as a side-effect of packaging.
 # distclean:      --Remove the package.
 #

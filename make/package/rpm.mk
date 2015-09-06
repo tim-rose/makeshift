@@ -2,6 +2,11 @@
 # RPM.MK --Rules for building RPM packages.
 #
 # Contents:
+# rpm:            --Build an RPM of the package for the current version/release/arch.
+# %-files.txt:    --Build a manifest file for the RPM's "file" section.
+# rpm-version-ok: --Compare the ".spec" version with Makefile definitions.
+# clean:          --Remove the RPM manifest file.
+# distclean:      --Remove the RPM file.
 #
 # Remarks:
 # TBD.
@@ -17,7 +22,7 @@ package:	package-rpm
 # rpm: --Build an RPM of the package for the current version/release/arch.
 #
 # Remarks:
-# "package-deb" and "deb" are aliases, for convenience.
+# "package-rpm" and "rpm" are aliases, for convenience.
 #
 .PHONY:		package-rpm rpm
 package-rpm:	package-vars-ok rpm
@@ -39,7 +44,7 @@ $(P-V-R.A).rpm: $(PACKAGE).spec $(PACKAGE)-files.txt cmd-exists[rpmbuild]
             sed -e 's|^$(STAGING_ROOT)||' | mk-rpm-files >$@
 
 #
-# deb-version-ok: --Compare debian/control's version with Makefile definitions.
+# rpm-version-ok: --Compare the ".spec" version with Makefile definitions.
 #
 release:	rpm-version-ok[$(VERSION)] rpm-release-ok[$(RELEASE)]
 rpm-version-ok[%]:
