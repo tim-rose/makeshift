@@ -9,6 +9,10 @@
 # src-python:         --specific-python customisations for the "src" target.
 # todo-python:        --Report unfinished work (identified by keyword comments)
 #
+# See Also:
+# Exercises in Programming Style, Cristina Videira Lopes
+# https://github.com/crista/exercises-in-programming-style
+#
 
 #
 # %.py:		--Rules for installing python scripts
