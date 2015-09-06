@@ -1,10 +1,10 @@
 #
 # Makefile --Build rules for devkit, the developer utilities kit.
 #
-package = rpm
+package = rpm deb
 PACKAGE = devkit
-VERSION = 0.0
-RELEASE = 0
+VERSION = 0.2
+RELEASE = 3
 
 include devkit.mk package.mk
 

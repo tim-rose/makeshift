@@ -3,8 +3,8 @@
 #
 Summary: Devkit, a build system using recursive make.
 Name: devkit
-Version: 0.0
-Release: 0
+Version: 0.2
+Release: 3
 License: MIT, Copyright (c) 2015 Tim Rose
 URL: git@github.com:tim-rose/devkit.git
 Group: Development/Libraries
