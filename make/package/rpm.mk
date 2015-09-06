@@ -11,10 +11,10 @@
 # Remarks:
 # TBD.
 #
-BUILD_ARCH ?= $(shell mk-rpm-buildarch $(PACKAGE).spec)
+RPM_ARCH ?= $(shell mk-rpm-buildarch $(PACKAGE).spec)
 P-V-R	= $(PACKAGE)-$(VERSION)-$(RELEASE)
-V-R.A	= $(VERSION)-$(RELEASE).$(BUILD_ARCH)
-P-V-R.A	= $(PACKAGE)-$(VERSION)-$(RELEASE).$(BUILD_ARCH)
+V-R.A	= $(VERSION)-$(RELEASE).$(RPM_ARCH)
+P-V-R.A	= $(PACKAGE)-$(VERSION)-$(RELEASE).$(RPM_ARCH)
 
 package:	package-rpm
 
@@ -30,7 +30,7 @@ rpm:		$(P-V-R.A).rpm
 
 $(P-V-R.A).rpm: $(PACKAGE).spec $(PACKAGE)-files.txt cmd-exists[rpmbuild]
 	rpmbuild -bb --clean $(PACKAGE).spec --define '_tmppath $(pwd)/tmp'
-	$(MV) $(BUILD_ARCH)/$(P-V-R.A).rpm $@
+	$(MV) $(RPM_ARCH)/$(P-V-R.A).rpm $@
 
 #
 # %-files.txt: --Build a manifest file for the RPM's "file" section.
@@ -65,7 +65,7 @@ distclean:	clean-rpm distclean-rpm
 #
 .PHONY:	clean-rpm
 clean-rpm:
-	$(RM) -r $(PACKAGE)-files.txt $(BUILD_ARCH)
+	$(RM) -r $(PACKAGE)-files.txt $(RPM_ARCH)
 
 #
 # distclean: --Remove the RPM file.
