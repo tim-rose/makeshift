@@ -18,9 +18,10 @@
 # There are many ways to build a debian package, and this is
 # just one more to add to the confusion.
 #
+DEB_ARCH ?= $(shell mk-deb-buildarch debian/control)
 P_V.R	= $(PACKAGE)_$(VERSION).$(RELEASE)
-V.R_A	= $(VERSION).$(RELEASE)_$(ARCH)
-P_V.R_A	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
+V.R_A	= $(VERSION).$(RELEASE)_$(DEB_ARCH)
+P_V.R_A	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(DEB_ARCH)
 
 #
 # deb: --Build a debian package for the current version/release/arch.
@@ -32,7 +33,7 @@ P_V.R_A	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
 package-deb:	deb
 deb:	control-ok $(P_V.R_A).deb
 
-$(PVRA).deb:	debian-binary control.tar.gz data.tar.gz
+$(P_V.R_A).deb:	debian-binary control.tar.gz data.tar.gz
 	$(ECHO_TARGET)
 	$(FAKEROOT) mk-ar debian-binary control.tar.gz data.tar.gz >$@
 
@@ -61,17 +62,6 @@ control.tar.gz:	debian/md5sums debian/conffiles
 data.tar.gz:	$(STAGING_ROOT)
 	$(ECHO_TARGET)
 	(cd $(STAGING_ROOT); $(FAKEROOT) tar zcf ../$@ *)
-
-#
-# .data: --Construct the installed system in a special sub-directory.
-#
-# Remarks:
-# This target runs make in a special way, but it needs to make
-# sure that the system is already built in the "standard" way
-#
-.data:	build
-	$(ECHO_TARGET)
-	$(MAKE) install DESTDIR=$$(pwd)/.data prefix= usr=usr
 
 #
 # md5sums: --Calculate the md5sums for all the installed files.
