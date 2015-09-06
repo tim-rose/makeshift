@@ -144,6 +144,22 @@ tidy:	tidy-c++
 tidy-c++:
 	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(H++_SRC) $(C++_SRC)
+
+#
+# lint: --Static analysis for C++.
+#
+# Remarks:
+# TODO: choose a suitable lint tool!
+#  * clang static analyser "checker"
+#  * facebook's flint
+#  * oc-lint
+#  * goanna?
+#
+lint:	lint-c++
+.PHONY:	lint-c++
+lint-c++:
+	$(ECHO_TARGET)
+	: checker
 #
 # toc: --Build the table-of-contents for C++ files.
 #
