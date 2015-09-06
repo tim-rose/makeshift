@@ -58,7 +58,7 @@ src-var-defined[%]:
 var-absolute-path[%]:
 	@case '$(value $*)' in \
 	/*);; \
-	*)  echo 'Error: $* ("$(value $*)") is not an absolute path'; \
+	*)  echo 'Error: \"$*\" ("$(value $*)") is not an absolute path'; \
 	    false; \
 	esac
 
@@ -67,7 +67,7 @@ var-absolute-path[%]:
 #
 file-writable[%]:
 	@if [ ! -w "$*" ]; then \
-	    echo "Error: $* is not writable"; \
+	    echo "Error: \"$*\" is not writable"; \
 	    false; \
 	fi
 
@@ -76,7 +76,7 @@ file-writable[%]:
 #
 file-exists[%]:
 	@if [ ! -f "$*" ]; then \
-	    echo "Error: file $* does not exist"; \
+	    echo "Error: file \"$*\" does not exist"; \
 	    false; \
 	fi
 
@@ -85,7 +85,7 @@ file-exists[%]:
 #
 dir-exists[%]:
 	@if [ ! -d "$*" ]; then \
-	    echo "Error: directory $* does not exist"; \
+	    echo "Error: directory \"$*\" does not exist"; \
 	    false; \
 	fi
 
