@@ -6,6 +6,8 @@
 s/.*/"&"/
 # identify documentation files:
 /man[0-9]/s/^/%doc /
+# brp-compress automatically compresses manual pages
+/man[0-9]/s/"$/.gz"/
 /\.txt/s/^/%doc /
 /\.pdf/s/^/%doc /
 # identify config files:
