@@ -12,6 +12,14 @@
 #
 # The behaviour of ld can be customised with $(LDFLAGS).
 #
+include coverage.mk
+
+#
+# The command "ld" is rarely invoked directly, it's more common that it's
+# exec'd by a compiler.  When including the lang/*.mk for the language to
+# be compiled, the language may override LD with its variation.  If not,
+# LD falls back to $(CC).
+#
 ifeq ($(LD), ld)
     LD = $(CC)
 endif
