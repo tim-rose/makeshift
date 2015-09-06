@@ -19,4 +19,4 @@ toc-etc:
 
 src:    toc-src
 toc-src:
-	mk-filelist -n ETC_SRC _*
+	@mk-filelist -n ETC_SRC _*
