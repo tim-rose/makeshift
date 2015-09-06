@@ -26,7 +26,7 @@ manual (i.e. "build", "clean", "distclean", "install" etc.).
 
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
-%{__make} install DESTDIR=$RPM_BUILD_ROOT prefix= usr=usr
+%{__make} install DESTDIR=$RPM_BUILD_ROOT prefix=/usr/local
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
