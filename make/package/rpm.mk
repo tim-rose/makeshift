@@ -20,7 +20,7 @@ package:	package-rpm
 # "package-deb" and "deb" are aliases, for convenience.
 #
 .PHONY:		package-rpm rpm
-package-rpm:	rpm
+package-rpm:	package-vars-ok rpm
 rpm:		$(P-V-R.A).rpm
 
 $(P-V-R.A).rpm: $(PACKAGE).spec $(PACKAGE)-files.txt cmd-exists[rpmbuild]
