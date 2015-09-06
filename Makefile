@@ -1,7 +1,12 @@
 #
 # Makefile --Build rules for devkit, the developer utilities kit.
 #
-include devkit.mk
+package = rpm
+PACKAGE = devkit
+VERSION = 0.0
+RELEASE = 0
+
+include devkit.mk package.mk
 
 devkit.mk:
 	@echo "you need to do a self-hosted install:"
