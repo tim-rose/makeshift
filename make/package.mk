@@ -16,18 +16,31 @@
 PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
 PVRA	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
+STAGING_ROOT = $(PACKAGE)-staging-root
 
-include package/$(PKG_TYPE).mk
+include $(package:%=package/%.mk)
 
 #
 # package: --Build a package for the current module.
 #
-package: package-vars-ok $(PKG_TYPE)
+package: package-vars-ok $(package:%=package-%)
+
+#
+# staging-root: --Install the package in a staged root directory.
+#
+# Remarks:
+# This target is constructed as a pattern rule so that packages
+# can override it.
+#
+.SECONDARY: $(STAGING_ROOT)
+%-staging-root:
+	$(ECHO_TARGET)
+	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix= usr=usr
 
 #
 # release: --Mark the current version of this package as "released".
 #
-release: version-match[$(VERSION).$(RELEASE)] vcs-tag[$(VERSION).$(RELEASE)]
+release: vcs-tag[$(VERSION).$(RELEASE)]
 
 #
 # dist:	--Create a tar.gz distribution file.
@@ -38,7 +51,7 @@ release: version-match[$(VERSION).$(RELEASE)] vcs-tag[$(VERSION).$(RELEASE)]
 dist:	package-vars-ok $(PVR).tar.gz
 $(PVR).tar.gz:
 	$(ECHO_TARGET)
-	$(MAKE) $(MFLAGS) distclean
+	$(MAKE) distclean
 	root=$$PWD; \
 	    cd ..; ln -s $$root $(PVR); \
 	    tar czf $(PVR).tar.gz -h $(VCS_EXCLUDES) $(PVR); \
@@ -47,9 +60,10 @@ $(PVR).tar.gz:
 #
 # distclean: --Remove the tarball created by "dist".
 #
-distclean:	package-distclean
-package-distclean:
+distclean:	distclean-package
+distclean-package:
 	$(RM) $(PVR).tar.gz
+	$(RM) -r $(STAGING_ROOT)
 
 #
 # package-vars-ok: --Test that "PACKAGE" and other variables are defined.
@@ -61,12 +75,3 @@ package-distclean:
 #
 .PHONY:		package-vars-ok
 package-vars-ok:	var-defined[PACKAGE] var-defined[VERSION] var-defined[RELEASE]
-
-#
-#
-#
-publish:	var-defined[PACKAGE_DIR] $(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE)
-
-$(PACKAGE_DIR)/$(PVRA).$(PKG_TYPE):	$(PACKAGE_DIR) $(PVRA).$(PKG_TYPE)
-	cp $(PVRA).$(PKG_TYPE) $@;
-	cd $(PACKAGE_DIR); $(MAKE) -f $(DEVKIT_HOME)/include/repository.mk clean all

@@ -19,17 +19,19 @@
 # There are many ways to build a debian package, and this is
 # just one more to add to the confusion.
 #
+P_V.R	= $(PACKAGE)_$(VERSION).$(RELEASE)
+V.R_A	= $(VERSION).$(RELEASE)_$(ARCH)
+P_V.R_A	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
 
 #
-# deb: --Tests and dependencies for building a debian archive.
+# deb: --Build a debian package for the current version/release/arch.
 #
 # Remarks:
-# because the tests are "phony", they must be associated with
-# (i.e. dependents of) a phony target only, or we re-build stuff too
-# often.
+# "package-deb" and "deb" are aliases, for convenience.
 #
-.PHONY:	deb
-deb:	control-ok $(PVRA).deb
+.PHONY:		package-deb deb
+package-deb:	deb
+deb:	control-ok $(P_V.R_A).deb
 
 $(PVRA).deb:	debian-binary control.tar.gz data.tar.gz
 	$(ECHO_TARGET)
@@ -57,9 +59,9 @@ control.tar.gz:	debian/md5sums debian/conffiles
 # which is also used by the md5sums target.  ".data" is removed
 # by the clean target.
 #
-data.tar.gz:	.data
+data.tar.gz:	$(STAGING_ROOT)
 	$(ECHO_TARGET)
-	(cd .data; $(FAKEROOT) tar zcf ../$@ *)
+	(cd $(STAGING_ROOT); $(FAKEROOT) tar zcf ../$@ *)
 
 #
 # .data: --Construct the installed system in a special sub-directory.
@@ -69,15 +71,15 @@ data.tar.gz:	.data
 # sure that the system is already built in the "standard" way
 #
 .data:	build
-	$(MAKE) $(MFLAGS) install \
-		 DESTDIR=$$(pwd)/.data prefix= usr=usr
+	$(ECHO_TARGET)
+	$(MAKE) install DESTDIR=$$(pwd)/.data prefix= usr=usr
 
 #
 # md5sums: --Calculate the md5sums for all the installed files.
 #
-debian/md5sums: .data
+debian/md5sums: $(STAGING_ROOT)
 	$(ECHO_TARGET)
-	find .data -type f | xargs md5sum | sed -e s@.data/@@ > $@
+	find $(STAGING_ROOT) -type f | xargs md5sum | sed -e s@$(STAGING_ROOT)/@@ > $@
 	chmod 644 $@
 
 #
@@ -87,11 +89,12 @@ debian/md5sums: .data
 # This rule makes the file if it doesn't exist, but if it's
 # subsequently modified it won't be trashed by this rule.
 #
-debian/conffiles: .data
+debian/conffiles: $(STAGING_ROOT)
+	$(ECHO_TARGET)
 	@touch $@
-	@if [ -d .data/etc ]; then \
+	@if [ -d $(STAGING_ROOT)/etc ]; then \
 	    $(ECHO) '++make[$@]: automatically generated'; \
-	    find .data/etc -type f | sed -e s@.data/@/@ > $@; \
+	    find $(STAGING_ROOT)/etc -type f | sed -e s@$(STAGING_ROOT)/@/@ > $@; \
 	    chmod 644 $@; \
 	fi
 
@@ -104,51 +107,33 @@ control-ok:	debian/control
 	    (echo "Error: Package is incorrect in debian/control"; false)
 	@grep >/dev/null '^Version: *$(VERSION).$(RELEASE)$$' debian/control ||\
 	    (echo "Error: Version is incorrect in debian/control"; false)
-#	@size=$$(du -sk  .data | cut -d '	' -f1);\
+#	@size=$$(du -sk  $(STAGING_ROOT) | cut -d '	' -f1);\
 #	    grep >/dev/null '^Installed-Size: *$$size' debian/control ||\
 #	    (echo "Error: Installed size is incorrect in debian/control"; false)
 
 #
-# version-match: --Compare debian/control version with intrinsic Makefile.
+# deb-version-ok: --Compare debian/control's version with Makefile definitions.
 #
-version-match[%]:
+release:	deb-version-ok[$(VERSION).$(RELEASE)]
+deb-version-ok[%]:
 	$(ECHO_TARGET)
 	@fgrep -q 'Version: $*' debian/control
 
 #
-# perl-depend: --Calculate perl dependencies.
-#
-# Remarks:
-#
-# This is is MUCH less useful than I had first thought, because
-# "deb.mk" is only included in the top-level makefile, and so only
-# finds dependencies on stuff in the current directory.  Either
-# I need to abandon recursive makes, or include deb.mk, or come
-# up with another, better solution.
-#
-perl-depend: .data
-	dpkg -S $$(find .data -name grep ^use $(PM_SRC) $(PL_SRC) \
-	    | sed -e 's/.*use \([a-zA-Z_0-9:]*\).*/\1/' \
-	    | sort -u \
-	    | egrep -v 'warnings|strict|base|integer' \
-	    | sed -e 's@::@/@g' -e 's/$$/.pm/') 2>/dev/null \
-	| sed -e 's/:.*//' \
-	| sort -u \
-	| egrep -v '^perl|perl-base$$'
-
-#
 # clean: --Remove derived files created as a side-effect of packaging.
 #
-clean:	deb-clean
-deb-clean:
+clean:	clean-deb
+distclean:	clean-deb distclean-deb
+
+.PHONY: clean-deb
+clean-deb:
 	$(ECHO_TARGET)
-	$(RM) -r .data
 	$(RM) debian-binary control.tar.gz data.tar.gz
 
 #
 # distclean: --Remove the package.
 #
-distclean:	deb-clean deb-distclean
-deb-distclean:
+.PHONY: distclean-deb
+distclean-deb:
 	$(ECHO_TARGET)
-	$(RM) debian/conffiles debian/md5sums $(PVRA).deb
+	$(RM) debian/conffiles debian/md5sums $(P_V.R_A).deb

@@ -6,33 +6,65 @@
 # Remarks:
 # TBD.
 #
+BUILD_ARCH ?= $(shell mk-rpm-buildarch $(PACKAGE).spec)
+P-V-R	= $(PACKAGE)-$(VERSION)-$(RELEASE)
+V-R.A	= $(VERSION)-$(RELEASE).$(BUILD_ARCH)
+P-V-R.A	= $(PACKAGE)-$(VERSION)-$(RELEASE).$(BUILD_ARCH)
+
+package:	package-rpm
 
 #
-# $(PACKAGE)-files.txt: --Build the list of files that RPM will "package".
+# rpm: --Build an RPM of the package for the current version/release/arch.
 #
 # Remarks:
-# This forces a "trial" install just so it can gather the
-# list of files that the spec file needs to know about.
+# "package-deb" and "deb" are aliases, for convenience.
 #
-BUILD_ROOT	= .root
-RM_PREFIX       =
+.PHONY:		package-rpm rpm
+package-rpm:	rpm
+rpm:		$(P-V-R.A).rpm
+
+$(P-V-R.A).rpm: $(PACKAGE).spec $(PACKAGE)-files.txt cmd-exists[rpmbuild]
+	rpmbuild -bb --clean $(PACKAGE).spec --define '_tmppath $(pwd)/tmp'
+	$(MV) $(BUILD_ARCH)/$(P-V-R.A).rpm $@
 
 #
-# %-files.txt: --Build the RPM's file section contents as a file.
+# %-files.txt: --Build a manifest file for the RPM's "file" section.
 #
 # Remarks:
 # This is defined as a pattern rule, so it can be overridden by
-# and explicit rule if needed.
+# an explicit rule if needed.
 #
-%-files.txt:	$(BUILD_ROOT)
-	find $(BUILD_ROOT) -not -type d | \
-            sed -e 's|^$(BUILD_ROOT)||' | mk-rpm-files >$@
+%-files.txt:	$(STAGING_ROOT)
+	find $(STAGING_ROOT) -not -type d | \
+            sed -e 's|^$(STAGING_ROOT)||' | mk-rpm-files >$@
 
-$(BUILD_ROOT):
-	$(MAKE) install DESTDIR=$(BUILD_ROOT) prefix= usr=usr
+#
+# deb-version-ok: --Compare debian/control's version with Makefile definitions.
+#
+release:	rpm-version-ok[$(VERSION)] rpm-release-ok[$(RELEASE)]
+rpm-version-ok[%]:
+	$(ECHO_TARGET)
+	@$(GREP)  'Version: *$*' $(PACKAGE).spec >/dev/null 2>&1
+
+rpm-release-ok[%]:
+	$(ECHO_TARGET)
+	@$(GREP)  'Release: *$*' $(PACKAGE).spec >/dev/null 2>&1
+
+
 
 clean:	clean-rpm
+distclean:	clean-rpm distclean-rpm
 
+#
+# clean: --Remove the RPM manifest file.
+#
 .PHONY:	clean-rpm
 clean-rpm:
-	$(RM) -r $(BUILD_ROOT) $(PACKAGE)-files.txt
+	$(RM) -r $(PACKAGE)-files.txt $(BUILD_ARCH)
+
+#
+# distclean: --Remove the RPM file.
+#
+.PHONY:	distclean-rpm
+distclean-rpm:
+	$(RM) $(P-V-R.A).rpm
