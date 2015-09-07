@@ -90,3 +90,9 @@ lint:	lint-python
 lint-python:    cmd-exists[pep8]
 	$(ECHO_TARGET)
 	-pep8 --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
+
+.PHONY: tidy-python
+tidy:	tidy-python
+tidy-python:    cmd-exists[autopep8]
+	$(ECHO_TARGET)
+	autopep8 --in-place --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
