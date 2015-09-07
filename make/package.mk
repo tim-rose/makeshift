@@ -17,7 +17,7 @@
 PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
 PVRA	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
-STAGING_ROOT = $(PACKAGE)-staging-root
+STAGING_ROOT = staging-$(PACKAGE)
 
 include $(package:%=package/%.mk)
 
@@ -34,7 +34,7 @@ package: package-vars-ok $(package:%=package-%)
 # can override it.
 #
 .SECONDARY: $(STAGING_ROOT)
-%-staging-root:
+staging-%:
 	$(ECHO_TARGET)
 	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix= usr=usr
 

@@ -55,8 +55,6 @@ rpm-release-ok[%]:
 	$(ECHO_TARGET)
 	@$(GREP)  'Release: *$*' $(PACKAGE).spec >/dev/null 2>&1
 
-
-
 clean:	clean-rpm
 distclean:	clean-rpm distclean-rpm
 

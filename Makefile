@@ -8,7 +8,7 @@ RELEASE = 3
 
 include devkit.mk package.mk
 
-devkit-staging-root:
+$(STAGING_ROOT):
 	$(ECHO_TARGET)
 	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=/usr/local
 
