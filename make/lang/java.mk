@@ -16,6 +16,8 @@
 #  * JAVA_SRC	--java source files
 #  * PACKAGE	--the java package name
 #
+.PHONY: $(recursive-targets:%=%-java)
+
 JAVAC	= javac
 JAVA_FLAGS = $(OS.JAVA_FLAGS) $(ARCH.JAVA_FLAGS) $(LOCAL.JAVA_FLAGS) $(TARGET.JAVA_FLAGS)
 
@@ -39,26 +41,24 @@ build:	$(JAVA_OBJ) var-defined[JAVA_SRC]
 #
 # clean: --Remove The Java package.
 #
-clean:	java-clean
-.PHONY:	java-clean
-java-clean:
+distclean:	clean-java
+clean:	clean-java
+clean-java:
 	$(ECHO_TARGET)
 	$(RM) $(archdir)/$(PACKAGE)
 
 #
 # src: --Update the JAVA_SRC macro.
 #
-src:	java-src
-.PHONY:	java-src
-java-src:
+src:	src-java
+src-java:
 	$(ECHO_TARGET)
 	@mk-filelist -qn JAVA_SRC $(find * -name *.java)
 #
 # tags: --Build vi, emacs tags files.
 #
-.PHONY: java-tags
-tags:	java-tags
-java-tags:
+tags:	tags-java
+tags-java:
 	$(ECHO_TARGET)
 	ctags $(JAVA_SRC) && \
 	etags $(JAVA_SRC); true
@@ -66,8 +66,7 @@ java-tags:
 #
 # todo: --Report "unfinished work" comments in Java files.
 #
-.PHONY: java-todo
-todo:	java-todo
-java-todo:
+todo:	todo-java
+todo-java:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(JAVA_SRC) /dev/null || true

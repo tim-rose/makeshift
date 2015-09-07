@@ -9,6 +9,7 @@
 # src-elisp:   --Update the ELISP_SRC macro with a list of ".el" files.
 # todo:        --Report "unfinished work" comments in elisp files.
 #
+.PHONY: $(recursive-targets:%=%-elisp)
 
 #
 # %.el: --Rules for installing elisp scripts.
@@ -31,14 +32,13 @@ build:	$(ELISP_OBJ)
 #
 distclean:	clean-elisp
 clean:	clean-elisp
-.PHONY: clean-elisp
+
 clean-elisp:
 	$(RM) $(ELISP_OBJ)
 
 #
 # toc-elisp: --Build the table-of-contents for emacs lisp files.
 #
-.PHONY: toc-elisp
 toc:	toc-elisp
 toc-elisp:
 	$(ECHO_TARGET)
@@ -48,7 +48,6 @@ toc-elisp:
 # src-elisp: --Update the ELISP_SRC macro with a list of ".el" files.
 #
 src:	src-elisp
-.PHONY:	src-elisp
 src-elisp:
 	$(ECHO_TARGET)
 	@mk-filelist -qn ELISP_SRC *.el
@@ -56,7 +55,6 @@ src-elisp:
 #
 # todo: --Report "unfinished work" comments in elisp files.
 #
-.PHONY: todo-elisp
 todo:	todo-elisp
 todo-elisp:
 	$(ECHO_TARGET)

@@ -6,17 +6,17 @@
 # toc-css:  --Build the table-of-contents for CSS files.
 # todo-css: --Report "unfinished work" comments in CSS files.
 #
+.PHONY: $(recursive-targets:%=%-css)
 
 $(wwwdir)/%.css:	%.css;	$(INSTALL_FILE) $? $@
 
-%.css:	%.scss;	scss $? >$@
-%.css:	%.less;	less $? >$@
+%.css:	%.scss;	scss $*.scss >$@
+%.css:	%.less;	less $*.less >$@
 
 #
 # src-css: --Update the CSS_SRC, SCSS_SRC macros.
 #
 src:	src-css
-.PHONY:	src-css
 src-css:
 	$(ECHO_TARGET)
 	@mk-filelist -qn CSS_SRC *.css
@@ -26,7 +26,6 @@ src-css:
 #
 # toc-css: --Build the table-of-contents for CSS files.
 #
-.PHONY: toc-css
 toc:	toc-css
 toc-css:
 	$(ECHO_TARGET)
@@ -35,7 +34,6 @@ toc-css:
 #
 # todo-css: --Report "unfinished work" comments in CSS files.
 #
-.PHONY: todo-css
 todo:	todo-css
 todo-css:
 	$(ECHO_TARGET)

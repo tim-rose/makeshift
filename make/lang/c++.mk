@@ -2,17 +2,17 @@
 # C++.MK --Rules for building C++ objects and programs.
 #
 # Contents:
-# %.o:    --Compile a C++ file into an arch-specific sub-directory.
-# %.o:    --Compile an arch-specific C++ file into an arch-specific sub-directory.
-# %.gcov: --Build a text-format coverage report.
-# build:  --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
-# clean:  --Remove objects and executables created from C++ files.
-# tidy:   --Reformat C++ files consistently.
-# lint:   --Static analysis for C++.
-# toc:    --Build the table-of-contents for C++ files.
-# src:    --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
-# tags:   --Build vi, emacs tags files for C++ files.
-# todo:   --Find "unfinished work" comments in C++ files.
+# %.o:         --Compile a C++ file into an arch-specific sub-directory.
+# archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
+# %.gcov:      --Build a text-format coverage report.
+# build:       --Compile the C++ files, and link any complete programs.
+# clean:       --Remove objects and executables created from C++ files.
+# tidy:        --Reformat C++ files consistently.
+# lint:        --Static analysis for C++.
+# toc:         --Build the table-of-contents for C++ files.
+# src:         --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
+# tags:        --Build vi, emacs tags files for C++ files.
+# todo:        --Find "unfinished work" comments in C++ files.
 #
 # Remarks:
 # The C++ module provides rules and targets for building software
@@ -20,12 +20,15 @@
 # standard file extension; the default is ".cc", but it can be set via
 # the C++_SUFFIX macro.
 #
+.PHONY: $(recursive-targets:%=%-c++)
+
+C++_SUFFIX ?= cc
+H++_SUFFIX ?= h
 
 #
 # Include any dependency information that's available.
 #
-C++_SUFFIX ?= cc
-H++_SUFFIX ?= h
+-include $(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.d)
 
 C++	= $(CXX)
 LD	= $(CXX)
@@ -53,7 +56,6 @@ C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
 	$(OS.LDLIBS) $(ARCH.LDLIBS) \
 	$(PROJECT.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
 
--include $(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.d)
 C++_OBJ  = $(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
 C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
 C++_MAIN = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%)
@@ -68,7 +70,7 @@ $(archdir)/%.o: %.$(C++_SUFFIX)
 	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
 
 #
-# %.o: --Compile an arch-specific C++ file into an arch-specific sub-directory.
+# archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 #
 $(archdir)/%.o: $(archdir)/%.$(C++_SUFFIX)
 	$(ECHO_TARGET)
@@ -91,7 +93,7 @@ build[%.$(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
 	    sed -ne '/^Lines/s/.*:/gcov $*.$(C++_SUFFIX): /p'
 
 #
-# %.h++: --Install a C++ header (.hpp) file.
+# %.h++: --Install a C++ header file.
 #
 $(includedir)/%.$(H++_SUFFIX):	%.$(H++_SUFFIX)
 	$(INSTALL_FILE) $? $@
@@ -111,10 +113,7 @@ $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX)
 	    $(RM) ..$(C++_SUFFIX)
 
 #
-# build: --Build the C++ files (as defined by C++_SRC, C++_MAIN_SRC)
-#
-# Remarks:
-# Note that C++_MAIN isn't built
+# build: --Compile the C++ files, and link any complete programs.
 #
 build:	$(C++_OBJ) $(C++_MAIN)
 
@@ -132,7 +131,6 @@ c++-src-var-defined:
 # clean: --Remove objects and executables created from C++ files.
 #
 clean:	clean-c++
-.PHONY:	clean-c++
 clean-c++:
 	$(ECHO_TARGET)
 	$(RM) $(C++_OBJ) $(C++_MAIN)
@@ -140,8 +138,9 @@ clean-c++:
 #
 # tidy: --Reformat C++ files consistently.
 #
+# REVISIT: consider using uncrustify
+#
 tidy:	tidy-c++
-.PHONY:	tidy-c++
 tidy-c++:
 	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(H++_SRC) $(C++_SRC)
@@ -157,14 +156,12 @@ tidy-c++:
 #  * goanna?
 #
 lint:	lint-c++
-.PHONY:	lint-c++
 lint-c++:
 	$(ECHO_TARGET)
 	: checker
 #
 # toc: --Build the table-of-contents for C++ files.
 #
-.PHONY: toc-c++
 toc:	toc-c++
 toc-c++:
 	$(ECHO_TARGET)
@@ -178,7 +175,6 @@ toc-c++:
 # SRC macros for every variety of suffix.
 #
 src:	src-c++
-.PHONY:	src-c++
 src-c++:
 	$(ECHO_TARGET)
 	@mk-filelist -qn C++_SRC *.$(C++_SUFFIX)
@@ -189,7 +185,6 @@ src-c++:
 #
 # tags: --Build vi, emacs tags files for C++ files.
 #
-.PHONY: tags-c++
 tags:	tags-c++
 tags-c++:
 	$(ECHO_TARGET)
@@ -199,7 +194,6 @@ tags-c++:
 #
 # todo: --Find "unfinished work" comments in C++ files.
 #
-.PHONY: todo-c++
 todo:	todo-c++
 todo-c++:
 	$(ECHO_TARGET)

@@ -3,6 +3,7 @@
 #
 # Contents:
 # %.o:               --Compile a C file into an arch-specific sub-directory.
+# archdir/%.o:       --Compile a generated C file into the arch sub-directory.
 # build[%]:          --Build a C file's related object.
 # %.h:               --Install a C header (.h) file.
 # %.c.gcov:          --Build a text-format coverage report.
@@ -24,6 +25,8 @@
 #  * C_SRC	--C source files
 #  * C_MAIN_SRC	--C source files that define a main() function.
 #
+
+.PHONY: $(recursive-targets:%=%-c)
 
 #
 # Include any dependency information that's available.
@@ -59,12 +62,14 @@ C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 # dependencies, and the "-include" command allows the files to
 # be absent, so this setup will avoid premature compilation.
 #
-$(archdir)/%.o: %.c 
+$(archdir)/%.o: %.c
 	$(ECHO_TARGET)
 	@mkdir -p $(archdir)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
-
+#
+# archdir/%.o: --Compile a generated C file into the arch sub-directory.
+#
 $(archdir)/%.o: $(archdir)/%.c
 	$(ECHO_TARGET)
 	@mkdir -p $(archdir)
@@ -122,7 +127,6 @@ c-src-var-defined:
 # clean: --Remove objects and executables created from C files.
 #
 clean:	clean-c
-.PHONY:	clean-c
 clean-c:
 	$(ECHO_TARGET)
 	$(RM) $(C_OBJ) $(C_MAIN)
@@ -131,14 +135,12 @@ clean-c:
 # tidy: --Reformat C files consistently.
 #
 tidy:	tidy-c
-.PHONY:	tidy-c
 tidy-c:
 	$(ECHO_TARGET)
 	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro $(INDENT) $(H_SRC) $(C_SRC)
 #
 # toc: --Build the table-of-contents for C files.
 #
-.PHONY: toc-c
 toc:	toc-c
 toc-c:
 	$(ECHO_TARGET)
@@ -148,7 +150,6 @@ toc-c:
 # src: --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
 #
 src:	src-c
-.PHONY:	src-c
 src-c:
 	$(ECHO_TARGET)
 	@mk-filelist -qn C_SRC *.c
@@ -159,7 +160,6 @@ src-c:
 #
 # tags: --Build vi, emacs tags files.
 #
-.PHONY: tags-c
 tags:	tags-c
 tags-c:
 	$(ECHO_TARGET)
@@ -169,7 +169,6 @@ tags-c:
 #
 # todo: --Report "unfinished work" comments in C files.
 #
-.PHONY: todo-c
 todo:	todo-c
 todo-c:
 	$(ECHO_TARGET)

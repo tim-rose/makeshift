@@ -14,6 +14,8 @@
 #
 # REVISIT: XmlSchema.h behaviour is broken: install triggers build!
 #
+.PHONY: $(recursive-targets:%=%-xsd)
+
 -include $(XSD_SRC:%.xsd=$(archdir)/%-depend.mk)
 
 C++_SUFFIX ?= cc
@@ -59,7 +61,6 @@ $(archdir)/XmlSchema.$(H++_SUFFIX):
 # clean: --Remove XSD's object files.
 #
 clean:	clean-xsd
-.PHONY:	clean-xsd
 clean-xsd:
 	$(RM) $(XSD_OBJ)
 
@@ -67,7 +68,6 @@ clean-xsd:
 # distclean: --Remove XSD-generated include files.
 #
 distclean:	distclean-xsd clean-xsd
-.PHONY:	distclean-xsd
 distclean-xsd:
 	$(RM) $(XSD_INCLUDE_SRC)
 
@@ -75,7 +75,6 @@ distclean-xsd:
 # src: --Update the XSD_SRC target.
 #
 src:	src-xsd
-.PHONY:	src-xsd
 src-xsd:
 	$(ECHO_TARGET)
 	@mk-filelist -qn XSD_SRC *.xsd

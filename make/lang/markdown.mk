@@ -16,6 +16,7 @@
 # doesn't create a full HTML document, and they aren't built by
 # default.
 #
+.PHONY: $(recursive-targets:%=%-markdown)
 
 MMDFLAGS ?= --process-html
 
@@ -37,7 +38,6 @@ build:	$(MMD_SRC:%.mmd=%.html) cmd-exists[multimarkdown]
 # clean-markdown: --Clean up MMD_SRC derived files.
 #
 clean:	clean-markdown
-.PHONY:	clean-markdown
 clean-markdown:
 	$(ECHO_TARGET)
 	$(RM) $(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html)
@@ -47,7 +47,6 @@ clean-markdown:
 # src-markdown: --Update MD_SRC, MMD_SRC macros.
 #
 src:	src-markdown
-.PHONY:	src-markdown
 src-markdown:
 	$(ECHO_TARGET)
 	@mk-filelist -qn MD_SRC *.md
@@ -57,7 +56,6 @@ src-markdown:
 # todo-markdown: --Report unfinished work in markdown files.
 #
 todo:	todo-markdown
-.PHONY: todo-markdown
 todo-markdown:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(MD_SRC) $(MMD_SRC) /dev/null || true

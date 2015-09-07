@@ -4,6 +4,8 @@
 # Contents:
 # img-src: --Update PNG_SRC, GIF_SRC, JPG_SRC macros.
 #
+.PHONY: $(recursive-targets:%=%-img)
+
 IMG_SRC = $(PNG_SRC) $(GIF_SRC) $(JPG_SRC) $(SVG_SRC)
 
 $(wwwdir)/%.png:	%.png;	$(INSTALL_FILE) $? $@
@@ -21,9 +23,8 @@ $(datadir)/%.svg:	%.svg;	$(INSTALL_FILE) $? $@
 #
 # img-src: --Update PNG_SRC, GIF_SRC, JPG_SRC macros.
 #
-src:	img-src
-.PHONY:	img-src
-img-src:
+src:	src-img
+src-img:
 	$(ECHO_TARGET)
 	@mk-filelist -qn PNG_SRC *.png
 	@mk-filelist -qn GIF_SRC *.gif

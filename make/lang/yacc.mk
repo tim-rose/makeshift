@@ -15,6 +15,7 @@
 # C processing definitions are defined, and must be included,
 # separately.
 #
+.PHONY: $(recursive-targets:%=%-yacc)
 
 -include $(Y_SRC:%.y=$(archdir)/%.d)
 
@@ -40,7 +41,6 @@ build:	$(Y_OBJ)
 # clean: --Remove a yacc grammar's object file.
 #
 clean:	clean-yacc
-.PHONY:	clean-yacc
 clean-yacc:
 	$(ECHO_TARGET)
 	$(RM) $(Y_OBJ)
@@ -49,7 +49,6 @@ clean-yacc:
 # src: --Get a list of the yacc grammars in this directory.
 #
 src:	src-yacc
-.PHONY:	src-yacc
 src-yacc:
 	$(ECHO_TARGET)
 	@mk-filelist -qn Y_SRC *.y
@@ -58,7 +57,6 @@ src-yacc:
 # toc: --Update the Y_SRC macro with a list of yacc grammars.
 #
 toc:	toc-yacc
-.PHONY:	toc-yacc
 toc-yacc:
 	$(ECHO_TARGET)
 	mk-toc $(Y_SRC)

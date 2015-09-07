@@ -6,6 +6,7 @@
 # distclean: --Clean TeX derived PDF files.
 # src:       --Update the definition of TEX_SRC.
 #
+.PHONY: $(recursive-targets:%=%-tex)
 
 %.pdf:	%.dvi;	dvipdf $*.dvi
 %.dvi:	%.tex;  latex $*.tex
@@ -21,8 +22,7 @@ build:	$(TEX_PDF)
 # clean: --Clean TeX intermediate files.
 #
 clean:	clean-tex
-.PHONY:	clean-tex
-clean-tex:	
+clean-tex:
 	$(ECHO_TARGET)
 	$(RM) $(TEX_DVI) $(TEX_AUX) $(TEX_LOG)
 
@@ -30,8 +30,7 @@ clean-tex:
 # distclean: --Clean TeX derived PDF files.
 #
 distclean:	clean-tex distclean-tex
-.PHONY:	distclean-tex
-distclean-tex:	
+distclean-tex:
 	$(ECHO_TARGET)
 	$(RM) $(TEX_PDF)
 
@@ -39,7 +38,6 @@ distclean-tex:
 # src: --Update the definition of TEX_SRC.
 #
 src:	src-tex
-.PHONY:	src-tex
-src-tex:	
+src-tex:
 	$(ECHO_TARGET)
 	@mk-filelist -qn TEX_SRC *.tex

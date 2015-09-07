@@ -8,6 +8,7 @@
 # clean-nroff: --Cleanup nroff files.
 # todo:        --Report unfinished work (identified by keyword comments)
 #
+.PHONY: $(recursive-targets:%=%-nroff)
 
 #
 # %.[1-9]:	--Rules for installing manual pages
@@ -32,7 +33,6 @@ $(man8dir)/%.8:	%.8;	$(INSTALL_FILE) $? $@
 #
 # toc-nroff: --Build the table-of-contents for nroff files.
 #
-.PHONY: toc-nroff
 toc:	toc-nroff
 toc-nroff:
 	@$(ECHO_TARGET)
@@ -46,7 +46,6 @@ toc-nroff:
 # we're likely to write.
 #
 src:	src-nroff
-.PHONY:	src-nroff
 src-nroff:
 	$(ECHO_TARGET)
 	@mk-filelist -qn MAN1_SRC *.1
@@ -76,7 +75,6 @@ install-man:    $(MAN1_SRC:%=$(man1dir)/%) \
 #
 # clean-nroff: --Cleanup nroff files.
 #
-.PHONY: clean-nroff
 distclean:	clean-nroff
 clean:	clean-nroff
 clean-nroff:
@@ -85,7 +83,6 @@ clean-nroff:
 #
 # todo: --Report unfinished work (identified by keyword comments)
 #
-.PHONY: todo-nroff
 todo:	todo-nroff
 todo-nroff:
 	$(ECHO_TARGET)

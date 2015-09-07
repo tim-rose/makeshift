@@ -8,20 +8,19 @@
 # todo-mk:    --Report unfinished work in Makefiles.
 # +dirs:      --Print the current make directory macros.
 #
+.PHONY: $(recursive-targets:%=%-mk)
 
 $(includedir)/%.mk:	%.mk;	$(INSTALL_FILE) $< $@
 
 #
 # install-mk: --Install ".mk" files to their usual places
 #
-.PHONY: install-mk
 install-mk:     $(MK_SRC:%.mk=$(includedir)/%.mk)
 
 #
 # src-mk: --Update MK_SRC with the list of ".mk" files.
 #
 src:	src-mk
-.PHONY: src-mk
 src-mk:
 	$(ECHO_TARGET)
 	@mk-filelist -qn MK_SRC *.mk .mk
@@ -30,7 +29,6 @@ src-mk:
 # toc-mk: --Rebuild a Makefile's table-of-contents.
 #
 toc:	toc-mk
-.PHONY: toc-mk
 toc-mk:
 	$(ECHO_TARGET)
 	@mk-toc Makefile $(MK_SRC)
@@ -39,7 +37,6 @@ toc-mk:
 # todo-mk: --Report unfinished work in Makefiles.
 #
 todo:	todo-mk
-.PHONY: todo-mk
 todo-mk:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT Makefile $(MK_SRC) /dev/null || true

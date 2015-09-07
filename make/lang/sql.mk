@@ -3,10 +3,11 @@
 #
 # Contents:
 # %.sql:   --Rules for installing SQL scripts into libexec
-# sql-toc: --Build the table-of-contents for shell, awk files.
-# sql-src: --sql-specific customisations for the "src" target.
-# todo:    --Report unfinished work (identified by keyword comments)
+# toc-sql: --Build the table-of-contents for SQL files.
+# src-sql: --Update the SQL_SRC macro.
+# todo:    --Report unfinished work in work SQL files.
 #
+.PHONY: $(recursive-targets:%=%-sql)
 
 #
 # %.sql: --Rules for installing SQL scripts into libexec
@@ -16,27 +17,24 @@ $(libexecdir)/%.sql:	%.sql;	$(INSTALL_FILE) $? $@
 pre-build:	src-var-defined[SQL_SRC]
 
 #
-# sql-toc: --Build the table-of-contents for shell, awk files.
+# toc-sql: --Build the table-of-contents for SQL files.
 #
-.PHONY: sql-toc
-toc:	sql-toc
-sql-toc:
+toc:	toc-sql
+toc-sql:
 	$(ECHO_TARGET)
 	mk-toc $(SQL_SRC)
 #
-# sql-src: --sql-specific customisations for the "src" target.
+# src-sql: --Update the SQL_SRC macro.
 #
-.PHONY:	sql-src
-src:	sql-src
-sql-src:	
+src:	src-sql
+src-sql:
 	$(ECHO_TARGET)
 	@mk-filelist -qn SQL_SRC *.sql
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
+# todo: --Report unfinished work in work SQL files.
 #
-.PHONY: sql-todo
-todo:	sql-todo
-sql-todo:
+todo:	todo-sql
+todo-sql:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(SQL_SRC) /dev/null || true

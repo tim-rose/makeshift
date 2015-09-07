@@ -3,10 +3,11 @@
 #
 # Contents:
 # php-build: --Make scripts "executable".
-# php-toc:   --Build the table-of-contents for PHP-ish files.
-# php-src:   --php-specific customisations for the "src" target.
+# toc-php:   --Build the table-of-contents for PHP-ish files.
+# src-php:   --php-specific customisations for the "src" target.
 # todo:      --Report unfinished work (identified by keyword comments)
 #
+.PHONY: $(recursive-targets:%=%-php)
 phplibdir      = $(exec_prefix)/lib/php/$(subdir)
 
 #
@@ -21,28 +22,25 @@ $(wwwdir)/%.php:	%.php;	$(INSTALL_FILE) $? $@
 pre-build:	var-defined[PHP_SRC]
 
 #
-# php-toc: --Build the table-of-contents for PHP-ish files.
+# toc-php: --Build the table-of-contents for PHP-ish files.
 #
-.PHONY: php-toc
-toc:	php-toc
-php-toc:
+toc:	toc-php
+toc-php:
 	$(ECHO_TARGET)
 	mk-toc $(PHP_SRC)
 
 #
-# php-src: --php-specific customisations for the "src" target.
+# src-php: --php-specific customisations for the "src" target.
 #
-src:	php-src
-.PHONY:	php-src
-php-src:
+src:	src-php
+src-php:
 	$(ECHO_TARGET)
 	@mk-filelist -qn PHP_SRC *.php
 
 #
 # todo: --Report unfinished work (identified by keyword comments)
 #
-.PHONY: php-todo
-todo:	php-todo
-php-todo:
+todo:	todo-php
+todo-php:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(PHP_SRC) /dev/null || true

@@ -14,6 +14,7 @@
 # Exercises in Programming Style, Cristina Videira Lopes
 # https://github.com/crista/exercises-in-programming-style
 #
+.PHONY: $(recursive-targets:%=%-python)
 
 #
 # %.py:		--Rules for installing python scripts
@@ -30,13 +31,11 @@ build-python:	$(PY_TRG)
 #
 # install-python: --Install python as executables.
 #
-.PHONY: install-python
 install-python: $(bindir)/$(PY_SRC:%.py=%)
 
 #
 # install-python-lib: --Install python as library modules.
 #
-.PHONY: install-python-lib
 install-python: $(pythonlibdir)/$(PY_SRC:%.py=%)
 
 #
@@ -45,14 +44,12 @@ install-python: $(pythonlibdir)/$(PY_SRC:%.py=%)
 clean:	clean-python
 distclean:	clean-python
 
-.PHONY: clean-python
 clean-python:
 	$(RM) $(PY_SRC:%.py=%.py[co])
 
 #
 # toc-python: --Build the table-of-contents for python files.
 #
-.PHONY: toc-python
 toc:	toc-python
 toc-python:
 	$(ECHO_TARGET)
@@ -61,7 +58,6 @@ toc-python:
 #
 # src-python: --specific-python customisations for the "src" target.
 #
-.PHONY:	src-python
 src:	src-python
 src-python:
 	$(ECHO_TARGET)
@@ -69,7 +65,6 @@ src-python:
 #
 # todo-python: --Report unfinished work (identified by keyword comments)
 #
-.PHONY: todo-python
 todo:	todo-python
 todo-python:
 	$(ECHO_TARGET)
@@ -85,13 +80,11 @@ todo-python:
 # * E402 module level import not at top of file
 # * E721 do not compare types, use 'isinstance()'
 #
-.PHONY: lint-python
 lint:	lint-python
 lint-python:    cmd-exists[pep8]
 	$(ECHO_TARGET)
 	-pep8 --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
 
-.PHONY: tidy-python
 tidy:	tidy-python
 tidy-python:    cmd-exists[autopep8]
 	$(ECHO_TARGET)

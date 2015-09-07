@@ -13,6 +13,7 @@
 # by the rules/definitions for building C programs.  This file
 # contains patterns to define the pre-processing transformation only.
 #
+.PHONY: $(recursive-targets:%=%-lex)
 
 -include $(LEX_SRC:%.l=$(archdir)/%_l.d)
 
@@ -34,7 +35,6 @@ build:	$(LEX_OBJ)
 # clean: --Remove the lex grammar's object files.
 #
 clean:	clean-lex
-.PHONY:	clean-lex
 clean-lex:
 	$(ECHO_TARGET)
 	$(RM) $(LEX_OBJ)
@@ -43,7 +43,6 @@ clean-lex:
 # src: --Update the LEX_SRC macro.
 #
 src:	src-lex
-.PHONY:	src-lex
 src-lex:
 	$(ECHO_TARGET)
 	@mk-filelist -qn LEX_SRC *.l
@@ -52,7 +51,6 @@ src-lex:
 # toc: --Update the table of contents in lex files.
 #
 toc:	toc-lex
-.PHONY:	toc-lex
 toc-lex:
 	$(ECHO_TARGET)
 	mk-toc $(LEX_SRC)

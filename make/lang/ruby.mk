@@ -2,11 +2,13 @@
 # RUBY.MK --Rules for building RUBY objects and programs.
 #
 # Contents:
-# ruby-clean: --Remove script executables.
-# ruby-toc:   --Build the table-of-contents for RUBY-ish files.
-# ruby-src:   --ruby-specific customisations for the "src" target.
+# clean-ruby: --Remove script executables.
+# toc-ruby:   --Build the table-of-contents for ruby files.
+# src-ruby:   --Create a list of ruby files as the RB_SRC macro.
 # todo:       --Report unfinished work (identified by keyword comments)
 #
+.PHONY: $(recursive-targets:%=%-ruby)
+
 rubylibdir      = $(exec_prefix)/lib/ruby/$(subdir)
 RB_TRG = $(RB_SRC:%.rb=%)
 
@@ -16,35 +18,31 @@ pre-build:	src-var-defined[RB_SRC]
 build:	$(RB_TRG)
 
 #
-# ruby-clean: --Remove script executables.
+# clean-ruby: --Remove script executables.
 #
-.PHONY: ruby-clean
-clean:	ruby-clean
-ruby-clean:
+clean:	clean-ruby
+clean-ruby:
 	$(RM) $(RB_TRG)
 
 #
-# ruby-toc: --Build the table-of-contents for RUBY-ish files.
+# toc-ruby: --Build the table-of-contents for ruby files.
 #
-.PHONY: ruby-toc
-toc:	ruby-toc
-ruby-toc:
+toc:	toc-ruby
+toc-ruby:
 	$(ECHO_TARGET)
 	mk-toc $(RB_SRC)
 
 #
-# ruby-src: --ruby-specific customisations for the "src" target.
+# src-ruby: --Create a list of ruby files as the RB_SRC macro.
 #
-.PHONY:	ruby-src
-src:	ruby-src
-ruby-src:
+src:	src-ruby
+src-ruby:
 	$(ECHO_TARGET)
 	@mk-filelist -qn RB_SRC *.rb
 #
 # todo: --Report unfinished work (identified by keyword comments)
 #
-.PHONY: ruby-todo
-todo:	ruby-todo
-ruby-todo:
+todo:	todo-ruby
+todo-ruby:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(RB_SRC) /dev/null || true

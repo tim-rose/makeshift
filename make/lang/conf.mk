@@ -3,7 +3,7 @@
 #
 # Contents:
 # %.conf:              --Pattern rules for installing config files.
-# pre-build:           --Make sure that config SRC macros are defined.
+# pre-build:           --Make sure that the various config SRC macros are defined.
 # conf-src-var-defined: --Test if any of the "conf" SRC vars. are defined.
 # toc-conf:            --Build the table-of-contents for config files.
 # src-conf:            --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
@@ -17,6 +17,7 @@
 # is useful on debian-based systems; it helps support local
 # customisation of another package's config files.
 #
+.PHONY: $(recursive-targets:%=%-conf)
 
 #
 # %.conf: --Pattern rules for installing config files.
@@ -33,7 +34,7 @@ $(divertdir)/%.cfg:	%.cfg;		$(INSTALL_FILE) $? $@
 $(divertdir)/%.ini:	%.ini;		$(INSTALL_FILE) $? $@
 
 #
-# pre-build: --Make sure that config SRC macros are defined.
+# pre-build: --Make sure that the various config SRC macros are defined.
 #
 pre-build:	conf-src-var-defined
 
@@ -49,7 +50,6 @@ conf-src-var-defined:
 #
 # toc-conf: --Build the table-of-contents for config files.
 #
-.PHONY: toc-conf
 toc:	toc-conf
 toc-conf:
 	$(ECHO_TARGET)
@@ -59,7 +59,6 @@ toc-conf:
 # src-conf: --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
 #
 src:	src-conf
-.PHONY:	src-conf
 src-conf:
 	$(ECHO_TARGET)
 	@mk-filelist -qn CONF_SRC *.conf
@@ -69,7 +68,6 @@ src-conf:
 #
 # todo: --Report "unfinished work" comments in config files.
 #
-.PHONY: todo-conf
 todo:	todo-conf
 todo-conf:
 	$(ECHO_TARGET)
