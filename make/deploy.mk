@@ -53,11 +53,12 @@ deploy-install[localhost]:	.deploy
 #
 .deploy:
 	$(ECHO_TARGET)
-	$(MAKE) $(MFLAGS) install DESTDIR=$$(pwd)/.deploy
+	$(MAKE) install DESTDIR=$$(pwd)/.deploy
+
+clean:	deploy-clean
+distclean:	deploy-clean
 
 .PHONY: deploy-clean
-clean:	deploy-clean
 deploy-clean:
 	$(RM) -r .deploy
 
-distclean:	deploy-clean

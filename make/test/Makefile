@@ -12,4 +12,4 @@ include devkit.mk
 
 $(includedir)/%:	%;		$(INSTALL_FILE) $< $@
 
-install:		$(MK_SRC:%=$(includedir)/%)
+install:		install-mk

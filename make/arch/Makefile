@@ -9,4 +9,4 @@ subdir	= arch
 
 include devkit.mk
 
-install:		$(MK_SRC:%=$(includedir)/%)
+install:		install-mk

@@ -1,12 +1,13 @@
 #
 # SVN.MK --Build rules for working with "subversion" repositories.
 #
-VCS_EXCLUDES = --exclude .svn
-
 #
 # Contents:
 # vcs-status-ok: --Test there are no unresolved changes in the repository.
 # vcs-tag:       --Make a release tag in SVN.
+
+VCS_EXCLUDES = --exclude .svn
+
 #
 # vcs-status-ok: --Test there are no unresolved changes in the repository.
 #
