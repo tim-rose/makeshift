@@ -1,7 +1,8 @@
-#!/usr/bin/env sed -f
+#!/bin/sh
 #
 # MK-RPM-FILES --Mung a list of files for use as a RPM "files" section.
 #
+sed -e '
 # wrap the filename in quotes, to protect against spaces:
 s/.*/"&"/
 # identify documentation files:
@@ -13,4 +14,4 @@ s/.*/"&"/
 # identify config files:
 /\.conf/s/^/%config /
 /\.cfg/s/^/%config /
-/\.ini/s/^/%config /
+/\.ini/s/^/%config /'
