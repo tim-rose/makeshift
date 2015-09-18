@@ -31,12 +31,12 @@ build-python:	$(PY_TRG)
 #
 # install-python: --Install python as executables.
 #
-install-python: $(bindir)/$(PY_SRC:%.py=%)
+install-python: $(PY_SRC:%.py=$(bindir)/%)
 
 #
 # install-python-lib: --Install python as library modules.
 #
-install-python: $(pythonlibdir)/$(PY_SRC:%.py=%)
+install-python-lib: $(PY_SRC:%.py=$(pythonlibdir)/%.py)
 
 #
 # clean-python: --Remove script executables.
@@ -45,7 +45,7 @@ clean:	clean-python
 distclean:	clean-python
 
 clean-python:
-	$(RM) $(PY_SRC:%.py=%.py[co])
+	$(RM) $(PY_SRC:%.py=%.py[co]) $(PY_SRC:%.py=%)
 
 #
 # toc-python: --Build the table-of-contents for python files.
@@ -85,7 +85,15 @@ lint-python:    cmd-exists[pep8]
 	$(ECHO_TARGET)
 	-pep8 --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
 
+lint[%.py]:    cmd-exists[pep8]
+	$(ECHO_TARGET)
+	-pep8 --max-line-length=110 --ignore=E402,E721 $*.py
+
 tidy:	tidy-python
 tidy-python:    cmd-exists[autopep8]
 	$(ECHO_TARGET)
 	autopep8 --in-place --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
+
+tidy[%.py]:    cmd-exists[autopep8]
+	$(ECHO_TARGET)
+	autopep8 --in-place --max-line-length=110 --ignore=E402,E721 $*.py
