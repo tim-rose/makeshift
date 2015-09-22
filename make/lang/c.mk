@@ -112,6 +112,7 @@ $(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 # build: --c-specific customisations for the "build" target.
 #
 build:	$(C_OBJ) $(C_MAIN)
+$(C_OBJ) $(C_MAIN): pre-build
 
 #
 # c-src-var-defined: --Test if "enough" of the C SRC variables are defined

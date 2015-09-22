@@ -116,6 +116,7 @@ $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX)
 # build: --Compile the C++ files, and link any complete programs.
 #
 build:	$(C++_OBJ) $(C++_MAIN)
+$(C++_OBJ) $(C++_MAIN):	pre-build
 
 #
 # c++-src-var-defined: --Test if "enough" of the C++ SRC variables are defined
