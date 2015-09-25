@@ -16,6 +16,9 @@ phplibdir      = $(exec_prefix)/lib/php/$(subdir)
 $(phplibdir)/%.php:    	%.php;	$(INSTALL_FILE) $? $@
 $(wwwdir)/%.php:	%.php;	$(INSTALL_FILE) $? $@
 
+install-lib-php:	$(PHP_SRC:%.php=$(phplibdir)/%.php)
+install-www-php:	$(PHP_SRC:%.php=$(wwwdir)/%.php)
+
 #
 # php-build: --Make scripts "executable".
 #
