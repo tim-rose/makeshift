@@ -1,0 +1,22 @@
+/*
+ * PRINT.CSS --Stylesheet for printing HTML documents with Prince.
+ */
+@page {
+    padding: 0;
+    margin: 2cm 0cm 1.5cm 0cm;
+    font-family: "Helvetica Neue",  Calibri, "Helvetica", Arial, sans-serif;
+    font-size: 6pt;
+    color: #888;
+    line-height: 1.2em;
+    border-bottom: 1px solid #888;
+
+    @bottom-center {
+        content: "Page " counter(page) " of " counter(pages);
+    	padding-top: 1em;
+    	vertical-align: top;
+    }
+}
+
+.new-page {
+    page-break-before: always;
+}

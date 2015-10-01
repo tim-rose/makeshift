@@ -1,0 +1,158 @@
+/*
+ * PLAIN.CSS --Stylesheet for plain "document" html.
+ */
+html {
+    margin:	1em 5em;
+    padding-bottom: 2em;
+    /* font-family: "Palatino", "Times New Roman", Times, serif; */
+    font-family: "Verdana", sans-serif;
+    line-height: 1.2em;
+    font-size: 10pt;
+}
+
+@media print {
+    html {
+	font-size: 8pt;
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Helvetica Neue", Calibri, "Helvetica", Arial, sans-serif;
+    font-weight: normal;
+    color: #777;
+    margin: 0.8em 0 0.2em 0;
+    line-height: 1.2em;
+}
+
+h1 { font-size: 2.4em; }
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.6em; }
+h4 { font-size: 1.4em; }
+h5 { font-size: 1.2em; }
+h6 { font-size: 1.1em; }
+
+/*
+ * code/pre:  code appears both inline, and contained within a "pre" block.
+ */
+code {
+    font-family: "Monaco", "Consolas", "Inconsolata", monospace, fixed;
+    font-size: 0.8em;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 4px;
+    padding: 0 0.2em;
+}
+
+pre {
+    border: 1px solid #ccc;
+    background: #f8f8f8;
+    border-radius: 4px;
+    padding: 0.2em 0.5em;
+    box-shadow: 2px 2px 4px #ddd;
+}
+
+h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+    font-size: 0.9em;
+    border: none;
+    background: inherit;
+    padding: 0 0.2em;
+}
+
+pre code {
+    background: inherit;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+figure img {
+    display: block;
+    margin: 0.5em auto;
+}
+
+figure figcaption {
+    text-align: center;
+    font-size: 0.8em;
+}
+
+/*
+ * table: these appear both as "real" tables displaying tabular data,
+ * but they're also used for some simple layout stuff.
+ */
+table {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    border-collapse: collapse;
+    font-family: "Helvetica Neue", Calibri, "Helvetica", Arial, sans-serif;
+    font-size: 0.8em;
+    margin:	1em 0;
+}
+
+table th {
+    background: #eee;
+    padding: 0.4em 0.4em;
+}
+
+caption {
+    caption-side: bottom;
+    padding:	0.5em 0;
+    text-align: left;
+}
+table td {
+    border: 1px solid #aaa;
+    padding: 0.4em 0.4em;
+    vertical-align: top;
+}
+
+table.layout, table.layout th, table.layout td {
+    background: inherit;
+    border: none;
+    font-size: 1em;
+    padding: 0;
+    margin: 0;
+}
+
+/*
+ * REVISIT: toc handling....
+ */
+ul.toc a::after {
+    content: leader('.') target-counter(attr(href), page);
+}
+
+ul { list-style-type: disc; }
+ul ul { list-style-type: square; }
+ul ul ul { list-style-type: disc; }
+ul ul ul ul { list-style-type: square; }
+ul ul ul ul ul { list-style-type: disc; }
+ul ul ul ul ul ul { list-style-type: square; }
+
+li::marker { color: #07b; }
+li::-moz-list-bullet { color: #07b; }
+
+/*
+ * LINK presentation.
+ */
+a { color: #888; text-decoration: none; }
+a:hover { color: #888; text-decoration: underline; }
+a:active { color: #aaa; text-decoration: underline; }
+
+/*
+ * REVISIT: external link decoration...
+ *
+ * also, try: glyphicon's (halfling) "new window"
+ */
+a.extern::after {
+    content: url(file:///usr/local/share/doc/img/external-link.svg);
+    margin-left: 0.2em;
+}
+
+blockquote {
+    font-style: italic;
+    border-left: 0.5em solid #07b;
+    padding-left: 1em;
+    color: #444;
+}
+/* blockquote:before         { content: "\275D"; } */
+/* blockquote:after          { content: "\275E"; } */
+
+sub, sup { font-size: 0.6em; }
