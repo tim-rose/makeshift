@@ -2,10 +2,12 @@
 # PROTOBUF.MK --Rules for building compiling protobuf protocols.
 #
 # Contents:
-# build: --Build the Protobuf files
-# clean: --Remove objects and intermediates created from Protobuf files.
-# src:   --Update the PROTOBUFH_SRC, PROTOBUFR_SRC macros.
-# todo:  --Find "unfinished work" comments in PROTOBUF files.
+# %.pb.cc: --build the C++ stubs from a ".proto" file.
+# %.py:    --Build the python stubs from a ".proto" file.
+# build:   --Build the protobuf files.
+# clean:   --Remove objects and intermediates created from protobuf files.
+# src:     --Update the PROTOBUF_SRC macro.
+# todo:    --Find "unfinished work" comments in protobuf files.
 #
 # Remarks:
 # The protobuf module adds support for building Protobuf-related software.
