@@ -19,7 +19,7 @@ PYTEST ?= py.test
 test:	test-pytest
 
 test-pytest:
-	$(PYTEST) --junit-xml pytest.xml $(PY_TESTS)
+	$(PYTEST) --junit-xml python-tests.xml $(PY_TESTS)
 
 #
 # test-pytest[%]: --Run an individual test.
@@ -36,4 +36,4 @@ distclean:	clean-pytest
 #
 .PHONY:		clean-pytest
 clean-pytest:
-	$(RM) -r __pycache__ $(PY_TESTS:%.py=%.xml) pytest.xml
+	$(RM) -r __pycache__ $(PY_TESTS:%.py=%.xml) python-tests.xml
