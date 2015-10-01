@@ -1,0 +1,230 @@
+#!/bin/sh
+#
+# TAP.SHL --Test-Anything-Protocol functions.
+#
+# Contents:
+# diag()            --Print a diagnostic line comment line.
+# TAP_BEGIN()       --startup code for the TAP module.
+# TAP_EXIT()        --Write some summary diagnostics of the test run.
+# plan()            --Declare the number of tests.
+# ok()              --Check a process result, and emit TAP output.
+# nok()             --Check a process result, and emit TAP output.
+# ok_eq()           --compare two strings for equality, report differences.
+# ok_match()        --compare a string to a glob-pattern, report differences.
+# ok_grep()         --look for a pattern, report differences.
+# todo()            --Mark the start/end of a "todo" block.
+# tap_test_msg()    --Common function to report on tests.
+# tap_report_diff() --Report differences between two strings.
+#
+# Remarks:
+# This library is an implementation Perl's TAP system for shell scripts.
+# TODO: skip
+#
+tap_test=0
+tap_todo_reason=
+tap_plan=0
+tap_fail=0
+tap_version='?.?.?'
+
+ok_style="m"
+fail_style="1;31m"
+log_style="1m"
+diag_style="36m"
+if [ -t 1 ]; then
+    isatty=1
+fi
+
+tty_filter()
+{
+    local style=$1; shift
+
+    if [ "$isatty" ]; then
+        while read line; do 
+            printf "\033[%s%s\033[m\n" "$style" "$line"
+        done
+    else
+        cat
+    fi
+}
+
+#
+# diag() --Print a diagnostic line comment line.
+#
+diag()
+{
+    if [ $# -gt 0 ]; then
+        { printf "$@"; printf "\n"; } | sed -e "s/^/# "/ | tty_filter $diag_style
+    else
+        sed -e "s/^/# /"
+    fi
+}
+
+#
+# TAP_BEGIN() --startup code for the TAP module.
+#
+TAP_BEGIN()
+{
+    diag "Current time local: %s" "$(date)"
+    diag "Current time UTC:   %s" "$(TZ=UTC date)"
+    diag "Using tap.sh version %s" "$tap_version"
+    trap TAP_EXIT 0
+}
+TAP_BEGIN
+
+#
+# TAP_EXIT() --Write some summary diagnostics of the test run.
+#
+TAP_EXIT()
+{
+    local s=			# plural-suffix
+    local status=1
+
+    if [ $tap_test -ne $tap_plan ]; then
+	s=; test $tap_plan -ne 1 && s=s
+	diag "Looks like you planned %d test%s but ran %d." \
+	    "$tap_plan" "$s"  "$tap_test"
+    fi
+    if [ $tap_fail -ne 0 ]; then
+	s=; test $tap_fail -gt 1 && s=s
+	diag "Looks like you failed %d test%s of %d run." \
+	"$tap_fail" "$s" "$tap_test"
+    else
+	status=0
+    fi
+}
+
+#
+# plan() --Declare the number of tests.
+#
+plan()
+{
+    if [ $# -ne 0 ]; then
+	tap_plan=$1
+	echo "1..$1" | tty_filter $log_style
+    else
+	echo "1..$tap_test" | tty_filter $log_style
+	tap_plan=$tap_test
+    fi
+}
+
+#
+# ok() --Check a process result, and emit TAP output.
+#
+ok()
+{
+    tap_test_msg "$@"
+}
+
+#
+# nok() --Check a process result, and emit TAP output.
+#
+nok()
+{
+   local tap_status=$1; shift
+
+   if [ $tap_status -eq 0 ]; then
+       tap_status=1;
+   else
+       tap_status=0;
+   fi
+   tap_test_msg $tap_status "$@"
+}
+
+#
+# ok_eq() --compare two strings for equality, report differences.
+#
+ok_eq()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    test "$have" = "$expect";
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
+}
+
+#
+# ok_match() --compare a string to a glob-pattern, report differences.
+#
+ok_match()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    case "$have" in
+    $expect) true;;
+    *) false;;
+    esac
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
+}
+
+#
+# ok_grep() --look for a pattern, report differences.
+#
+ok_grep()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    echo "$have" | grep -q "$expect"
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
+}
+
+#
+# todo() --Mark the start/end of a "todo" block.
+#
+todo()
+{
+    tap_todo_reason="$1"; shift
+}
+
+#
+# tap_test_msg() --Common function to report on tests.
+#
+tap_test_msg()
+{
+    local result=$1; shift
+    local msg=
+    local status=ok
+    local style=$ok_style
+
+    tap_test=$(( $tap_test + 1))
+
+    if [ $# -gt 0 ]; then
+	if [ $# -gt 1 ]; then
+	    msg=$(printf "$@")
+	else
+	    msg=$1
+	fi
+	msg=" - $msg"
+    fi
+    if [ "$tap_todo_reason" ]; then
+	msg="$msg  # TODO $tap_todo_reason"
+    fi
+
+    if [ $result -ne 0 ]; then
+	status="not ok"
+        style=$fail_style
+	if [ ! "$tap_todo_reason" ]; then
+	    tap_fail=$(( $tap_fail + 1))
+	fi
+    fi
+    printf "%s %d%s\n" "$status" $tap_test "$msg" | tty_filter "$style"
+    if [ $result -ne 0 ]; then
+	local file=$(caller 1 | cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
+	local line=$(caller 1 | cut -d' ' -f1)
+
+	diag "   Failed test %s" "$tap_test"
+	diag "   in %s at line %d" "$file" "$line"
+    fi
+    return $result
+}
+
+#
+# tap_report_diff() --Report differences between two strings.
+#
+tap_report_diff()
+{
+    diag "%12s: '%s'" 'got' "$1"
+    diag "%12s: '%s'" 'expected' "$2"
+    false
+}
