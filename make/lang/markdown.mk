@@ -2,9 +2,12 @@
 # MARKDOWN.MK --Rules for dealing with markdown files.
 #
 # Contents:
+# %.html:         --build a HTML document from a markdown file.
+# %.pdf:          --Create a PDF document from a HTML file.
 # build:          --Create HTML documents from MMD_SRC.
-# clean-markdown: --Clean up MMD_SRC derived files.
-# src-markdown:   --Update MD_SRC, MMD_SRC macros.
+# doc-markdown:   --Create PDF documents.
+# clean-markdown: --Clean up markdown's derived files.
+# src-markdown:   --Update MD_SRC, TXT_SRC macros.
 # todo-markdown:  --Report unfinished work in markdown files.
 #
 # Remarks:
@@ -18,39 +21,59 @@
 #
 .PHONY: $(recursive-targets:%=%-markdown)
 
-MMDFLAGS ?= --process-html
+MD = multimarkdown
+MDFLAGS ?= --process-html
 
 $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 
+#
+# %.html: --build a HTML document from a markdown file.
+#
 %.html:	%.md
 	$(ECHO_TARGET)
-	multimarkdown $(MMDFLAGS) $*.md > $@
+	$(MD) $(MDFLAGS) $*.md > $@
 
+#
+# TODO: build HTML document from simple text file (i.e. with no mmd headers).
+#
+# %.html:	%.txt
+# 	$(ECHO_TARGET)
+# 	$(MD) $(MDFLAGS) $*.txt > $@
+
+#
+# %.pdf: --Create a PDF document from a HTML file.
+#
 %.pdf: %.html
 	$(ECHO_TARGET)
 	prince -s /usr/local/share/doc/css/print.css $*.html -o $@
 #
 # build: --Create HTML documents from MMD_SRC.
 #
-build:	$(MMD_SRC:%.mmd=%.html) cmd-exists[multimarkdown]
+build:	$(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html)
 
 #
-# clean-markdown: --Clean up MMD_SRC derived files.
+# doc-markdown: --Create PDF documents.
+#
+doc:	doc-markdown
+doc-markdown:	$(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
+
+#
+# clean-markdown: --Clean up markdown's derived files.
 #
 clean:	clean-markdown
 clean-markdown:
 	$(ECHO_TARGET)
-	$(RM) $(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html)
+	$(RM) $(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html) $(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
 
 
 #
-# src-markdown: --Update MD_SRC, MMD_SRC macros.
+# src-markdown: --Update MD_SRC, TXT_SRC macros.
 #
 src:	src-markdown
 src-markdown:
 	$(ECHO_TARGET)
 	@mk-filelist -qn MD_SRC *.md
-	@mk-filelist -qn MMD_SRC *.mmd
+	@mk-filelist -qn TXT_SRC *.txt
 
 #
 # todo-markdown: --Report unfinished work in markdown files.
@@ -58,4 +81,4 @@ src-markdown:
 todo:	todo-markdown
 todo-markdown:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(MD_SRC) $(MMD_SRC) /dev/null || true
+	@$(GREP) -e TODO -e FIXME -e REVISIT $(MD_SRC) $(TXT_SRC) /dev/null || true
