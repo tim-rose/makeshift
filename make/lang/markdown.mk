@@ -11,18 +11,17 @@
 # todo-markdown:  --Report unfinished work in markdown files.
 #
 # Remarks:
-# The markdown module recognises both "original" markdown files
-# (".md"), and "multimarkdown" files (".mmd"), defined by MD_SRC and
-# MMD_SRC respectively. MMD files are assumed to create full
-# documents, and are created by `build`, using multimarkdown. There
-# are pattern rules for converting MD src to HTML, but markdown
-# doesn't create a full HTML document, and they aren't built by
-# default.
+# The markdown module recognises both "multimarkdow" markdown files
+# (".md"), and simple text files (".txt"), defined by MD_SRC and
+# TXT_SRC respectively. The markdown files are assumed to create full
+# documents, and are created by `build`, using multimarkdown.
 #
 .PHONY: $(recursive-targets:%=%-markdown)
 
 MD = multimarkdown
 MDFLAGS ?= --process-html
+TXT_CSS = $(exec_prefix)/share/doc/css/plain.css
+PDF_CSS = $(exec_prefix)/share/doc/css/print.css
 
 $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 
@@ -36,23 +35,24 @@ $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 #
 # TODO: build HTML document from simple text file (i.e. with no mmd headers).
 #
-# %.html:	%.txt
-# 	$(ECHO_TARGET)
-# 	$(MD) $(MDFLAGS) $*.txt > $@
+%.html:	%.txt
+	$(ECHO_TARGET)
+	{ echo "title: $*"; echo "css: file://$(TXT_CSS)"; echo; cat $*.txt; } |\
+	    $(MD) $(MDFLAGS) > $@
 
 #
 # %.pdf: --Create a PDF document from a HTML file.
 #
 %.pdf: %.html
 	$(ECHO_TARGET)
-	prince -s /usr/local/share/doc/css/print.css $*.html -o $@
+	prince -s $(PDF_CSS) $*.html -o $@
 #
-# build: --Create HTML documents from MMD_SRC.
+# build: --Create HTML documents from MD_SRC, TXT_SRC.
 #
 build:	$(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html)
 
 #
-# doc-markdown: --Create PDF documents.
+# doc-markdown: --Create PDF documents from MD_SRC, TXT_SRC.
 #
 doc:	doc-markdown
 doc-markdown:	$(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
@@ -60,6 +60,7 @@ doc-markdown:	$(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
 #
 # clean-markdown: --Clean up markdown's derived files.
 #
+distclean:	clean-markdown
 clean:	clean-markdown
 clean-markdown:
 	$(ECHO_TARGET)

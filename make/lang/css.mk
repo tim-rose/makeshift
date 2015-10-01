@@ -9,6 +9,7 @@
 .PHONY: $(recursive-targets:%=%-css)
 
 $(wwwdir)/%.css:	%.css;	$(INSTALL_FILE) $? $@
+$(datadir)/%.css:	%.css;	$(INSTALL_FILE) $? $@
 
 %.css:	%.scss;	scss $*.scss >$@
 %.css:	%.less;	less $*.less >$@
