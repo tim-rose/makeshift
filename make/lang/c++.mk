@@ -32,7 +32,6 @@ H++_SUFFIX ?= h
 
 C++	= $(CXX)
 LD	= $(CXX)
-#LANG.LDFLAGS = -stdlib=libstdc++
 
 C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS)\
 	$(PROJECT.C++_DEFS) $(LOCAL.C++_DEFS) $(TARGET.C++_DEFS) \
