@@ -32,7 +32,7 @@ H++_SUFFIX ?= h
 
 C++	= $(CXX)
 LD	= $(CXX)
-LANG.LDFLAGS = -stdlib=libstdc++
+#LANG.LDFLAGS = -stdlib=libstdc++
 
 C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS)\
 	$(PROJECT.C++_DEFS) $(LOCAL.C++_DEFS) $(TARGET.C++_DEFS) \
@@ -48,7 +48,7 @@ C++_WARN_FLAGS  = $(OS.C++_WARN_FLAGS) $(ARCH.C++_WARN_FLAGS) \
 C++_CPPFLAGS = $(CPPFLAGS) \
 	$(TARGET.C++_CPPFLAGS) $(LOCAL.C++_CPPFLAGS) $(PROJECT.C++_CPPFLAGS) \
 	$(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
-        -I$(includedir)
+        -I. -I$(includedir)
 
 C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
@@ -116,7 +116,6 @@ $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX)
 # build: --Compile the C++ files, and link any complete programs.
 #
 build:	$(C++_OBJ) $(C++_MAIN)
-$(C++_OBJ) $(C++_MAIN):	pre-build
 
 #
 # c++-src-var-defined: --Test if "enough" of the C++ SRC variables are defined

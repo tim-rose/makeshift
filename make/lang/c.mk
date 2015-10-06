@@ -49,7 +49,7 @@ C_WARN_FLAGS = $(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS) \
 C_CPPFLAGS = $(CPPFLAGS) \
 	$(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) $(PROJECT.C_CPPFLAGS) \
 	$(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
-        -I$(includedir)
+        -I. -I$(includedir)
 
 C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
@@ -112,7 +112,6 @@ $(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 # build: --c-specific customisations for the "build" target.
 #
 build:	$(C_OBJ) $(C_MAIN)
-$(C_OBJ) $(C_MAIN): pre-build
 
 #
 # c-src-var-defined: --Test if "enough" of the C SRC variables are defined
