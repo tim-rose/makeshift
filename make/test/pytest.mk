@@ -19,7 +19,7 @@ PYTEST ?= py.test
 test:	test-pytest
 
 test-pytest:
-	$(PYTEST) --junit-xml python-tests.xml $(PY_TESTS)
+	$(PYTEST) --junitxml python-tests.xml $(PY_TESTS)
 
 #
 # test-pytest[%]: --Run an individual test.
