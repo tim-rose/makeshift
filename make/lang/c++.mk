@@ -52,10 +52,6 @@ C++_CPPFLAGS = $(CPPFLAGS) \
 
 C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
-C++_LDLIBS = $(LOADLIBES) $(LDLIBS) \
-	$(OS.LDLIBS) $(ARCH.LDLIBS) \
-	$(PROJECT.LDLIBS) $(LOCAL.LDLIBS) $(TARGET.LDLIBS)
-
 C++_OBJ  = $(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
 C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
 C++_MAIN = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%)
