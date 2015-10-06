@@ -122,12 +122,12 @@ distclean-devkit:
 +dirs:		;	@echo $(.INCLUDE_DIRS)
 +files:		;	@echo $(MAKEFILE_LIST)
 
-include recursive-targets.mk valid.mk
-include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 include os/$(OS).mk arch/$(ARCH).mk
 ifdef PROJECT
 include project/$(PROJECT).mk
 endif
+include recursive-targets.mk valid.mk
+include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 #include vcs/$(VCS).mk
 
 #
