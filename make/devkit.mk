@@ -125,7 +125,9 @@ distclean-devkit:
 include recursive-targets.mk valid.mk
 include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 include os/$(OS).mk arch/$(ARCH).mk
--include project/$(PROJECT).mk
+ifdef PROJECT
+include project/$(PROJECT).mk
+endif
 #include vcs/$(VCS).mk
 
 #
