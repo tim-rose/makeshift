@@ -38,9 +38,9 @@ $(XSD_INCLUDEDIR)/%.$(H++_SUFFIX): $(archdir)/%.$(H++_SUFFIX)
 
 $(archdir)/%.$(C++_SUFFIX) $(archdir)/%.$(H++_SUFFIX):	%.xsd
 	$(ECHO_TARGET)
-        mkdir -p $(archdir)
+	mkdir -p $(archdir)
 	xsd cxx-tree --output-dir $(archdir) $(XSD.FLAGS) \
-	    --extern-xml-schema $(archdir)/XmlSchema.$(H++_SUFFIX) $*.xsd
+		--extern-xml-schema $(archdir)/XmlSchema.$(H++_SUFFIX) $*.xsd
 #
 # build: --xsd-specific customisations for the "build" target.
 #
@@ -52,10 +52,10 @@ xsd-install-include:	$(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_
 
 $(archdir)/XmlSchema.$(H++_SUFFIX):
 	$(ECHO_TARGET)
-        mkdir -p $(archdir)
+	mkdir -p $(archdir)
 	xsd cxx-tree --output-dir $(archdir) \
-	    --options-file XmlSchema.conf \
-	    --generate-xml-schema XmlSchema.$(H++_SUFFIX)
+		--options-file XmlSchema.conf \
+		--generate-xml-schema XmlSchema.$(H++_SUFFIX)
 
 #
 # clean: --Remove XSD's object files.
