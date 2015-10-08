@@ -29,8 +29,9 @@ MOC	?= moc
 
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
+QRC_SUFFIX ?= qrc
 
-QTR_TRG = $(QTR_SRC:%.qrc=$(archdir)/%.$(C++_SUFFIX))
+QTR_TRG = $(QTR_SRC:%.$(QRC_SUFFIX)=$(archdir)/%.$(C++_SUFFIX))
 QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(archdir)/moc-%.$(C++_SUFFIX))
 QT_TRG  = $(QTR_TRG) $(QTH_TRG)
 
