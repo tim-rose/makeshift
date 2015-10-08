@@ -43,10 +43,14 @@ QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
 #
 build:	$(QT_OBJ)
 
-$(archdir)/%.$(C++_SUFFIX):	%.qrc mkdir[$(archdir)]
+$(archdir)/%.$(C++_SUFFIX): %.qrc
+	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
 	$(RCC) $< >$@
 
-$(archdir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX) mkdir[$(archdir)]
+$(archdir)/moc-%.$(C++_SUFFIX): %.$(H++_SUFFIX)
+	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
 	$(MOC) -o $@ $<
 
 #
