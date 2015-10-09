@@ -21,12 +21,14 @@ $(TEST_EXE):	$(TEST_OBJ)
 #
 # google-test: --Run googletest with arch defined in the environment.
 #
-.PHONY:	test-google
 test:	test-google
+.PHONY:	test-google
 test-google:
 	archdir=$(archdir) $(TEST_EXE) --gtest_output=xml:$(TEST_XML)
 
-.PHONY:	googletest-clean
 clean:	googletest-clean
+distclean:	googletest-clean
+
+.PHONY:	googletest-clean
 googletest-clean:
 	$(RM) $(TEST_EXE) $(TEST_XML)
