@@ -36,7 +36,7 @@ PROTOBUF_OBJ = $(PROTOBUF_C++_TRG:%.$(C++_SUFFIX)=%.o)
 #
 # %.pb.cc: --build the C++ stubs from a ".proto" file.
 #
-$(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto mkdir[$(archdir)]
+$(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto
 	$(ECHO_TARGET)
 	@mkdir $(archdir) 2>/dev/null || true
 	protoc --cpp_out=$(archdir) $<
