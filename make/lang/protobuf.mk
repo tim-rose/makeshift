@@ -38,7 +38,7 @@ PROTOBUF_OBJ = $(PROTOBUF_C++_TRG:%.$(C++_SUFFIX)=%.o)
 #
 $(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto
 	$(ECHO_TARGET)
-	@mkdir $(archdir) 2>/dev/null || true
+	@mkdir -p $(archdir)
 	protoc --cpp_out=$(archdir) $<
 	cd $(archdir) ; \
 	if [ "$(H++_SUFFIX)" != "h" ]; then \
@@ -57,7 +57,7 @@ $(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto
 #
 $(archdir)/%.py:	%.proto
 	$(ECHO_TARGET)
-	@mkdir $(archdir) 2>/dev/null || true
+	@mkdir -p $(archdir)
 	protoc --python_out=$(archdir) $<
 	cd $(archdir); $(MV) $*_pb2.py $*.py
 

@@ -23,7 +23,7 @@
 #
 .PHONY: $(recursive-targets:%=%-qt)
 
-#-include $(QTH_SRC:%.$(H++_SUFFIX)=$(archdir)/%-depend.mk)
+-include $(QTR_SRC:%.qrc=$(archdir)/%.d)
 RCC	?= rcc
 MOC	?= moc
 
@@ -44,15 +44,15 @@ QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
 #
 build:	$(QT_OBJ)
 
-$(archdir)/%.$(C++_SUFFIX): %.qrc
+$(archdir)/%.$(C++_SUFFIX):	%.qrc
 	$(ECHO_TARGET)
 	@mkdir -p $(archdir)
-	$(RCC) $< >$@
+	$(RCC) $(RCC_FLAGS) $< >$@
 
-$(archdir)/moc-%.$(C++_SUFFIX): %.$(H++_SUFFIX)
+$(archdir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
 	@mkdir -p $(archdir)
-	$(MOC) -o $@ $<
+	$(MOC) $(MOC_FLAGS) -o $@ $<
 
 #
 # clean: --Remove objects and intermediates created from Qt files.
