@@ -6,7 +6,7 @@
 # make reference to make variables defined in the lang/c++ module.
 #
 GTEST_LIBS = gtest_main gtest dl util
-TEST_XML = test-results.xml
+TEST_XML = google-tests.xml
 TEST_EXE = $(archdir)/googletest
 
 build: $(archdir)/googletest

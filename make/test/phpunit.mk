@@ -19,14 +19,13 @@ PHPUNIT ?= phpunit
 test:	test-phpunit
 
 test-phpunit:
-	$(PHPUNIT) --log-junit php-tests.xml $(PHP_TESTS)
+	$(PHPUNIT) --log-junit phpunit-tests.xml $(PHP_TESTS)
 
 #
 # test-phpunit[%]: --Run an individual test.
 #
 test[%.php]:
 	$(PHPUNIT) $*.php
-
 
 clean:		clean-phpunit
 distclean:	clean-phpunit
@@ -36,4 +35,4 @@ distclean:	clean-phpunit
 #
 .PHONY:		clean-phpunit
 clean-phpunit:
-	$(RM) -r $(PHP_TESTS:%.php=%.xml) php-tests.xml
+	$(RM) -r $(PHP_TESTS:%.php=%.xml) phpunit-tests.xml
