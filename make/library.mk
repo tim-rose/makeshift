@@ -59,7 +59,7 @@ $(libbasedir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 	$(INSTALL_FILE) $? $@
 	$(RANLIB) $@
 #
-# pre-build: --Install the include files
+# pre-build: --Stage the include files.
 #
 pre-build:      lib-src-var-defined $(LIB_INCLUDE_SRC)
 build:		$(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
