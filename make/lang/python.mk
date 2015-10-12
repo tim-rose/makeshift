@@ -45,7 +45,7 @@ clean:	clean-python
 distclean:	clean-python
 
 clean-python:
-	$(RM) __pycache__ $(PY_SRC:%.py=%.py[co]) $(PY_SRC:%.py=%)
+	$(RM) -r __pycache__ $(PY_SRC:%.py=%.py[co]) $(PY_SRC:%.py=%)
 
 #
 # toc-python: --Build the table-of-contents for python files.

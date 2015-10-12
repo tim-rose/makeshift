@@ -37,4 +37,4 @@ distclean:	clean-pytest
 #
 .PHONY:		clean-pytest
 clean-pytest:
-	$(RM) -r pytest-tests.xml
+	$(RM) pytest-tests.xml
