@@ -39,6 +39,7 @@ QTR_OBJ = $(QTR_TRG:%.$(C++_SUFFIX)=%.o)
 QTH_OBJ = $(QTH_TRG:%.$(C++_SUFFIX)=%.o)
 QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
 
+.PRECIOUS:	$(QT_TRG)
 #
 # build: --Build the Qt files
 #
