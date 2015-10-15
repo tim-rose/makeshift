@@ -37,7 +37,7 @@ $1@%:
 	@if [ -e $$*/Makefile-$(OS) ]; then \
             $$(ECHO) ++ make: recursively building $$@ for $(OS); \
             cd $$* >/dev/null && $$(MAKE) -f Makefile-$(OS) $1; \
-	elif [ -e $$*/Makefile-$(ARCH) ]; then \
+        elif [ -e $$*/Makefile-$(ARCH) ]; then \
             $$(ECHO) ++ make: recursively building $$@ for $(ARCH); \
             cd $$* >/dev/null && $$(MAKE) -f Makefile-$(ARCH) $1; \
         elif [ -e $$*/Makefile ]; then \
