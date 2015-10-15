@@ -38,18 +38,18 @@ C_MAIN_OBJ = $(C_MAIN_SRC:%.c=$(archdir)/%.o)
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 
 C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS)\
-	$(PROJECT.C_DEFS) $(LOCAL.C_DEFS) $(TARGET.C_DEFS)
+    $(PROJECT.C_DEFS) $(LOCAL.C_DEFS) $(TARGET.C_DEFS)
 
 C_FLAGS = $(OS.CFLAGS) $(ARCH.CFLAGS) \
-	$(PROJECT.CFLAGS) $(LOCAL.CFLAGS) $(TARGET.CFLAGS) $(CFLAGS)
+    $(PROJECT.CFLAGS) $(LOCAL.CFLAGS) $(TARGET.CFLAGS) $(CFLAGS)
 
 C_WARN_FLAGS = $(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS) \
-        $(PROJECT.C_WARN_FLAGS) $(LOCAL.C_WARN_FLAGS) $(TARGET.C_WARN_FLAGS)
+    $(PROJECT.C_WARN_FLAGS) $(LOCAL.C_WARN_FLAGS) $(TARGET.C_WARN_FLAGS)
 
 C_CPPFLAGS = $(CPPFLAGS) \
-	$(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) $(PROJECT.C_CPPFLAGS) \
-	$(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
-        -I. -I$(includedir)
+    $(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) $(PROJECT.C_CPPFLAGS) \
+    $(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
+    -I. -I$(includedir)
 
 C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
@@ -118,9 +118,9 @@ build:	$(C_OBJ) $(C_MAIN)
 #
 c-src-var-defined:
 	@if [ -z '$(C_SRC)$(H_SRC)' ]; then \
-	    printf $(VAR_UNDEF) "C_SRC, H_SRC"; \
-	    echo 'run "make src" to define them'; \
-	    false; \
+            printf $(VAR_UNDEF) "C_SRC, H_SRC"; \
+            echo 'run "make src" to define them'; \
+           false; \
 	fi >&2
 
 #
@@ -154,7 +154,7 @@ src-c:
 	$(ECHO_TARGET)
 	@mk-filelist -qn C_SRC *.c
 	@mk-filelist -qn C_MAIN_SRC \
-		$$(grep -l '^ *int *main(' *.c 2>/dev/null)
+            $$(grep -l '^[ \t]*int[ \t][ \t]*main[ \t]*(' *.c 2>/dev/null)
 	@mk-filelist -qn H_SRC *.h
 
 #

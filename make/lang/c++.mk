@@ -34,20 +34,20 @@ C++	= $(CXX)
 LD	= $(CXX)
 
 C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS)\
-	$(PROJECT.C++_DEFS) $(LOCAL.C++_DEFS) $(TARGET.C++_DEFS) \
+    $(PROJECT.C++_DEFS) $(LOCAL.C++_DEFS) $(TARGET.C++_DEFS) \
 
 C++_FLAGS = $(OS.CXXFLAGS) $(ARCH.CXXFLAGS) \
-	$(PROJECT.CXXFLAGS) $(LOCAL.CXXFLAGS) $(TARGET.CXXFLAGS) \
-	$(CFLAGS) $(CXXFLAGS)
+    $(PROJECT.CXXFLAGS) $(LOCAL.CXXFLAGS) $(TARGET.CXXFLAGS) \
+    $(CFLAGS) $(CXXFLAGS)
 
 C++_WARN_FLAGS  = $(OS.C++_WARN_FLAGS) $(ARCH.C++_WARN_FLAGS) \
-	$(PROJECT.C++_WARN_FLAGS) $(LOCAL.C++_WARN_FLAGS) \
-	$(TARGET.C++_WARN_FLAGS)
+    $(PROJECT.C++_WARN_FLAGS) $(LOCAL.C++_WARN_FLAGS) \
+    $(TARGET.C++_WARN_FLAGS)
 
 C++_CPPFLAGS = $(CPPFLAGS) \
-	$(TARGET.C++_CPPFLAGS) $(LOCAL.C++_CPPFLAGS) $(PROJECT.C++_CPPFLAGS) \
-	$(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
-        -I. -I$(includedir)
+    $(TARGET.C++_CPPFLAGS) $(LOCAL.C++_CPPFLAGS) $(PROJECT.C++_CPPFLAGS) \
+    $(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
+    -I. -I$(includedir)
 
 C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
@@ -85,7 +85,7 @@ build[%.$(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
 	@mkdir -p $(archdir)
 	@echo gcov -o $(archdir) $*.$(C++_SUFFIX)
 	@gcov -o $(archdir) $*.$(C++_SUFFIX) | \
-	    sed -ne '/^Lines/s/.*:/gcov $*.$(C++_SUFFIX): /p'
+            sed -ne '/^Lines/s/.*:/gcov $*.$(C++_SUFFIX): /p'
 
 #
 # %.h++: --Install a C++ header file.
@@ -104,8 +104,8 @@ $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX)
 #
 +c++-defines:
 	@touch ..$(C++_SUFFFIX); \
-	    $(C++) -E -dM ..$(C++_SUFFIX); \
-	    $(RM) ..$(C++_SUFFIX)
+            $(C++) -E -dM ..$(C++_SUFFIX); \
+            $(RM) ..$(C++_SUFFIX)
 
 #
 # build: --Compile the C++ files, and link any complete programs.
@@ -117,10 +117,10 @@ build:	$(C++_OBJ) $(C++_MAIN)
 #
 c++-src-var-defined:
 	@if [ -z '$(C++_SRC)$(H++_SRC)' ]; then \
-	    printf $(VAR_UNDEF) "C++_SRC, H++_SRC"; \
-	    echo 'run "make src" to define them'; \
-	    false; \
-	fi >&2
+            printf $(VAR_UNDEF) "C++_SRC, H++_SRC"; \
+            echo 'run "make src" to define them'; \
+            false; \
+        fi >&2
 
 #
 # clean: --Remove objects and executables created from C++ files.
@@ -174,7 +174,7 @@ src-c++:
 	$(ECHO_TARGET)
 	@mk-filelist -qn C++_SRC *.$(C++_SUFFIX)
 	@mk-filelist -qn C++_MAIN_SRC \
-		$$(grep -l '^ *int *main(' *.$(C++_SUFFIX) 2>/dev/null)
+            $$(grep -l '^[ \t]*int[ \t][ \t]*main[ \t]*(' *.$(C++_SUFFIX) 2>/dev/null)
 	@mk-filelist -qn H++_SRC *.$(H++_SUFFIX)
 
 #
