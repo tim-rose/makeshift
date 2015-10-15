@@ -17,7 +17,9 @@ OS.C++_CPPFLAGS = -I/usr/local/include -I/usr/include/c++/4.2.1
 OS.C++_DEFS     = -D__Darwin__
 OS.CXXFLAGS 	= -MMD
 OS.LDFLAGS	= -stdlib=libstdc++ -Wl,-map,$(archdir)/$*.map
-OS.PYTEST_FLAGS = --junit-xml python-tests.xml
+OS.PYTEST_FLAGS = --junit-xml pytest-tests.xml
+
+OS.AUTO_CLEAN	= .DS_Store
 
 CHMOD		= chmod
 CP		= cp

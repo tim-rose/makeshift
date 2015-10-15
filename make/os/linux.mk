@@ -14,7 +14,7 @@ OS.C++_DEFS	= -D__Linux__ -D_BSD_SOURCE -D_XOPEN_SOURCE
 OS.CXXFLAGS 	= -MMD
 OS.LDFLAGS	= -Wl,-Map,$(archdir)/$*.map
 
-OS.PYTEST_FLAGS = --junitxml python-tests.xml
+OS.PYTEST_FLAGS = --junitxml pytest-tests.xml
 
 CHMOD		= chmod
 CP		= cp

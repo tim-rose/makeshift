@@ -12,7 +12,7 @@ $(wwwdir)/%.css:	%.css;	$(INSTALL_FILE) $? $@
 $(datadir)/%.css:	%.css;	$(INSTALL_FILE) $? $@
 
 %.css:	%.scss;	scss $*.scss >$@
-%.css:	%.less;	less $*.less >$@
+%.css:	%.less;	plessc $*.less >$@
 
 #
 # src-css: --Update the CSS_SRC, SCSS_SRC macros.

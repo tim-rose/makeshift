@@ -19,7 +19,7 @@ PERL_TRG = $(PL_SRC:%.pl=%)
 #
 # %.pm:		--Rules for installing perl libraries
 #
-%:			%.pl;	$(INSTALL_PROGRAM) $? $@
+%:			%.pl;	$(CP) $*.pl $@ && $(CHMOD) +x $@
 $(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
 
 #
