@@ -5,7 +5,7 @@
 # This directory contains shell library code; at the moment
 # an implementation of the tap protocol.
 #
-SRC_LANG=sh
+language = sh
 SHL_SRC = tap.shl
 subdir = sh
 
