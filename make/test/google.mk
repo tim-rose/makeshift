@@ -9,7 +9,7 @@ GTEST_LIBS = gtest_main gtest dl util
 TEST_XML = google-tests.xml
 TEST_EXE = $(archdir)/googletest
 
-build: $(archdir)/googletest
+build: $(TEST_EXE)
 
 $(TEST_EXE):	$(TEST_OBJ)
 	$(ECHO_TARGET)
@@ -23,7 +23,7 @@ $(TEST_EXE):	$(TEST_OBJ)
 #
 test:	test-google
 .PHONY:	test-google
-test-google:
+test-google:	$(TEST_EXE)
 	archdir=$(archdir) $(TEST_EXE) --gtest_output=xml:$(TEST_XML)
 
 clean:	googletest-clean
