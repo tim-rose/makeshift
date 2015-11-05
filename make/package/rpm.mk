@@ -11,6 +11,9 @@
 # Remarks:
 # TBD.
 #
+# See Also:
+# https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+#
 RPM_ARCH ?= $(shell mk-rpm-buildarch $(PACKAGE).spec)
 P-V-R	= $(PACKAGE)-$(VERSION)-$(RELEASE)
 V-R.A	= $(VERSION)-$(RELEASE).$(RPM_ARCH)
