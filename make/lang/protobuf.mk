@@ -11,17 +11,14 @@
 #
 # Remarks:
 # The protobuf module adds support for building Protobuf-related software.
-# It defines some pattern rules for compiling ".qrc" files,
-# and ".h" files that contain Protobuf definitions.  These rules
-# will be applied to files defined by the macros:
-#
-#  * PROTOBUFR_SRC -- ".qrc" files
-#  * PROTOBUFH_SRC -- ".h" files containing PROTOBUF_OBJECT usage.
+# It defines some pattern rules for compiling ".proto" files into
+# C++, python (but not java, yet).
 #
 .PHONY: $(recursive-targets:%=%-protobuf)
 
-RCC	?= rcc
-MOC	?= moc
+PROTOC	?= protoc
+PROTOBUF_FLAGS = $(TARGET.PROTOBUF_FLAGS) $(LOCAL.PROTOBUF_FLAGS) \
+    $(PROJECT.PROTOBUF_FLAGS) $(ARCH.PROTOBUF_FLAGS) $(OS.PROTOBUF_FLAGS)
 
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
@@ -31,6 +28,8 @@ PROTOBUF_H++_TRG = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(H++_SUFFIX))
 PROTOBUF_PY_TRG = $(PROTOBUF_SRC:%.proto=$(archdir)/%.py)
 PROTOBUF_TRG  = $(PROTOBUF_C++_TRG) $(PROTOBUF_H++_TRG) $(PROTOBUF_PY_TRG)
 
+.PRECIOUS: $(PROTOBUF_TRG)
+
 PROTOBUF_OBJ = $(PROTOBUF_C++_TRG:%.$(C++_SUFFIX)=%.o)
 
 #
@@ -39,7 +38,7 @@ PROTOBUF_OBJ = $(PROTOBUF_C++_TRG:%.$(C++_SUFFIX)=%.o)
 $(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto
 	$(ECHO_TARGET)
 	@mkdir -p $(archdir)
-	protoc --cpp_out=$(archdir) $<
+	$(PROTOC) $(PROTOBUF_FLAGS) --cpp_out=$(archdir) $<
 	cd $(archdir) ; \
 	if [ "$(H++_SUFFIX)" != "h" ]; then \
 	    $(MV) $*.pb.h $*.pb.$(H++_SUFFIX); \
@@ -58,7 +57,7 @@ $(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto
 $(archdir)/%.py:	%.proto
 	$(ECHO_TARGET)
 	@mkdir -p $(archdir)
-	protoc --python_out=$(archdir) $<
+	$(PROTOC) $(PROTOBUF_FLAGS) --python_out=$(archdir) $<
 	cd $(archdir); $(MV) $*_pb2.py $*.py
 
 #
@@ -88,4 +87,4 @@ src-protobuf:
 todo:	todo-protobuf
 todo-protobuf:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(PROTOBUFH_SRC) $(PROTOBUFR_SRC) /dev/null || true
+	@$(GREP) -e TODO -e FIXME -e REVISIT $(PROTOBUF_SRC) /dev/null || true

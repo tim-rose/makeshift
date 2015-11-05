@@ -25,6 +25,8 @@ XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
 XSD_H++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(H++_SUFFIX))
 XSD_C++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(C++_SUFFIX))
 
+.PRECIOUS: $(XSD_H++) $(XSD_C++)
+
 XSD_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
 XSD_INCLUDE_SRC = $(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(XSD_INCLUDEDIR)/%.$(H++_SUFFIX)) \
 	$(XSD_INCLUDEDIR)/XmlSchema.$(H++_SUFFIX)

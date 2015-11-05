@@ -25,7 +25,8 @@ PY_TRG = $(PY_SRC:%.py=%)
 %:			%.py;	$(CP) $*.py $@ && $(CHMOD) +x $@
 $(pythonlibdir)/%.py:	%.py;	$(INSTALL_FILE) $? $@
 
-pre-build:	src-var-defined[PY_SRC]
+$(pythonlibdir)/%.py:	$(archdir)/%.py;	$(INSTALL_FILE) $? $@
+
 build-python:	$(PY_TRG)
 
 #
