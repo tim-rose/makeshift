@@ -9,12 +9,10 @@
 # Remarks:
 # These rules runs the tests defined by the PYTEST_SRC explicitly.
 #
-
 PYTEST_SRC ?= $(PY_SRC)
 PYTEST ?= py.test
-PYTEST_FLAGS = \
-	$(TARGET.PYTEST_FLAGS) $(LOCAL.PYTEST_FLAGS) $(PROJECT.PYTEST_FLAGS) \
-	$(ARCH.PYTEST_FLAGS) $(OS.PYTEST_FLAGS)
+PYTEST_FLAGS = $(TARGET.PYTEST_FLAGS) $(LOCAL.PYTEST_FLAGS) \
+    $(PROJECT.PYTEST_FLAGS) $(ARCH.PYTEST_FLAGS) $(OS.PYTEST_FLAGS)
 #
 # test: --Run all tests, and save the results to pytest.xml.
 #

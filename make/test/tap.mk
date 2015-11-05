@@ -1,5 +1,5 @@
 #
-# TAP.MK --Rules for running unit tests.
+# TAP.MK --Rules for running unit tests with the TAP framework.
 #
 # Remarks:
 # This defines some tap-specific targets related to testing,
