@@ -31,6 +31,7 @@ libexecdir	= $(exec_prefix)/libexec/$(subdir)
 datadir		= $(exec_prefix)/share/$(subdir)
 
 sysconfdir	= $(rootdir)/etc/$(opt)/$(subdir)
+initdir		= $(DESTDIR)/etc/init.d
 divertdir	= $(rootdir)/var/lib/divert/$(subdir)
 sharedstatedir	= $(rootdir_opt)/com/$(subdir)
 localstatedir	= $(rootdir)/var/$(opt)/$(subdir)
@@ -58,6 +59,7 @@ man8dir		= $(mandir)/man8
 #
 $(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
+$(initdir)/%:		%;	$(INSTALL_FILE) $? $@
 $(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
 $(libdir)/%:		%;	$(INSTALL_FILE) $? $@
 $(datadir)/%:		%;	$(INSTALL_FILE) $? $@
