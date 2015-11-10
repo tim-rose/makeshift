@@ -26,7 +26,7 @@ exec_prefix	= $(rootdir_opt)/$(usr)
 
 bindir		= $(exec_prefix)/bin
 sbindir 	= $(exec_prefix)/sbin
-#libexecdir	= $(exec_prefix)/libexec/$(archdir)	# (GNU std)
+#libexecdir	= $(exec_prefix)/libexec/$(archdir)/$(subdir)	# (GNU std)
 libexecdir	= $(exec_prefix)/libexec/$(subdir)
 datadir		= $(exec_prefix)/share/$(subdir)
 

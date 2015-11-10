@@ -30,6 +30,8 @@ RANLIB		= ranlib
 
 PKG_TYPE	= deb
 
++vars:   $(.VARIABLES:%=+var[%])
+
 clean:	clean-darwin
 .PHONY: clean-darwin
 clean-darwin:

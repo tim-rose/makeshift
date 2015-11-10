@@ -27,3 +27,5 @@ RANLIB		= ranlib
 MOC 		= moc-qt4
 
 PKG_TYPE	= deb
+
++vars:   $(.VARIABLES:%=+var[%])

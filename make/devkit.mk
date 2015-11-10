@@ -35,14 +35,15 @@
 # http://www.gnu.org/software/make/manual/make.html#Variables-for-Specifying-Commands).
 #
 SUBDIRS := $(shell find * -type d -prune)
-PREFIX ?= /usr/local
-prefix ?= $(PREFIX)
+DESTDIR ?= /
+PREFIX  ?= /usr/local
+prefix  ?= $(PREFIX)
 
 DEFAULT_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
 DEFAULT_ARCH := $(shell uname -m | tr A-Z a-z)
 
-OS ?= $(DEFAULT_OS)
-ARCH ?= $(DEFAULT_ARCH)
+OS      ?= $(DEFAULT_OS)
+ARCH    ?= $(DEFAULT_ARCH)
 PROJECT ?= default
 
 #
@@ -89,7 +90,7 @@ clean:	clean-devkit
 .PHONY:	clean-devkit
 clean-devkit:
 	$(ECHO_TARGET)
-	$(RM) core *~ *.bak *.tmp *.out $(OS.AUTO_CLEAN)
+	$(RM) core *~ *.bak *.tmp *.out $(OS.AUTO_CLEAN) $(ARCH.AUTO_CLEAN)
 
 #
 # distclean: --Remove artefacts that devkit creates/updates.
@@ -104,7 +105,7 @@ distclean-devkit:
 #
 # var[%]:	--Pattern rule to print a make "variable".
 #
-+vars:   $(.VARIABLES:%=+var[%])
+#+vars:   $(.VARIABLES:%=+var[%])
 +var[%]:
 	@$(ECHO) "# $(origin $*) variable \"$*\":"
 	@echo "$*='$($*)'"
