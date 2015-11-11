@@ -19,6 +19,8 @@
 #
 .PHONY: $(recursive-targets:%=%-conf)
 
+install-conf:	$(CONF_SRC:%=$(sysconfdir)/%) \
+    $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
 #
 # %.conf: --Pattern rules for installing config files.
 #
