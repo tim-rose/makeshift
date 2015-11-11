@@ -130,6 +130,25 @@ include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 #include vcs/$(VCS).mk
 
 #
+# stddir/% --Common pattern rules for installing stuff into the "standard" places.
+#
+$(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
+$(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
+$(sysconfdir)/%:	%;	$(INSTALL_FILE) $? $@
+$(initdir)/%:		%;	$(INSTALL_FILE) $? $@
+$(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
+$(libdir)/%:		%;	$(INSTALL_FILE) $? $@
+$(datadir)/%:		%;	$(INSTALL_FILE) $? $@
+$(sharedstatedir)/%:	%;	$(INSTALL_FILE) $? $@
+$(localstatedir)/%:	%;	$(INSTALL_FILE) $? $@
+#
+# bindir/archdir: --Rules for installing any executable from archdir.
+#
+$(bindir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
+$(libexecdir)/%:	$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
+#$(libdir)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
+
+#
 # %.gz: --Rules for building compressed/summarised data.
 #
 %.gz:		%;	gzip -9 <$? >$@

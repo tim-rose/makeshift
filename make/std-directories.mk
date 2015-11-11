@@ -54,20 +54,3 @@ man5dir		= $(mandir)/man5
 man6dir		= $(mandir)/man6
 man7dir		= $(mandir)/man7
 man8dir		= $(mandir)/man8
-#
-# Common pattern rules for installing stuff into the "standard" places.
-#
-$(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(initdir)/%:		%;	$(INSTALL_FILE) $? $@
-$(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
-$(libdir)/%:		%;	$(INSTALL_FILE) $? $@
-$(datadir)/%:		%;	$(INSTALL_FILE) $? $@
-$(sharedstatedir)/%:	%;	$(INSTALL_FILE) $? $@
-$(localstatedir)/%:	%;	$(INSTALL_FILE) $? $@
-#
-# bindir/archdir: --Rules for installing any executable in archdir.
-#
-$(bindir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
-$(libexecdir)/%:	$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
-#$(libdir)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
