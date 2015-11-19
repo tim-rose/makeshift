@@ -128,7 +128,7 @@ c++-src-var-defined:
 clean:	clean-c++
 clean-c++:
 	$(ECHO_TARGET)
-	$(RM) $(C++_OBJ) $(C++_MAIN)
+	$(RM) $(C++_MAIN) $(C++_OBJ) $(C++_OBJ:%.o=%.d)
 
 #
 # tidy: --Reformat C++ files consistently.

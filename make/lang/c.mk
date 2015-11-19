@@ -129,7 +129,7 @@ c-src-var-defined:
 clean:	clean-c
 clean-c:
 	$(ECHO_TARGET)
-	$(RM) $(C_OBJ) $(C_MAIN)
+	$(RM) $(C_MAIN) $(C_OBJ) $(C_OBJ:%.o=%.d)
 
 #
 # tidy: --Reformat C files consistently.
