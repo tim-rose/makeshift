@@ -18,6 +18,9 @@
 # install devkit into $HOME, you must use/alias make as
 # "make -I$HOME/include".
 #
+system_root     = $(DESTDIR)
+system_confdir	= $(system_root)/etc/$(subdir)
+
 archdir         = $(OS)-$(ARCH)
 rootdir 	= $(DESTDIR)/$(prefix)
 rootdir_opt 	= $(DESTDIR)/$(prefix)/$(opt)
@@ -31,7 +34,7 @@ libexecdir	= $(exec_prefix)/libexec/$(subdir)
 datadir		= $(exec_prefix)/share/$(subdir)
 
 sysconfdir	= $(rootdir)/etc/$(opt)/$(subdir)
-initdir		= $(DESTDIR)/etc/init.d
+
 divertdir	= $(rootdir)/var/lib/divert/$(subdir)
 sharedstatedir	= $(rootdir_opt)/com/$(subdir)
 localstatedir	= $(rootdir)/var/$(opt)/$(subdir)

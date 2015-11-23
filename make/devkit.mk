@@ -2,13 +2,16 @@
 # devkit.mk --Recursive make considered useful.
 #
 # Contents:
-# build:     --The default target
-# INSTALL_*: --Specialised install commands.
-# src:       --Make sure the src target can write to the Makefile
-# clean:     --Devkit-specific customisations for the "clean" target.
-# distclean: --Remove artefacts that devkit creates/updates.
-# +help:     --Output some help text extracted from the included makefiles.
-# %.gz:      --Rules for building compressed/summarised data.
+# build:          --The default target
+# INSTALL_*:      --Specialised install commands.
+# src:            --Make sure the src target can write to the Makefile
+# clean:          --Devkit-specific customisations for the "clean" target.
+# distclean:      --Remove artefacts that devkit creates/updates.
+# +help:          --Output some help text extracted from the included makefiles.
+# stddir/%        --Common pattern rules for installing stuff into the "standard" places.
+# bindir/archdir: --Rules for installing any executable from archdir.
+# system_confdir: --Rules for installing into the local system's "etc" dir.
+# %.gz:           --Rules for building compressed/summarised data.
 #
 # Remarks:
 # The devkit makefiles together define a build system that extends
@@ -135,7 +138,6 @@ include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 $(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(sysconfdir)/%:	%;	$(INSTALL_FILE) $? $@
-$(initdir)/%:		%;	$(INSTALL_FILE) $? $@
 $(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
 $(libdir)/%:		%;	$(INSTALL_FILE) $? $@
 $(datadir)/%:		%;	$(INSTALL_FILE) $? $@
@@ -147,6 +149,11 @@ $(localstatedir)/%:	%;	$(INSTALL_FILE) $? $@
 $(bindir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%:	$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 #$(libdir)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
+
+#
+# system_confdir: --Rules for installing into the local system's "etc" dir.
+#
+$(system_confdir)/%:	%;	$(INSTALL_FILE) $? $@
 
 #
 # %.gz: --Rules for building compressed/summarised data.
