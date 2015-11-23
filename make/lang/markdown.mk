@@ -4,8 +4,8 @@
 # Contents:
 # %.html:         --build a HTML document from a markdown file.
 # %.pdf:          --Create a PDF document from a HTML file.
-# build:          --Create HTML documents from MMD_SRC.
-# doc-markdown:   --Create PDF documents.
+# build:          --Create HTML documents from MD_SRC, TXT_SRC.
+# doc-markdown:   --Create PDF documents from MD_SRC, TXT_SRC.
 # clean-markdown: --Clean up markdown's derived files.
 # src-markdown:   --Update MD_SRC, TXT_SRC macros.
 # todo-markdown:  --Report unfinished work in markdown files.

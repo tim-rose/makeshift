@@ -3,7 +3,7 @@
 #
 # Contents:
 # libdir/%.a:          --Install a static (.a) library
-# pre-build:           --Install the include files
+# pre-build:           --Stage the include files.
 # lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
 # %/lib.a:             --Build the sub-librar(ies) in its subdirectory.
 # build:               --Build this directory's library.
