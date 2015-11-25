@@ -37,7 +37,7 @@
 # See Also:
 # http://www.gnu.org/software/make/manual/make.html#Variables-for-Specifying-Commands).
 #
-SUBDIRS := $(shell find * -type d -prune)
+SUBDIRS := $(subst /.,,$(wildcard */.))
 DESTDIR ?= /
 PREFIX  ?= /usr/local
 prefix  ?= $(PREFIX)
