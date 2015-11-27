@@ -139,18 +139,18 @@ C++_INDENT_FLAGS = $(OS.C++_INDENT_FLAGS) $(ARCH.C++_INDENT_FLAGS) \
 tidy:	tidy-c
 tidy-c:
 	$(ECHO_TARGET)
-	$(C++_INDENT) $(C++_INDENT_FLAGS) $(H_SRC) $(C_SRC)
+	$(C++_INDENT) $(C++_INDENT_FLAGS) $(H++_SRC) $(C++_SRC)
 #
 # lint: --Perform static analysis for C++ files.
 #
 
-C++_LINT ?= cppcheck --std=c++11 --enable=style,warning,performance,portability,information
+C++_LINT ?= cppcheck --quiet --std=c++11 --template=gcc --enable=style,warning,performance,portability,information $(C++_CPPFLAGS)
 C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
     $(PROJECT.C++_LINT_FLAGS) $(LOCAL.C++_LINT_FLAGS) $(TARGET.C++_LINT_FLAGS)
 lint:	lint-c
 lint-c:
 	$(ECHO_TARGET)
-	$(C++_LINT) $(C++_LINT_FLAGS) $(C++_CPPFLAGS) $(H_SRC) $(C_SRC)
+	$(C++_LINT) $(C++_LINT_FLAGS) $(H++_SRC) $(C++_SRC)
 
 #
 # tidy: --Reformat C++ files consistently.

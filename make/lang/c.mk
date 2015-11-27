@@ -145,13 +145,13 @@ tidy-c:
 # lint: --Perform static analysis for C files.
 #
 
-C_LINT ?= cppcheck --std=c11 --enable=style,warning,performance,portability,information
+C_LINT ?= cppcheck --quiet --std=c11 --template=gcc --enable=style,warning,performance,portability,information $(C_CPPFLAGS)
 C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
     $(PROJECT.C_LINT_FLAGS) $(LOCAL.C_LINT_FLAGS) $(TARGET.C_LINT_FLAGS)
 lint:	lint-c
 lint-c:
 	$(ECHO_TARGET)
-	$(C_LINT) $(C_LINT_FLAGS) $(C_CPPFLAGS) $(H_SRC) $(C_SRC)
+	$(C_LINT) $(C_LINT_FLAGS) $(H_SRC) $(C_SRC)
 #
 # toc: --Build the table-of-contents for C files.
 #
