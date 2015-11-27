@@ -133,6 +133,28 @@ clean-c++:
 #
 # tidy: --Reformat C++ files consistently.
 #
+C++_INDENT ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent
+C++_INDENT_FLAGS = $(OS.C++_INDENT_FLAGS) $(ARCH.C++_INDENT_FLAGS) \
+    $(PROJECT.C++_INDENT_FLAGS) $(LOCAL.C++_INDENT_FLAGS) $(TARGET.C++_INDENT_FLAGS)
+tidy:	tidy-c
+tidy-c:
+	$(ECHO_TARGET)
+	$(C++_INDENT) $(C++_INDENT_FLAGS) $(H_SRC) $(C_SRC)
+#
+# lint: --Perform static analysis for C++ files.
+#
+
+C++_LINT ?= cppcheck --std=c++11 --enable=style,warning,performance,portability,information
+C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
+    $(PROJECT.C++_LINT_FLAGS) $(LOCAL.C++_LINT_FLAGS) $(TARGET.C++_LINT_FLAGS)
+lint:	lint-c
+lint-c:
+	$(ECHO_TARGET)
+	$(C++_LINT) $(C++_LINT_FLAGS) $(C++_CPPFLAGS) $(H_SRC) $(C_SRC)
+
+#
+# tidy: --Reformat C++ files consistently.
+#
 # REVISIT: consider using uncrustify
 #
 tidy:	tidy-c++

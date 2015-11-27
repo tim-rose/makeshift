@@ -15,6 +15,8 @@ OS.CXXFLAGS 	= -MMD
 OS.LDFLAGS	= -Wl,-Map,$(archdir)/$*.map
 
 OS.PYTEST_FLAGS = --junitxml pytest-tests.xml
+OS.C++_LINT_FLAGS = --std=posix
+OS.C_LINT_FLAGS = --std=posix
 
 CHMOD		= chmod
 CP		= cp

@@ -48,6 +48,7 @@ DEFAULT_ARCH := $(shell uname -m | tr A-Z a-z)
 OS      ?= $(DEFAULT_OS)
 ARCH    ?= $(DEFAULT_ARCH)
 PROJECT ?= default
+DEVKIT_HOME ?= /usr/local
 
 #
 # ECHO is a shell no-op by default, but can be redefined by setting "VERBOSE".

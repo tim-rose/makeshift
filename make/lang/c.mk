@@ -134,10 +134,24 @@ clean-c:
 #
 # tidy: --Reformat C files consistently.
 #
+C_INDENT ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent
+C_INDENT_FLAGS = $(OS.C_INDENT_FLAGS) $(ARCH.C_INDENT_FLAGS) \
+    $(PROJECT.C_INDENT_FLAGS) $(LOCAL.C_INDENT_FLAGS) $(TARGET.C_INDENT_FLAGS)
 tidy:	tidy-c
 tidy-c:
 	$(ECHO_TARGET)
-	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro $(INDENT) $(H_SRC) $(C_SRC)
+	$(C_INDENT) $(C_INDENT_FLAGS) $(H_SRC) $(C_SRC)
+#
+# lint: --Perform static analysis for C files.
+#
+
+C_LINT ?= cppcheck --std=c11 --enable=style,warning,performance,portability,information
+C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
+    $(PROJECT.C_LINT_FLAGS) $(LOCAL.C_LINT_FLAGS) $(TARGET.C_LINT_FLAGS)
+lint:	lint-c
+lint-c:
+	$(ECHO_TARGET)
+	$(C_LINT) $(C_LINT_FLAGS) $(C_CPPFLAGS) $(H_SRC) $(C_SRC)
 #
 # toc: --Build the table-of-contents for C files.
 #
