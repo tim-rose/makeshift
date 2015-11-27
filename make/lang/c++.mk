@@ -136,34 +136,12 @@ clean-c++:
 C++_INDENT ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent
 C++_INDENT_FLAGS = $(OS.C++_INDENT_FLAGS) $(ARCH.C++_INDENT_FLAGS) \
     $(PROJECT.C++_INDENT_FLAGS) $(LOCAL.C++_INDENT_FLAGS) $(TARGET.C++_INDENT_FLAGS)
-tidy:	tidy-c
-tidy-c:
+tidy:	tidy-c++
+tidy-c++:
 	$(ECHO_TARGET)
 	$(C++_INDENT) $(C++_INDENT_FLAGS) $(H++_SRC) $(C++_SRC)
 #
 # lint: --Perform static analysis for C++ files.
-#
-
-C++_LINT ?= cppcheck --quiet --std=c++11 --template=gcc --enable=style,warning,performance,portability,information $(C++_CPPFLAGS)
-C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
-    $(PROJECT.C++_LINT_FLAGS) $(LOCAL.C++_LINT_FLAGS) $(TARGET.C++_LINT_FLAGS)
-lint:	lint-c
-lint-c:
-	$(ECHO_TARGET)
-	$(C++_LINT) $(C++_LINT_FLAGS) $(H++_SRC) $(C++_SRC)
-
-#
-# tidy: --Reformat C++ files consistently.
-#
-# REVISIT: consider using uncrustify
-#
-tidy:	tidy-c++
-tidy-c++:
-	$(ECHO_TARGET)
-	INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent $(H++_SRC) $(C++_SRC)
-
-#
-# lint: --Static analysis for C++.
 #
 # Remarks:
 # TODO: choose a suitable lint tool!
@@ -172,10 +150,14 @@ tidy-c++:
 #  * oc-lint
 #  * goanna?
 #
+C++_LINT ?= cppcheck --quiet --std=c++11 --template=gcc --enable=style,warning,performance,portability,information $(C++_CPPFLAGS)
+C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
+    $(PROJECT.C++_LINT_FLAGS) $(LOCAL.C++_LINT_FLAGS) $(TARGET.C++_LINT_FLAGS)
 lint:	lint-c++
 lint-c++:
 	$(ECHO_TARGET)
-	: checker
+	$(C++_LINT) $(C++_LINT_FLAGS) $(H++_SRC) $(C++_SRC)
+
 #
 # toc: --Build the table-of-contents for C++ files.
 #
