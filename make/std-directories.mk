@@ -18,42 +18,42 @@
 # install devkit into $HOME, you must use/alias make as
 # "make -I$HOME/include".
 #
-system_root     = $(DESTDIR)
-system_confdir	= $(system_root)/etc/$(subdir)
+system_root     := $(DESTDIR)
+system_confdir	:= $(system_root)/etc/$(subdir)
 
-archdir         = $(OS)-$(ARCH)
-rootdir 	= $(DESTDIR)/$(prefix)
-rootdir_opt 	= $(DESTDIR)/$(prefix)/$(opt)
-#exec_prefix = $(rootdir)/$(archdir)	# (GNU std)
-exec_prefix	= $(rootdir_opt)/$(usr)
+archdir         := $(HW:%=%-)$(OS:%=%-)$(ARCH)
+rootdir 	:= $(DESTDIR)/$(prefix)
+rootdir_opt 	:= $(DESTDIR)/$(prefix)/$(opt)
+#exec_prefix := $(rootdir)/$(archdir)	# (GNU std)
+exec_prefix	:= $(rootdir_opt)/$(usr)
 
-bindir		= $(exec_prefix)/bin
-sbindir 	= $(exec_prefix)/sbin
-#libexecdir	= $(exec_prefix)/libexec/$(archdir)/$(subdir)	# (GNU std)
-libexecdir	= $(exec_prefix)/libexec/$(subdir)
-datadir		= $(exec_prefix)/share/$(subdir)
+bindir		:= $(exec_prefix)/bin
+sbindir 	:= $(exec_prefix)/sbin
+#libexecdir	:= $(exec_prefix)/libexec/$(archdir)/$(subdir)	# (GNU std)
+libexecdir	:= $(exec_prefix)/libexec/$(subdir)
+datadir		:= $(exec_prefix)/share/$(subdir)
 
-sysconfdir	= $(rootdir)/etc/$(opt)/$(subdir)
+sysconfdir	:= $(rootdir)/etc/$(opt)/$(subdir)
 
-divertdir	= $(rootdir)/var/lib/divert/$(subdir)
-sharedstatedir	= $(rootdir_opt)/com/$(subdir)
-localstatedir	= $(rootdir)/var/$(opt)/$(subdir)
-srvdir 		= $(rootdir)/srv/$(subdir)
-wwwdir 		= $(rootdir)/srv/www/$(subdir)
+divertdir	:= $(rootdir)/var/lib/divert/$(subdir)
+sharedstatedir	:= $(rootdir_opt)/com/$(subdir)
+localstatedir	:= $(rootdir)/var/$(opt)/$(subdir)
+srvdir 		:= $(rootdir)/srv/$(subdir)
+wwwdir 		:= $(rootdir)/srv/www/$(subdir)
 
-#libdir		= $(exec_prefix)/lib/$(archdir)	# (GNU std)
-libdir		= $(exec_prefix)/lib/$(subdir)
-libbasedir	= $(exec_prefix)/lib
-infodir		= $(rootdir_opt)/info
-lispdir		= $(rootdir_opt)/share/emacs/site-lisp
+#libdir		:= $(exec_prefix)/lib/$(archdir)	# (GNU std)
+libdir		:= $(exec_prefix)/lib/$(subdir)
+libbasedir	:= $(exec_prefix)/lib
+infodir		:= $(rootdir_opt)/info
+lispdir		:= $(rootdir_opt)/share/emacs/site-lisp
 
-includedir	= $(rootdir_opt)/$(usr)/include/$(subdir)
-mandir		= $(datadir)/man
-man1dir		= $(mandir)/man1
-man2dir		= $(mandir)/man2
-man3dir		= $(mandir)/man3
-man4dir		= $(mandir)/man4
-man5dir		= $(mandir)/man5
-man6dir		= $(mandir)/man6
-man7dir		= $(mandir)/man7
-man8dir		= $(mandir)/man8
+includedir	:= $(rootdir_opt)/$(usr)/include/$(subdir)
+mandir		:= $(datadir)/man
+man1dir		:= $(mandir)/man1
+man2dir		:= $(mandir)/man2
+man3dir		:= $(mandir)/man3
+man4dir		:= $(mandir)/man4
+man5dir		:= $(mandir)/man5
+man6dir		:= $(mandir)/man6
+man7dir		:= $(mandir)/man7
+man8dir		:= $(mandir)/man8
