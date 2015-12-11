@@ -14,12 +14,16 @@
 # package-building rule named after the package type (i.e. "deb",
 # "rpm", etc.).
 #
+export PACKAGE
+export VERSION
+export RELEASE
+
 PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
 PVRA	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
 STAGING_ROOT = staging-$(PACKAGE)
 
-include $(package:%=package/%.mk)
+include $(package-type:%=package/%.mk)
 
 #
 # package: --Build a package for the current module.
