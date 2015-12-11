@@ -12,6 +12,7 @@
 # bindir/archdir: --Rules for installing any executable from archdir.
 # system_confdir: --Rules for installing into the local system's "etc" dir.
 # %.gz:           --Rules for building compressed/summarised data.
+# %.shx:          --Create a file from a shell script output.
 #
 # Remarks:
 # The devkit makefiles together define a build system that extends
@@ -50,6 +51,9 @@ ARCH    ?= $(DEFAULT_ARCH)
 PROJECT ?= default
 DEVKIT_HOME ?= /usr/local
 
+# TODO: integrate TODO pattern...
+TODO_PATTERN = -e TODO -e FIXME -e REVISIT -e @todo -e @fixme -e @revisit
+
 #
 # ECHO is a shell no-op by default, but can be redefined by setting "VERBOSE".
 #
@@ -75,10 +79,10 @@ all:	build
 #
 # INSTALL_*: --Specialised install commands.
 #
-INSTALL 	   = install -D
-INSTALL_PROGRAM   = $(INSTALL) -m 755
-INSTALL_FILE      = $(INSTALL) -m 644
-INSTALL_DIRECTORY = $(INSTALL) -d
+INSTALL 	  := install -D
+INSTALL_PROGRAM   := $(INSTALL) -m 755
+INSTALL_FILE      := $(INSTALL) -m 644
+INSTALL_DIRECTORY := $(INSTALL) -d
 
 include std-directories.mk
 
@@ -163,3 +167,8 @@ $(system_confdir)/%:	%;	$(INSTALL_FILE) $? $@
 %.gpg:		%;	gpg -b -o $? $@
 %.sum:		%;	sum $? | sed -e 's/ .*//' >$@
 %.md5:		%;	md5sum $? | sed -e 's/ .*//' >$@
+
+#
+# %.shx: --Create a file from a shell script output.
+#
+%:		%.shx;	sh $*.shx > $@
