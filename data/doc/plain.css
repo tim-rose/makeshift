@@ -36,11 +36,7 @@ h6 { font-size: 1.1em; }
  */
 code {
     font-family: "Monaco", "Consolas", "Inconsolata", monospace, fixed;
-    font-size: 0.8em;
-    border: 1px solid #ddd;
-    background: #f8f8f8;
-    border-radius: 4px;
-    padding: 0 0.2em;
+    font-size: 0.9em;
 }
 
 pre {
@@ -156,3 +152,7 @@ blockquote {
 /* blockquote:after          { content: "\275E"; } */
 
 sub, sup { font-size: 0.6em; }
+
+a.table:after {
+    content: "[["  target-counter(attr(href), table) "]]";
+}
