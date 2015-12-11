@@ -2,10 +2,11 @@
 # PHP.MK --Rules for building PHP objects and programs.
 #
 # Contents:
-# php-build: --Make scripts "executable".
-# toc-php:   --Build the table-of-contents for PHP-ish files.
-# src-php:   --php-specific customisations for the "src" target.
-# todo:      --Report unfinished work (identified by keyword comments)
+# php-build:      --Make scripts "executable".
+# toc-php:        --Build the table-of-contents for PHP-ish files.
+# src-php:        --php-specific customisations for the "src" target.
+# todo:           --Report unfinished work (identified by keyword comments)
+# system-php.ini: --Create a PHP configuration file based on current system settings.
 #
 .PHONY: $(recursive-targets:%=%-php)
 phplibdir      = $(exec_prefix)/lib/php/$(subdir)
@@ -48,3 +49,12 @@ todo:	todo-php
 todo-php:
 	$(ECHO_TARGET)
 	@$(GREP) -e TODO -e FIXME -e REVISIT $(PHP_SRC) /dev/null || true
+
+#
+# system-php.ini: --Create a PHP configuration file based on current system settings.
+#
+# Remarks:
+# This can be helpful for testing.  This is a hack to get me started...
+#
+system-php.ini:
+	php -i | sed -e '/=>.*=>/!d' -e '/^Directive/d' -e '/=> no value/d' -e 's/=>/=/' -e 's/=>.*//' >$@

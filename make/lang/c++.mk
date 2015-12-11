@@ -8,7 +8,7 @@
 # build:       --Compile the C++ files, and link any complete programs.
 # clean:       --Remove objects and executables created from C++ files.
 # tidy:        --Reformat C++ files consistently.
-# lint:        --Static analysis for C++.
+# lint:        --Perform static analysis for C++ files.
 # toc:         --Build the table-of-contents for C++ files.
 # src:         --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
 # tags:        --Build vi, emacs tags files for C++ files.
@@ -91,8 +91,11 @@ build[%.$(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
 # %.h++: --Install a C++ header file.
 #
 $(includedir)/%.$(H++_SUFFIX):	%.$(H++_SUFFIX)
+	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
+
 $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX)
+	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 
 #
@@ -110,17 +113,10 @@ $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX)
 #
 # build: --Compile the C++ files, and link any complete programs.
 #
-build:	$(C++_OBJ) $(C++_MAIN)
+build:	build-c++
 
-#
-# c++-src-var-defined: --Test if "enough" of the C++ SRC variables are defined
-#
-c++-src-var-defined:
-	@if [ -z '$(C++_SRC)$(H++_SRC)' ]; then \
-            printf $(VAR_UNDEF) "C++_SRC, H++_SRC"; \
-            echo 'run "make src" to define them'; \
-            false; \
-        fi >&2
+build-c++:	$(C++_OBJ) $(C++_MAIN)
+	$(ECHO_TARGET)
 
 #
 # clean: --Remove objects and executables created from C++ files.
@@ -143,16 +139,10 @@ tidy-c++:
 #
 # lint: --Perform static analysis for C++ files.
 #
-# Remarks:
-# TODO: choose a suitable lint tool!
-#  * clang static analyser "checker"
-#  * facebook's flint
-#  * oc-lint
-#  * goanna?
-#
 C++_LINT ?= cppcheck --quiet --std=c++11 --template=gcc --enable=style,warning,performance,portability,information $(C++_CPPFLAGS)
 C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
     $(PROJECT.C++_LINT_FLAGS) $(LOCAL.C++_LINT_FLAGS) $(TARGET.C++_LINT_FLAGS)
+
 lint:	lint-c++
 lint-c++:
 	$(ECHO_TARGET)

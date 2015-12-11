@@ -12,6 +12,7 @@
 # c-src-var-defined: --Test if "enough" of the C SRC variables are defined
 # clean:             --Remove objects and executables created from C files.
 # tidy:              --Reformat C files consistently.
+# lint:              --Perform static analysis for C files.
 # toc:               --Build the table-of-contents for C files.
 # src:               --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
 # tags:              --Build vi, emacs tags files.

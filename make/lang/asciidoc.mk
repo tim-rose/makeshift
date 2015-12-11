@@ -19,6 +19,7 @@
 # will attempt to build both PDF and HTML.
 #
 .PHONY: $(recursive-targets:%=%-asciidoc)
+TXT_SRC ?= $(wildcard *.txt)
 
 #
 # XSL_FLAGS is adapted from observing the output of a2x, and should
@@ -83,4 +84,4 @@ clean-asciidoc:
 todo:	todo-asciidoc
 todo-asciidoc:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(ASCIIDOC_SRC)  /dev/null || true
+	@$(GREP) -e TODO -e FIXME -e REVISIT $(TXT_SRC)  /dev/null || true

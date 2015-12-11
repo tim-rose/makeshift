@@ -9,6 +9,11 @@
 # todo:        --Report unfinished work (identified by keyword comments)
 #
 .PHONY: $(recursive-targets:%=%-nroff)
+MAN1_SRC ?= $(wildcard *.1)
+MAN3_SRC ?= $(wildcard *.3)
+MAN5_SRC ?= $(wildcard *.5)
+MAN7_SRC ?= $(wildcard *.7)
+MAN8_SRC ?= $(wildcard *.8)
 
 #
 # %.[1-9]:	--Rules for installing manual pages

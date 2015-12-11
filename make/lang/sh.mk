@@ -26,9 +26,13 @@
 # The target `install-shell` will install scripts into $(bindir).
 #
 .PHONY: $(recursive-targets:%=%-shell)
+SH_SRC	?= $(wildcard *.sh)
+SHL_SRC	?= $(wildcard *.shl)
+AWK_SRC	?= $(wildcard *.awk)
+SED_SRC	?= $(wildcard *.sed)
 
-shlibdir      = $(exec_prefix)/lib/sh/$(subdir)
-SHELL_TRG = $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
+shlibdir	:= $(exec_prefix)/lib/sh/$(subdir)
+SHELL_TRG	:= $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
 #
 # %.sh: --Rules for installing shell scripts, libraries
 #
@@ -55,6 +59,7 @@ shell-src-var-defined:
 pre-build:	shell-src-var-defined
 build:	$(SHELL_TRG)
 
+$(SHELL_TRG): | pre-build
 
 #
 # install-shell: --install all shell scripts to $(bindir)

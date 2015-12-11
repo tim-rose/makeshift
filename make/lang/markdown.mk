@@ -2,7 +2,7 @@
 # MARKDOWN.MK --Rules for dealing with markdown files.
 #
 # Contents:
-# %.html:         --build a HTML document from a markdown file.
+# %.html/%.md:    --build a HTML document from a markdown file.
 # %.pdf:          --Create a PDF document from a HTML file.
 # build:          --Create HTML documents from MD_SRC, TXT_SRC.
 # doc-markdown:   --Create PDF documents from MD_SRC, TXT_SRC.
@@ -20,26 +20,41 @@
 
 MD = multimarkdown
 MDFLAGS ?= --process-html
+
+MD_SRC ?= $(wildcard *.md)
+TXT_SRC ?= $(wildcard *.txt)
+
 TXT_CSS = $(exec_prefix)/share/doc/css/plain.css
 PDF_CSS = $(exec_prefix)/share/doc/css/print.css
 
 $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 
 #
-# %.html: --build a HTML document from a markdown file.
+# %.html/%.md: --build a HTML document from a markdown file.
 #
 %.html:	%.md
 	$(ECHO_TARGET)
 	$(MD) $(MDFLAGS) $*.md > $@
 
 #
-# TODO: build HTML document from simple text file (i.e. with no mmd headers).
+# %.html/%.txt: build HTML document from a simple text file.
 #
 %.html:	%.txt
 	$(ECHO_TARGET)
 	{ echo "title: $*"; echo "css: file://$(TXT_CSS)"; echo; cat $*.txt; } |\
 	    $(MD) $(MDFLAGS) > $@
 
+#
+# README.html: build HTML document from a README file.
+#
+# Remarks:
+# Because github handles markdown specially, it's worth
+# having a special rule for README.md files.
+#
+README.html:	README.md
+	$(ECHO_TARGET)
+	{ echo "title: $*"; echo "css: file://$(TXT_CSS)"; echo; cat $*.txt; } |\
+	    $(MD) $(MDFLAGS) > $@
 #
 # %.pdf: --Create a PDF document from a HTML file.
 #
