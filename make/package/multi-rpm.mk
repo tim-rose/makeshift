@@ -1,5 +1,5 @@
 #
-# RPM.MK --Rules for building RPM packages.
+# MULTI-RPM.MK --Rules for building RPM sub-packages.
 #
 # Contents:
 # rpm:            --Build an RPM of the package for the current version/release/arch.
@@ -16,8 +16,8 @@
 #
 VERSION ?= local
 RELEASE ?= latest
-RPM_ARCH ?= $(ARCH)
 
+RPM_ARCH ?= $(shell mk-rpm-buildarch $(PACKAGE).spec)
 P-V-R	= $(PACKAGE)-$(VERSION)-$(RELEASE)
 V-R.A	= $(VERSION)-$(RELEASE).$(RPM_ARCH)
 P-V-R.A	= $(PACKAGE)-$(VERSION)-$(RELEASE).$(RPM_ARCH)
@@ -36,23 +36,22 @@ package:	package-rpm
 # "package-rpm" and "rpm" are aliases, for convenience.
 #
 .PHONY:		package-rpm rpm
-rpm package-rpm:	SPECS/$(P-V-R.A).rpm
+rpm package-rpm:	$(P-V-R.A).rpm
 
-SPECS/$(P-V-R.A).rpm: SPECS/$(PACKAGE).spec
-	$(ECHO_TARGET)
-	mkdir -p RPMS SRPMS
+$(P-V-R.A).rpm: SPECS/$(PACKAGE).spec SOURCES/$(PACKAGE).spec
 	$(RPMBUILD) $(RPM_FLAGS) SPECS/$(PACKAGE).spec
+	$(MV) $(RPM_ARCH)/$(P-V-R.A).rpm $@
 
-SPECS/%.spec:	%.spec
+SPECS/%.spec:	.spec@%
 	$(ECHO_TARGET)
 	mkdir -p SPECS
-	cp $*.spec $@
+	{ echo "Source: $(P-V).tar.gz"; cat $*/$*.spec; } >$@
 
-#
-# %.spec: --Build the spec file from a template "spec".
-#
+
+.spec@%:
+	cd $* >/dev/null && $(MAKE) $*.spec
+
 %.spec:	spec %-rpm-files.txt
-	$(ECHO_TARGET)
 	{ echo "%define name $(PACKAGE)"; \
 	echo "%define version $(VERSION)"; \
 	echo "%define release $(RELEASE)"; \
@@ -79,7 +78,6 @@ distclean:	clean-rpm distclean-rpm
 #
 .PHONY:	clean-rpm
 clean-rpm:
-	$(RM) -r SPECS SOURCES RPMS SRPMS BUILD
 	$(RM) -r -- rpm-files.txt $(RPM_ARCH)
 
 #
@@ -88,4 +86,3 @@ clean-rpm:
 .PHONY:	distclean-rpm
 distclean-rpm:
 	$(RM) $(P-V-R.A).rpm
-	$(RM) -r SPECS SOURCES RPMS SRPMS

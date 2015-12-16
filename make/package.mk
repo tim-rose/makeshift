@@ -18,6 +18,7 @@ export PACKAGE
 export VERSION
 export RELEASE
 
+P-V	= $(PACKAGE)-$(VERSION)
 PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
 PVRA	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
@@ -53,15 +54,15 @@ release: vcs-tag[$(VERSION).$(RELEASE)]
 # Remarks:
 # This target execs another make to do a distclean before building the tar.gz.
 #
-dist:	package-vars-ok $(PVR).tar.gz
-$(PVR).tar.gz:
+dist:	package-vars-ok $(P-V).tar.gz
+$(P-V).tar.gz:
 	$(ECHO_TARGET)
 	$(MAKE) distclean
 	root=$$PWD; \
-	    cd ..; ln -s $$root $(PVR); \
-	    tar czf $(PVR).tar.gz -h $(VCS_EXCLUDES) $(PVR); \
-	    $(RM) $(PVR); \
-	    mv $(PVR).tar.gz $$root
+	    cd ..; ln -s $$root $(P-V); \
+	    tar czf $(P-V).tar.gz -h $(VCS_EXCLUDES) $(P-V); \
+	    $(RM) $(P-V); \
+	    mv $(P-V).tar.gz $$root
 #
 # distclean: --Remove the tarball created by "dist".
 #

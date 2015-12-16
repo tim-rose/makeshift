@@ -19,6 +19,7 @@ OS.CXXFLAGS 	= -MMD
 OS.LDFLAGS	= -stdlib=libstdc++ -Wl,-map,$(archdir)/$*.map
 OS.PYTEST_FLAGS = --junit-xml pytest-tests.xml
 
+OS.RPM_FLAGS    = --define "_tmppath /var/tmp"
 OS.AUTO_CLEAN	= .DS_Store
 
 CHMOD		= chmod

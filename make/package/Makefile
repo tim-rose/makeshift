@@ -1,7 +1,7 @@
 #
 # Makefile --Build rules for the package directory of devkit.
 #
-MK_SRC = deb.mk rpm.mk
+MK_SRC = deb.mk multi-rpm.mk rpm.mk
 subdir	= package
 
 include devkit.mk

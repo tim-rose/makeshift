@@ -1,7 +1,7 @@
 #
 # Makefile --Build rules for devkit, the developer utilities kit.
 #
-package = rpm deb
+package-type = rpm deb
 PACKAGE = devkit
 VERSION = 0.2
 RELEASE = 3
