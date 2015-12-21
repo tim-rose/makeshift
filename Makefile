@@ -3,8 +3,7 @@
 #
 package-type = rpm deb
 PACKAGE = devkit
-VERSION = 0.2
-RELEASE = 3
+VERSION = 0.2.3
 
 include devkit.mk package.mk
 
