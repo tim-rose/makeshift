@@ -117,6 +117,7 @@ distclean-devkit:
 +var[%]:
 	@$(ECHO) "# $(origin $*) variable \"$*\":"
 	@echo "$*='$($*)'"
+
 +var[ECHO_TARGET]:
 	@echo "# $(origin ECHO_TARGET) variable \"ECHO_TARGET\":"
 	@echo "ECHO_TARGET=(unprintable)"

@@ -1,64 +1,141 @@
 #
-# RPM.MK --Rules for building RPM packages.
+# RPM.MK --Rules for building RPM sub-packages.
 #
 # Contents:
-# rpm:            --Build an RPM of the package for the current version/release/arch.
-# %-files.txt:    --Build a manifest file for the RPM's "file" section.
-# rpm-version-ok: --Compare the ".spec" version with Makefile definitions.
-# clean:          --Remove the RPM manifest file.
-# distclean:      --Remove the RPM file.
+# rpm:                 --Build an RPM package for the current source.
+# rpm[%]:              --Build a sub-package from shared source.
+# SPECS/package-%.spec: --Create the "sub-component" spec file
+# SPECS/package.spec:  --Create the overall spec file.
+# spec[%]:             --Create a sub-component's spec file in its sub-directory.
+# %-rpm-files.txt:     --Build a manifest file for the RPM's "file" section.
+# clean:               --Remove the RPM manifest file.
+# distclean:           --Remove the RPM file.
 #
 # Remarks:
-# TBD.
+#
 #
 # See Also:
 # https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 #
 VERSION ?= local
 RELEASE ?= latest
-RPM_ARCH ?= $(ARCH)
+bogus ?= latest
+
+print-version:
+	@echo "version: $(VERSION)"
+	@echo "release: $(RELEASE)"
+
+RPM_DEFAULT_ARCH := $(shell mk-rpm-buildarch)
+RPM_ARCH ?= $(RPM_DEFAULT_ARCH)
 
 P-V-R	= $(PACKAGE)-$(VERSION)-$(RELEASE)
 V-R.A	= $(VERSION)-$(RELEASE).$(RPM_ARCH)
 P-V-R.A	= $(PACKAGE)-$(VERSION)-$(RELEASE).$(RPM_ARCH)
 
+#
+# rpmbuild configuration
+#
 RPMBUILD ?= rpmbuild
-RPM_FLAGS = -bb --clean --define "_topdir $$PWD" \
+RPM_FLAGS = --clean --define "_topdir $$PWD" \
     $(TARGET.RPM_FLAGS) $(LOCAL.RPM_FLAGS) $(PROJECT.RPM_FLAGS) \
     $(ARCH.RPM_FLAGS) $(OS.RPM_FLAGS)
 
+#
+# rpm: --Build an RPM package for the current source.
+#
+.PHONY:		package-rpm rpm rpm[.]
 package:	package-rpm
+package-rpm:	rpm
 
+rpm:	$(RPM_PACKAGES:%=rpm[%]) rpm[.]
 #
-# rpm: --Build an RPM of the package for the current version/release/arch.
+# rpm[.]: --build a package in this directory.
 #
-# Remarks:
-# "package-rpm" and "rpm" are aliases, for convenience.
-#
-.PHONY:		package-rpm rpm
-rpm package-rpm:	SPECS/$(P-V-R.A).rpm
-
-SPECS/$(P-V-R.A).rpm: SPECS/$(PACKAGE).spec
+rpm[.]:	SPECS/$(PACKAGE).spec
 	$(ECHO_TARGET)
-	mkdir -p RPMS SRPMS
-	$(RPMBUILD) $(RPM_FLAGS) SPECS/$(PACKAGE).spec
+	mkdir -p RPMS
+	$(RPMBUILD) -bb $(RPM_FLAGS) SPECS/$(PACKAGE).spec
 
-SPECS/%.spec:	%.spec
+#
+# rpm[%]: --Build a sub-package from shared source.
+#
+rpm[%]:	SPECS/$(PACKAGE)-%.spec SOURCES/$(P-V).tar.gz
+	$(ECHO_TARGET)
+	mkdir -p RPMS
+	$(RPMBUILD) -bb $(RPM_FLAGS) SPECS/$(PACKAGE)-$*.spec
+
+#
+# SPECS/package-%.spec: --Create the "sub-component" spec file
+#
+.PRECIOUS:	SPECS/$(PACKAGE)-%.spec
+SPECS/$(PACKAGE)-%.spec:	spec[%]
 	$(ECHO_TARGET)
 	mkdir -p SPECS
-	cp $*.spec $@
+	{ echo "%define name $(PACKAGE)-$*"; \
+	echo "%define version $(VERSION)"; \
+	echo "%define release $(RELEASE)"; \
+	echo "%define _rpmdir %{_topdir}/RPMS"; \
+	echo "%define _srcrpmdir %{_topdir}/SRPMS"; \
+	echo "%define _specdir %{_topdir}"; \
+	echo "%define _sourcedir %{_topdir}"; \
+	echo "%define _patchdir %{_sourcedir}"; \
+	echo "%define _builddir %{_sourcedir}"; \
+	echo "BuildRoot: %{_tmppath}/BUILD"; \
+	echo "Source: $(P-V).tar.gz"; \
+	cat $*/$*.spec; \
+	echo "%clean"; \
+	echo "%{__rm} -rf \$$RPM_BUILD_ROOT"; \
+	echo "%install"; \
+	echo "cd $*"; \
+	echo "make install DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
+        echo "%files"; \
+	cat $*/$*-rpm-files.txt; } > $@
 
 #
-# %.spec: --Build the spec file from a template "spec".
+# SPECS/package.spec: --Create the overall spec file.
 #
-%.spec:	spec %-rpm-files.txt
+.PRECIOUS:	SPECS/$(PACKAGE).spec
+SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
 	$(ECHO_TARGET)
+	mkdir -p SPECS
 	{ echo "%define name $(PACKAGE)"; \
 	echo "%define version $(VERSION)"; \
 	echo "%define release $(RELEASE)"; \
-	cat spec; \
+	echo "%define _rpmdir %{_topdir}/RPMS"; \
+	echo "%define _srcrpmdir %{_topdir}/SRPMS"; \
+	echo "%define _specdir %{_topdir}"; \
+	echo "%define _sourcedir %{_topdir}"; \
+	echo "%define _patchdir %{_sourcedir}"; \
+	echo "%define _builddir %{_sourcedir}"; \
+	echo "BuildRoot: %{_tmppath}/BUILD"; \
+	cat $<; \
+	echo "%clean"; \
+	echo "%{__rm} -rf \$$RPM_BUILD_ROOT"; \
+	echo "%install"; \
+	echo "make install DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
         echo "%files"; \
-	cat $*-rpm-files.txt; } > $@
+	cat $(PACKAGE)-rpm-files.txt; } > $@
+
+#
+# spec[%]: --Create a sub-component's spec file in its sub-directory.
+#
+spec[%]:
+	$(ECHO_TARGET)
+	$(MAKE) --directory $* SPECS/$*.spec
+
+#
+# Create the package's source tarball.
+#
+SOURCES/$(P-V).tar.gz:	$(P-V).tar.gz | mkdir[SOURCES]
+	$(ECHO_TARGET)
+	ln $< $@
+
+.PHONY: srpm
+srpm:	SRPMS/$(P-V-R).src.rpm
+SRPMS/$(P-V-R).src.rpm:	SPECS/$(PACKAGE).spec SOURCES/$(P-V).tar.gz
+	$(ECHO_TARGET)
+	mkdir -p SRPMS
+	$(RPMBUILD) -bs $(RPM_FLAGS) SPECS/$(PACKAGE).spec
 
 #
 # %-rpm-files.txt: --Build a manifest file for the RPM's "file" section.
@@ -67,7 +144,9 @@ SPECS/%.spec:	%.spec
 # This is defined as a pattern rule, so it can be overridden by
 # an explicit rule if needed.
 #
+.PRECIOUS:	%-rpm-files.txt
 %-rpm-files.txt:	$(STAGING_ROOT)
+	$(ECHO_TARGET)
 	find $(STAGING_ROOT) -not -type d | \
             sed -e 's|^$(STAGING_ROOT)||' | mk-rpm-files >$@
 
@@ -79,13 +158,11 @@ distclean:	clean-rpm distclean-rpm
 #
 .PHONY:	clean-rpm
 clean-rpm:
-	$(RM) -r SPECS SOURCES RPMS SRPMS BUILD
-	$(RM) -r -- rpm-files.txt $(RPM_ARCH)
+	$(RM) -r BUILD BUILDROOT $(PACKAGE)-rpm-files.txt
 
 #
 # distclean: --Remove the RPM file.
 #
 .PHONY:	distclean-rpm
 distclean-rpm:
-	$(RM) $(P-V-R.A).rpm
-	$(RM) -r SPECS SOURCES RPMS SRPMS
+	$(RM) -r SPECS SOURCES RPMS SRPMS $(P-V).tar.gz

@@ -14,10 +14,6 @@
 # package-building rule named after the package type (i.e. "deb",
 # "rpm", etc.).
 #
-export PACKAGE
-export VERSION
-export RELEASE
-
 P-V	= $(PACKAGE)-$(VERSION)
 PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
@@ -41,7 +37,7 @@ package: package-vars-ok $(package:%=package-%)
 .SECONDARY: $(STAGING_ROOT)
 staging-%:
 	$(ECHO_TARGET)
-	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix= usr=usr
+	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=$(prefix) usr=$(usr) opt=$(opt)
 
 #
 # release: --Mark the current version of this package as "released".
