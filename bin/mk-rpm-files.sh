@@ -2,16 +2,19 @@
 #
 # MK-RPM-FILES --Mung a list of files for use as a RPM "files" section.
 #
-sed -e '
-# wrap the filename in quotes, to protect against spaces:
-s/.*/"&"/
-# identify documentation files:
-/man[0-9]/s/^/%doc /
-# brp-compress automatically compresses manual pages
-/man[0-9]/s/"$/.gz"/
-/\.txt/s/^/%doc /
-/\.pdf/s/^/%doc /
-# identify config files:
-/\.conf/s/^/%config /
-/\.cfg/s/^/%config /
-/\.ini/s/^/%config /'
+while read file; do
+    case "$file" in
+#    (*man[0-9]*) echo "%doc $file.gz";;
+    (*man[0-9]*) echo "%doc $file";;
+    (*.txt)	echo "%doc $file";;
+    (*.pdf)	echo "%doc $file";;
+
+    (*/etc/*)	echo "%config $file";;
+    (*.conf)	echo "%config $file";;
+    (*.cfg)	echo "%config $file";;
+    (*.ini)	echo "%config $file";;
+
+    (*.py)	echo "${file}"; echo "${file}o"; echo "${file}c";;
+    (*)		echo "$file";;
+    esac
+done
