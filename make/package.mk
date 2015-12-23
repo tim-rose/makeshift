@@ -14,11 +14,29 @@
 # package-building rule named after the package type (i.e. "deb",
 # "rpm", etc.).
 #
+# The make variable `package-type` controls which packages are built, e.g.
+#
+#     package-type = rpm deb
+#
+# The full name of the generated package is defined by three make variables:
+#
+# * PACKAGE --the name of the package
+# * VERSION --(ideally a three-number triple updated "semantically")
+# * RELEASE --additional identification tag.
+#
+# See Also:
+# https://semver.org
+#
+PACKAGE ?= unknown
+VERSION ?= local
+RELEASE ?= latest
+
 P-V	= $(PACKAGE)-$(VERSION)
 PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
 PVRA	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
 STAGING_ROOT = staging-$(PACKAGE)
+VCS_EXCLUDES = --exclude .git --exclude .svn
 
 include $(package-type:%=package/%.mk)
 
@@ -56,7 +74,7 @@ $(P-V).tar.gz:
 	$(MAKE) distclean
 	root=$$PWD; \
 	    cd ..; ln -s $$root $(P-V); \
-	    tar czf $(P-V).tar.gz -h $(VCS_EXCLUDES) $(P-V); \
+	    tar czf $(P-V).tar.gz --dereference $(VCS_EXCLUDES) $(P-V); \
 	    $(RM) $(P-V); \
 	    mv $(P-V).tar.gz $$root
 #
@@ -64,7 +82,7 @@ $(P-V).tar.gz:
 #
 distclean:	distclean-package
 distclean-package:
-	$(RM) $(PVR).tar.gz
+	$(RM) $(P-V).tar.gz
 	$(RM) -r $(STAGING_ROOT)
 
 #

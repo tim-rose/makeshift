@@ -4,27 +4,22 @@
 # Contents:
 # rpm:                 --Build an RPM package for the current source.
 # rpm[%]:              --Build a sub-package from shared source.
-# SPECS/package-%.spec: --Create the "sub-component" spec file
+# SPECS/package-%.spec: --Create the "sub-component" spec file.
 # SPECS/package.spec:  --Create the overall spec file.
-# spec[%]:             --Create a sub-component's spec file in its sub-directory.
+# spec[%]:             --Recursively build a sub-component's spec file.
 # %-rpm-files.txt:     --Build a manifest file for the RPM's "file" section.
 # clean:               --Remove the RPM manifest file.
 # distclean:           --Remove the RPM file.
 #
 # Remarks:
+# The package/rpm module provides support for building an RPM package
+# from the current source.
 #
+# The build process is controlled by the following
 #
 # See Also:
 # https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 #
-VERSION ?= local
-RELEASE ?= latest
-bogus ?= latest
-
-print-version:
-	@echo "version: $(VERSION)"
-	@echo "release: $(RELEASE)"
-
 RPM_DEFAULT_ARCH := $(shell mk-rpm-buildarch)
 RPM_ARCH ?= $(RPM_DEFAULT_ARCH)
 
@@ -59,13 +54,15 @@ rpm[.]:	SPECS/$(PACKAGE).spec
 #
 # rpm[%]: --Build a sub-package from shared source.
 #
-rpm[%]:	SPECS/$(PACKAGE)-%.spec SOURCES/$(P-V).tar.gz
+rpm[%]:	SOURCES/$(P-V).tar.gz SPECS/$(PACKAGE)-%.spec
 	$(ECHO_TARGET)
 	mkdir -p RPMS
 	$(RPMBUILD) -bb $(RPM_FLAGS) SPECS/$(PACKAGE)-$*.spec
 
 #
-# SPECS/package-%.spec: --Create the "sub-component" spec file
+# SPECS/package-%.spec: --Create the "sub-component" spec file.
+#
+# REVISIT: DRY spec-file production...
 #
 .PRECIOUS:	SPECS/$(PACKAGE)-%.spec
 SPECS/$(PACKAGE)-%.spec:	spec[%]
@@ -83,11 +80,14 @@ SPECS/$(PACKAGE)-%.spec:	spec[%]
 	echo "BuildRoot: %{_tmppath}/BUILD"; \
 	echo "Source: $(P-V).tar.gz"; \
 	cat $*/$*.spec; \
-	echo "%clean"; \
-	echo "%{__rm} -rf \$$RPM_BUILD_ROOT"; \
+	echo "%build"; \
+	echo "cd $*"; \
+	echo "make $(RPM_MAKEFLAGS) build DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
 	echo "%install"; \
 	echo "cd $*"; \
-	echo "make install DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
+	echo "make $(RPM_MAKEFLAGS) install DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
+	echo "%clean"; \
+	echo "%{__rm} -rf \$$RPM_BUILD_ROOT"; \
         echo "%files"; \
 	cat $*/$*-rpm-files.txt; } > $@
 
@@ -109,18 +109,21 @@ SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
 	echo "%define _builddir %{_sourcedir}"; \
 	echo "BuildRoot: %{_tmppath}/BUILD"; \
 	cat $<; \
+	echo "%build"; \
+	echo "make $(RPM_MAKEFLAGS) build DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
+	echo "%install"; \
+	echo "make $(RPM_MAKEFLAGS) install DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
 	echo "%clean"; \
 	echo "%{__rm} -rf \$$RPM_BUILD_ROOT"; \
-	echo "%install"; \
-	echo "make install DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
         echo "%files"; \
 	cat $(PACKAGE)-rpm-files.txt; } > $@
 
 #
-# spec[%]: --Create a sub-component's spec file in its sub-directory.
+# spec[%]: --Recursively build a sub-component's spec file.
 #
 spec[%]:
 	$(ECHO_TARGET)
+	$(MAKE) build
 	$(MAKE) --directory $* SPECS/$*.spec
 
 #
@@ -132,7 +135,7 @@ SOURCES/$(P-V).tar.gz:	$(P-V).tar.gz | mkdir[SOURCES]
 
 .PHONY: srpm
 srpm:	SRPMS/$(P-V-R).src.rpm
-SRPMS/$(P-V-R).src.rpm:	SPECS/$(PACKAGE).spec SOURCES/$(P-V).tar.gz
+SRPMS/$(P-V-R).src.rpm:	SOURCES/$(P-V).tar.gz SPECS/$(PACKAGE).spec
 	$(ECHO_TARGET)
 	mkdir -p SRPMS
 	$(RPMBUILD) -bs $(RPM_FLAGS) SPECS/$(PACKAGE).spec
