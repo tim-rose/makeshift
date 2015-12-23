@@ -10,12 +10,12 @@
 #  * Makefile --a "normal" make file.
 #
 # Note that if *any* of these files exist, the recursion will occur,
-# using the first Makefile that matches.  So, it is possible to
-# create sub-directories that are only processed for particular
-# OS or ARCH, or that have customised behaviour for OS, ARCH.
+# using the first Makefile that matches.  So, it is possible to create
+# sub-directories that are only processed for particular OS or ARCH,
+# or that have customised behaviour for OS, ARCH.
 #
-# The recursive targets and their meaning are documented
-# in the GNU make manual.
+# The recursive targets and their meaning are documented in the GNU
+# make manual.
 #
 # See Also:
 # http://www.gnu.org/software/make/manual/make.html#Standard-Targets
@@ -36,13 +36,13 @@ $1@%:
 	@$$(ECHO_TARGET)
 	@if [ -e $$*/Makefile-$(OS) ]; then \
             $$(ECHO) ++ make: recursively building $$@ for $(OS); \
-            cd $$* >/dev/null && $$(MAKE) -f Makefile-$(OS) $1; \
+            $$(MAKE) --directory $$* -f Makefile-$(OS) $1; \
         elif [ -e $$*/Makefile-$(ARCH) ]; then \
             $$(ECHO) ++ make: recursively building $$@ for $(ARCH); \
-            cd $$* >/dev/null && $$(MAKE) -f Makefile-$(ARCH) $1; \
+            $$(MAKE) --directory $$* -f Makefile-$(ARCH) $1; \
         elif [ -e $$*/Makefile ]; then \
             $$(ECHO) ++ make: recursively building $$@; \
-            cd $$* >/dev/null && $$(MAKE) $1; \
+            $$(MAKE) --directory $$* $1; \
         fi
 endef
 
