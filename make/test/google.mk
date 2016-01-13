@@ -24,7 +24,7 @@ $(TEST_EXE):	$(TEST_OBJ)
 test:	test-google
 .PHONY:	test-google
 test-google:	$(TEST_EXE)
-	archdir=$(archdir) $(TEST_EXE) --gtest_output=xml:$(TEST_XML)
+	archdir=$(archdir) $(TEST_EXE) $(GTEST_FLAGS) --gtest_output=xml:$(TEST_XML)
 
 clean:	googletest-clean
 distclean:	googletest-clean
