@@ -53,7 +53,7 @@ $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 #
 README.html:	README.md
 	$(ECHO_TARGET)
-	{ echo "title: $*"; echo "css: file://$(TXT_CSS)"; echo; cat $*.txt; } |\
+	{ echo "title: README"; echo "css: file://$(TXT_CSS)"; echo; cat $<; } |\
 	    $(MD) $(MDFLAGS) > $@
 #
 # %.pdf: --Create a PDF document from a HTML file.
