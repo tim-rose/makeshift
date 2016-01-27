@@ -6,6 +6,9 @@
 # and actions that are triggered by the "test" target.
 #
 TAP_TRG	= $(TAP_TESTS:%=%.tap)
+PROVE_FLAGS = $(TARGET.PROVE_FLAGS) $(LOCAL.PROVE_FLAGS) \
+    $(PROJECT.PROVE_FLAGS) $(ARCH.PROVE_FLAGS) $(OS.PROVE_FLAGS)
+
 %.tap:	%;	./$* > $@
 %.tap:	%.t;	perl $*.t > $@
 
