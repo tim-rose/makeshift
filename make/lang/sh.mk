@@ -64,7 +64,7 @@ $(SHELL_TRG): | pre-build
 #
 # install-shell: --install all shell scripts to $(bindir)
 #
-install-shell:	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(libexecdir)/%) \
+install-shell:	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
 	$(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
 
 #
