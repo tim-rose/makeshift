@@ -8,6 +8,7 @@ VCS_EXCLUDES = --exclude .git
 #
 .PHONY:		vcs-status-ok
 vcs-status-ok:
+	@$(ECHO_TARGET)
 	@export n=$$(git status -s | wc -l); \
 	if [ $$n -gt 0 ]; then \
 	    echo "There are $$n unresolved changes"; \
@@ -17,7 +18,7 @@ vcs-status-ok:
 # vcs-tag: --Make a release tag in GIT.
 #
 vcs-tag[%]:	vcs-status-ok
-	$(ECHO_TARGET)
+	@$(ECHO_TARGET)
 	@if [ "$(git tag | grep "^v$*$$"|wc -l)" != "0" ]; then \
 	    echo "release $* already exists"; false; \
 	else \
