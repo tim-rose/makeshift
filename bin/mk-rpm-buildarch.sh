@@ -7,12 +7,27 @@
 # arch, but this script sniffs the ".spec" file to see if it's been
 # overridden (e.g. for "noarch" packages).
 #
-if [ "$1" -a -f "$1" ]; then
-    if grep ^Buildarch: "$1" >/dev/null 2>&1; then
-	sed -ne 's/^Buildarch: *//p' "$1"
+rpm_arch()
+{
+    local file=$1
+    if [ "$file" -a -f "$file" ]; then
+	if grep ^Buildarch: "$file" >/dev/null 2>&1; then
+	    sed -ne 's/^Buildarch: *//p' "$file"
+	else
+	    rpm --eval "%{_arch}"
+	fi
     else
 	rpm --eval "%{_arch}"
     fi
-else
-    rpm --eval "%{_arch}"
-fi
+}
+
+main()
+{
+    if type rpm >/dev/null 2>&1; then
+	rpm_arch $1
+    else
+	uname -m | tr A-Z a-z
+    fi
+}
+
+main "$@"

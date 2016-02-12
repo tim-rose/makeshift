@@ -161,7 +161,7 @@ distclean:	clean-rpm distclean-rpm
 #
 .PHONY:	clean-rpm
 clean-rpm:
-	$(RM) -r BUILD BUILDROOT $(PACKAGE)-rpm-files.txt
+	$(RM) -r BUILD BUILDROOT $(PACKAGE)-rpm-files.txt SPECS/*.spec
 
 #
 # distclean: --Remove the RPM file.
