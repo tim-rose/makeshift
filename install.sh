@@ -13,7 +13,7 @@
 # which has the side effect of creating some auto-generated files.
 # Then we can do a full self-hosted install.
 #
-mk_args="OS=linux ARCH=all $*"
+mk_args="OS=unkown ARCH=all $*"
 
 install_self() ( cd make && make build -I$PWD $mk_args )
 install_all() { make -I$PWD/make build install $mk_args; }
