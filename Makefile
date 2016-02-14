@@ -9,7 +9,7 @@ include devkit.mk package.mk
 
 $(STAGING_ROOT):
 	$(ECHO_TARGET)
-	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=/usr/local
+	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=/usr/local usr=$(usr) opt=$(opt)
 
 devkit.mk:
 	@echo "you need to do a self-hosted install:"
