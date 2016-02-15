@@ -5,7 +5,7 @@
 # %.sh:                --Rules for installing shell scripts, libraries
 # shell-src-var-defined: --Test if "enough" of the shell SRC vars. are defined.
 # build-shell:         --Make scripts "executable".
-# install-shell:       --install all shell scripts to $(bindir)
+# install-shell:       --install shell scripts to bindir, libraries to shlibdir
 # clean-shell:         --Remove script executables.
 # toc-shell:           --Build the table-of-contents for shell, awk files.
 # src-shell:           --shell-specific customisations for the "src" target.
@@ -62,7 +62,7 @@ build:	$(SHELL_TRG)
 $(SHELL_TRG): | pre-build
 
 #
-# install-shell: --install all shell scripts to $(bindir)
+# install-shell: --install shell scripts to bindir, libraries to shlibdir
 #
 install-shell:	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
 	$(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
