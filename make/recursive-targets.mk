@@ -17,6 +17,12 @@
 # The recursive targets and their meaning are documented in the GNU
 # make manual.
 #
+# For every recursive target, there are two special targets:
+# * pre-*target* --actions to perform *before* recursing into sub-directories
+# * post-*target* --actions to perform *after* recursing into sub-directories
+#
+# These targets can be used to control when particular actions are run.
+#
 # See Also:
 # http://www.gnu.org/software/make/manual/make.html#Standard-Targets
 #
@@ -32,6 +38,7 @@ define recursive_rule
 $1:	$$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
 pre-$1:	;			$$(ECHO_TARGET)
 $1 $(SUBDIRS:%=$1@%):	pre-$1
+post-$1: | $(SUBDIRS:%=$1@%)
 $1@%:
 	@$$(ECHO_TARGET)
 	@if [ -e $$*/Makefile-$(OS) ]; then \
