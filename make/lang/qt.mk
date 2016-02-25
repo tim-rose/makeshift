@@ -78,4 +78,4 @@ src-qt:
 todo:	todo-qt
 todo-qt:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(QTH_SRC) $(QTR_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(QTH_SRC) $(QTR_SRC) /dev/null || true

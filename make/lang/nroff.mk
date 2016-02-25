@@ -91,4 +91,4 @@ clean-nroff:
 todo:	todo-nroff
 todo-nroff:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(MAN1_SRC) $(MAN3_SRC) $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(MAN1_SRC) $(MAN3_SRC) $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC) /dev/null || true

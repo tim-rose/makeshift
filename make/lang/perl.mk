@@ -82,7 +82,7 @@ src-perl:
 todo:	todo-perl
 todo-perl:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(PERL_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(PERL_SRC) /dev/null || true
 
 #
 # *.pot --extract strings for internationalisation.

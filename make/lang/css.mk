@@ -38,4 +38,4 @@ toc-css:
 todo:	todo-css
 todo-css:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC) /dev/null || true

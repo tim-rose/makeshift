@@ -100,5 +100,5 @@ src-shell:
 todo:	todo-shell
 todo-shell:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT \
+	@$(GREP) $(TODO_PATTERN) \
 	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null || true

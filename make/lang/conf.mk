@@ -73,4 +73,4 @@ src-conf:
 todo:	todo-conf
 todo-conf:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(CONF_SRC) $(CFG_SRC) $(INI_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(CONF_SRC) $(CFG_SRC) $(INI_SRC) /dev/null || true

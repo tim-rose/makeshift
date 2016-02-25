@@ -69,4 +69,4 @@ tags-java:
 todo:	todo-java
 todo-java:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(JAVA_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(JAVA_SRC) /dev/null || true

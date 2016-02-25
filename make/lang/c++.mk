@@ -186,4 +186,4 @@ tags-c++:
 todo:	todo-c++
 todo-c++:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(H++_SRC) $(C++_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(H++_SRC) $(C++_SRC) /dev/null || true

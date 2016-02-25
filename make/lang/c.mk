@@ -187,4 +187,4 @@ tags-c:
 todo:	todo-c
 todo-c:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(H_SRC) $(C_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(H_SRC) $(C_SRC) /dev/null || true

@@ -67,6 +67,7 @@ release: vcs-tag[$(VERSION).$(RELEASE)]
 #
 # Remarks:
 # This target execs another make to do a distclean before building the tar.gz.
+# REVISIT: make sure symlink is cleaned up always!
 #
 dist:	package-vars-ok $(P-V).tar.gz
 $(P-V).tar.gz:

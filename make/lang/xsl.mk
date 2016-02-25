@@ -30,4 +30,4 @@ src-xsl:
 todo:	todo-xsl
 todo-xsl:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(XSL_SRC)  /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(XSL_SRC)  /dev/null || true

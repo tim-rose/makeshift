@@ -51,8 +51,11 @@ ARCH    ?= $(DEFAULT_ARCH)
 PROJECT ?= default
 DEVKIT_HOME ?= /usr/local
 
-# TODO: integrate TODO pattern...
-TODO_PATTERN = -e TODO -e FIXME -e REVISIT -e @todo -e @fixme -e @revisit
+#
+# Patterns matched by the "todo" target
+#
+TODO_KEYWORDS = TODO FIXME REVISIT @todo @fixme @revisit
+TODO_PATTERN = $(TODO_KEYWORDS:%=-e %)
 
 #
 # ECHO is a shell no-op by default, but can be redefined by setting "VERBOSE".

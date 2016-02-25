@@ -30,4 +30,4 @@ src-xml:
 todo:	xml-todo
 xml-todo:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(XML_SRC)  /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(XML_SRC)  /dev/null || true

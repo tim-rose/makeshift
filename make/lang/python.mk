@@ -69,7 +69,7 @@ src-python:
 todo:	todo-python
 todo-python:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(PY_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(PY_SRC) /dev/null || true
 
 #
 # lint-python: --Run a static analyser over the PY_SRC.

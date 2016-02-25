@@ -41,4 +41,4 @@ src-sql:
 todo:	todo-sql
 todo-sql:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(SQL_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(SQL_SRC) /dev/null || true

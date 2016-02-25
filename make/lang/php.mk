@@ -48,7 +48,7 @@ src-php:
 todo:	todo-php
 todo-php:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(PHP_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(PHP_SRC) /dev/null || true
 
 #
 # system-php.ini: --Create a PHP configuration file based on current system settings.

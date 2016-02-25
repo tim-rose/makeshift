@@ -84,4 +84,4 @@ clean-asciidoc:
 todo:	todo-asciidoc
 todo-asciidoc:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(TXT_SRC)  /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(TXT_SRC)  /dev/null || true

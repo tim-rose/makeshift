@@ -58,4 +58,4 @@ src-elisp:
 todo:	todo-elisp
 todo-elisp:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(ELISP_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(ELISP_SRC) /dev/null || true

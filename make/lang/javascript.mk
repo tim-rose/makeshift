@@ -31,4 +31,4 @@ src-javascript:
 todo:	todo-javascript
 todo-javascript:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(JS_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(JS_SRC) /dev/null || true

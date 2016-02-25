@@ -28,6 +28,9 @@ TXT_CSS = $(exec_prefix)/share/doc/css/plain.css
 PDF_CSS = $(exec_prefix)/share/doc/css/print.css
 
 $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
+$(datadir)/%.html:	%.html; $(INSTALL_FILE) $? $@
+
+
 
 #
 # %.html/%.md: --build a HTML document from a markdown file.
@@ -97,4 +100,4 @@ src-markdown:
 todo:	todo-markdown
 todo-markdown:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(MD_SRC) $(TXT_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(TXT_SRC) /dev/null || true

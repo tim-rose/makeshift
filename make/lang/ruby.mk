@@ -45,4 +45,4 @@ src-ruby:
 todo:	todo-ruby
 todo-ruby:
 	$(ECHO_TARGET)
-	@$(GREP) -e TODO -e FIXME -e REVISIT $(RB_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(RB_SRC) /dev/null || true
