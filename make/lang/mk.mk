@@ -57,6 +57,7 @@ todo-mk:
 	@echo "sbindir:        $(sbindir)"
 	@echo "libexecdir:     $(libexecdir)"
 	@echo "datadir:        $(datadir)"
+	@echo "system_confdir: $(system_confdir)"
 	@echo "sysconfdir:     $(sysconfdir)"
 	@echo "divertdir:      $(divertdir)"
 	@echo "sharedstatedir: $(sharedstatedir)"

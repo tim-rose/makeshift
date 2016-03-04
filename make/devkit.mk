@@ -39,9 +39,6 @@
 # http://www.gnu.org/software/make/manual/make.html#Variables-for-Specifying-Commands).
 #
 SUBDIRS := $(subst /.,,$(wildcard */.))
-DESTDIR ?= /
-PREFIX  ?= /usr/local
-prefix  ?= $(PREFIX)
 
 DEFAULT_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
 DEFAULT_ARCH := $(shell uname -m | tr A-Z a-z)
@@ -87,7 +84,20 @@ INSTALL_PROGRAM   := $(INSTALL) -m 755
 INSTALL_FILE      := $(INSTALL) -m 644
 INSTALL_DIRECTORY := $(INSTALL) -d
 
+include os/$(OS).mk arch/$(ARCH).mk
+-include project/$(PROJECT).mk
+#include vcs/$(VCS).mk
+
+#
+# define DESTDIR, prefix if that hasn't happened already
+#
+DESTDIR ?= /
+PREFIX  ?= /usr/local
+prefix  ?= $(PREFIX)
+
 include std-directories.mk
+include recursive-targets.mk valid.mk
+include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 
 #
 # src: --Make sure the src target can write to the Makefile
@@ -134,12 +144,6 @@ distclean-devkit:
 +features:	;	@echo $(.FEATURES)
 +dirs:		;	@echo $(.INCLUDE_DIRS)
 +files:		;	@echo $(MAKEFILE_LIST)
-
-include recursive-targets.mk valid.mk
-include os/$(OS).mk arch/$(ARCH).mk
--include project/$(PROJECT).mk
-include lang/mk.mk $(language:%=lang/%.mk) ld.mk
-#include vcs/$(VCS).mk
 
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.
