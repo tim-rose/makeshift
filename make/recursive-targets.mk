@@ -33,9 +33,20 @@ recursive-targets = $(std-targets) $(devkit-targets)
 
 +var[recursive_rule]:;@: # disable +var[recursive_rule]
 
+#
+# recursive_rule: --Define a set of targets that implement recursion.
+#
+# Parameters:
+# $1 --the name of the recursive target
+# $2 --flag: define the action for the recursive target.
+#
 define recursive_rule
 .PHONY:	$1 pre-$1
+ifeq "$2" "1"
 $1:	$$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
+else
+$1:	$$(SUBDIRS:%=$1@%)
+endif
 pre-$1:	;			$$(ECHO_TARGET)
 $1 $(SUBDIRS:%=$1@%):	pre-$1
 post-$1: | $(SUBDIRS:%=$1@%)
@@ -53,4 +64,4 @@ $1@%:
         fi
 endef
 
-$(foreach target,$(recursive-targets),$(eval $(call recursive_rule,$(target))))
+$(foreach target,$(recursive-targets),$(eval $(call recursive_rule,$(target),1)))

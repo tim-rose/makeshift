@@ -1,15 +1,13 @@
 #
-# RPM.MK --Rules for building RPM sub-packages.
+# RPM.MK --Rules for building RPM packages.
 #
 # Contents:
-# rpm:                 --Build an RPM package for the current source.
-# rpm[%]:              --Build a sub-package from shared source.
-# SPECS/package-%.spec: --Create the "sub-component" spec file.
-# SPECS/package.spec:  --Create the overall spec file.
-# spec[%]:             --Recursively build a sub-component's spec file.
-# %-rpm-files.txt:     --Build a manifest file for the RPM's "file" section.
-# clean:               --Remove the RPM manifest file.
-# distclean:           --Remove the RPM file.
+# package-rpm:        --build a package in this directory.
+# SPECS/package.spec: --Create the "real" spec file.
+# %-rpm-files.txt:    --Build a manifest file for the RPM's "file" section.
+# clean:              --Remove the RPM manifest file.
+# distclean:          --Remove the RPM file.
+# rpm:                --Build an RPM package for the current source.
 #
 # Remarks:
 # The package/rpm module provides support for building an RPM package
@@ -35,64 +33,19 @@ RPM_FLAGS = --clean --define "_topdir $$PWD" \
     $(TARGET.RPM_FLAGS) $(LOCAL.RPM_FLAGS) $(PROJECT.RPM_FLAGS) \
     $(ARCH.RPM_FLAGS) $(OS.RPM_FLAGS)
 
-#
-# rpm: --Build an RPM package for the current source.
-#
-.PHONY:		package-rpm rpm rpm[.]
+.PHONY:		package-rpm
 package:	package-rpm
-package-rpm:	rpm
 
-rpm:	$(RPM_PACKAGES:%=rpm[%]) rpm[.]
 #
-# rpm[.]: --build a package in this directory.
+# package-rpm: --build a package in this directory.
 #
-rpm[.]:	SPECS/$(PACKAGE).spec
+package-rpm:	SPECS/$(PACKAGE).spec
 	$(ECHO_TARGET)
 	mkdir -p RPMS
 	$(RPMBUILD) -bb $(RPM_FLAGS) SPECS/$(PACKAGE).spec
 
 #
-# rpm[%]: --Build a sub-package from shared source.
-#
-rpm[%]:	SOURCES/$(P-V).tar.gz SPECS/$(PACKAGE)-%.spec
-	$(ECHO_TARGET)
-	mkdir -p RPMS
-	$(RPMBUILD) -bb $(RPM_FLAGS) SPECS/$(PACKAGE)-$*.spec
-
-#
-# SPECS/package-%.spec: --Create the "sub-component" spec file.
-#
-# REVISIT: DRY spec-file production...
-#
-.PRECIOUS:	SPECS/$(PACKAGE)-%.spec
-SPECS/$(PACKAGE)-%.spec:	spec[%]
-	$(ECHO_TARGET)
-	mkdir -p SPECS
-	{ echo "%define name $(PACKAGE)-$*"; \
-	echo "%define version $(VERSION)"; \
-	echo "%define release $(RELEASE)"; \
-	echo "%define _rpmdir %{_topdir}/RPMS"; \
-	echo "%define _srcrpmdir %{_topdir}/SRPMS"; \
-	echo "%define _specdir %{_topdir}"; \
-	echo "%define _sourcedir %{_topdir}"; \
-	echo "%define _patchdir %{_sourcedir}"; \
-	echo "%define _builddir %{_sourcedir}"; \
-	echo "BuildRoot: %{_tmppath}/BUILD"; \
-	echo "Source: $(P-V).tar.gz"; \
-	cat $*/$*.spec; \
-	echo "%build"; \
-	echo "cd $*"; \
-	echo "make $(RPM_MAKEFLAGS) build DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
-	echo "%install"; \
-	echo "cd $*"; \
-	echo "make $(RPM_MAKEFLAGS) install DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
-	echo "%clean"; \
-	echo "%{__rm} -rf \$$RPM_BUILD_ROOT"; \
-        echo "%files"; \
-	cat $*/$*-rpm-files.txt; } > $@
-
-#
-# SPECS/package.spec: --Create the overall spec file.
+# SPECS/package.spec: --Create the "real" spec file.
 #
 .PRECIOUS:	SPECS/$(PACKAGE).spec
 SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
@@ -110,21 +63,13 @@ SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
 	echo "BuildRoot: %{_tmppath}/BUILD"; \
 	cat $<; \
 	echo "%build"; \
-	echo "make $(RPM_MAKEFLAGS) build DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
+	echo "make $(RPM_MAKEFLAGS) build prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
 	echo "%install"; \
 	echo "make $(RPM_MAKEFLAGS) install DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
 	echo "%clean"; \
 	echo "%{__rm} -rf \$$RPM_BUILD_ROOT"; \
         echo "%files"; \
 	cat $(PACKAGE)-rpm-files.txt; } > $@
-
-#
-# spec[%]: --Recursively build a sub-component's spec file.
-#
-spec[%]:
-	$(ECHO_TARGET)
-	$(MAKE) build
-	$(MAKE) --directory $* SPECS/$*.spec
 
 #
 # Create the package's source tarball.
@@ -161,7 +106,7 @@ distclean:	clean-rpm distclean-rpm
 #
 .PHONY:	clean-rpm
 clean-rpm:
-	$(RM) -r BUILD BUILDROOT $(PACKAGE)-rpm-files.txt SPECS/*.spec
+	$(RM) -r BUILD BUILDROOT SPECS/*.spec SOURCES/* RPMS/* SRPMS/* $(PACKAGE)-rpm-files.txt
 
 #
 # distclean: --Remove the RPM file.
@@ -169,3 +114,6 @@ clean-rpm:
 .PHONY:	distclean-rpm
 distclean-rpm:
 	$(RM) -r SPECS SOURCES RPMS SRPMS $(P-V).tar.gz
+#
+# rpm: --Build an RPM package for the current source.
+#

@@ -2,9 +2,11 @@
 # devkit.mk --Recursive make considered useful.
 #
 # Contents:
+# VERBOSE:        --Control how (+how much) is output via echo.
+# ECHO_TARGET:    --Common macro for logging in devkit targets.
 # build:          --The default target
 # INSTALL_*:      --Specialised install commands.
-# src:            --Make sure the src target can write to the Makefile
+# src:            --Make sure the src target can write to the Makefile.
 # clean:          --Devkit-specific customisations for the "clean" target.
 # distclean:      --Remove artefacts that devkit creates/updates.
 # +help:          --Output some help text extracted from the included makefiles.
@@ -38,6 +40,14 @@
 # See Also:
 # http://www.gnu.org/software/make/manual/make.html#Variables-for-Specifying-Commands).
 #
+
+#
+# DEVKIT_VERSION: --define the version of devkit that's running.
+#
+DEVKIT_VERSION ?= local
+DEVKIT_RELEASE ?= latest
+-include version.mk
+
 SUBDIRS := $(subst /.,,$(wildcard */.))
 
 DEFAULT_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
@@ -55,26 +65,22 @@ TODO_KEYWORDS = TODO FIXME REVISIT @todo @fixme @revisit
 TODO_PATTERN = $(TODO_KEYWORDS:%=-e %)
 
 #
-# ECHO is a shell no-op by default, but can be redefined by setting "VERBOSE".
+# VERBOSE: --Control how (+how much) is output via echo.
 #
-ifeq "$(VERBOSE)" "1"
-    ECHO = echo
-else ifeq "$(VERBOSE)" "color"
+ifeq "$(VERBOSE)" "color"
     ECHO = colour_echo() { printf '\033[36m%s\033[m\n' "$$*"; }; colour_echo
+else ifneq "$(VERBOSE)" ""
+    ECHO = echo
 else
     ECHO = :
 endif
 
+#
+# ECHO_TARGET: --Common macro for logging in devkit targets.
+#
 #ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"
 #ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$^: $^"
 ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
-
-.SUFFIXES:			# remove default suffix rules
-
-#
-# build: --The default target
-#
-all:	build
 
 #
 # INSTALL_*: --Specialised install commands.
@@ -84,12 +90,19 @@ INSTALL_PROGRAM   := $(INSTALL) -m 755
 INSTALL_FILE      := $(INSTALL) -m 644
 INSTALL_DIRECTORY := $(INSTALL) -d
 
+.SUFFIXES:			# remove default suffix rules
+
+#
+# build: --The default target
+#
+all:	build
+
 include os/$(OS).mk arch/$(ARCH).mk
 -include project/$(PROJECT).mk
 #include vcs/$(VCS).mk
 
 #
-# define DESTDIR, prefix if that hasn't happened already
+# Define DESTDIR, prefix if that hasn't happened already.
 #
 DESTDIR ?= /
 PREFIX  ?= /usr/local
@@ -100,9 +113,14 @@ include recursive-targets.mk valid.mk
 include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 
 #
-# src: --Make sure the src target can write to the Makefile
+# package: --By default, (successfully) do no packaging.
 #
-src:			file-writable[Makefile]
+package:; $(ECHO_TARGET)
+
+#
+# src: --Make sure the src target can write to the Makefile.
+#
+src:			| file-writable[Makefile]
 
 #
 # clean: --Devkit-specific customisations for the "clean" target.
@@ -111,7 +129,7 @@ clean:	clean-devkit
 .PHONY:	clean-devkit
 clean-devkit:
 	$(ECHO_TARGET)
-	$(RM) core *~ *.bak *.tmp *.out $(OS.AUTO_CLEAN) $(ARCH.AUTO_CLEAN)
+	$(RM) core *~ *.bak *.tmp *.out $(OS.AUTO_CLEAN) $(ARCH.AUTO_CLEAN)  $(PROJECT.AUTO_CLEAN)
 
 #
 # distclean: --Remove artefacts that devkit creates/updates.
@@ -140,10 +158,10 @@ distclean-devkit:
 #
 # +help: --Output some help text extracted from the included makefiles.
 #
-+help:		;	@mk-help $(MAKEFILE_LIST)
-+features:	;	@echo $(.FEATURES)
-+dirs:		;	@echo $(.INCLUDE_DIRS)
-+files:		;	@echo $(MAKEFILE_LIST)
++help:			;	@mk-help $(MAKEFILE_LIST)
++features:		;	@echo $(.FEATURES)
++dirs:			;	@echo $(.INCLUDE_DIRS)
++files:			;	@echo $(MAKEFILE_LIST)
 
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.
@@ -171,12 +189,12 @@ $(system_confdir)/%:	%;	$(INSTALL_FILE) $? $@
 #
 # %.gz: --Rules for building compressed/summarised data.
 #
-%.gz:		%;	gzip -9 <$? >$@
-%.gpg:		%;	gpg -b -o $? $@
-%.sum:		%;	sum $? | sed -e 's/ .*//' >$@
-%.md5:		%;	md5sum $? | sed -e 's/ .*//' >$@
+%.gz:			%;	gzip -9 <$? >$@
+%.gpg:			%;	gpg -b -o $? $@
+%.sum:			%;	sum $? | sed -e 's/ .*//' >$@
+%.md5:			%;	md5sum $? | sed -e 's/ .*//' >$@
 
 #
 # %.shx: --Create a file from a shell script output.
 #
-%:		%.shx;	sh $*.shx > $@
+%:			%.shx;	sh $*.shx > $@
