@@ -79,10 +79,11 @@ $(P-V).tar.gz:
 	    $(RM) $(P-V); \
 	    mv $(P-V).tar.gz $$root
 #
-# distclean: --Remove the tarball created by "dist".
+# clean: --Remove the tarball created by "dist", and the staging root.
 #
-distclean:	distclean-package
-distclean-package:
+clean:	clean-package
+distclean:	clean-package
+clean-package:
 	$(RM) $(P-V).tar.gz
 	$(RM) -r $(STAGING_ROOT)
 
