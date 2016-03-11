@@ -15,3 +15,8 @@ devkit.mk:
 	@echo "you need to do a self-hosted install:"
 	@echo "    sh install.sh [make-arg.s...]"
 	@false
+
+install:	$(includedir)/version.mk
+$(includedir)/version.mk:
+	{ echo 'DEVKIT_VERSION=$(DEVKIT_VERSION)'; \
+          echo 'DEVKIT_RELEASE=$(DEVKIT_RELEASE)/';} >$@
