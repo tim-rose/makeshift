@@ -15,7 +15,7 @@ package:	package-rpm-repo
 package-rpm-repo:	$(SPEC_SRC:%=package-rpm-repo[%])
 
 package-rpm-repo[%]:
-	$(RPMBUILD) -bb $(RPM_FLAGS) SPECS/$*.spec
+	$(RPMBUILD) -bb $(RPM_FLAGS) SPECS/$*
 
 clean:  clean-rpm-repo
 distclean:  clean-rpm-repo
