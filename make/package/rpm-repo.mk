@@ -3,7 +3,7 @@
 #
 .PHONY: $(recursive-targets:%=%-rpm-repo)
 
-DEFAULT_SPEC_SRC := $(wildcard SPECS/*.spec)
+DEFAULT_SPEC_SRC := $(subst SPECS/,,$(wildcard SPECS/*.spec))
 SPEC_SRC ?= $(DEFAULT_SPEC_SRC)
 
 RPMBUILD = rpmbuild
@@ -28,4 +28,4 @@ clean-rpm-repo:
 src:	src-rpm-repo
 src-rpm-repo:
 	$(ECHO_TARGET)
-	@mk-filelist -qn SPEC_SRC SPECS/*.spec
+	cd SPECS && mk-filelist -qn SPEC_SRC *.spec
