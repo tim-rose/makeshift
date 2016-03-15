@@ -21,6 +21,7 @@
 RPM_DEFAULT_ARCH := $(shell mk-rpm-buildarch)
 RPM_ARCH ?= $(RPM_DEFAULT_ARCH)
 
+RPMDIRS = BUILD BUILDROOT RPMS SOURCES SPECS SRPMS
 P-V-R	= $(PACKAGE)-$(VERSION)-$(RELEASE)
 V-R.A	= $(VERSION)-$(RELEASE).$(RPM_ARCH)
 P-V-R.A	= $(PACKAGE)-$(VERSION)-$(RELEASE).$(RPM_ARCH)
@@ -106,14 +107,14 @@ distclean:	clean-rpm distclean-rpm
 #
 .PHONY:	clean-rpm
 clean-rpm:
-	$(RM) -r BUILD BUILDROOT SPECS/*.spec SOURCES/* RPMS/* SRPMS/* $(PACKAGE)-rpm-files.txt
+	$(RM) -r $(RPMDIRS:%=%/*) $(PACKAGE)-rpm-files.txt
 
 #
 # distclean: --Remove the RPM file.
 #
 .PHONY:	distclean-rpm
 distclean-rpm:
-	$(RM) -r SPECS SOURCES RPMS SRPMS $(P-V).tar.gz
+	$(RM) -r $(RPMDIRS) $(P-V).tar.gz
 #
 # rpm: --Build an RPM package for the current source.
 #
