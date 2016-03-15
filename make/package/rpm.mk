@@ -4,6 +4,7 @@
 # Contents:
 # package-rpm:        --build a package in this directory.
 # SPECS/package.spec: --Create the "real" spec file.
+# srpm:               --Create a source RPM.
 # %-rpm-files.txt:    --Build a manifest file for the RPM's "file" section.
 # clean:              --Remove the RPM manifest file.
 # distclean:          --Remove the RPM file.
@@ -13,7 +14,18 @@
 # The package/rpm module provides support for building an RPM package
 # from the current source.
 #
-# The build process is controlled by the following
+# The build process is controlled by the following make macros:
+# * PACKAGE --the package to be built
+# * VERSION --the version of the package (hopefully, a "semantic" version)
+# * RELEASE --a release tag to distinguish otherwise identical packages
+#
+# The module expecs to find a file $(PACKAGE).spec, which it expands
+# into a "full" spec file in the SPECS sub-directory.  The rpmbuild
+# process omits the setup step of "unpack a versioned tarball", it
+# simply builds/installs from the current directory.
+#
+# Because the final file name(s) cannot be predicted, these package
+# rules will re-run every time, re-creating the same results.
 #
 # See Also:
 # https://fedoraproject.org/wiki/How_to_create_an_RPM_package
@@ -26,20 +38,17 @@ P-V-R	= $(PACKAGE)-$(VERSION)-$(RELEASE)
 V-R.A	= $(VERSION)-$(RELEASE).$(RPM_ARCH)
 P-V-R.A	= $(PACKAGE)-$(VERSION)-$(RELEASE).$(RPM_ARCH)
 
-#
-# rpmbuild configuration
-#
 RPMBUILD ?= rpmbuild
-RPM_FLAGS = --clean --define "_topdir $$PWD" \
+RPM_FLAGS = --define "_topdir $$PWD" \
     $(TARGET.RPM_FLAGS) $(LOCAL.RPM_FLAGS) $(PROJECT.RPM_FLAGS) \
     $(ARCH.RPM_FLAGS) $(OS.RPM_FLAGS)
-
-.PHONY:		package-rpm
-package:	package-rpm
 
 #
 # package-rpm: --build a package in this directory.
 #
+.PHONY:		package-rpm
+package:	package-rpm
+rpm:	package-rpm
 package-rpm:	SPECS/$(PACKAGE).spec
 	$(ECHO_TARGET)
 	mkdir -p RPMS
@@ -47,6 +56,13 @@ package-rpm:	SPECS/$(PACKAGE).spec
 
 #
 # SPECS/package.spec: --Create the "real" spec file.
+#
+# Remarks:
+# This rule uses the ./package.spec as a template; it inserts a bunch
+# of useful defines (especially: PACKAGE, VERSION, RELEASE), and
+# implementations for the RPM scriptlets: %build, %install, %clean.
+# Note that there is no scriptlet for %setup: the current directory is
+# assumed to be setup by its existence.
 #
 .PRECIOUS:	SPECS/$(PACKAGE).spec
 SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
@@ -79,9 +95,15 @@ SOURCES/$(P-V).tar.gz:	$(P-V).tar.gz | mkdir[SOURCES]
 	$(ECHO_TARGET)
 	ln $< $@
 
+#
+# srpm: --Create a source RPM.
+#
+# Remarks:
+# Warning! this target creates the "dist" tarball, which involves
+# a distclean of the current directory.
+#
 .PHONY: srpm
-srpm:	SRPMS/$(P-V-R).src.rpm
-SRPMS/$(P-V-R).src.rpm:	SOURCES/$(P-V).tar.gz SPECS/$(PACKAGE).spec
+srpm:	SOURCES/$(P-V).tar.gz SPECS/$(PACKAGE).spec | mkdir[SRPMS]
 	$(ECHO_TARGET)
 	mkdir -p SRPMS
 	$(RPMBUILD) -bs $(RPM_FLAGS) SPECS/$(PACKAGE).spec

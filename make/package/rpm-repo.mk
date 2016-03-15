@@ -21,7 +21,7 @@ DEFAULT_SPEC_SRC := $(subst SPECS/,,$(wildcard SPECS/*.spec))
 SPEC_SRC ?= $(DEFAULT_SPEC_SRC)
 
 RPMBUILD ?= rpmbuild
-RPM_FLAGS = --define "_topdir $$PWD" --define "_tmppath /var/tmp" \
+RPM_FLAGS = --define "_topdir $$PWD" \
     $(OS.RPM_FLAGS) $(ARCH.RPM_FLAGS) \
     $(PROJECT.RPM_FLAGS) $(LOCAL.RPM_FLAGS) $(TARGET.RPM_FLAGS)
 
@@ -36,6 +36,7 @@ package-rpm-repo:	$(SPEC_SRC:%=package-rpm-repo[%])
 #
 package-rpm-repo[%]:
 	$(RPMBUILD) -bb $(RPM_FLAGS) SPECS/$*
+	$(RPMBUILD) -bs $(RPM_FLAGS) SPECS/$*
 
 #
 # clean-rpm-repo: --Remove the RPMs and other build artefacts.
