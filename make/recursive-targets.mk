@@ -61,7 +61,7 @@ $1@%:
         elif [ -e $$*/Makefile ]; then \
             $$(ECHO) ++ make: recursively building $$@; \
             $$(MAKE) --directory $$* $1; \
-        fi
+	else (cd $$*); fi
 endef
 
 $(foreach target,$(recursive-targets),$(eval $(call recursive_rule,$(target),1)))
