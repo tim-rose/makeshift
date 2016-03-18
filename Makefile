@@ -19,5 +19,5 @@ devkit.mk:
 
 install:	$(includedir)/version.mk
 $(includedir)/version.mk:
-	{ echo 'DEVKIT_VERSION=$(DEVKIT_VERSION)'; \
-          echo 'DEVKIT_RELEASE=$(DEVKIT_RELEASE)/';} >$@
+	{ echo 'DEVKIT_VERSION=$(VERSION)'; \
+          echo 'DEVKIT_RELEASE=$(RELEASE)';} >$@
