@@ -57,9 +57,8 @@ shell-src-var-defined:
 # build-shell: --Make scripts "executable".
 #
 pre-build:	shell-src-var-defined
-build:	$(SHELL_TRG)
-
-$(SHELL_TRG): | pre-build
+build:	build-shell
+build-shell:	$(SHELL_TRG)
 
 #
 # install-shell: --install shell scripts to bindir, libraries to shlibdir
