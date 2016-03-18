@@ -51,6 +51,7 @@ DEVKIT_RELEASE ?= latest
 -include version.mk
 
 SUBDIRS := $(subst /.,,$(wildcard */.))
+PWD := $(shell echo $$PWD)
 
 DEFAULT_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
 DEFAULT_ARCH := $(shell uname -m | tr A-Z a-z)
