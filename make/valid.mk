@@ -10,6 +10,7 @@
 # dir-exists[%]:      --Test if a directory exists.
 # cmd-exists[%]:      --Test if a command exists.
 # mkdir[%]:           --Create a directory.
+# sleep[%]:           --Sleep for the specified time.
 #
 # Remarks:
 # The "valid" module is a library of validation tests in the form of
@@ -109,3 +110,11 @@ mkdir[%]:
 	@if [ ! -d "$*" ]; then \
 	    $(INSTALL_DIRECTORY) "$*"; \
 	fi
+
+#
+# sleep[%]: --Sleep for the specified time.
+#
+# Remarks:
+# Useful for debugging.
+#
+sleep[%]:;@sleep $*
