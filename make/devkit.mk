@@ -109,6 +109,8 @@ include os/$(OS).mk arch/$(ARCH).mk
 DESTDIR ?= /
 PREFIX  ?= /usr/local
 prefix  ?= $(PREFIX)
+# REVISIT: consider setting VPATH (for "-lxxx" library search)
+# (c.f GNU Make, @4.4.6)
 
 include std-directories.mk
 include recursive-targets.mk valid.mk
@@ -116,6 +118,12 @@ include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 
 #
 # package: --By default, (successfully) do no packaging.
+#
+# Remarks:
+# This target exists so that the parent directory can do
+# "package" recursively, delegating to the children directories.
+# Unless overridden in the child makefile, it will execute
+# this target (thus stopping the recursion).
 #
 package:; $(ECHO_TARGET)
 
@@ -148,11 +156,11 @@ distclean-devkit:
 #
 #+vars:   $(.VARIABLES:%=+var[%])
 +var[%]:
-	@$(ECHO) "# $(origin $*) variable \"$*\":"
+	@$(ECHO) "# $(origin $*) $(flavor $*) variable \"$*\":"
 	@echo "$*='$($*)'"
 
 +var[ECHO_TARGET]:
-	@echo "# $(origin ECHO_TARGET) variable \"ECHO_TARGET\":"
+	@echo "# $(origin ECHO_TARGET) $(flavour ECHO_TARGET) variable \"ECHO_TARGET\":"
 	@echo "ECHO_TARGET=(unprintable)"
 
 +var[.VARIABLES]:;@: # avoid listing a list of all the variables
