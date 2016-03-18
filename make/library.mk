@@ -23,14 +23,18 @@
 # delegates building of the sub-libraries to recursive make targets,
 # and then assembles them all into one master library.
 #
-# These rules require that following variables are defined:
+# These rules are controlled by the following macros:
 #
-#  * LIB_ROOT --the root location of the main top-level library
-#  * LIB      --the name of the library to build
-#  * LIB_OBJ  --the objects to put into the library.
+#  * LIB_ROOT --the root location of the main top-level library (default: ".")
+#  * LIB      --the name of the library to build (default: name of current dir)
+#  * LIB_OBJ  --the objects to put into the library (default: C/C++ objects)
 #
 LIB_SUFFIX ?= a
 LIB_PREFIX ?= lib
+LIB ?= $(subst lib,,$(notdir $(PWD)))
+LIB_ROOT ?= .
+LIB_OBJ ?= $(C_OBJ) $(C++_OBJ) $(LEX_OBJ) $(YACC_OBJ) \
+    $(QTR_OBJ) $(XSD_OBJ) $(PROTOBUF_OBJ)
 
 LIB_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
 LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%) \

@@ -6,7 +6,7 @@
 # build: --Compile the yacc grammar.
 # clean: --Remove a yacc grammar's object file.
 # src:   --Get a list of the yacc grammars in this directory.
-# toc:   --Update the Y_SRC macro with a list of yacc grammars.
+# toc:   --Update the YACC_SRC macro with a list of yacc grammars.
 #
 # Remarks:
 # YACC files are compiled into "C" files which are then handled
@@ -17,14 +17,14 @@
 #
 .PHONY: $(recursive-targets:%=%-yacc)
 
--include $(Y_SRC:%.y=$(archdir)/%.d)
+-include $(YACC_SRC:%.y=$(archdir)/%.d)
 
 #
 # %.y: --Compile the yacc grammar into ".h" and ".c" files.
 #
 # TODO: build these files into the arch-subdir.
 #
-Y_OBJ	= $(Y_SRC:%.y=$(archdir)/%.o)
+YACC_OBJ	= $(YACC_SRC:%.y=$(archdir)/%.o)
 %.h %.c:	%.y
 	$(YACC) -d $(YFLAGS) $<
 	sed -e "s/yy/$*_/g" <y.tab.h >$*.h
@@ -34,8 +34,8 @@ Y_OBJ	= $(Y_SRC:%.y=$(archdir)/%.o)
 #
 # build: --Compile the yacc grammar.
 #
-pre-build:	src-var-defined[Y_SRC]
-build:	$(Y_OBJ)
+pre-build:	src-var-defined[YACC_SRC]
+build:	$(YACC_OBJ)
 
 #
 # clean: --Remove a yacc grammar's object file.
@@ -43,7 +43,7 @@ build:	$(Y_OBJ)
 clean:	clean-yacc
 clean-yacc:
 	$(ECHO_TARGET)
-	$(RM) $(Y_OBJ)
+	$(RM) $(YACC_OBJ)
 
 #
 # src: --Get a list of the yacc grammars in this directory.
@@ -51,12 +51,12 @@ clean-yacc:
 src:	src-yacc
 src-yacc:
 	$(ECHO_TARGET)
-	@mk-filelist -qn Y_SRC *.y
+	@mk-filelist -qn YACC_SRC *.y
 
 #
-# toc: --Update the Y_SRC macro with a list of yacc grammars.
+# toc: --Update the YACC_SRC macro with a list of yacc grammars.
 #
 toc:	toc-yacc
 toc-yacc:
 	$(ECHO_TARGET)
-	mk-toc $(Y_SRC)
+	mk-toc $(YACC_SRC)
