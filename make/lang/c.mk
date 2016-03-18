@@ -2,21 +2,20 @@
 # C.MK --Rules for building C objects and programs.
 #
 # Contents:
-# %.o:               --Compile a C file into an arch-specific sub-directory.
-# archdir/%.o:       --Compile a generated C file into the arch sub-directory.
-# build[%]:          --Build a C file's related object.
-# %.h:               --Install a C header (.h) file.
-# %.c.gcov:          --Build a text-format coverage report.
-# +c-defines:        --Print a list of predefined macros for the "C" language.
-# build:             --c-specific customisations for the "build" target.
-# c-src-var-defined: --Test if "enough" of the C SRC variables are defined
-# clean:             --Remove objects and executables created from C files.
-# tidy:              --Reformat C files consistently.
-# lint:              --Perform static analysis for C files.
-# toc:               --Build the table-of-contents for C files.
-# src:               --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
-# tags:              --Build vi, emacs tags files.
-# todo:              --Report "unfinished work" comments in C files.
+# %.o:         --Compile a C file into an arch-specific sub-directory.
+# archdir/%.o: --Compile a generated C file into the arch sub-directory.
+# %.h:         --Install a C header (.h) file.
+# %.c.gcov:    --Build a text-format coverage report.
+# +c-defines:  --Print a list of predefined macros for the "C" language.
+# build:       --Build the C objects and executables.
+# build[%]:    --Build a C file's related object.
+# clean:       --Remove objects and executables created from C files.
+# tidy:        --Reformat C files consistently.
+# lint:        --Perform static analysis for C files.
+# toc:         --Build the table-of-contents for C files.
+# src:         --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
+# tags:        --Build vi, emacs tags files.
+# todo:        --Report "unfinished work" comments in C files.
 #
 # Remarks:
 # The "lang/c" module provides support for the "C" programming language.
@@ -78,11 +77,6 @@ $(archdir)/%.o: $(archdir)/%.c
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 
 #
-# build[%]: --Build a C file's related object.
-#
-build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
-
-#
 # %.h: --Install a C header (.h) file.
 #
 $(includedir)/%.h:	%.h;		$(INSTALL_FILE) $? $@
@@ -110,19 +104,17 @@ $(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 	@touch ..c;  $(CC) -E -dM ..c; $(RM) ..c
 
 #
-# build: --c-specific customisations for the "build" target.
+# build: --Build the C objects and executables.
 #
-build:	$(C_OBJ) $(C_MAIN)
+build:	build-c
+$(C_OBJ) $(C_MAIN):	| build-subdirs
+build-c:	$(C_OBJ) $(C_MAIN)
+	$(ECHO_TARGET)
 
 #
-# c-src-var-defined: --Test if "enough" of the C SRC variables are defined
+# build[%]: --Build a C file's related object.
 #
-c-src-var-defined:
-	@if [ -z '$(C_SRC)$(H_SRC)' ]; then \
-            printf $(VAR_UNDEF) "C_SRC, H_SRC"; \
-            echo 'run "make src" to define them'; \
-           false; \
-	fi >&2
+build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 
 #
 # clean: --Remove objects and executables created from C files.
