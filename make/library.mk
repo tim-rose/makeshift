@@ -84,8 +84,7 @@ lib-src-var-defined:
 #
 # build: --Build this directory's library.
 #
-build:	var-defined[LIB_ROOT] var-defined[LIB] lib-src-var-defined \
-	$(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
+build: $(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX) | lib-src-var-defined
 
 #
 # lib-install-lib: --Install the library (and include files).
@@ -124,7 +123,7 @@ lib-clean:
 distclean: lib-clean lib-distclean
 lib-distclean:
 	$(ECHO_TARGET)
-	$(RM) $(LIB_INCLUDE_SRC)
+	if [ "$(LIB_ROOT)" = "." ]; then $(RM) -r $(LIB_INCLUDEDIR); fi
 
 #
 # src: --Get a list of sub-directories that are libraries.
