@@ -41,7 +41,7 @@ recursive-targets = $(std-targets) $(devkit-targets)
 # $2 --flag: define the action for the recursive target.
 #
 define recursive_rule
-.PHONY:	$1 pre-$1
+.PHONY:	$1 pre-$1 post-$1
 ifeq "$2" "1"
 $1:	$$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
 else
@@ -49,7 +49,7 @@ $1:	$$(SUBDIRS:%=$1@%)
 endif
 pre-$1:	;			$$(ECHO_TARGET)
 $1 $(SUBDIRS:%=$1@%):	pre-$1
-post-$1: | $(SUBDIRS:%=$1@%)
+post-$1: $(SUBDIRS:%=$1@%)
 $1@%:
 	@$$(ECHO_TARGET)
 	@if [ -e $$*/Makefile-$(OS) ]; then \
