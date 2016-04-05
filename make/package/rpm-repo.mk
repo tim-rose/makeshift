@@ -15,6 +15,9 @@
 # The "package" rule builds all the RPMs defined by SPEC_SRC (by
 # default SPECS/*.spec).
 #
+# See Also:
+# https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+#
 .PHONY: $(recursive-targets:%=%-rpm-repo)
 
 DEFAULT_SPEC_SRC := $(subst SPECS/,,$(wildcard SPECS/*.spec))
