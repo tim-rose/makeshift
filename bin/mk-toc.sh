@@ -6,6 +6,8 @@
 # toc_split() --Split a file into pieces for TOC manipulation.
 # set_type()  --Adjust for a particular file type.
 #
+# TODO: "//" comments don't work!
+#
 usage="Usage: mk-toc [options] file..."
 
 log_message() { printf "mk-toc: "; printf "$@"; printf "\n"; } >&2
@@ -26,7 +28,7 @@ log_quit()    { notice "$@"; exit 1 ; }
 #
 toc_split()
 {
-    comment_prefix_rgx=$(echo "$comment_prefix" | sed -e 's/\*/[*]/')
+    comment_prefix_rgx=$(echo "$comment_prefix" | sed -e 's/[*/.]/[&]/g')
     debug 'comment_prefix="%s", comment_prefix_rgx="%s"' \
 	"$comment_prefix" "$comment_prefix_rgx"
     debug 'toc_label="%s"' "$toc_label"
@@ -58,13 +60,13 @@ BEGIN {
 }
 
 # Match a TOC-entry in the body text
-/^$comment_prefix_rgx *$name_rgx  *--/ {
+/^ *$comment_prefix_rgx *$name_rgx  *--/ {
     if (mode == 1) {
         next
     }
     if (mode > 1) {
         line=\$0;
-        sub(/^$comment_prefix_rgx */, \"\", line);
+        sub(/^ *$comment_prefix_rgx */, \"\", line);
         n = match(line, /  *--/)
         if (n > 0) {
             name[entry] = substr(line, 1, n-1);
