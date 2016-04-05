@@ -16,13 +16,22 @@
 # TXT_SRC respectively. The markdown files are assumed to create full
 # documents, and are created by `build`, using multimarkdown.
 #
+# See Also:
+# http://alistapart.com/article/building-books-with-css3
+# http://www.princexml.com/doc
+#
 .PHONY: $(recursive-targets:%=%-markdown)
 
 MD = multimarkdown
 MDFLAGS ?= --process-html
 
-MD_SRC ?= $(wildcard *.md)
-TXT_SRC ?= $(wildcard *.txt)
+ifdef AUTOSRC
+    DEFAULT_MD_SRC := $(wildcard *.md)
+    DEFAULT_TXT_SRC := $(wildcard *.txt)
+
+    MD_SRC ?= $(DEFAULT_MD_SRC)
+    TXT_SRC ?= $(DEFAULT_TXT_SRC)
+endif
 
 TXT_CSS = $(exec_prefix)/share/doc/css/plain.css
 PDF_CSS = $(exec_prefix)/share/doc/css/print.css

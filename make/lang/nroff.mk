@@ -9,11 +9,20 @@
 # todo:        --Report unfinished work (identified by keyword comments)
 #
 .PHONY: $(recursive-targets:%=%-nroff)
-MAN1_SRC ?= $(wildcard *.1)
-MAN3_SRC ?= $(wildcard *.3)
-MAN5_SRC ?= $(wildcard *.5)
-MAN7_SRC ?= $(wildcard *.7)
-MAN8_SRC ?= $(wildcard *.8)
+
+ifdef AUTOSRC
+    DEFAULT_MAN1_SRC := $(wildcard *.1)
+    DEFAULT_MAN3_SRC := $(wildcard *.3)
+    DEFAULT_MAN5_SRC := $(wildcard *.5)
+    DEFAULT_MAN7_SRC := $(wildcard *.7)
+    DEFAULT_MAN8_SRC := $(wildcard *.8)
+
+    MAN1_SRC ?= $(DEFAULT_MAN1_SRC)
+    MAN3_SRC ?= $(DEFAULT_MAN3_SRC)
+    MAN5_SRC ?= $(DEFAULT_MAN5_SRC)
+    MAN7_SRC ?= $(DEFAULT_MAN7_SRC)
+    MAN8_SRC ?= $(DEFAULT_MAN8_SRC)
+endif
 
 #
 # %.[1-9]:	--Rules for installing manual pages

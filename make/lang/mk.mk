@@ -10,6 +10,12 @@
 #
 .PHONY: $(recursive-targets:%=%-mk)
 
+ifdef AUTOSRC
+    DEFAULT_MK_SRC := $(wildcard *.mk)
+
+    MK_SRC ?= $(DEFAULT_MK_SRC)
+endif
+
 $(includedir)/%.mk:	%.mk;	$(INSTALL_FILE) $< $@
 
 #

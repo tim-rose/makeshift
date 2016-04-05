@@ -19,7 +19,11 @@
 # will attempt to build both PDF and HTML.
 #
 .PHONY: $(recursive-targets:%=%-asciidoc)
-TXT_SRC ?= $(wildcard *.txt)
+
+ifdef AUTOSRC
+    DEFAULT_TXT_SRC := $(wildcard *.txt)
+    TXT_SRC ?= $(wildcard *.txt)
+endif
 
 #
 # XSL_FLAGS is adapted from observing the output of a2x, and should

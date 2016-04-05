@@ -19,6 +19,16 @@
 #
 .PHONY: $(recursive-targets:%=%-conf)
 
+ifdef AUTOSRC
+    DEFAULT_CONF_SRC := $(wildcard *.conf)
+    DEFAULT_CFG_SRC := $(wildcard *.cfg)
+    DEFAULT_INI_SRC := $(wildcard *.ini)
+
+    CONF_SRC ?= $(DEFAULT_CONF_SRC)
+    CFG_SRC ?= $(DEFAULT_CFG_SRC)
+    INI_SRC ?= $(DEFAULT_INI_SRC)
+endif
+
 install-conf:	$(CONF_SRC:%=$(sysconfdir)/%) \
     $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
 #
