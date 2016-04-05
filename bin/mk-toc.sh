@@ -118,7 +118,7 @@ set_type()
 	.c|.h|.css)
 	    comment_prefix=' * '
 	    ;;
-	.c++|.cpp|.cxx|.C|.cc|.js)
+	.c++|.cpp|.cxx|.C|.cc|.js|.php)
 	    comment_prefix='// '
 	    ;;
 	Makefile|.mk|.conf|.cfg|.ini|.p[lm]|.sh*|.awk|.sed|.rb|.py)
