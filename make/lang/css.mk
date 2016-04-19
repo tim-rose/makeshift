@@ -2,9 +2,10 @@
 # CSS.MK --Rules for dealing with CSS files.
 #
 # Contents:
-# src-css:  --Update the CSS_SRC, SCSS_SRC macros.
-# toc-css:  --Build the table-of-contents for CSS files.
-# todo-css: --Report "unfinished work" comments in CSS files.
+# install-css: --install css files.
+# src-css:     --Update the CSS_SRC, SCSS_SRC macros.
+# toc-css:     --Build the table-of-contents for CSS files.
+# todo-css:    --Report "unfinished work" comments in CSS files.
 #
 # Remarks:
 # MAP_SRC is not defined, not all CSS files have them.

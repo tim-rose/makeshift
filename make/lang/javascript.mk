@@ -2,9 +2,10 @@
 # JAVASCRIPT.MK --Rules for dealing with JavaScript files.
 #
 # Contents:
-# toc-javascript: --Build the table-of-contents for JavaScript files.
-# src-javascript: --Update the JS_SRC macro.
-# todo:           --Report "unfinished work" comments in JavaScript files.
+# install-javascript: --Install JavaScript files to wwwdir(?).
+# toc-javascript:     --Build the table-of-contents for JavaScript files.
+# src-javascript:     --Update the JS_SRC macro.
+# todo:               --Report "unfinished work" comments in JavaScript files.
 #
 .PHONY: $(recursive-targets:%=%-javascript)
 

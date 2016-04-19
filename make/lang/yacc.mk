@@ -3,7 +3,7 @@
 #
 # Contents:
 # %.y:   --Compile the yacc grammar into ".h" and ".c" files.
-# build: --Compile the yacc grammar.
+# build: --Compile LEX_SRC to object code.
 # clean: --Remove a yacc grammar's object file.
 # src:   --Get a list of the yacc grammars in this directory.
 # toc:   --Update the YACC_SRC macro with a list of yacc grammars.
