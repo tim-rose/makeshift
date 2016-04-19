@@ -88,7 +88,7 @@ ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
 #
 # INSTALL_*: --Specialised install commands.
 #
-INSTALL 	  := install -D
+INSTALL 	  := install -CD
 INSTALL_PROGRAM   := $(INSTALL) -m 755
 INSTALL_FILE      := $(INSTALL) -m 644
 INSTALL_DIRECTORY := $(INSTALL) -d
@@ -185,6 +185,7 @@ $(libdir)/%:		%;	$(INSTALL_FILE) $? $@
 $(datadir)/%:		%;	$(INSTALL_FILE) $? $@
 $(sharedstatedir)/%:	%;	$(INSTALL_FILE) $? $@
 $(localstatedir)/%:	%;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%:		%;	$(INSTALL_FILE) $? $@
 #
 # bindir/archdir: --Rules for installing any executable from archdir.
 #
