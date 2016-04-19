@@ -6,6 +6,7 @@
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 # %.gcov:      --Build a text-format coverage report.
 # build:       --Compile the C++ files, and link any complete programs.
+# install:     --Install "C++"-related artefacts.
 # clean:       --Remove objects and executables created from C++ files.
 # tidy:        --Reformat C++ files consistently.
 # lint:        --Perform static analysis for C++ files.
@@ -24,6 +25,17 @@
 
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
+C++_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
+
+ifdef AUTOSRC
+    DEFAULT_C++_MAIN_SRC := $(shell grep -l $(C++_MAIN_RGX) *.$(C++_SUFFIX) 2>/dev/null)
+    DEFAULT_C++_SRC := $(wildcard *.$(C++_SUFFIX))
+    DEFAULT_H++_SRC := $(wildcard *.$(H++_SUFFIX))
+
+    C++_SRC ?= $(DEFAULT_C++_SRC)
+    C++_MAIN_SRC ?= $(DEFAULT_C++_MAIN_SRC)
+    H++_SRC ?= $(DEFAULT_H_SRC)
+endif
 
 #
 # Include any dependency information that's available.
@@ -114,8 +126,13 @@ $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX)
 # build: --Compile the C++ files, and link any complete programs.
 #
 build:	build-c++
-
 build-c++:	$(C++_OBJ) $(C++_MAIN)
+	$(ECHO_TARGET)
+
+#
+# install: --Install "C++"-related artefacts.
+#
+install-c++:	$(C++_MAIN:%=$(bindir)/%)
 	$(ECHO_TARGET)
 
 #
@@ -168,7 +185,7 @@ src-c++:
 	$(ECHO_TARGET)
 	@mk-filelist -qn C++_SRC *.$(C++_SUFFIX)
 	@mk-filelist -qn C++_MAIN_SRC \
-            $$(grep -l '^[ \t]*int[ \t][ \t]*main[ \t]*(' *.$(C++_SUFFIX) 2>/dev/null)
+            $$(grep -l $(C++_MAIN_RGX) *.$(C++_SUFFIX) 2>/dev/null)
 	@mk-filelist -qn H++_SRC *.$(H++_SUFFIX)
 
 #

@@ -9,6 +9,7 @@
 # +c-defines:  --Print a list of predefined macros for the "C" language.
 # build:       --Build the C objects and executables.
 # build[%]:    --Build a C file's related object.
+# install:     --Install "C" programs.
 # clean:       --Remove objects and executables created from C files.
 # tidy:        --Reformat C files consistently.
 # lint:        --Perform static analysis for C files.
@@ -27,6 +28,18 @@
 #
 
 .PHONY: $(recursive-targets:%=%-c)
+
+C_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
+
+ifdef AUTOSRC
+    DEFAULT_C_MAIN_SRC := $(shell grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
+    DEFAULT_C_SRC := $(wildcard *.c)
+    DEFAULT_H_SRC := $(wildcard *.h)
+
+    C_SRC ?= $(DEFAULT_C_SRC)
+    C_MAIN_SRC ?= $(DEFAULT_C_MAIN_SRC)
+    H_SRC ?= $(DEFAULT_H_SRC)
+endif
 
 #
 # Include any dependency information that's available.
@@ -117,6 +130,12 @@ build-c:	$(C_OBJ) $(C_MAIN)
 build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 
 #
+# install: --Install "C" programs.
+#
+install-c:	$(C_MAIN:%=$(bindir)/%)
+	$(ECHO_TARGET)
+
+#
 # clean: --Remove objects and executables created from C files.
 #
 clean:	clean-c
@@ -161,7 +180,7 @@ src-c:
 	$(ECHO_TARGET)
 	@mk-filelist -qn C_SRC *.c
 	@mk-filelist -qn C_MAIN_SRC \
-            $$(grep -l '^[ \t]*int[ \t][ \t]*main[ \t]*(' *.c 2>/dev/null)
+            $$(grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
 	@mk-filelist -qn H_SRC *.h
 
 #
