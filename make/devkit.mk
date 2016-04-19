@@ -85,14 +85,6 @@ endif
 #ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$^: $^"
 ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
 
-#
-# INSTALL_*: --Specialised install commands.
-#
-INSTALL 	  := install -CD
-INSTALL_PROGRAM   := $(INSTALL) -m 755
-INSTALL_FILE      := $(INSTALL) -m 644
-INSTALL_DIRECTORY := $(INSTALL) -d
-
 .SUFFIXES:			# remove default suffix rules
 
 #
@@ -103,6 +95,14 @@ all:	build
 include os/$(OS).mk arch/$(ARCH).mk
 -include project/$(PROJECT).mk
 #include vcs/$(VCS).mk
+
+#
+# INSTALL_*: --Specialised install commands.
+#
+INSTALL 	  ?= install -CD
+INSTALL_PROGRAM   := $(INSTALL) -m 755
+INSTALL_FILE      := $(INSTALL) -m 644
+INSTALL_DIRECTORY := $(INSTALL) -d
 
 #
 # Define DESTDIR, prefix if that hasn't happened already.
