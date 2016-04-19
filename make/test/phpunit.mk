@@ -13,8 +13,9 @@
 
 PHP_TESTS ?= $(PHP_SRC)
 PHPUNIT ?= phpunit
-PHPUNIT_FLAGS = $(TARGET.PHPUNIT_FLAGS) $(LOCAL.PHPUNIT_FLAGS) \
-    $(PROJECT.PHPUNIT_FLAGS) $(ARCH.PHPUNIT_FLAGS) $(OS.PHPUNIT_FLAGS)
+ALL_PHPUNIT_FLAGS = $(TARGET.PHPUNIT_FLAGS) $(LOCAL.PHPUNIT_FLAGS) \
+    $(PROJECT.PHPUNIT_FLAGS) $(ARCH.PHPUNIT_FLAGS) $(OS.PHPUNIT_FLAGS) \
+    $(PHPUNIT_FLAGS)
 
 #
 # test: --Run all tests, and save the results to phpunit.xml.
@@ -22,13 +23,13 @@ PHPUNIT_FLAGS = $(TARGET.PHPUNIT_FLAGS) $(LOCAL.PHPUNIT_FLAGS) \
 test:	test-phpunit
 
 test-phpunit:
-	$(PHPUNIT) $(PHPUNIT_FLAGS) --log-junit phpunit-tests.xml .
+	$(PHPUNIT) $(ALL_PHPUNIT_FLAGS) --log-junit phpunit-tests.xml .
 
 #
 # test-phpunit[%]: --Run an individual test.
 #
 test[%.php]:
-	$(PHPUNIT) $(PHPUNIT_FLAGS) $*.php
+	$(PHPUNIT) $(ALL_PHPUNIT_FLAGS) $*.php
 
 clean:		clean-phpunit
 distclean:	clean-phpunit

@@ -8,6 +8,9 @@
 GTEST_LIBS = gtest_main gtest dl util
 TEST_XML = google-tests.xml
 TEST_EXE = $(archdir)/googletest
+ALL_GTEST_FLAGS = $(TARGET.GTEST_FLAGS) $(LOCAL.GTEST_FLAGS) \
+    $(PROJECT.GTEST_FLAGS) $(ARCH.GTEST_FLAGS) $(OS.GTEST_FLAGS) \
+    $(GTEST_FLAGS)
 
 build: $(TEST_EXE)
 
@@ -24,7 +27,7 @@ $(TEST_EXE):	$(TEST_OBJ)
 test:	test-google
 .PHONY:	test-google
 test-google:	$(TEST_EXE)
-	archdir=$(archdir) $(TEST_EXE) $(GTEST_FLAGS) --gtest_output=xml:$(TEST_XML)
+	archdir=$(archdir) $(TEST_EXE) $(ALL_GTEST_FLAGS) --gtest_output=xml:$(TEST_XML)
 
 clean:	googletest-clean
 distclean:	googletest-clean

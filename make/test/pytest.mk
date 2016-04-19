@@ -11,21 +11,22 @@
 #
 PYTEST_SRC ?= $(PY_SRC)
 PYTEST ?= py.test
-PYTEST_FLAGS = $(TARGET.PYTEST_FLAGS) $(LOCAL.PYTEST_FLAGS) \
-    $(PROJECT.PYTEST_FLAGS) $(ARCH.PYTEST_FLAGS) $(OS.PYTEST_FLAGS)
+ALL_PYTEST_FLAGS = $(TARGET.PYTEST_FLAGS) $(LOCAL.PYTEST_FLAGS) \
+    $(PROJECT.PYTEST_FLAGS) $(ARCH.PYTEST_FLAGS) $(OS.PYTEST_FLAGS) \
+    $(PYTEST_FLAGS)
 #
 # test: --Run all tests, and save the results to pytest.xml.
 #
 test:	test-pytest
 
 test-pytest:
-	$(PYTEST) $(PYTEST_FLAGS) $(PYTEST_SRC)
+	$(PYTEST) $(ALL_PYTEST_FLAGS) $(PYTEST_SRC)
 
 #
 # test-pytest[%]: --Run an individual test.
 #
 test[%.py]:
-	$(PYTEST) $(PYTEST_FLAGS) $*.py
+	$(PYTEST) $(ALL_PYTEST_FLAGS) $*.py
 
 clean:		clean-pytest
 distclean:	clean-pytest
