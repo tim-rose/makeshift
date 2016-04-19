@@ -24,7 +24,7 @@ ELISP_OBJ = $(ELISP_SRC:%.el=%.elc)
 #
 %.elc:	%.el
 	emacs -batch -f batch-byte-compile $*.el
-pre-build:	src-var-defined[ELISP_SRC]
+pre-build:
 build:	$(ELISP_OBJ)
 
 #
