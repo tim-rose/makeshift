@@ -11,6 +11,11 @@
 $(wwwdir)/%.js:	%.js;	$(INSTALL_FILE) $? $@
 
 #
+# install-javascript: --Install JavaScript files to wwwdir(?).
+#
+install-javascript:	$(JS_SRC:%=$(wwwdir)/%)
+
+#
 # toc-javascript: --Build the table-of-contents for JavaScript files.
 #
 toc:	toc-javascript
