@@ -15,20 +15,34 @@
 #
 .PHONY: $(recursive-targets:%=%-lex)
 
+ifdef AUTOSRC
+    DEFAULT_LEX_SRC := $(wildcard *.c)
+    LEX_SRC ?= $(DEFAULT_LEX_SRC)
+endif
+LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%_l.o)
+LEX_GEN	= $(LEX_SRC:%.l=$(archdir)/%_l.c)
+
+.PRECIOUS:	$(LEX_GEN)
+
 -include $(LEX_SRC:%.l=$(archdir)/%_l.d)
 
-LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%.o)
+ALL_LFLAGS = $(OS.LFLAGS) $(ARCH.LFLAGS) \
+    $(PROJECT.LFLAGS) $(LOCAL.LFLAGS) $(TARGET.LFLAGS) $(LFLAGS)
 
 #
 # %.l: --Compile the lex grammar into a ".c" file
 #
-%.c:	%.l
-	$(LEX) $(LFLAGS) -t $< | sed -e "s/yy/$*_/g" >$*_l.c
+
+$(archdir)/%_l.c:	%.l
+	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
+	BASE=$$(echo "$*"| tr a-z A-Z); \
+            $(LEX) $(ALL_LFLAGS) -t $< | \
+            sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" >$(archdir)/$*_l.c
 
 #
 # build: --Compile LEX_SRC to object code.
 #
-pre-build:	src-var-defined[LEX_SRC]
 build:	$(LEX_OBJ)
 
 #
@@ -37,7 +51,7 @@ build:	$(LEX_OBJ)
 clean:	clean-lex
 clean-lex:
 	$(ECHO_TARGET)
-	$(RM) $(LEX_OBJ)
+	$(RM) $(LEX_OBJ) $(LEX_SRC:%.l=$(archdir)/%_l.d)
 
 #
 # src: --Update the LEX_SRC macro.
