@@ -38,7 +38,8 @@ LIB_OBJ ?= $(C_OBJ) $(C++_OBJ) $(LEX_OBJ) $(YACC_OBJ) \
 
 LIB_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
 LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%) \
-    $(H++_SRC:%=$(LIB_INCLUDEDIR)/%)
+    $(H++_SRC:%=$(LIB_INCLUDEDIR)/%) \
+    $(YACC_SRC:%.y=$(LIB_INCLUDEDIR)/%.h)
 
 $(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_FILE) $* $@
 $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
