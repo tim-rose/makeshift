@@ -1,6 +1,12 @@
 #
 # XSD.MK --Support for XSD.
 #
+# Contents:
+# build:     --xsd-specific customisations for the "build" target.
+# clean:     --Remove XSD's object files.
+# distclean: --Remove XSD-generated include files.
+# src:       --Update the XSD_SRC target.
+#
 # Remarks:
 # The XSD module adds some rules for building C++ marshalling routines
 # from ".xsd" files.  The code is generated into $(archdir), so it won't
@@ -38,6 +44,10 @@ $(XSD_INCLUDEDIR)/%.$(H++_SUFFIX): $(archdir)/%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 
+$(datadir)/%.xsd:	%.xsd
+	$(ECHO_TARGET)
+	$(INSTALL_FILE) $? $@
+
 $(archdir)/%.$(C++_SUFFIX) $(archdir)/%.$(H++_SUFFIX):	%.xsd
 	$(ECHO_TARGET)
 	mkdir -p $(archdir)
@@ -50,7 +60,8 @@ $(XSD_OBJ):	$(XSD_INCLUDE_SRC)
 pre-build:      var-defined[XSD_INCLUDEDIR] $(XSD_INCLUDE_SRC)
 build:	$(XSD_OBJ)
 
-xsd-install-include:	$(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
+install-xsd-xsd:	$(XSD_SRC:%=$(datadir)/%.)
+install-xsd-include:	$(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
 
 $(archdir)/XmlSchema.$(H++_SUFFIX):
 	$(ECHO_TARGET)
