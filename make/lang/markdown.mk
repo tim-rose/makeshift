@@ -2,18 +2,18 @@
 # MARKDOWN.MK --Rules for dealing with markdown files.
 #
 # Contents:
-# %.html/%.md:    --build a HTML document from a markdown file.
+# %.html/%.md:    --build a HTML document from a mulitmarkdown file.
 # %.pdf:          --Create a PDF document from a HTML file.
-# build:          --Create HTML documents from MD_SRC, TXT_SRC.
-# doc-markdown:   --Create PDF documents from MD_SRC, TXT_SRC.
+# build:          --Create HTML documents from MMD_SRC, MD_SRC.
+# doc-markdown:   --Create PDF documents from MMD_SRC, MD_SRC.
 # clean-markdown: --Clean up markdown's derived files.
-# src-markdown:   --Update MD_SRC, TXT_SRC macros.
+# src-markdown:   --Update MD_SRC, MMD_SRC macros.
 # todo-markdown:  --Report unfinished work in markdown files.
 #
 # Remarks:
-# The markdown module recognises both "multimarkdow" markdown files
-# (".md"), and simple text files (".txt"), defined by MD_SRC and
-# TXT_SRC respectively. The markdown files are assumed to create full
+# The markdown module recognises both "multimarkdown" markdown files
+# (".mmd"), and simple markdown/text files (".md"), defined by MMD_SRC and
+# MD_SRC respectively. The markdown files are assumed to create full
 # documents, and are created by `build`, using multimarkdown.
 #
 # See Also:
@@ -26,47 +26,35 @@ MD = multimarkdown
 MDFLAGS ?= --process-html
 
 ifdef AUTOSRC
+    DEFAULT_MMD_SRC := $(wildcard *.mmd)
     DEFAULT_MD_SRC := $(wildcard *.md)
-    DEFAULT_TXT_SRC := $(wildcard *.txt)
 
+    MMD_SRC ?= $(DEFAULT_MMD_SRC)
     MD_SRC ?= $(DEFAULT_MD_SRC)
-    TXT_SRC ?= $(DEFAULT_TXT_SRC)
 endif
 
-TXT_CSS = $(exec_prefix)/share/doc/css/plain.css
+MMD_CSS = $(exec_prefix)/share/doc/css/plain.css
 PDF_CSS = $(exec_prefix)/share/doc/css/print.css
 
 $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 $(datadir)/%.html:	%.html; $(INSTALL_FILE) $? $@
 
-
+#
+# %.html/%.md: --build a HTML document from a mulitmarkdown file.
+#
+%.html:	%.mmd
+	$(ECHO_TARGET)
+	$(MD) $(MDFLAGS) $*.mmd > $@
 
 #
-# %.html/%.md: --build a HTML document from a markdown file.
+# %.html/%.md: build HTML document from a simple markdown file.
 #
 %.html:	%.md
 	$(ECHO_TARGET)
-	$(MD) $(MDFLAGS) $*.md > $@
+	{ echo "title: $*"; \
+          echo "css: file://$(MMD_CSS)"; \
+          echo; cat $*.md; } | $(MD) $(MDFLAGS) > $@
 
-#
-# %.html/%.txt: build HTML document from a simple text file.
-#
-%.html:	%.txt
-	$(ECHO_TARGET)
-	{ echo "title: $*"; echo "css: file://$(TXT_CSS)"; echo; cat $*.txt; } |\
-	    $(MD) $(MDFLAGS) > $@
-
-#
-# README.html: build HTML document from a README file.
-#
-# Remarks:
-# Because github handles markdown specially, it's worth
-# having a special rule for README.md files.
-#
-README.html:	README.md
-	$(ECHO_TARGET)
-	{ echo "title: README"; echo "css: file://$(TXT_CSS)"; echo; cat $<; } |\
-	    $(MD) $(MDFLAGS) > $@
 #
 # %.pdf: --Create a PDF document from a HTML file.
 #
@@ -74,15 +62,16 @@ README.html:	README.md
 	$(ECHO_TARGET)
 	prince -s $(PDF_CSS) $*.html -o $@
 #
-# build: --Create HTML documents from MD_SRC, TXT_SRC.
+# build: --Create HTML documents from MMD_SRC, MD_SRC.
 #
-build:	$(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html)
+build:	build-markdown
+build-mardkown:	$(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html)
 
 #
-# doc-markdown: --Create PDF documents from MD_SRC, TXT_SRC.
+# doc-markdown: --Create PDF documents from MMD_SRC, MD_SRC.
 #
 doc:	doc-markdown
-doc-markdown:	$(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
+doc-markdown:	$(MMD_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
 
 #
 # clean-markdown: --Clean up markdown's derived files.
@@ -91,17 +80,16 @@ distclean:	clean-markdown
 clean:	clean-markdown
 clean-markdown:
 	$(ECHO_TARGET)
-	$(RM) $(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html) $(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
-
+	$(RM) $(MMD_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html) $(MMD_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
 
 #
-# src-markdown: --Update MD_SRC, TXT_SRC macros.
+# src-markdown: --Update MD_SRC, MMD_SRC macros.
 #
 src:	src-markdown
 src-markdown:
 	$(ECHO_TARGET)
+	@mk-filelist -qn MMD_SRC *.mmd
 	@mk-filelist -qn MD_SRC *.md
-	@mk-filelist -qn TXT_SRC *.txt
 
 #
 # todo-markdown: --Report unfinished work in markdown files.
@@ -109,4 +97,4 @@ src-markdown:
 todo:	todo-markdown
 todo-markdown:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(TXT_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(MMD_SRC) /dev/null || true
