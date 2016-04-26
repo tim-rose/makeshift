@@ -1,6 +1,10 @@
 #
 # TAP.MK --Rules for running unit tests with the TAP framework.
 #
+# Contents:
+# test:   --Run all the tests, and summarise them.
+# test[%] --Run a particular test.
+#
 # Remarks:
 # This defines some tap-specific targets related to testing,
 # and actions that are triggered by the "test" target.
@@ -13,22 +17,14 @@ ALL_PROVE_FLAGS = $(TARGET.PROVE_FLAGS) $(LOCAL.PROVE_FLAGS) \
 %.tap:	%;	./$* > $@
 %.tap:	%.t;	perl $*.t > $@
 
-pre-test:	var-defined[TAP_TESTS]
+#
+# test: --Run all the tests, and summarise them.
+#
 test:	test-tap
 test-tap:	$(TAP_TESTS)
 	prove $(ALL_PROVE_FLAGS) $(TAP_TESTS)
 
+#
+# test[%] --Run a particular test.
+#
 test[%]:        %;      ./$*
-
-#
-# tap: --make the tap files explicitly
-#
-.PHONY:	tap
-tap:	$(TAP_TRG)
-
-clean:		clean-tap
-distclean:	clean-tap
-
-.PHONY:		clean-tap
-clean-tap:
-	$(RM) $(TAP_TRG)
