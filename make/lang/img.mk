@@ -2,7 +2,8 @@
 # IMG.MK --Rules for installing and building image files
 #
 # Contents:
-# img-src: --Update PNG_SRC, GIF_SRC, JPG_SRC macros.
+# install-img: --Install various image files to wwwdir.
+# src-img:     --Update PNG_SRC, GIF_SRC, JPG_SRC macros.
 #
 .PHONY: $(recursive-targets:%=%-img)
 
@@ -21,7 +22,17 @@ $(datadir)/%.jpg:	%.jpg;	$(INSTALL_FILE) $? $@
 $(datadir)/%.svg:	%.svg;	$(INSTALL_FILE) $? $@
 
 #
-# img-src: --Update PNG_SRC, GIF_SRC, JPG_SRC macros.
+# install-img: --Install various image files to wwwdir.
+#
+install-img:	install-png install-gif install-jpg install-svg
+
+install-png:	$(PNG_SRC:%=$(wwwdir)/%)
+install-gif:	$(GIF_SRC:%=$(wwwdir)/%)
+install-jpg:	$(jpg_SRC:%=$(wwwdir)/%)
+install-svg:	$(svg_SRC:%=$(wwwdir)/%)
+
+#
+# src-img: --Update PNG_SRC, GIF_SRC, JPG_SRC macros.
 #
 src:	src-img
 src-img:
