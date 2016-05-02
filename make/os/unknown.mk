@@ -10,3 +10,4 @@ GREP		= grep
 INDENT          = gnuindent
 MV		= mv
 RANLIB		= ranlib
+RMDIR		= rmdir

@@ -28,6 +28,8 @@ GREP		= grep
 INDENT          = gnuindent
 MV		= mv
 RANLIB		= ranlib
+RMDIR		= rmdir
+
 
 PKG_TYPE	= deb
 

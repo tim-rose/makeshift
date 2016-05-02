@@ -14,5 +14,6 @@ GREP		= grep
 INDENT          = indent
 MV		= mv
 RANLIB		= ranlib
+RMDIR		= rmdir
 
 PKG_TYPE	= deb

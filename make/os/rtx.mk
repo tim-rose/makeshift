@@ -19,3 +19,4 @@ GREP		= grep
 INDENT          = gnuindent
 MV		= mv
 RANLIB = : $(AR) -s
+RMDIR		= rmdir
