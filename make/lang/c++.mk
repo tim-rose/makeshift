@@ -6,7 +6,8 @@
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 # %.gcov:      --Build a text-format coverage report.
 # build:       --Compile the C++ files, and link any complete programs.
-# install:     --Install "C++"-related artefacts.
+# install:     --Install "C++" programs.
+# uninstall:   --Uninstall "C++" programs.
 # clean:       --Remove objects and executables created from C++ files.
 # tidy:        --Reformat C++ files consistently.
 # lint:        --Perform static analysis for C++ files.
@@ -129,11 +130,24 @@ build:	build-c++
 build-c++:	$(C++_OBJ) $(C++_MAIN)
 	$(ECHO_TARGET)
 
+
 #
-# install: --Install "C++"-related artefacts.
+# install: --Install "C++" programs.
 #
-install-c++:	$(C++_MAIN:%=$(bindir)/%)
+# Remarks:
+# The install (and uninstall) target is not invoked by default,
+# it must be added as a dependent of the "install" target.
+#
+install-c:	$(C++_MAIN:$(archdir)/%=$(bindir)/%)
 	$(ECHO_TARGET)
+
+#
+# uninstall: --Uninstall "C++" programs.
+#
+uninstall-c:
+	$(ECHO_TARGET)
+	$(RM) $(C++_MAIN:$(archdir)/%=$(bindir)/%)
+	$(RMDIR) -p $(bindir) 2>/dev/null || true
 
 #
 # clean: --Remove objects and executables created from C++ files.

@@ -147,6 +147,7 @@ uninstall-c:
 	$(ECHO_TARGET)
 	$(RM) $(C_MAIN:$(archdir)/%=$(bindir)/%)
 	$(RMDIR) -p $(bindir) 2>/dev/null || true
+
 #
 # clean: --Remove objects and executables created from C files.
 #
