@@ -10,6 +10,7 @@
 # build:       --Build the C objects and executables.
 # build[%]:    --Build a C file's related object.
 # install:     --Install "C" programs.
+# uninstall:   --Uninstall "C" programs.
 # clean:       --Remove objects and executables created from C files.
 # tidy:        --Reformat C files consistently.
 # lint:        --Perform static analysis for C files.
@@ -132,9 +133,20 @@ build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 #
 # install: --Install "C" programs.
 #
-install-c:	$(C_MAIN:%=$(bindir)/%)
+# Remarks:
+# The install (and uninstall) target is not invoked by default,
+# it must be added as a dependent of the "install" target.
+#
+install-c:	$(C_MAIN:$(archdir)/%=$(bindir)/%)
 	$(ECHO_TARGET)
 
+#
+# uninstall: --Uninstall "C" programs.
+#
+uninstall-c:
+	$(ECHO_TARGET)
+	$(RM) $(C_MAIN:$(archdir)/%=$(bindir)/%)
+	$(RMDIR) -p $(bindir) 2>/dev/null || true
 #
 # clean: --Remove objects and executables created from C files.
 #

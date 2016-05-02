@@ -5,8 +5,8 @@
 # DEVKIT_VERSION: --define the version of devkit that's running.
 # VERBOSE:        --Control how (+how much) is output via echo.
 # ECHO_TARGET:    --Common macro for logging in devkit targets.
-# INSTALL_*:      --Specialised install commands.
 # build:          --The default target
+# INSTALL_*:      --Specialised install commands.
 # package:        --By default, (successfully) do no packaging.
 # src:            --Make sure the src target can write to the Makefile.
 # clean:          --Devkit-specific customisations for the "clean" target.
