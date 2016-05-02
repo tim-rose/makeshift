@@ -60,7 +60,8 @@ $(XSD_OBJ):	$(XSD_INCLUDE_SRC)
 pre-build:      var-defined[XSD_INCLUDEDIR] $(XSD_INCLUDE_SRC)
 build:	$(XSD_OBJ)
 
-install-xsd-xsd:	$(XSD_SRC:%=$(datadir)/%.)
+install-xsd:	install-xsd-xsd install-xsd-include
+install-xsd-xsd:	$(XSD_SRC:%=$(datadir)/%)
 install-xsd-include:	$(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
 
 $(archdir)/XmlSchema.$(H++_SUFFIX):
