@@ -4,10 +4,4 @@
 # Remarks:
 # This file is really only used for bootstrapping devkit.
 #
-CHMOD		= chmod
-CP		= cp
-GREP		= grep
-INDENT          = gnuindent
-MV		= mv
-RANLIB		= ranlib
-RMDIR		= rmdir
+include os/posix.mk

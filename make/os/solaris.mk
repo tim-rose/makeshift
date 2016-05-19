@@ -1,10 +1,4 @@
 #
 # SOLARIS.MK	--Macros and definitions for Solaris.
 #
-CHMOD		= chmod
-CP		= cp
-GREP		= grep
-INDENT          = gnuindent
-MV		= mv
-RANLIB		= ranlib
-RMDIR		= rmdir
+include os/posix.mk

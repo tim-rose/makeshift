@@ -8,6 +8,8 @@
 # resets whatever needs to be done, and the build rules will apply it
 # if defined.
 #
+include os/posix.mk
+
 OS.CFLAGS 	= -MMD
 OS.C_WARN_FLAGS = -Wno-gnu-zero-variadic-macro-arguments
 OS.C_CPPFLAGS   = -I/usr/local/include
@@ -21,17 +23,6 @@ OS.PYTEST_FLAGS = --junit-xml pytest-tests.xml
 
 OS.RPM_FLAGS    = --define "_tmppath /var/tmp"
 OS.AUTO_CLEAN	= .DS_Store
-
-CHMOD		= chmod
-CP		= cp
-GREP		= grep
-INDENT          = gnuindent
-MV		= mv
-RANLIB		= ranlib
-RMDIR		= rmdir
-
-
-PKG_TYPE	= deb
 
 +vars:   $(.VARIABLES:%=+var[%])
 
