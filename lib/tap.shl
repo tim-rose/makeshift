@@ -3,9 +3,10 @@
 # TAP.SHL --Test-Anything-Protocol functions.
 #
 # Contents:
+# tty_filter()      --Filter stdout suitably/conditionally for a tty.
 # diag()            --Print a diagnostic line comment line.
-# TAP_BEGIN()       --startup code for the TAP module.
-# TAP_EXIT()        --Write some summary diagnostics of the test run.
+# TAP_BEGIN()       --startup code for the TAP module, print TAP prologue.
+# TAP_EXIT()        --Write some summary diagnostics as TAP epilogue.
 # plan()            --Declare the number of tests.
 # ok()              --Check a process result, and emit TAP output.
 # nok()             --Check a process result, and emit TAP output.
@@ -20,6 +21,7 @@
 # This library is an implementation Perl's TAP system for shell scripts.
 # TODO: skip
 #
+isatty=
 tap_test=0
 tap_todo_reason=
 tap_plan=0
@@ -30,16 +32,23 @@ ok_style="m"
 fail_style="1;31m"
 log_style="1m"
 diag_style="36m"
+
 if [ -t 1 ]; then
     isatty=1
 fi
 
+#
+# tty_filter() --Filter stdout suitably/conditionally for a tty.
+#
+# Parameters:
+# style	--the preferred output styling, as a ANSI mode arg (e.g. "1;33")
+#
 tty_filter()
 {
     local style=$1; shift
 
     if [ "$isatty" ]; then
-        while read line; do 
+        while read line; do
             printf "\033[%s%s\033[m\n" "$style" "$line"
         done
     else
@@ -60,7 +69,7 @@ diag()
 }
 
 #
-# TAP_BEGIN() --startup code for the TAP module.
+# TAP_BEGIN() --startup code for the TAP module, print TAP prologue.
 #
 TAP_BEGIN()
 {
@@ -72,7 +81,7 @@ TAP_BEGIN()
 TAP_BEGIN
 
 #
-# TAP_EXIT() --Write some summary diagnostics of the test run.
+# TAP_EXIT() --Write some summary diagnostics as TAP epilogue.
 #
 TAP_EXIT()
 {
@@ -100,11 +109,10 @@ plan()
 {
     if [ $# -ne 0 ]; then
 	tap_plan=$1
-	echo "1..$1" | tty_filter $log_style
     else
-	echo "1..$tap_test" | tty_filter $log_style
 	tap_plan=$tap_test
     fi
+    echo "1..$tap_plan" | tty_filter $log_style
 }
 
 #
@@ -214,7 +222,7 @@ tap_test_msg()
 	local line=$(caller 1 | cut -d' ' -f1)
 
 	diag "   Failed test %s" "$tap_test"
-	diag "   in %s at line %d" "$file" "$line"
+	diag "   in %s at line %d" "${file:-stdin}" "$line"
     fi
     return $result
 }
