@@ -3,6 +3,6 @@
 #
 #
 language = sh
-SH_SRC = test-taplib.sh
+SH_SRC = tap-api.sh tap-protocol.sh
 TAP_TESTS = $(SH_SRC:%.sh=%)
 include devkit.mk test/tap.mk
