@@ -6,7 +6,6 @@
 # VERBOSE:        --Control how (+how much) is output via echo.
 # ECHO_TARGET:    --Common macro for logging in devkit targets.
 # build:          --The default target
-# INSTALL_*:      --Specialised install commands.
 # package:        --By default, (successfully) do no packaging.
 # src:            --Make sure the src target can write to the Makefile.
 # clean:          --Devkit-specific customisations for the "clean" target.
@@ -95,14 +94,6 @@ all:	build
 include os/$(OS).mk arch/$(ARCH).mk
 -include project/$(PROJECT).mk
 #include vcs/$(VCS).mk
-
-#
-# INSTALL_*: --Specialised install commands.
-#
-INSTALL 	  ?= install -D
-INSTALL_PROGRAM   := $(INSTALL) -m 755
-INSTALL_FILE      := $(INSTALL) -m 644
-INSTALL_DIRECTORY := $(INSTALL) -d
 
 #
 # Define DESTDIR, prefix if that hasn't happened already.
