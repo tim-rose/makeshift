@@ -19,9 +19,17 @@ endif
 $(includedir)/%.mk:	%.mk;	$(INSTALL_FILE) $< $@
 
 #
-# install-mk: --Install ".mk" files to their usual places
+# install-mk: --Install ".mk" files to their usual places.
 #
 install-mk:     $(MK_SRC:%.mk=$(includedir)/%.mk)
+
+#
+# uninstall-mk: --Uninstall the default ".mk" files.
+#
+uninstall-mk:
+	$(ECHO_TARGET)
+	$(RM) $(MK_SRC:%.mk=$(includedir)/%.mk)
+	$(RMDIR) -p $(includedir) 2>/dev/null || true
 
 #
 # src-mk: --Update MK_SRC with the list of ".mk" files.
@@ -58,7 +66,8 @@ todo-mk:
 	@echo "usr:            $(usr)"
 	@echo "subdir:         $(subdir)"
 	@echo "archdir:        $(archdir)"
-	@echo "rootdir:        $(rootdir)"
+	@echo "pkgver:         $(pkgver)"
+	@echo ""; echo "rootdir:        $(rootdir)"
 	@echo "bindir:         $(bindir)"
 	@echo "sbindir:        $(sbindir)"
 	@echo "libexecdir:     $(libexecdir)"
@@ -75,3 +84,4 @@ todo-mk:
 	@echo "lispdir:        $(lispdir)"
 	@echo "includedir:     $(includedir)"
 	@echo "mandir:         $(mandir)"
+	@echo "docdir:         $(docdir)"

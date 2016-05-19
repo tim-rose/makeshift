@@ -20,6 +20,7 @@
 #
 system_root     = $(DESTDIR)
 system_confdir	= $(system_root)/etc/$(subdir)
+pkgver		=$(PACKAGE)$(VERSION:%=-%)
 
 archdir         = $(HW:%=%-)$(OS:%=%-)$(ARCH)
 rootdir 	= $(DESTDIR)/$(prefix)
@@ -48,6 +49,7 @@ infodir		= $(rootdir_opt)/info
 lispdir		= $(rootdir_opt)/share/emacs/site-lisp
 
 includedir	= $(rootdir_opt)/$(usr)/include/$(subdir)
+docdir		= $(exec_prefix)/share/doc/$(pkgver)/$(subdir)
 mandir		= $(datadir)/man
 man1dir		= $(mandir)/man1
 man2dir		= $(mandir)/man2
