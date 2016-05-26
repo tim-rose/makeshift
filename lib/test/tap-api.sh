@@ -5,11 +5,6 @@
 . ../tap.shl
 
 #
-# Protocol tests:
-# * prologue timestamp
-# * prologue plan
-# * epilogue failure summary
-# * epilogue plan mismatch
 # API tests:
 # * plan none, 0, 1, ...
 # * ok true/false
@@ -23,11 +18,13 @@
 # * diag
 #
 
-plan 5
+plan 9
 ok 0
 ok 0 success
 nok 1 fail
-ok_eq 0 0 success
-#nok_eq 0 1 fail
-ok_grep foobar foo success
-#nok_grep foobar fox fail
+ok_eq 0 0 'eq success'
+nok_eq 0 1 'eq fail'
+ok_match foobar 'foo*' 'glob success'
+nok_match foobar 'fox*' 'glob fail'
+ok_grep foobar 'fo*bar' 'regex success'
+nok_grep foobar 'fo[x]bar' 'regex fail'

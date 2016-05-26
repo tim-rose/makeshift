@@ -3,45 +3,57 @@
 # TAP.SHL --Test-Anything-Protocol functions.
 #
 # Contents:
+# caller()          --Fake implementation of bash's caller().
 # tty_filter()      --Filter stdout suitably/conditionally for a tty.
-# diag()            --Print a diagnostic line comment line.
-# TAP_BEGIN()       --startup code for the TAP module, print TAP prologue.
+# diag()            --Print diagnostic lines as TAP comments.
+# TAP_BEGIN()       --Startup code for the TAP module, print TAP prologue.
 # TAP_EXIT()        --Write some summary diagnostics as TAP epilogue.
 # plan()            --Declare the number of tests.
-# ok()              --Check a process result, and emit TAP output.
-# nok()             --Check a process result, and emit TAP output.
-# ok_eq()           --compare two strings for equality, report differences.
-# ok_match()        --compare a string to a glob-pattern, report differences.
-# ok_grep()         --look for a pattern, report differences.
 # todo()            --Mark the start/end of a "todo" block.
 # tap_test_msg()    --Common function to report on tests.
 # tap_report_diff() --Report differences between two strings.
+# ok()              --Check a process result, and emit TAP output.
+# nok()             --Check a process result, and emit TAP output.
+# ok_eq()           --compare two strings for equality, report differences.
+# nok_eq()          --compare two strings for inequality, report differences.
+# ok_match()        --Compare a string to a glob-pattern, report differences.
+# nok_match()       --Compare a string to a glob-pattern, report differences.
+# ok_grep()         --Compare a string to a regex pattern, report differences.
+# nok_grep()        --Compare a string to a regex pattern, report differences.
 #
 # Remarks:
 # This library is an implementation Perl's TAP system for shell scripts.
 # TODO: skip
 #
+version=local.latest
 isatty=
 tap_test=0
 tap_todo_reason=
 tap_plan=0
 tap_fail=0
-tap_version='?.?.?'
+tap_version="${version}"
 
-ok_style="m"
-fail_style="1;31m"
-log_style="1m"
-diag_style="36m"
+ok_style=""			# plain
+fail_style="1;31"		# bold+red
+log_style="1"			# bold
+diag_style="36"			# cyan
 
 if [ -t 1 ]; then
     isatty=1
 fi
 
 #
+# caller() --Fake implementation of bash's caller().
+#
+if ! type caller >/dev/null; then
+    caller() { printf '(unknown) unknown (input)\n'; }
+fi
+
+#
 # tty_filter() --Filter stdout suitably/conditionally for a tty.
 #
 # Parameters:
-# style	--the preferred output styling, as a ANSI mode arg (e.g. "1;33")
+# style	--the preferred output styling, as an ANSI mode arg (e.g. "1;33")
 #
 tty_filter()
 {
@@ -49,7 +61,7 @@ tty_filter()
 
     if [ "$isatty" ]; then
         while read line; do
-            printf "\033[%s%s\033[m\n" "$style" "$line"
+            printf "\033[%sm%s\033[m\n" "$style" "$line"
         done
     else
         cat
@@ -57,25 +69,31 @@ tty_filter()
 }
 
 #
-# diag() --Print a diagnostic line comment line.
+# diag() --Print diagnostic lines as TAP comments.
+#
+# Remarks:
+# If any arguments are provided, they are passed on to printf,
+# and that's what gets output.  If there are no arguments, cat
+# is used to passthrough the lines of text.
 #
 diag()
 {
     if [ $# -gt 0 ]; then
-        { printf "$@"; printf "\n"; } | sed -e "s/^/# "/ | tty_filter $diag_style
+        printf "$@"
+	printf "\n"
     else
-        sed -e "s/^/# /"
-    fi
+	cat
+    fi | sed -e "s/^/# "/ | tty_filter "$diag_style"
 }
 
 #
-# TAP_BEGIN() --startup code for the TAP module, print TAP prologue.
+# TAP_BEGIN() --Startup code for the TAP module, print TAP prologue.
 #
 TAP_BEGIN()
 {
-    diag "Current time local: %s" "$(date)"
-    diag "Current time UTC:   %s" "$(TZ=UTC date)"
-    diag "Using tap.sh version %s" "$tap_version"
+    diag 'current time local: %s' "$(date)"
+    diag 'current time UTC:   %s' "$(TZ=UTC date)"
+    diag 'tap.shl version:    %s' "$tap_version"
     trap TAP_EXIT 0
 }
 TAP_BEGIN
@@ -112,69 +130,7 @@ plan()
     else
 	tap_plan=$tap_test
     fi
-    echo "1..$tap_plan" | tty_filter $log_style
-}
-
-#
-# ok() --Check a process result, and emit TAP output.
-#
-ok()
-{
-    tap_test_msg "$@"
-}
-
-#
-# nok() --Check a process result, and emit TAP output.
-#
-nok()
-{
-   local tap_status=$1; shift
-
-   if [ $tap_status -eq 0 ]; then
-       tap_status=1;
-   else
-       tap_status=0;
-   fi
-   tap_test_msg $tap_status "$@"
-}
-
-#
-# ok_eq() --compare two strings for equality, report differences.
-#
-ok_eq()
-{
-    local have="$1"; shift
-    local expect="$1"; shift
-
-    test "$have" = "$expect";
-    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
-}
-
-#
-# ok_match() --compare a string to a glob-pattern, report differences.
-#
-ok_match()
-{
-    local have="$1"; shift
-    local expect="$1"; shift
-
-    case "$have" in
-    $expect) true;;
-    *) false;;
-    esac
-    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
-}
-
-#
-# ok_grep() --look for a pattern, report differences.
-#
-ok_grep()
-{
-    local have="$1"; shift
-    local expect="$1"; shift
-
-    echo "$have" | grep -q "$expect"
-    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
+    echo "1..$tap_plan" | tty_filter "$log_style"
 }
 
 #
@@ -216,13 +172,13 @@ tap_test_msg()
 	    tap_fail=$(( $tap_fail + 1))
 	fi
     fi
-    printf "%s %d%s\n" "$status" $tap_test "$msg" | tty_filter "$style"
+    printf '%s %d%s\n' "$status" $tap_test "$msg" | tty_filter "$style"
     if [ $result -ne 0 ]; then
 	local file=$(caller 1 | cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
 	local line=$(caller 1 | cut -d' ' -f1)
 
-	diag "   Failed test %s" "$tap_test"
-	diag "   in %s at line %d" "${file:-stdin}" "$line"
+	diag '   Failed test %s' "$tap_test"
+	diag '   in "%s" at line %s' "${file:-stdin}" "$line"
     fi
     return $result
 }
@@ -235,4 +191,114 @@ tap_report_diff()
     diag "%12s: '%s'" 'got' "$1"
     diag "%12s: '%s'" 'expected' "$2"
     false
+}
+
+
+#
+# ok() --Check a process result, and emit TAP output.
+#
+ok()
+{
+    tap_test_msg "$@"
+}
+
+#
+# nok() --Check a process result, and emit TAP output.
+#
+nok()
+{
+   local tap_status=$1; shift
+
+   if [ $tap_status -eq 0 ]; then
+       tap_status=1;
+   else
+       tap_status=0;
+   fi
+   tap_test_msg $tap_status "$@"
+}
+
+#
+# ok_eq() --compare two strings for equality, report differences.
+#
+ok_eq()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    test "$have" = "$expect";
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
+}
+
+#
+# nok_eq() --compare two strings for inequality, report differences.
+#
+# Remarks:
+# differences?
+#
+nok_eq()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    test "$have" != "$expect";
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
+}
+
+#
+# ok_match() --Compare a string to a glob-pattern, report differences.
+#
+ok_match()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    case "$have" in
+    $expect) true;;
+    *) false;;
+    esac
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a glob matching  \"$expect\""
+}
+
+#
+# nok_match() --Compare a string to a glob-pattern, report differences.
+#
+nok_match()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    case "$have" in
+    $expect) false;;
+    *) true;;
+    esac
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a glob matching  \"$expect\""
+}
+
+#
+# ok_grep() --Compare a string to a regex pattern, report differences.
+#
+ok_grep()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    echo "$have" | grep -q -- "$expect"
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a regex matching \"$expect\""
+}
+
+#
+# nok_grep() --Compare a string to a regex pattern, report differences.
+#
+nok_grep()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    echo "$have" | grep -q -- "$expect"
+    test $? -ne 0
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a regex not matching \"$expect\""
 }
