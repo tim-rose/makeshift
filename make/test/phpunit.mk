@@ -8,7 +8,9 @@
 #
 # Remarks:
 # These rules runs the tests in the current directory according to
-# phpunit's odd ideas for finding tests.
+# phpunit's odd ideas for finding tests (you can't name the tests
+# explicitly, you name the directory containing them, and phpunit
+# "discovers" them according to some pattern).
 #
 
 PHP_TESTS ?= $(PHP_SRC)
@@ -28,8 +30,8 @@ test-phpunit:
 #
 # test-phpunit[%]: --Run an individual test.
 #
-test[%.php]:
-	$(PHPUNIT) $(ALL_PHPUNIT_FLAGS) $*.php
+test[%]:
+	$(PHPUNIT) $(ALL_PHPUNIT_FLAGS) --log-junit $*.xml $*.php
 
 clean:		clean-phpunit
 distclean:	clean-phpunit

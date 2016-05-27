@@ -29,9 +29,9 @@ test:	test-google
 test-google:	$(TEST_EXE)
 	archdir=$(archdir) $(TEST_EXE) $(ALL_GTEST_FLAGS) --gtest_output=xml:$(TEST_XML)
 
-clean:	googletest-clean
-distclean:	googletest-clean
+clean:	clean-googletest
+distclean:	clean-googletest
 
-.PHONY:	googletest-clean
-googletest-clean:
+.PHONY:	clean-googletest
+clean-googletest:
 	$(RM) $(TEST_EXE) $(TEST_XML)
