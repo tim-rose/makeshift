@@ -33,10 +33,10 @@ tap_plan=0
 tap_fail=0
 tap_version="${version}"
 
-ok_style=""			# plain
-fail_style="1;31"		# bold+red
-log_style="1"			# bold
-diag_style="36"			# cyan
+ok_style=''			# plain
+fail_style='1;31'		# bold+red
+log_style='1'			# bold
+diag_style='36'			# cyan
 
 if [ -t 1 ]; then
     isatty=1
@@ -99,25 +99,26 @@ TAP_BEGIN()
 TAP_BEGIN
 
 #
-# TAP_EXIT() --Write some summary diagnostics as TAP epilogue.
+# TAP_EXIT() --Write a test summary as TAP epilogue, and set exit status.
 #
 TAP_EXIT()
 {
     local s=			# plural-suffix
-    local status=1
+    local status=
 
     if [ $tap_test -ne $tap_plan ]; then
 	s=; test $tap_plan -ne 1 && s=s
 	diag "Looks like you planned %d test%s but ran %d." \
 	    "$tap_plan" "$s"  "$tap_test"
+	status=2
     fi
     if [ $tap_fail -ne 0 ]; then
 	s=; test $tap_fail -gt 1 && s=s
 	diag "Looks like you failed %d test%s of %d run." \
 	"$tap_fail" "$s" "$tap_test"
-    else
-	status=0
+	status=${status:-1}
     fi
+    exit ${status:-0}
 }
 
 #
