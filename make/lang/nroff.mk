@@ -11,17 +11,17 @@
 .PHONY: $(recursive-targets:%=%-nroff)
 
 ifdef AUTOSRC
-    DEFAULT_MAN1_SRC := $(wildcard *.1)
-    DEFAULT_MAN3_SRC := $(wildcard *.3)
-    DEFAULT_MAN5_SRC := $(wildcard *.5)
-    DEFAULT_MAN7_SRC := $(wildcard *.7)
-    DEFAULT_MAN8_SRC := $(wildcard *.8)
+    LOCAL_MAN1_SRC := $(wildcard *.1)
+    LOCAL_MAN3_SRC := $(wildcard *.3)
+    LOCAL_MAN5_SRC := $(wildcard *.5)
+    LOCAL_MAN7_SRC := $(wildcard *.7)
+    LOCAL_MAN8_SRC := $(wildcard *.8)
 
-    MAN1_SRC ?= $(DEFAULT_MAN1_SRC)
-    MAN3_SRC ?= $(DEFAULT_MAN3_SRC)
-    MAN5_SRC ?= $(DEFAULT_MAN5_SRC)
-    MAN7_SRC ?= $(DEFAULT_MAN7_SRC)
-    MAN8_SRC ?= $(DEFAULT_MAN8_SRC)
+    MAN1_SRC ?= $(LOCAL_MAN1_SRC)
+    MAN3_SRC ?= $(LOCAL_MAN3_SRC)
+    MAN5_SRC ?= $(LOCAL_MAN5_SRC)
+    MAN7_SRC ?= $(LOCAL_MAN7_SRC)
+    MAN8_SRC ?= $(LOCAL_MAN8_SRC)
 endif
 
 #

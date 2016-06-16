@@ -2,13 +2,14 @@
 # PERL.MK --Rules for building PERL objects and programs.
 #
 # Contents:
-# build-perl:          --Make scripts "executable".
-# perl-src-var-defined: --Test if "enough" of the perl SRC vars. are defined.
-# perl-clean:          --Remove script executables.
-# tidy-perl:           --perl-specific customisations for the "tidy" target.
-# toc-perl:            --Build the table-of-contents for PERL-ish files.
-# src-perl:            --perl-specific customisations for the "src" target.
-# todo:                --Report unfinished work (identified by keyword comments)
+# perl-src-defined: --Test if "enough" of the perl SRC vars. are defined.
+# %.pm:             --Rules for installing perl programs and libraries.
+# build:            --Make perl scripts "executable".
+# clean:            --Remove perl script executables.
+# tidy:             --perl-specific customisations for the "tidy" target.
+# toc:              --Build the table-of-contents for perl files.
+# src:              --Define PL_SRC, PM_SRC, T_SRC.
+# todo:             --Report unfinished work (identified by keyword comments)
 #
 .PHONY: $(recursive-targets:%=%-perl)
 
@@ -17,33 +18,34 @@ PERL_SRC=$(PL_SRC) $(PM_SRC) $(T_SRC)
 PERL_TRG = $(PL_SRC:%.pl=%)
 
 #
-# %.pm:		--Rules for installing perl libraries
+# perl-src-defined: --Test if "enough" of the perl SRC vars. are defined.
 #
-%:			%.pl;	$(CP) $*.pl $@ && $(CHMOD) +x $@
-$(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
-
-#
-# build-perl: --Make scripts "executable".
-#
-pre-build:	perl-src-var-defined
-build:	$(PERL_TRG)
-
-#
-# perl-src-var-defined: --Test if "enough" of the perl SRC vars. are defined.
-#
-perl-src-var-defined:
+perl-src-defined:
 	@if [ -z '$(PL_SRC)$(PM_SRC)$(T_SRC)' ]; then \
 	    printf $(VAR_UNDEF) "PL_SRC, PM_SRC or T_SRC" \
 	    echo 'run "make src" to define them'; \
 	    false; \
 	fi >&2
+
+#
+# %.pm: --Rules for installing perl programs and libraries.
+#
+%:			%.pl;	$(INSTALL_PROGRAM) $*.pl $@
+$(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
+
+#
+# build: --Make perl scripts "executable".
+#
+build:	build-perl
+build-perl:	$(PERL_TRG)
+
 #
 # xgettext support
 #
 X_PL_FLAGS = -k__ '-k$$__' -k%__ -k__x -k__n:1,2 -k__nx:1,2 -k__xn:1,2 -kN__ -k
 
 #
-# perl-clean: --Remove script executables.
+# clean: --Remove perl script executables.
 #
 clean:	clean-perl
 distclean:	clean-perl
@@ -51,7 +53,7 @@ clean-perl:
 	$(RM) $(PERL_TRG)
 
 #
-# tidy-perl: --perl-specific customisations for the "tidy" target.
+# tidy: --perl-specific customisations for the "tidy" target.
 #
 tidy:	tidy-perl
 tidy-perl:
@@ -59,7 +61,7 @@ tidy-perl:
 	perltidy --profile=$(DEVKIT_HOME)/etc/.perltidyrc $(PERL_SRC)
 
 #
-# toc-perl: --Build the table-of-contents for PERL-ish files.
+# toc: --Build the table-of-contents for perl files.
 #
 toc:	toc-perl
 toc-perl:
@@ -67,7 +69,7 @@ toc-perl:
 	mk-toc $(PERL_SRC)
 
 #
-# src-perl: --perl-specific customisations for the "src" target.
+# src: --Define PL_SRC, PM_SRC, T_SRC.
 #
 src:	src-perl
 src-perl:

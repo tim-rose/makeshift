@@ -36,7 +36,7 @@ $(archdir)/%.class: %.java mkdir[$(archdir)] var_defined[PACKAGE]
 #
 # build: --Compile all the JAVA_SRC files.
 #
-build:	$(JAVA_OBJ) var-defined[JAVA_SRC]
+build:	$(JAVA_OBJ)
 
 #
 # clean: --Remove The Java package.

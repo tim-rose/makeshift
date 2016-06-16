@@ -16,19 +16,17 @@ sqllibdir	:= $(exec_prefix)/lib/sql/$(subdir)
 #
 $(sqllibdir)/%.sql:	%.sql;	$(INSTALL_FILE) $? $@
 
-pre-build:	src-var-defined[SQL_SRC]
-
 install-sql:    $(SQL_SRC:%=$(sqllibdir)/%)
 
 #
-# toc-sql: --Build the table-of-contents for SQL files.
+# toc: --Build the table-of-contents for SQL files.
 #
 toc:	toc-sql
 toc-sql:
 	$(ECHO_TARGET)
 	mk-toc $(SQL_SRC)
 #
-# src-sql: --Update the SQL_SRC macro.
+# src: --Update the SQL_SRC macro.
 #
 src:	src-sql
 src-sql:

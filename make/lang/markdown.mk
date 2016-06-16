@@ -26,11 +26,11 @@ MD = multimarkdown
 MDFLAGS ?= --process-html
 
 ifdef AUTOSRC
-    DEFAULT_MMD_SRC := $(wildcard *.mmd)
-    DEFAULT_MD_SRC := $(wildcard *.md)
+    LOCAL_MMD_SRC := $(wildcard *.mmd)
+    LOCAL_MD_SRC := $(wildcard *.md)
 
-    MMD_SRC ?= $(DEFAULT_MMD_SRC)
-    MD_SRC ?= $(DEFAULT_MD_SRC)
+    MMD_SRC ?= $(LOCAL_MMD_SRC)
+    MD_SRC ?= $(LOCAL_MD_SRC)
 endif
 
 MMD_CSS = $(exec_prefix)/share/doc/css/plain.css

@@ -1,0 +1,2295 @@
+#!/bin/sh
+# shell archive created on Thu Jun 16 13:45:14 AEST 2016
+# by timmo@joshu.alloratech.local from directory /Users/timmo/Projects/devkit/make/lang
+#
+echo x asciidoc.mk
+cat > asciidoc.mk << '[@-asciidoc.mk-EOF]'
+#
+# ASCIIDOC.MK --Rules for building documents from asciidoc ".txt" files.
+#
+# Contents:
+# %.xml:     --Convert asciidoc ".txt" files into XML.
+# %.fo:      --Convert asciidoc ".txt" files into flow objects.
+# %.html:    --Convert asciidoc ".xml" files into HTML.
+# %.pdf:     --Convert asciidoc ".fo" files into PDF.
+# build:     --Build PDF and HTML documents from asciidoc files.
+# install:   --Install PDF documents to docdir
+# uninstall: --Remove PDF documents from docdir.
+# src:       --Update the TXT_SRC macro with a list of asciidoc text files.
+# clean:     --cleanup asciidoc intermediate files (.xml, .fo, .pdf).
+# todo:      --Report unfinished work in asciidoc files.
+#
+# Remarks:
+# The asciidoc module manages a list of simple asciidoc documents with
+# the ".txt" extension, using the macro TXT_SRC.  It implements
+# pattern rules for converting the ".txt" to docbook XML, and thence
+# to flow objects (".fo"), PDF, and HTML output.  The build target
+# will attempt to build both PDF and HTML.
+#
+.PHONY: $(recursive-targets:%=%-asciidoc)
+
+ifdef AUTOSRC
+    LOCAL_TXT_SRC := $(wildcard *.txt)
+    TXT_SRC ?= $(wildcard *.txt)
+endif
+
+#
+# XSL_FLAGS is adapted from observing the output of a2x, and should
+# be cleaned up.
+# REVISIT: this needs to be generalised from hardcoded paths!
+#
+XSL_FLAGS = --stringparam callout.graphics 0 \
+    --stringparam navig.graphics 0 \
+    --stringparam admon.textlabel 1 \
+    --stringparam admon.graphics 0
+FO_XSL = /opt/local/etc/asciidoc/docbook-xsl/fo.xsl
+HTML_XSL = /opt/local/etc/asciidoc/docbook-xsl/xhtml.xsl
+
+#
+# %.xml: --Convert asciidoc ".txt" files into XML.
+#
+%.xml:  %.txt
+	asciidoc --backend docbook --out-file "$@" "$*.txt"
+	xmllint --nonet --noout --valid "$@"
+
+#
+# %.fo: --Convert asciidoc ".txt" files into flow objects.
+#
+%.fo:	%.xml
+	xsltproc $(XSL_FLAGS) --output "$*.fo" $(FO_XSL) "$*.xml"
+
+#
+# %.html: --Convert asciidoc ".xml" files into HTML.
+#
+%.html:	%.xml
+	xsltproc $(XSL_FLAGS) --output "$*.html" $(HTML_XSL) "$*.xml"
+
+#
+# %.pdf: --Convert asciidoc ".fo" files into PDF.
+#
+%.pdf:	%.fo
+	fop -fo "$*.fo" -pdf "$@"
+
+#
+# build: --Build PDF and HTML documents from asciidoc files.
+#
+build:	build-asciidoc-html build-asciidoc-pdf
+
+build-asciidoc-html:	$(TXT_SRC:%.txt=%.html)
+build-asciidoc-pdf:	$(TXT_SRC:%.txt=%.pdf)
+
+#
+# install: --Install PDF documents to docdir
+#
+install-asciidoc: $(TXT_SRC:%.txt=$(docdir)/%.pdf)
+	$(ECHO_TARGET)
+
+#
+# uninstall: --Remove PDF documents from docdir.
+#
+uninstall-asciidoc:
+	$(ECHO_TARGET)
+	$(RM) $(TXT_SRC:%.txt=$(docdir)/%.pdf)
+	$(RMDIR) -p $(docdir) 2>/dev/null || true
+
+#
+# src: --Update the TXT_SRC macro with a list of asciidoc text files.
+#
+src:	src-asciidoc
+src-asciidoc:
+	$(ECHO_TARGET)
+	@mk-filelist -qn TXT_SRC *.txt
+
+#
+# clean: --cleanup asciidoc intermediate files (.xml, .fo, .pdf).
+#
+distclean:	clean-asciidoc
+clean:	clean-asciidoc
+clean-asciidoc:
+	$(RM) $(TXT_SRC:%.txt=%.xml) $(TXT_SRC:%.txt=%.fo) $(TXT_SRC:%.txt=%.pdf)
+
+#
+# todo: --Report unfinished work in asciidoc files.
+#
+todo:	todo-asciidoc
+todo-asciidoc:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(TXT_SRC)  /dev/null || true
+[@-asciidoc.mk-EOF]
+echo x c++.mk
+cat > c++.mk << '[@-c++.mk-EOF]'
+#
+# C++.MK --Rules for building C++ objects and programs.
+#
+# Contents:
+# %.o:         --Compile a C++ file into an arch-specific sub-directory.
+# archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
+# %.gcov:      --Build a text-format coverage report.
+# build:       --Compile the C++ files, and link any complete programs.
+# install:     --Install "C++" programs.
+# uninstall:   --Uninstall "C++" programs.
+# clean:       --Remove objects and executables created from C++ files.
+# tidy:        --Reformat C++ files consistently.
+# lint:        --Perform static analysis for C++ files.
+# toc:         --Build the table-of-contents for C++ files.
+# src:         --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
+# tags:        --Build vi, emacs tags files for C++ files.
+# todo:        --Find "unfinished work" comments in C++ files.
+#
+# Remarks:
+# The C++ module provides rules and targets for building software
+# using the C++ language. C++ is a little unusual in that there isn't
+# a standard file extension for the source and header files; the
+# (devkit) default is ".cc", ".h", but it can be set via the
+# C++_SUFFIX and H++_SUFFIX macros.
+#
+.PHONY: $(recursive-targets:%=%-c++)
+
+C++_SUFFIX ?= cc
+H++_SUFFIX ?= h
+C++_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
+
+ifdef AUTOSRC
+    LOCAL_C++_MAIN_SRC := $(shell grep -l $(C++_MAIN_RGX) *.$(C++_SUFFIX) 2>/dev/null)
+    LOCAL_C++_SRC := $(wildcard *.$(C++_SUFFIX))
+    LOCAL_H++_SRC := $(wildcard *.$(H++_SUFFIX))
+
+    C++_SRC ?= $(LOCAL_C++_SRC)
+    C++_MAIN_SRC ?= $(LOCAL_C++_MAIN_SRC)
+    H++_SRC ?= $(LOCAL_H_SRC)
+endif
+
+#
+# Include any dependency information that's available.
+#
+-include $(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.d)
+
+C++	= $(CXX)
+LD	= $(CXX)
+
+C++_DEFS = $(OS.C++_DEFS) $(ARCH.C++_DEFS)\
+    $(PROJECT.C++_DEFS) $(LOCAL.C++_DEFS) $(TARGET.C++_DEFS) \
+
+C++_FLAGS = $(OS.CXXFLAGS) $(ARCH.CXXFLAGS) \
+    $(PROJECT.CXXFLAGS) $(LOCAL.CXXFLAGS) $(TARGET.CXXFLAGS) \
+    $(CFLAGS) $(CXXFLAGS)
+
+C++_WARN_FLAGS  = $(OS.C++_WARN_FLAGS) $(ARCH.C++_WARN_FLAGS) \
+    $(PROJECT.C++_WARN_FLAGS) $(LOCAL.C++_WARN_FLAGS) \
+    $(TARGET.C++_WARN_FLAGS)
+
+C++_CPPFLAGS = $(CPPFLAGS) \
+    $(TARGET.C++_CPPFLAGS) $(LOCAL.C++_CPPFLAGS) $(PROJECT.C++_CPPFLAGS) \
+    $(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
+    -I. -I$(includedir)
+
+C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
+
+C++_OBJ  = $(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
+C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
+C++_MAIN = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%)
+
+#
+# c++-src-defined: --Test that the C++ SRC variable(s) are set.
+#
+c++-src-defined:
+	@if [ ! '$(C++_SRC)$(H++_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "H++_SRC and C++_SRC"; \
+	    echo 'run "make src" to define it'; \
+	    false; \
+	fi >&2
+
+#
+# %.o: --Compile a C++ file into an arch-specific sub-directory.
+#
+$(archdir)/%.o: %.$(C++_SUFFIX) | mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
+	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
+
+#
+# archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
+#
+$(archdir)/%.o: $(archdir)/%.$(C++_SUFFIX) | mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
+	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
+#
+# build[%.c++]: --Build a C++ file's related object.
+#
+build[%.$(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
+
+#
+# %.gcov: --Build a text-format coverage report.
+#
+%.$(C++_SUFFIX).gcov:	$(archdir)/%.gcda mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	@echo gcov -o $(archdir) $*.$(C++_SUFFIX)
+	@gcov -o $(archdir) $*.$(C++_SUFFIX) | \
+            sed -ne '/^Lines/s/.*:/gcov $*.$(C++_SUFFIX): /p'
+
+#
+# %.h++: --Install a C++ header file.
+#
+$(includedir)/%.$(H++_SUFFIX):	%.$(H++_SUFFIX)
+	$(ECHO_TARGET)
+	$(INSTALL_FILE) $? $@
+
+$(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX) mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	$(INSTALL_FILE) $? $@
+
+#
+# +c++-defines: --Print a list of predefined macros for the "C++" language.
+#
+# Remarks:
+# This target uses gcc-specific compiler options, so it may not work
+# on your compiler...
+#
++c++-defines:
+	@touch ..$(C++_SUFFFIX); \
+            $(C++) -E -dM ..$(C++_SUFFIX); \
+            $(RM) ..$(C++_SUFFIX)
+
+#
+# build: --Compile the C++ files, and link any complete programs.
+#
+build:	build-c++
+build-c++:	$(C++_OBJ) $(C++_MAIN)
+	$(ECHO_TARGET)
+
+#
+# install: --Install "C++" programs.
+#
+# Remarks:
+# The install (and uninstall) target is not invoked by default,
+# it must be added as a dependent of the "install" target.
+#
+install-c++:	$(C++_MAIN:$(archdir)/%=$(bindir)/%)
+	$(ECHO_TARGET)
+
+#
+# uninstall: --Uninstall "C++" programs.
+#
+uninstall-c++: src-var-defined[C++_MAIN_SRC]
+	$(ECHO_TARGET)
+	$(RM) $(C++_MAIN:$(archdir)/%=$(bindir)/%)
+	$(RMDIR) -p $(bindir) 2>/dev/null || true
+
+#
+# clean: --Remove objects and executables created from C++ files.
+#
+clean:	clean-c++
+clean-c++:
+	$(ECHO_TARGET)
+	$(RM) $(C++_MAIN) $(C++_OBJ) $(C++_OBJ:%.o=%.d)
+
+#
+# tidy: --Reformat C++ files consistently.
+#
+C++_INDENT ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent
+C++_INDENT_FLAGS = $(OS.C++_INDENT_FLAGS) $(ARCH.C++_INDENT_FLAGS) \
+    $(PROJECT.C++_INDENT_FLAGS) $(LOCAL.C++_INDENT_FLAGS) $(TARGET.C++_INDENT_FLAGS)
+tidy:	tidy-c++
+tidy-c++:	c++-src-defined
+	$(ECHO_TARGET)
+	$(C++_INDENT) $(C++_INDENT_FLAGS) $(H++_SRC) $(C++_SRC)
+#
+# lint: --Perform static analysis for C++ files.
+#
+C++_LINT ?= cppcheck --quiet --std=c++11 --template=gcc --enable=style,warning,performance,portability,information $(C++_CPPFLAGS)
+C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
+    $(PROJECT.C++_LINT_FLAGS) $(LOCAL.C++_LINT_FLAGS) $(TARGET.C++_LINT_FLAGS)
+
+lint:	lint-c++
+lint-c++:	c++-src-defined
+	$(ECHO_TARGET)
+	$(C++_LINT) $(C++_LINT_FLAGS) $(H++_SRC) $(C++_SRC)
+
+#
+# toc: --Build the table-of-contents for C++ files.
+#
+toc:	toc-c++
+toc-c++:	c++-src-defined
+	$(ECHO_TARGET)
+	mk-toc $(H++_SRC) $(C++_SRC)
+
+#
+# src: --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
+#
+src:	src-c++
+src-c++:
+	$(ECHO_TARGET)
+	@mk-filelist -qn C++_SRC *.$(C++_SUFFIX)
+	@mk-filelist -qn C++_MAIN_SRC \
+            $$(grep -l $(C++_MAIN_RGX) *.$(C++_SUFFIX) 2>/dev/null)
+	@mk-filelist -qn H++_SRC *.$(H++_SUFFIX)
+
+#
+# tags: --Build vi, emacs tags files for C++ files.
+#
+tags:	tags-c++
+tags-c++:	c++-src-defined
+	$(ECHO_TARGET)
+	-ctags $(H++_SRC) $(C++_SRC) && etags $(H++_SRC) $(C++_SRC)
+
+#
+# todo: --Find "unfinished work" comments in C++ files.
+#
+todo:	todo-c++
+todo-c++:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(H++_SRC) $(C++_SRC) /dev/null || true
+[@-c++.mk-EOF]
+echo x c.mk
+cat > c.mk << '[@-c.mk-EOF]'
+#
+# C.MK --Rules for building C objects and programs.
+#
+# Contents:
+# c-src-defined: --Test that the C SRC variable(s) are set.
+# %.o:           --Compile a C file into an arch-specific sub-directory.
+# archdir/%.o:   --Compile a generated C file into the arch sub-directory.
+# %.h:           --Install a C header (.h) file.
+# %.c.gcov:      --Build a text-format coverage report.
+# +c-defines:    --Print a list of predefined macros for the "C" language.
+# build:         --Build the C objects and executables.
+# build[%]:      --Build a C file's related object.
+# install:       --Install "C" programs.
+# uninstall:     --Uninstall "C" programs.
+# clean:         --Remove objects and executables created from C files.
+# tidy:          --Reformat C files consistently.
+# lint:          --Perform static analysis for C files.
+# toc:           --Build the table-of-contents for C files.
+# src:           --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
+# tags:          --Build vi, emacs tags files.
+# todo:          --Report "unfinished work" comments in C files.
+#
+# Remarks:
+# The "lang/c" module provides support for the "C" programming language.
+# It requires some of the following variables to be defined:
+#
+#  * H_SRC	--C header files
+#  * C_SRC	--C source files
+#  * C_MAIN_SRC	--C source files that define a main() function.
+#
+
+.PHONY: $(recursive-targets:%=%-c)
+
+C_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
+
+ifdef AUTOSRC
+    LOCAL_C_MAIN_SRC := $(shell grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
+    LOCAL_C_SRC := $(wildcard *.c)
+    LOCAL_H_SRC := $(wildcard *.h)
+
+    C_SRC ?= $(LOCAL_C_SRC)
+    C_MAIN_SRC ?= $(LOCAL_C_MAIN_SRC)
+    H_SRC ?= $(LOCAL_H_SRC)
+endif
+
+#
+# Include any dependency information that's available.
+#
+-include $(C_SRC:%.c=$(archdir)/%.d)
+
+C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
+C_MAIN_OBJ = $(C_MAIN_SRC:%.c=$(archdir)/%.o)
+C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
+
+C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS)\
+    $(PROJECT.C_DEFS) $(LOCAL.C_DEFS) $(TARGET.C_DEFS)
+
+C_FLAGS = $(OS.CFLAGS) $(ARCH.CFLAGS) \
+    $(PROJECT.CFLAGS) $(LOCAL.CFLAGS) $(TARGET.CFLAGS) $(CFLAGS)
+
+C_WARN_FLAGS = $(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS) \
+    $(PROJECT.C_WARN_FLAGS) $(LOCAL.C_WARN_FLAGS) $(TARGET.C_WARN_FLAGS)
+
+C_CPPFLAGS = $(CPPFLAGS) \
+    $(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) $(PROJECT.C_CPPFLAGS) \
+    $(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
+    -I. -I$(includedir)
+
+C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
+
+#
+# c-src-defined: --Test that the C SRC variable(s) are set.
+#
+c-src-defined:
+	@if [ ! '$(C_SRC)$(H_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "H_SRC and C_SRC"; \
+	    echo 'run "make src" to define it'; \
+	    false; \
+	fi >&2
+
+#
+# %.o: --Compile a C file into an arch-specific sub-directory.
+#
+# Remarks:
+# This target also builds dependency information as a side effect
+# of the build.  Note that it doesn't declare that it builds the
+# dependencies, and the "-include" command allows the files to
+# be absent, so this setup will avoid premature compilation.
+#
+$(archdir)/%.o: %.c | mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
+	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
+#
+# archdir/%.o: --Compile a generated C file into the arch sub-directory.
+#
+$(archdir)/%.o: $(archdir)/%.c | mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
+	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
+
+#
+# %.h: --Install a C header (.h) file.
+#
+$(includedir)/%.h:	%.h;		$(INSTALL_FILE) $? $@
+$(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
+
+#
+# %.c.gcov: --Build a text-format coverage report.
+#
+# Remarks:
+# The gcov tool outputs some progress information, which is
+# mostly filtered out.
+#
+%.c.gcov:	$(archdir)/%.gcda | mkdir[$(archdir)]
+	@echo gcov -o $(archdir) $*.c
+	@gcov -o $(archdir) $*.c | sed -ne '/^Lines/s/.*:/gcov $*.c: /p'
+
+#
+# +c-defines: --Print a list of predefined macros for the "C" language.
+#
+# Remarks:
+# This target uses gcc-specific compiler options, so it may not work
+# on your compiler...
+#
++c-defines:
+	@touch ..c;  $(CC) -E -dM ..c; $(RM) ..c
+
+#
+# build: --Build the C objects and executables.
+#
+build:	build-c
+build-c:	$(C_OBJ) $(C_MAIN); $(ECHO_TARGET)
+
+$(C_OBJ) $(C_MAIN):	| build-subdirs
+
+#
+# build[%]: --Build a C file's related object.
+#
+build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
+
+#
+# install: --Install "C" programs.
+#
+# Remarks:
+# The install (and uninstall) target is not invoked by default,
+# it must be added as a dependent of the "install" target.
+#
+install-c:	$(C_MAIN:$(archdir)/%=$(bindir)/%); $(ECHO_TARGET)
+install-strip-c:	install-strip-file[$(C_MAIN:$(archdir)/%=$(bindir)/%)]
+	$(ECHO_TARGET)
+
+#
+# uninstall: --Uninstall "C" programs.
+#
+uninstall-c:	src-var-defined[C_MAIN]
+	$(ECHO_TARGET)
+	$(RM) $(C_MAIN:$(archdir)/%=$(bindir)/%)
+	$(RMDIR) -p $(bindir) 2>/dev/null || true
+
+#
+# clean: --Remove objects and executables created from C files.
+#
+clean:	clean-c
+clean-c: src-src-defined[C_SRC]
+	$(ECHO_TARGET)
+	$(RM) $(C_MAIN) $(C_OBJ) $(C_OBJ:%.o=%.d) $(C_OBJ:%.o=%.map)
+
+#
+# tidy: --Reformat C files consistently.
+#
+C_INDENT ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent
+C_INDENT_FLAGS = $(OS.C_INDENT_FLAGS) $(ARCH.C_INDENT_FLAGS) \
+    $(PROJECT.C_INDENT_FLAGS) $(LOCAL.C_INDENT_FLAGS) $(TARGET.C_INDENT_FLAGS)
+tidy:	tidy-c
+tidy-c:	c-src-defined
+	$(ECHO_TARGET)
+	$(C_INDENT) $(C_INDENT_FLAGS) $(H_SRC) $(C_SRC)
+#
+# lint: --Perform static analysis for C files.
+#
+C_LINT ?= cppcheck --quiet --std=c11 --template=gcc --enable=style,warning,performance,portability,information $(C_CPPFLAGS)
+C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
+    $(PROJECT.C_LINT_FLAGS) $(LOCAL.C_LINT_FLAGS) $(TARGET.C_LINT_FLAGS)
+lint:	lint-c
+lint-c:
+	$(ECHO_TARGET)
+	$(C_LINT) $(C_LINT_FLAGS) $(H_SRC) $(C_SRC)
+#
+# toc: --Build the table-of-contents for C files.
+#
+toc:	toc-c
+toc-c:	c-src-defined
+	$(ECHO_TARGET)
+	mk-toc $(H_SRC) $(C_SRC)
+
+#
+# src: --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
+#
+src:	src-c
+src-c:
+	$(ECHO_TARGET)
+	@mk-filelist -qn C_SRC *.c
+	@mk-filelist -qn C_MAIN_SRC \
+            $$(grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
+	@mk-filelist -qn H_SRC *.h
+
+#
+# tags: --Build vi, emacs tags files.
+#
+tags:	tags-c
+tags-c:	c-src-defined
+	$(ECHO_TARGET)
+	-ctags $(H_SRC) $(C_SRC) && etags $(H_SRC) $(C_SRC)
+
+#
+# todo: --Report "unfinished work" comments in C files.
+#
+todo:	todo-c
+todo-c:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(H_SRC) $(C_SRC) /dev/null || true
+[@-c.mk-EOF]
+echo x conf.mk
+cat > conf.mk << '[@-conf.mk-EOF]'
+#
+# CONF.MK --Rules for building config files.
+#
+# Contents:
+# %.conf:           --Pattern rules for installing config files.
+# conf-src-defined: --Test if any of the "conf" SRC vars. are defined.
+# install:          --Install config files to sysconfdir
+# toc:              --Build the table-of-contents for config files.
+# src:              --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
+# todo:             --Report "unfinished work" comments in config files.
+#
+# Remarks:
+# Config files can have a variety of extensions (".conf", ".ini",
+# ".cfg").  The conf module supports all of these via the macros
+# CONF_SRC, INI_SRC, CFG_SRC.  It defines rules for installing the
+# config files into $(sysconfdir), and $(divertdir). FWIW, divertdir
+# is useful on debian-based systems; it helps support local
+# customisation of another package's config files.
+#
+.PHONY: $(recursive-targets:%=%-conf)
+
+ifdef AUTOSRC
+    LOCAL_CONF_SRC := $(wildcard *.conf)
+    LOCAL_CFG_SRC := $(wildcard *.cfg)
+    LOCAL_INI_SRC := $(wildcard *.ini)
+
+    CONF_SRC ?= $(LOCAL_CONF_SRC)
+    CFG_SRC ?= $(LOCAL_CFG_SRC)
+    INI_SRC ?= $(LOCAL_INI_SRC)
+endif
+
+#
+# %.conf: --Pattern rules for installing config files.
+#
+$(sysconfdir)/%:	%.conf;		$(INSTALL_FILE) $? $@
+$(divertdir)/%:		%.conf;		$(INSTALL_FILE) $? $@
+
+$(sysconfdir)/%.conf:	%.conf;		$(INSTALL_FILE) $? $@
+$(sysconfdir)/%.cfg:	%.cfg;		$(INSTALL_FILE) $? $@
+$(sysconfdir)/%.ini:	%.ini;		$(INSTALL_FILE) $? $@
+
+$(divertdir)/%.conf:	%.conf;		$(INSTALL_FILE) $? $@
+$(divertdir)/%.cfg:	%.cfg;		$(INSTALL_FILE) $? $@
+$(divertdir)/%.ini:	%.ini;		$(INSTALL_FILE) $? $@
+
+#
+# conf-src-defined: --Test if any of the "conf" SRC vars. are defined.
+#
+conf-src-defined:
+	@if [ ! '$(CONF_SRC)$(CFG_SRC)$(INI_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "CONF_SRC, CFG_SRC, INI_SRC"; \
+	    echo 'run "make src" to define them'; \
+	    false; \
+	fi >&2
+
+#
+# install: --Install config files to sysconfdir
+#
+install-conf:	$(CONF_SRC:%=$(sysconfdir)/%) \
+    $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
+	$(ECHO_TARGET)
+#
+# toc: --Build the table-of-contents for config files.
+#
+toc:	toc-conf
+toc-conf:	conf-src-defined
+	$(ECHO_TARGET)
+	mk-toc $(CONF_SRC) $(CFG_SRC) $(INI_SRC)
+
+#
+# src: --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
+#
+src:	src-conf
+src-conf:
+	$(ECHO_TARGET)
+	@mk-filelist -qn CONF_SRC *.conf
+	@mk-filelist -qn CFG_SRC *.cfg
+	@mk-filelist -qn INI_SRC *.ini
+
+#
+# todo: --Report "unfinished work" comments in config files.
+#
+todo:	todo-conf
+todo-conf:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(CONF_SRC) $(CFG_SRC) $(INI_SRC) /dev/null || true
+[@-conf.mk-EOF]
+echo x css.mk
+cat > css.mk << '[@-css.mk-EOF]'
+#
+# CSS.MK --Rules for dealing with CSS files.
+#
+# Contents:
+# css-src-defined: --Test if any of the "css" SRC vars. are defined.
+# install-css:     --install css files.
+# src:             --Update the CSS_SRC, SCSS_SRC macros.
+# toc:             --Build the table-of-contents for CSS files.
+# todo:            --Report "unfinished work" comments in CSS files.
+#
+# Remarks:
+# MAP_SRC is not defined, not all CSS files have them.
+#
+# TODO: macros for LESSC, SCSS (and choose tools)
+#
+.PHONY: $(recursive-targets:%=%-css)
+
+$(wwwdir)/%.css:	%.css;		$(INSTALL_FILE) $? $@
+$(datadir)/%.css:	%.css;		$(INSTALL_FILE) $? $@
+$(wwwdir)/%.css.map:	%.css.map;	$(INSTALL_FILE) $? $@
+$(datadir)/%.css.map:	%.css.map;	$(INSTALL_FILE) $? $@
+
+%.css:	%.scss;	scss $*.scss >$@
+%.css:	%.less;	plessc $*.less >$@
+
+#
+# css-src-defined: --Test if any of the "css" SRC vars. are defined.
+#
+css-src-defined:
+	@if [ ! '$(CSS_SRC)$(SCSS_SRC)$(LESS_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "CSS_SRC, SCSS_SRC, LESS_SRC"; \
+	    echo 'run "make src" to define them'; \
+	    false; \
+	fi >&2
+
+#
+# install-css: --install css files.
+#
+install-css:	$(CSS_SRC:%.css=$(wwwdir)/%.css) \
+    $(CSS_MAP_SRC:%.css.map=$(wwwdir)/%.css.map)
+
+#
+# src: --Update the CSS_SRC, SCSS_SRC macros.
+#
+src:	src-css
+src-css:
+	$(ECHO_TARGET)
+	@mk-filelist -qn CSS_SRC *.css
+	@mk-filelist -qn SCSS_SRC *.scss
+	@mk-filelist -qn LESS_SRC *.less
+
+#
+# toc: --Build the table-of-contents for CSS files.
+#
+toc:	toc-css
+toc-css:	css-src-defined
+	$(ECHO_TARGET)
+	mk-toc $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC)
+
+#
+# todo: --Report "unfinished work" comments in CSS files.
+#
+todo:	todo-css
+todo-css:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC) /dev/null || true
+[@-css.mk-EOF]
+echo x elisp.mk
+cat > elisp.mk << '[@-elisp.mk-EOF]'
+#
+# ELISP.MK --Rules for emacs lisp stuff.
+#
+# Contents:
+# %.el:  --Rules for installing elisp scripts.
+# build: --Compile elisp files using the emacs byte compiler.
+# build: --byte-compile the elisp src.
+# clean: --Remove byte-compiled elisp.
+# toc:   --Build the table-of-contents for emacs lisp files.
+# src:   --Update the ELISP_SRC macro with a list of ".el" files.
+# todo:  --Report "unfinished work" comments in elisp files.
+#
+.PHONY: $(recursive-targets:%=%-elisp)
+
+#
+# %.el: --Rules for installing elisp scripts.
+#
+$(elispdir)/%.el:	%.el;	$(INSTALL_FILE) $? $@
+$(elispdir)/%.elc:	%.elc;	$(INSTALL_FILE) $? $@
+
+ELISP_OBJ = $(ELISP_SRC:%.el=%.elc)
+
+#
+# build: --Compile elisp files using the emacs byte compiler.
+#
+%.elc:	%.el
+	emacs -batch -f batch-byte-compile $*.el
+
+
+
+#
+# build: --byte-compile the elisp src.
+#
+build:	build-elisp
+build-elisp:	$(ELISP_OBJ)
+	$(ECHO_TARGET)
+
+#
+# clean: --Remove byte-compiled elisp.
+#
+distclean:	clean-elisp
+clean:	clean-elisp
+clean-elisp:
+	$(RM) -f $(ELISP_OBJ)
+
+#
+# toc: --Build the table-of-contents for emacs lisp files.
+#
+toc:	toc-elisp
+toc-elisp:	var-defined[ELISP_SRC]
+	$(ECHO_TARGET)
+	mk-toc $(ELISP_SRC)
+
+#
+# src: --Update the ELISP_SRC macro with a list of ".el" files.
+#
+src:	src-elisp
+src-elisp:
+	$(ECHO_TARGET)
+	@mk-filelist -qn ELISP_SRC *.el
+
+#
+# todo: --Report "unfinished work" comments in elisp files.
+#
+todo:	todo-elisp
+todo-elisp:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(ELISP_SRC) /dev/null || true
+[@-elisp.mk-EOF]
+echo x img.mk
+cat > img.mk << '[@-img.mk-EOF]'
+#
+# IMG.MK --Rules for installing and building image files
+#
+# Contents:
+# install-img: --Install various image files to wwwdir.
+# src-img:     --Update PNG_SRC, GIF_SRC, JPG_SRC macros.
+#
+.PHONY: $(recursive-targets:%=%-img)
+
+IMG_SRC = $(PNG_SRC) $(GIF_SRC) $(JPG_SRC) $(SVG_SRC)
+
+$(wwwdir)/%.png:	%.png;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.gif:	%.gif;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.jpeg:	%.jpeg;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.jpg:	%.jpg;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.svg:	%.svg;	$(INSTALL_FILE) $? $@
+
+$(datadir)/%.png:	%.png;	$(INSTALL_FILE) $? $@
+$(datadir)/%.gif:	%.gif;	$(INSTALL_FILE) $? $@
+$(datadir)/%.jpeg:	%.jpeg;	$(INSTALL_FILE) $? $@
+$(datadir)/%.jpg:	%.jpg;	$(INSTALL_FILE) $? $@
+$(datadir)/%.svg:	%.svg;	$(INSTALL_FILE) $? $@
+
+#
+# install-img: --Install various image files to wwwdir.
+#
+install-img:	install-png install-gif install-jpg install-svg
+
+install-png:	$(PNG_SRC:%=$(wwwdir)/%)
+install-gif:	$(GIF_SRC:%=$(wwwdir)/%)
+install-jpg:	$(jpg_SRC:%=$(wwwdir)/%)
+install-svg:	$(svg_SRC:%=$(wwwdir)/%)
+
+#
+# src-img: --Update PNG_SRC, GIF_SRC, JPG_SRC macros.
+#
+src:	src-img
+src-img:
+	$(ECHO_TARGET)
+	@mk-filelist -qn PNG_SRC *.png
+	@mk-filelist -qn GIF_SRC *.gif
+	@mk-filelist -qn JPG_SRC *.jpeg *.jpg
+	@mk-filelist -qn SVG_SRC *.svg
+[@-img.mk-EOF]
+echo x java.mk
+cat > java.mk << '[@-java.mk-EOF]'
+#
+# JAVA.MK --Rules for building JAVA objects and programs.
+#
+# Contents:
+# %.class: --Compile a java file into an arch-specific sub-directory.
+# build:   --Compile all the JAVA_SRC files.
+# clean:   --Remove The Java package.
+# src:     --Update the JAVA_SRC macro.
+# tags:    --Build vi, emacs tags files.
+# todo:    --Report "unfinished work" comments in Java files.
+#
+# Remarks:
+# The "lang/java" module provides support for the "java" programming language.
+# It requires the following variables to be defined:
+#
+#  * JAVA_SRC	--java source files
+#  * PACKAGE	--the java package name
+#
+.PHONY: $(recursive-targets:%=%-java)
+
+JAVAC	= javac
+JAVA_FLAGS = $(OS.JAVA_FLAGS) $(ARCH.JAVA_FLAGS) $(LOCAL.JAVA_FLAGS) $(TARGET.JAVA_FLAGS)
+
+JAVA_OBJ	= $(JAVA_SRC:%.java=$(archdir)/%.class)
+
+#
+# %.class: --Compile a java file into an arch-specific sub-directory.
+#
+# Remarks:
+# ".class" files are arch-neutral aren't they?
+#
+$(archdir)/%.class: %.java mkdir[$(archdir)] var_defined[PACKAGE]
+	$(ECHO_TARGET)
+	$(JAVAC) $(JAVA_FLAGS) -d $(archdir) $*.java
+
+#
+# build: --Compile all the JAVA_SRC files.
+#
+build:	$(JAVA_OBJ) var-defined[JAVA_SRC]
+
+#
+# clean: --Remove The Java package.
+#
+distclean:	clean-java
+clean:	clean-java
+clean-java:
+	$(ECHO_TARGET)
+	$(RM) $(archdir)/$(PACKAGE)
+
+#
+# src: --Update the JAVA_SRC macro.
+#
+src:	src-java
+src-java:
+	$(ECHO_TARGET)
+	@mk-filelist -qn JAVA_SRC $(find * -name *.java)
+#
+# tags: --Build vi, emacs tags files.
+#
+tags:	tags-java
+tags-java:	src-var-defined[JAVA_SRC]
+	$(ECHO_TARGET)
+	ctags $(JAVA_SRC) && \
+	etags $(JAVA_SRC); true
+
+#
+# todo: --Report "unfinished work" comments in Java files.
+#
+todo:	todo-java
+todo-java:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(JAVA_SRC) /dev/null || true
+[@-java.mk-EOF]
+echo x javascript.mk
+cat > javascript.mk << '[@-javascript.mk-EOF]'
+#
+# JAVASCRIPT.MK --Rules for dealing with JavaScript files.
+#
+# Contents:
+# install-javascript: --Install JavaScript files to wwwdir(?).
+# toc-javascript:     --Build the table-of-contents for JavaScript files.
+# src-javascript:     --Update the JS_SRC macro.
+# todo:               --Report "unfinished work" comments in JavaScript files.
+#
+.PHONY: $(recursive-targets:%=%-javascript)
+
+$(wwwdir)/%.js:	%.js;	$(INSTALL_FILE) $? $@
+
+#
+# install-javascript: --Install JavaScript files to wwwdir(?).
+#
+install-javascript:	$(JS_SRC:%=$(wwwdir)/%)
+
+#
+# toc-javascript: --Build the table-of-contents for JavaScript files.
+#
+toc:	toc-javascript
+toc-javascript:
+	$(ECHO_TARGET)
+	mk-toc $(JS_SRC)
+#
+# src-javascript: --Update the JS_SRC macro.
+#
+src:	src-javascript
+src-javascript:
+	$(ECHO_TARGET)
+	@mk-filelist -qn JS_SRC *.js
+
+#
+# todo: --Report "unfinished work" comments in JavaScript files.
+#
+todo:	todo-javascript
+todo-javascript:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(JS_SRC) /dev/null || true
+[@-javascript.mk-EOF]
+echo x lex.mk
+cat > lex.mk << '[@-lex.mk-EOF]'
+#
+# LEX.MK --Rules for working with LEX files.
+#
+# Contents:
+# %.l:   --Compile the lex grammar into a ".c" file
+# build: --Compile LEX_SRC to object code.
+# clean: --Remove the lex grammar's object files.
+# src:   --Update the LEX_SRC macro.
+# toc:   --Update the table of contents in lex files.
+#
+# Remarks:
+# LEX files are pre-processed into "C" files which are then handled
+# by the rules/definitions for building C programs.  This file
+# contains patterns to define the pre-processing transformation only.
+#
+.PHONY: $(recursive-targets:%=%-lex)
+
+ifdef AUTOSRC
+    LOCAL_LEX_SRC := $(wildcard *.c)
+    LEX_SRC ?= $(LOCAL_LEX_SRC)
+endif
+LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%_l.o)
+LEX_GEN	= $(LEX_SRC:%.l=$(archdir)/%_l.c)
+
+.PRECIOUS:	$(LEX_GEN)
+
+-include $(LEX_SRC:%.l=$(archdir)/%_l.d)
+
+ALL_LFLAGS = $(OS.LFLAGS) $(ARCH.LFLAGS) \
+    $(PROJECT.LFLAGS) $(LOCAL.LFLAGS) $(TARGET.LFLAGS) $(LFLAGS)
+
+#
+# %.l: --Compile the lex grammar into a ".c" file
+#
+
+$(archdir)/%_l.c:	%.l | mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	BASE=$$(echo "$*"| tr a-z A-Z); \
+            $(LEX) $(ALL_LFLAGS) -t $< | \
+            sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" >$(archdir)/$*_l.c
+
+#
+# build: --Compile LEX_SRC to object code.
+#
+build:	$(LEX_OBJ)
+
+#
+# clean: --Remove the lex grammar's object files.
+#
+clean:	clean-lex
+clean-lex:
+	$(ECHO_TARGET)
+	$(RM) $(LEX_OBJ) $(LEX_SRC:%.l=$(archdir)/%_l.d)
+
+#
+# src: --Update the LEX_SRC macro.
+#
+src:	src-lex
+src-lex:
+	$(ECHO_TARGET)
+	@mk-filelist -qn LEX_SRC *.l
+
+#
+# toc: --Update the table of contents in lex files.
+#
+toc:	toc-lex
+toc-lex:
+	$(ECHO_TARGET)
+	mk-toc $(LEX_SRC)
+[@-lex.mk-EOF]
+echo x markdown.mk
+cat > markdown.mk << '[@-markdown.mk-EOF]'
+#
+# MARKDOWN.MK --Rules for dealing with markdown files.
+#
+# Contents:
+# %.html/%.md:    --build a HTML document from a mulitmarkdown file.
+# %.pdf:          --Create a PDF document from a HTML file.
+# build:          --Create HTML documents from MMD_SRC, MD_SRC.
+# doc-markdown:   --Create PDF documents from MMD_SRC, MD_SRC.
+# clean-markdown: --Clean up markdown's derived files.
+# src-markdown:   --Update MD_SRC, MMD_SRC macros.
+# todo-markdown:  --Report unfinished work in markdown files.
+#
+# Remarks:
+# The markdown module recognises both "multimarkdown" markdown files
+# (".mmd"), and simple markdown/text files (".md"), defined by MMD_SRC and
+# MD_SRC respectively. The markdown files are assumed to create full
+# documents, and are created by `build`, using multimarkdown.
+#
+# See Also:
+# http://alistapart.com/article/building-books-with-css3
+# http://www.princexml.com/doc
+#
+.PHONY: $(recursive-targets:%=%-markdown)
+
+MD = multimarkdown
+MDFLAGS ?= --process-html
+
+ifdef AUTOSRC
+    LOCAL_MMD_SRC := $(wildcard *.mmd)
+    LOCAL_MD_SRC := $(wildcard *.md)
+
+    MMD_SRC ?= $(LOCAL_MMD_SRC)
+    MD_SRC ?= $(LOCAL_MD_SRC)
+endif
+
+MMD_CSS = $(exec_prefix)/share/doc/css/plain.css
+PDF_CSS = $(exec_prefix)/share/doc/css/print.css
+
+$(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
+$(datadir)/%.html:	%.html; $(INSTALL_FILE) $? $@
+
+#
+# %.html/%.md: --build a HTML document from a mulitmarkdown file.
+#
+%.html:	%.mmd
+	$(ECHO_TARGET)
+	$(MD) $(MDFLAGS) $*.mmd > $@
+
+#
+# %.html/%.md: build HTML document from a simple markdown file.
+#
+%.html:	%.md
+	$(ECHO_TARGET)
+	{ echo "title: $*"; \
+          echo "css: file://$(MMD_CSS)"; \
+          echo; cat $*.md; } | $(MD) $(MDFLAGS) > $@
+
+#
+# %.pdf: --Create a PDF document from a HTML file.
+#
+%.pdf: %.html
+	$(ECHO_TARGET)
+	prince -s $(PDF_CSS) $*.html -o $@
+#
+# build: --Create HTML documents from MMD_SRC, MD_SRC.
+#
+build:	build-markdown
+build-mardkown:	$(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html)
+
+#
+# doc-markdown: --Create PDF documents from MMD_SRC, MD_SRC.
+#
+doc:	doc-markdown
+doc-markdown:	$(MMD_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
+
+#
+# clean-markdown: --Clean up markdown's derived files.
+#
+distclean:	clean-markdown
+clean:	clean-markdown
+clean-markdown:
+	$(ECHO_TARGET)
+	$(RM) $(MMD_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html) $(MMD_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
+
+#
+# src-markdown: --Update MD_SRC, MMD_SRC macros.
+#
+src:	src-markdown
+src-markdown:
+	$(ECHO_TARGET)
+	@mk-filelist -qn MMD_SRC *.mmd
+	@mk-filelist -qn MD_SRC *.md
+
+#
+# todo-markdown: --Report unfinished work in markdown files.
+#
+todo:	todo-markdown
+todo-markdown:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(MMD_SRC) /dev/null || true
+[@-markdown.mk-EOF]
+echo x mk.mk
+cat > mk.mk << '[@-mk.mk-EOF]'
+#
+# MK.MK --devkit rules for manipulating ".mk" files.
+#
+# Contents:
+# install-mk:   --Install ".mk" files to their usual places.
+# uninstall-mk: --Uninstall the default ".mk" files.
+# src:          --Update MK_SRC with the list of ".mk" files.
+# toc:          --Rebuild a Makefile's table-of-contents.
+# todo:         --Report unfinished work in Makefiles.
+# +stddirs:     --Print the current make directory macros.
+#
+.PHONY: $(recursive-targets:%=%-mk)
+
+ifdef AUTOSRC
+    LOCAL_MK_SRC := $(wildcard *.mk)
+
+    MK_SRC ?= $(LOCAL_MK_SRC)
+endif
+
+$(includedir)/%.mk:	%.mk;	$(INSTALL_FILE) $< $@
+
+#
+# install-mk: --Install ".mk" files to their usual places.
+#
+install-mk:     $(MK_SRC:%.mk=$(includedir)/%.mk)
+
+#
+# uninstall-mk: --Uninstall the default ".mk" files.
+#
+uninstall-mk:
+	$(ECHO_TARGET)
+	$(RM) $(MK_SRC:%.mk=$(includedir)/%.mk)
+	$(RMDIR) -p $(includedir) 2>/dev/null || true
+
+#
+# src: --Update MK_SRC with the list of ".mk" files.
+#
+src:	src-mk
+src-mk:
+	$(ECHO_TARGET)
+	@mk-filelist -qn MK_SRC *.mk .mk
+
+#
+# toc: --Rebuild a Makefile's table-of-contents.
+#
+toc:	toc-mk
+toc-mk:
+	$(ECHO_TARGET)
+	@mk-toc Makefile $(MK_SRC)
+
+#
+# todo: --Report unfinished work in Makefiles.
+#
+todo:	todo-mk
+todo-mk:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) Makefile $(MK_SRC) /dev/null || true
+
+#
+# +stddirs: --Print the current make directory macros.
+#
+.PHONY +stddirs:
++stddirs:
+	@echo "DESTDIR:        $(DESTDIR)"
+	@echo "prefix:         $(prefix)"
+	@echo "opt:            $(opt)"
+	@echo "usr:            $(usr)"
+	@echo "subdir:         $(subdir)"
+	@echo "archdir:        $(archdir)"
+	@echo "pkgver:         $(pkgver)"
+	@echo ""; echo "rootdir:        $(rootdir)"
+	@echo "bindir:         $(bindir)"
+	@echo "sbindir:        $(sbindir)"
+	@echo "libexecdir:     $(libexecdir)"
+	@echo "datadir:        $(datadir)"
+	@echo "system_confdir: $(system_confdir)"
+	@echo "sysconfdir:     $(sysconfdir)"
+	@echo "divertdir:      $(divertdir)"
+	@echo "sharedstatedir: $(sharedstatedir)"
+	@echo "localstatedir:  $(localstatedir)"
+	@echo "srvdir:         $(srvdir)"
+	@echo "wwwdir:         $(wwwdir)"
+	@echo "libdir:         $(libdir)"
+	@echo "infodir:        $(infodir)"
+	@echo "lispdir:        $(lispdir)"
+	@echo "includedir:     $(includedir)"
+	@echo "mandir:         $(mandir)"
+	@echo "docdir:         $(docdir)"
+[@-mk.mk-EOF]
+echo x nroff.mk
+cat > nroff.mk << '[@-nroff.mk-EOF]'
+#
+# NROFF.MK --Rules for building nroff files.
+#
+# Contents:
+# toc-nroff:   --Build the table-of-contents for nroff files.
+# src-nroff:   --specific-nroff customisations for the "src" target.
+# install-man: --install manual pages in their usual places.
+# clean-nroff: --Cleanup nroff files.
+# todo:        --Report unfinished work (identified by keyword comments)
+#
+.PHONY: $(recursive-targets:%=%-nroff)
+
+ifdef AUTOSRC
+    LOCAL_MAN1_SRC := $(wildcard *.1)
+    LOCAL_MAN3_SRC := $(wildcard *.3)
+    LOCAL_MAN5_SRC := $(wildcard *.5)
+    LOCAL_MAN7_SRC := $(wildcard *.7)
+    LOCAL_MAN8_SRC := $(wildcard *.8)
+
+    MAN1_SRC ?= $(LOCAL_MAN1_SRC)
+    MAN3_SRC ?= $(LOCAL_MAN3_SRC)
+    MAN5_SRC ?= $(LOCAL_MAN5_SRC)
+    MAN7_SRC ?= $(LOCAL_MAN7_SRC)
+    MAN8_SRC ?= $(LOCAL_MAN8_SRC)
+endif
+
+#
+# %.[1-9]:	--Rules for installing manual pages
+#
+# TODO: finish implementing patterns for all sections
+
+$(man1dir)/%.1:	%.1;	$(INSTALL_FILE) $? $@
+$(man2dir)/%.2:	%.2;	$(INSTALL_FILE) $? $@
+$(man3dir)/%.3:	%.3;	$(INSTALL_FILE) $? $@
+$(man4dir)/%.4:	%.4;	$(INSTALL_FILE) $? $@
+$(man5dir)/%.5:	%.5;	$(INSTALL_FILE) $? $@
+$(man6dir)/%.6:	%.6;	$(INSTALL_FILE) $? $@
+$(man7dir)/%.7:	%.7;	$(INSTALL_FILE) $? $@
+$(man8dir)/%.8:	%.8;	$(INSTALL_FILE) $? $@
+
+%.1.pdf:	%.1;	man -t ./$*.1 | ps2pdf - - > $@
+%.3.pdf:	%.3;	man -t ./$*.3 | ps2pdf - - > $@
+%.5.pdf:	%.5;	man -t ./$*.5 | ps2pdf - - > $@
+%.7.pdf:	%.7;	man -t ./$*.7 | ps2pdf - - > $@
+%.8.pdf:	%.8;	man -t ./$*.8 | ps2pdf - - > $@
+
+#
+# toc-nroff: --Build the table-of-contents for nroff files.
+#
+toc:	toc-nroff
+toc-nroff:
+	@$(ECHO_TARGET)
+	mk-toc $(MAN1_SRC) $(MAN3_SRC) $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC)
+
+#
+# src-nroff: --specific-nroff customisations for the "src" target.
+#
+# We only really care about some of the manual sections; specifically
+# section 2 (system calls) and 4 (special files) are not something
+# we're likely to write.
+#
+src:	src-nroff
+src-nroff:
+	$(ECHO_TARGET)
+	@mk-filelist -qn MAN1_SRC *.1
+	@mk-filelist -qn MAN3_SRC *.3
+	@mk-filelist -qn MAN5_SRC *.5
+	@mk-filelist -qn MAN7_SRC *.7
+	@mk-filelist -qn MAN8_SRC *.8
+
+doc:	$(MAN1_SRC:%.1=%.1.pdf) \
+	$(MAN3_SRC:%.3=%.3.pdf) \
+	$(MAN5_SRC:%.5=%.5.pdf) \
+	$(MAN7_SRC:%.7=%.7.pdf) \
+	$(MAN8_SRC:%.8=%.8.pdf)
+
+install:        install-man
+
+#
+# install-man:  --install manual pages in their usual places.
+#
+.PHONY: install-man
+install-man:    $(MAN1_SRC:%=$(man1dir)/%) \
+    $(MAN3_SRC:%=$(man3dir)/%) \
+    $(MAN5_SRC:%=$(man5dir)/%) \
+    $(MAN7_SRC:%=$(man7dir)/%) \
+    $(MAN8_SRC:%=$(man8dir)/%)
+
+#
+# clean-nroff: --Cleanup nroff files.
+#
+distclean:	clean-nroff
+clean:	clean-nroff
+clean-nroff:
+	$(RM) $(MAN1_SRC:%.1=%.1.pdf) $(MAN3_SRC:%.3=%.3.pdf) $(MAN5_SRC:%.5=%.5.pdf) $(MAN7_SRC:%.7=%.7.pdf) $(MAN8_SRC:%.8=%.8.pdf)
+
+#
+# todo: --Report unfinished work (identified by keyword comments)
+#
+todo:	todo-nroff
+todo-nroff:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(MAN1_SRC) $(MAN3_SRC) $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC) /dev/null || true
+[@-nroff.mk-EOF]
+echo x perl.mk
+cat > perl.mk << '[@-perl.mk-EOF]'
+#
+# PERL.MK --Rules for building PERL objects and programs.
+#
+# Contents:
+# build-perl:          --Make scripts "executable".
+# perl-src-var-defined: --Test if "enough" of the perl SRC vars. are defined.
+# perl-clean:          --Remove script executables.
+# tidy-perl:           --perl-specific customisations for the "tidy" target.
+# toc-perl:            --Build the table-of-contents for PERL-ish files.
+# src-perl:            --perl-specific customisations for the "src" target.
+# todo:                --Report unfinished work (identified by keyword comments)
+#
+.PHONY: $(recursive-targets:%=%-perl)
+
+perllibdir      = $(exec_prefix)/lib/perl5/$(subdir)
+PERL_SRC=$(PL_SRC) $(PM_SRC) $(T_SRC)
+PERL_TRG = $(PL_SRC:%.pl=%)
+
+#
+# %.pm:		--Rules for installing perl libraries
+#
+%:			%.pl;	$(CP) $*.pl $@ && $(CHMOD) +x $@
+$(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
+
+#
+# build-perl: --Make scripts "executable".
+#
+pre-build:	perl-src-var-defined
+build:	$(PERL_TRG)
+
+#
+# perl-src-var-defined: --Test if "enough" of the perl SRC vars. are defined.
+#
+perl-src-var-defined:
+	@if [ -z '$(PL_SRC)$(PM_SRC)$(T_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "PL_SRC, PM_SRC or T_SRC" \
+	    echo 'run "make src" to define them'; \
+	    false; \
+	fi >&2
+#
+# xgettext support
+#
+X_PL_FLAGS = -k__ '-k$$__' -k%__ -k__x -k__n:1,2 -k__nx:1,2 -k__xn:1,2 -kN__ -k
+
+#
+# perl-clean: --Remove script executables.
+#
+clean:	clean-perl
+distclean:	clean-perl
+clean-perl:
+	$(RM) $(PERL_TRG)
+
+#
+# tidy-perl: --perl-specific customisations for the "tidy" target.
+#
+tidy:	tidy-perl
+tidy-perl:
+	$(ECHO_TARGET)
+	perltidy --profile=$(DEVKIT_HOME)/etc/.perltidyrc $(PERL_SRC)
+
+#
+# toc-perl: --Build the table-of-contents for PERL-ish files.
+#
+toc:	toc-perl
+toc-perl:
+	$(ECHO_TARGET)
+	mk-toc $(PERL_SRC)
+
+#
+# src-perl: --perl-specific customisations for the "src" target.
+#
+src:	src-perl
+src-perl:
+	$(ECHO_TARGET)
+	@mk-filelist -qn PL_SRC *.pl
+	@mk-filelist -qn PM_SRC *.pm
+	@mk-filelist -qn T_SRC *.t
+
+#
+# todo: --Report unfinished work (identified by keyword comments)
+#
+todo:	todo-perl
+todo-perl:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(PERL_SRC) /dev/null || true
+
+#
+# *.pot --extract strings for internationalisation.
+#
+$(PACKAGE).pot:	$(ALL_SRC)
+	xgettext $(XFLAGS) $(X_PL_FLAGS) $(PERL_SRC) -o $@
+[@-perl.mk-EOF]
+echo x php.mk
+cat > php.mk << '[@-php.mk-EOF]'
+#
+# PHP.MK --Rules for building PHP objects and programs.
+#
+# Contents:
+# php-build:      --Make scripts "executable".
+# toc-php:        --Build the table-of-contents for PHP-ish files.
+# src-php:        --php-specific customisations for the "src" target.
+# todo:           --Report unfinished work (identified by keyword comments)
+# system-php.ini: --Create a PHP configuration file based on current system settings.
+#
+.PHONY: $(recursive-targets:%=%-php)
+phplibdir      = $(exec_prefix)/lib/php/$(subdir)
+
+#
+# %.php:		--Rules for installing php scripts
+#
+$(phplibdir)/%.php:    	%.php;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.php:	%.php;	$(INSTALL_FILE) $? $@
+$(bindir)/%:		%.php;	$(INSTALL_PROGRAM) $? $@
+
+install-lib-php:	$(PHP_SRC:%.php=$(phplibdir)/%.php)
+install-www-php:	$(PHP_SRC:%.php=$(wwwdir)/%.php)
+
+#
+# php-build: --Make scripts "executable".
+#
+pre-build:	var-defined[PHP_SRC]
+
+#
+# toc-php: --Build the table-of-contents for PHP-ish files.
+#
+toc:	toc-php
+toc-php:
+	$(ECHO_TARGET)
+	mk-toc $(PHP_SRC)
+
+#
+# src-php: --php-specific customisations for the "src" target.
+#
+src:	src-php
+src-php:
+	$(ECHO_TARGET)
+	@mk-filelist -qn PHP_SRC *.php
+
+#
+# todo: --Report unfinished work (identified by keyword comments)
+#
+todo:	todo-php
+todo-php:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(PHP_SRC) /dev/null || true
+
+#
+# system-php.ini: --Create a PHP configuration file based on current system settings.
+#
+# Remarks:
+# This can be helpful for testing.  This is a hack to get me started...
+#
+system-php.ini:
+	php -i | sed -e '/=>.*=>/!d' -e '/^Directive/d' -e '/=> no value/d' -e 's/=>/=/' -e 's/=>.*//' >$@
+[@-php.mk-EOF]
+echo x protobuf.mk
+cat > protobuf.mk << '[@-protobuf.mk-EOF]'
+#
+# PROTOBUF.MK --Rules for building compiling protobuf protocols.
+#
+# Contents:
+# %.pb.cc: --build the C++ stubs from a ".proto" file.
+# %.py:    --Build the python stubs from a ".proto" file.
+# build:   --Build the protobuf files.
+# clean:   --Remove objects and intermediates created from protobuf files.
+# src:     --Update the PROTOBUF_SRC macro.
+# todo:    --Find "unfinished work" comments in protobuf files.
+#
+# Remarks:
+# The protobuf module adds support for building Protobuf-related software.
+# It defines some pattern rules for compiling ".proto" files into
+# C++, python (but not java, yet).
+#
+.PHONY: $(recursive-targets:%=%-protobuf)
+
+PROTOC	?= protoc
+PROTOBUF_FLAGS = $(TARGET.PROTOBUF_FLAGS) $(LOCAL.PROTOBUF_FLAGS) \
+    $(PROJECT.PROTOBUF_FLAGS) $(ARCH.PROTOBUF_FLAGS) $(OS.PROTOBUF_FLAGS)
+
+C++_SUFFIX ?= cc
+H++_SUFFIX ?= h
+
+PROTOBUF_C++_TRG = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(C++_SUFFIX))
+PROTOBUF_H++_TRG = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(H++_SUFFIX))
+PROTOBUF_PY_TRG = $(PROTOBUF_SRC:%.proto=$(archdir)/%.py)
+PROTOBUF_TRG  = $(PROTOBUF_C++_TRG) $(PROTOBUF_H++_TRG) $(PROTOBUF_PY_TRG)
+
+.PRECIOUS: $(PROTOBUF_TRG)
+
+PROTOBUF_OBJ = $(PROTOBUF_C++_TRG:%.$(C++_SUFFIX)=%.o)
+
+#
+# %.pb.cc: --build the C++ stubs from a ".proto" file.
+#
+$(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto
+	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
+	$(PROTOC) $(PROTOBUF_FLAGS) --cpp_out=$(archdir) $<
+	cd $(archdir) ; \
+	if [ "$(H++_SUFFIX)" != "h" ]; then \
+	    $(MV) $*.pb.h $*.pb.$(H++_SUFFIX); \
+	    $(CP) $*.pb.cc $*.pb.cc.bak; \
+	    sed -e "s/$*\.pb\.h/$*.pb.$(H++_SUFFIX)/" <$*.pb.cc.bak >$*.pb.cc; \
+	    $(RM)  $*.pb.cc.bak; \
+	fi
+	cd $(archdir) ; \
+	if [ "$(C++_SUFFIX)" != "cc" ]; then \
+	    $(MV) $*.pb.cc $*.pb.$(C++_SUFFIX); \
+	fi
+
+#
+# %.py: --Build the python stubs from a ".proto" file.
+#
+$(archdir)/%.py:	%.proto
+	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
+	$(PROTOC) $(PROTOBUF_FLAGS) --python_out=$(archdir) $<
+	cd $(archdir); $(MV) $*_pb2.py $*.py
+
+#
+# build: --Build the protobuf files.
+#
+build:	$(PROTOBUF_OBJ)
+
+#
+# clean: --Remove objects and intermediates created from protobuf files.
+#
+clean:	clean-protobuf
+clean-protobuf:
+	$(ECHO_TARGET)
+	$(RM) $(PROTOBUF_TRG) $(PROTOBUF_OBJ)
+
+#
+# src: --Update the PROTOBUF_SRC macro.
+#
+src:	src-protobuf
+src-protobuf:
+	$(ECHO_TARGET)
+	@mk-filelist -qn PROTOBUF_SRC *.proto
+
+#
+# todo: --Find "unfinished work" comments in protobuf files.
+#
+todo:	todo-protobuf
+todo-protobuf:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(PROTOBUF_SRC) /dev/null || true
+[@-protobuf.mk-EOF]
+echo x python.mk
+cat > python.mk << '[@-python.mk-EOF]'
+#
+# PYTHON.MK --Rules for building PYTHON objects and programs.
+#
+# Contents:
+# install-python:     --Install python as executables.
+# install-python-lib: --Install python as library modules.
+# clean:              --Remove python executables.
+# toc:                --Build the table-of-contents for python files.
+# src:                --define the PY_SRC variable.
+# todo:               --Report unfinished work (identified by keyword comments)
+# lint:               --Run a static analyser over the PY_SRC.
+#
+# See Also:
+# Exercises in Programming Style, Cristina Videira Lopes
+# https://github.com/crista/exercises-in-programming-style
+#
+.PHONY: $(recursive-targets:%=%-python)
+
+#
+# %.py:		--Rules for installing python scripts
+#
+pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
+PY_TRG = $(PY_SRC:%.py=%)
+
+%:			%.py;	$(CP) $*.py $@ && $(CHMOD) +x $@
+$(pythonlibdir)/%.py:	%.py;	$(INSTALL_FILE) $? $@
+
+$(pythonlibdir)/%.py:	$(archdir)/%.py;	$(INSTALL_FILE) $? $@
+
+build-python:	$(PY_TRG)
+
+#
+# install-python: --Install python as executables.
+#
+install-python: $(PY_SRC:%.py=$(bindir)/%)
+
+#
+# install-python-lib: --Install python as library modules.
+#
+install-python-lib: $(PY_SRC:%.py=$(pythonlibdir)/%.py)
+
+#
+# clean: --Remove python executables.
+#
+clean:	clean-python
+distclean:	clean-python
+
+clean-python:
+	$(RM) -r __pycache__ $(PY_SRC:%.py=%.py[co]) $(PY_SRC:%.py=%)
+
+#
+# toc: --Build the table-of-contents for python files.
+#
+toc:	toc-python
+toc-python:	var-defined[PY_SRC]
+	$(ECHO_TARGET)
+	mk-toc $(PY_SRC)
+
+#
+# src: --define the PY_SRC variable.
+#
+src:	src-python
+src-python:
+	$(ECHO_TARGET)
+	@mk-filelist -qn PY_SRC *.py
+#
+# todo: --Report unfinished work (identified by keyword comments)
+#
+todo:	todo-python
+todo-python:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(PY_SRC) /dev/null || true
+
+#
+# lint: --Run a static analyser over the PY_SRC.
+#
+# Remarks:
+# There are several static analysers for python, for now I'm using pep8 with
+# relaxed line-length restrictions.  The following errors are excluded:
+#
+# * E402 module level import not at top of file
+# * E721 do not compare types, use 'isinstance()'
+#
+lint:	lint-python
+lint-python:	cmd-exists[pep8] var-defined[PY_SRC]
+	$(ECHO_TARGET)
+	-pep8 --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
+
+lint[%.py]:	cmd-exists[pep8] var-defined[PY_SRC]
+	$(ECHO_TARGET)
+	-pep8 --max-line-length=110 --ignore=E402,E721 $*.py
+
+tidy:	tidy-python
+tidy-python: 	cmd-exists[autopep8] var-defined[PY_SRC]
+	$(ECHO_TARGET)
+	autopep8 --in-place --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
+
+tidy[%.py]:	cmd-exists[autopep8]
+	$(ECHO_TARGET)
+	autopep8 --in-place --max-line-length=110 --ignore=E402,E721 $*.py
+[@-python.mk-EOF]
+echo x qt.mk
+cat > qt.mk << '[@-qt.mk-EOF]'
+#
+# QT.MK --Rules for building Qt GUI applications
+#
+# Contents:
+# build: --Build the Qt files
+# clean: --Remove objects and intermediates created from Qt files.
+# src:   --Update the QTH_SRC, QTR_SRC macros.
+# todo:  --Find "unfinished work" comments in QT files.
+#
+# Remarks:
+# The qt module adds support for building Qt-related software.
+# It defines some pattern rules for compiling ".qrc" files,
+# and ".h" files that contain Qt definitions.  These rules
+# will be applied to files defined by the macros:
+#
+#  * QTR_SRC -- ".qrc" files
+#  * QTH_SRC -- ".h" files containing QT_OBJECT usage.
+#
+# The "src" target will update the current makefile with suitable
+# definitions of these macros; it uses the value of $(H++_SUFFIX)
+# to find $(QTH_SRC) candidates, and $(C++_SUFFIX) to name
+# generated C++ files.
+#
+.PHONY: $(recursive-targets:%=%-qt)
+
+-include $(QTR_SRC:%.qrc=$(archdir)/%.d)
+RCC	?= rcc
+MOC	?= moc-qt4
+
+C++_SUFFIX ?= cc
+H++_SUFFIX ?= h
+QRC_SUFFIX ?= qrc
+
+QTR_TRG = $(QTR_SRC:%.$(QRC_SUFFIX)=$(archdir)/%.$(C++_SUFFIX))
+QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(archdir)/moc-%.$(C++_SUFFIX))
+QT_TRG  = $(QTR_TRG) $(QTH_TRG)
+
+QTR_OBJ = $(QTR_TRG:%.$(C++_SUFFIX)=%.o)
+QTH_OBJ = $(QTH_TRG:%.$(C++_SUFFIX)=%.o)
+QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
+
+.PRECIOUS:	$(QT_TRG)
+#
+# build: --Build the Qt files
+#
+build:	$(QT_OBJ)
+
+$(archdir)/%.$(C++_SUFFIX):	%.qrc
+	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
+	$(RCC) $(RCC_FLAGS) $< >$@
+
+$(archdir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX)
+	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
+	$(MOC) $(MOC_FLAGS) -o $@ $<
+
+#
+# clean: --Remove objects and intermediates created from Qt files.
+#
+clean:	clean-qt
+clean-qt:
+	$(ECHO_TARGET)
+	$(RM) $(QT_TRG) $(QT_OBJ)
+
+#
+# src: --Update the QTH_SRC, QTR_SRC macros.
+#
+src:	src-qt
+src-qt:
+	$(ECHO_TARGET)
+	@mk-filelist -qn QTR_SRC *.qrc
+	@mk-filelist -qn QTH_SRC $$(grep -l Q_OBJECT *.$(H++_SUFFIX))
+
+#
+# todo: --Find "unfinished work" comments in QT files.
+#
+todo:	todo-qt
+todo-qt:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(QTH_SRC) $(QTR_SRC) /dev/null || true
+[@-qt.mk-EOF]
+echo x ruby.mk
+cat > ruby.mk << '[@-ruby.mk-EOF]'
+#
+# RUBY.MK --Rules for building RUBY objects and programs.
+#
+# Contents:
+# clean-ruby: --Remove script executables.
+# toc-ruby:   --Build the table-of-contents for ruby files.
+# src-ruby:   --Create a list of ruby files as the RB_SRC macro.
+# todo:       --Report unfinished work (identified by keyword comments)
+#
+.PHONY: $(recursive-targets:%=%-ruby)
+
+rubylibdir      = $(exec_prefix)/lib/ruby/$(subdir)
+RB_TRG = $(RB_SRC:%.rb=%)
+
+$(rubylibdir)/%.rb:	%.rb;	$(INSTALL_FILE) $? $@
+
+pre-build:	src-var-defined[RB_SRC]
+build:	$(RB_TRG)
+
+#
+# clean-ruby: --Remove script executables.
+#
+clean:	clean-ruby
+clean-ruby:
+	$(RM) $(RB_TRG)
+
+#
+# toc-ruby: --Build the table-of-contents for ruby files.
+#
+toc:	toc-ruby
+toc-ruby:
+	$(ECHO_TARGET)
+	mk-toc $(RB_SRC)
+
+#
+# src-ruby: --Create a list of ruby files as the RB_SRC macro.
+#
+src:	src-ruby
+src-ruby:
+	$(ECHO_TARGET)
+	@mk-filelist -qn RB_SRC *.rb
+#
+# todo: --Report unfinished work (identified by keyword comments)
+#
+todo:	todo-ruby
+todo-ruby:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(RB_SRC) /dev/null || true
+[@-ruby.mk-EOF]
+echo x sh.mk
+cat > sh.mk << '[@-sh.mk-EOF]'
+#
+# SHELL.MK --Rules for building shell, awk scripts and libraries.
+#
+# Contents:
+# %.sh:              --Rules for installing shell scripts, libraries
+# shell-src-defined: --Test if "enough" of the shell SRC vars. are defined.
+# build-shell:       --Make scripts "executable".
+# install-shell:     --install shell scripts to bindir, libraries to shlibdir
+# uninstall-shell:   --uninstall files installed by "install-shell".
+# clean:             --Remove shell, awk, sed script executables.
+# toc:               --Build the table-of-contents for shell, awk, sed files.
+# src:               --Define SH_SRC, SHL_SRC, AWK_SRC, SED_SRC.
+# todo:              --Report unfinished work in shell, awk, sed code.
+#
+# Remarks:
+# For the purposes of building stuff, "shell" covers the "traditional"
+# Unix scripting languages (sh, sed and awk).  It requires some of
+# the following variables to be defined:
+#
+#  * SH_SRC	--shell scripts
+#  * SHL_SRC	--shell library files
+#  * AWK_SRC	--awk scripts
+#  * SED_SRC	--sed scripts
+#
+# It defines rules for building and installing, and for installing
+# library files into a shell-specific library directory $(shlibdir).
+# The target `install-shell` will install scripts into $(bindir).
+#
+.PHONY: $(recursive-targets:%=%-shell)
+SH_SRC	?= $(wildcard *.sh)
+SHL_SRC	?= $(wildcard *.shl)
+AWK_SRC	?= $(wildcard *.awk)
+SED_SRC	?= $(wildcard *.sed)
+
+shlibdir	:= $(exec_prefix)/lib/sh/$(subdir)
+SHELL_TRG	:= $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
+#
+# %.sh: --Rules for installing shell scripts, libraries
+#
+%:			%.sh;	$(CP) $*.sh $@ && $(CHMOD) +x $@
+%:			%.awk;	$(CP) $*.awk $@ && $(CHMOD) +x $@
+%:			%.sed;	$(CP) $*.sed $@ && $(CHMOD) +x $@
+$(shlibdir)/%.shl:	%.shl;	$(INSTALL_FILE) $*.shl $@
+$(shlibdir)/%.awk:	%.awk;	$(INSTALL_FILE) $*.awk $@
+$(shlibdir)/%.sed:	%.sed;	$(INSTALL_FILE) $*.sed $@
+
+#
+# shell-src-defined: --Test if "enough" of the shell SRC vars. are defined.
+#
+shell-src-defined:
+	@if [ -z '$(SH_SRC)$(SHL_SRC)$(AWK_SRC)$(SED_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "SH_SRC, SHL_SRC, AWK_SRC or SED_SRC"; \
+	    echo 'run "make src" to define them'; \
+	    false; \
+	fi >&2
+
+#
+# build-shell: --Make scripts "executable".
+#
+pre-build:	shell-src-defined
+build:	build-shell
+build-shell:	$(SHELL_TRG)
+
+#
+# install-shell: --install shell scripts to bindir, libraries to shlibdir
+#
+install-shell:	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
+    $(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
+	$(ECHO_TARGET)
+
+#
+# uninstall-shell: --uninstall files installed by "install-shell".
+#
+uninstall-shell:
+	$(ECHO_TARGET)
+	$(RM) 	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
+            $(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
+	$(RMDIR) -p $(bindir) $(shlibdir) 2>/dev/null || true
+
+#
+# clean: --Remove shell, awk, sed script executables.
+#
+clean:	clean-shell
+clean-shell:
+	$(RM) $(SHELL_TRG)
+
+distclean:	clean-shell
+
+#
+# toc: --Build the table-of-contents for shell, awk, sed files.
+#
+toc:	toc-shell
+toc-shell:
+	$(ECHO_TARGET)
+	mk-toc $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC)
+#
+# src: --Define SH_SRC, SHL_SRC, AWK_SRC, SED_SRC.
+#
+src:	src-shell
+src-shell:
+	$(ECHO_TARGET)
+	@mk-filelist -qn SH_SRC *.sh
+	@mk-filelist -qn SHL_SRC *.shl
+	@mk-filelist -qn AWK_SRC *.awk
+	@mk-filelist -qn SED_SRC *.sed
+
+#
+# todo: --Report unfinished work in shell, awk, sed code.
+#
+todo:	todo-shell
+todo-shell:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) \
+	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null || true
+[@-sh.mk-EOF]
+echo x sql.mk
+cat > sql.mk << '[@-sql.mk-EOF]'
+#
+# SQL.MK --Rules for dealing with SQL files.
+#
+# Contents:
+# %.sql:   --Rules for installing SQL scripts into libdir
+# toc-sql: --Build the table-of-contents for SQL files.
+# src-sql: --Update the SQL_SRC macro.
+# todo:    --Report unfinished work in work SQL files.
+#
+.PHONY: $(recursive-targets:%=%-sql)
+
+sqllibdir	:= $(exec_prefix)/lib/sql/$(subdir)
+
+#
+# %.sql: --Rules for installing SQL scripts into libdir
+#
+$(sqllibdir)/%.sql:	%.sql;	$(INSTALL_FILE) $? $@
+
+pre-build:	src-var-defined[SQL_SRC]
+
+install-sql:    $(SQL_SRC:%=$(sqllibdir)/%)
+
+#
+# toc-sql: --Build the table-of-contents for SQL files.
+#
+toc:	toc-sql
+toc-sql:
+	$(ECHO_TARGET)
+	mk-toc $(SQL_SRC)
+#
+# src-sql: --Update the SQL_SRC macro.
+#
+src:	src-sql
+src-sql:
+	$(ECHO_TARGET)
+	@mk-filelist -qn SQL_SRC *.sql
+
+#
+# todo: --Report unfinished work in work SQL files.
+#
+todo:	todo-sql
+todo-sql:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(SQL_SRC) /dev/null || true
+[@-sql.mk-EOF]
+echo x tex.mk
+cat > tex.mk << '[@-tex.mk-EOF]'
+#
+# TEX.MK --Build rules for handling TeX documents.
+#
+# Contents:
+# clean:     --Clean TeX intermediate files.
+# distclean: --Clean TeX derived PDF files.
+# src:       --Update the definition of TEX_SRC.
+# todo:      --Report unfinished work in tex code.
+#
+.PHONY: $(recursive-targets:%=%-tex)
+
+ifdef AUTOSRC
+    LOCAL_TEX_SRC := $(wildcard *.tex)
+    TEX_SRC ?= $(wildcard *.tex)
+endif
+
+%.pdf:	%.dvi;	dvipdf $*.dvi
+%.dvi:	%.tex;  latex $*.tex
+
+TEX_DVI = $(TEX_SRC:%.tex=%.dvi)
+TEX_AUX = $(TEX_SRC:%.tex=%.aux)
+TEX_LOG = $(TEX_SRC:%.tex=%.log)
+TEX_PDF = $(TEX_SRC:%.tex=%.pdf)
+
+build:	$(TEX_PDF)
+
+#
+# clean: --Clean TeX intermediate files.
+#
+clean:	clean-tex
+clean-tex:
+	$(ECHO_TARGET)
+	$(RM) $(TEX_DVI) $(TEX_AUX) $(TEX_LOG)
+
+#
+# distclean: --Clean TeX derived PDF files.
+#
+distclean:	clean-tex distclean-tex
+distclean-tex:
+	$(ECHO_TARGET)
+	$(RM) $(TEX_PDF)
+
+#
+# src: --Update the definition of TEX_SRC.
+#
+src:	src-tex
+src-tex:
+	$(ECHO_TARGET)
+	@mk-filelist -qn TEX_SRC *.tex
+#
+# todo: --Report unfinished work in tex code.
+#
+todo:	todo-tex
+todo-tex:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) \
+	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null || true
+[@-tex.mk-EOF]
+echo x xml.mk
+cat > xml.mk << '[@-xml.mk-EOF]'
+#
+# XML.MK --Rules for installing xml data.
+#
+# Contents:
+# %.xml: --Rules for installing xml files
+# src:   --Update the XML_SRC macro.
+# todo:  --Report unfinished work in XML files.
+#
+
+.PHONY: $(recursive-targets:%=%-xml)
+
+#
+# %.xml: --Rules for installing xml files
+#
+
+$(sysconfdir)/%.xml:	%.xml;	$(INSTALL_FILE) $? $@
+$(libdir)/%.xml:	%.xml;	$(INSTALL_FILE) $? $@
+
+#
+# src: --Update the XML_SRC macro.
+#
+src:	src-xml
+src-xml:
+	$(ECHO_TARGET)
+	@mk-filelist -qn XML_SRC *.xml
+
+#
+# todo: --Report unfinished work in XML files.
+#
+todo:	xml-todo
+xml-todo:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(XML_SRC)  /dev/null || true
+[@-xml.mk-EOF]
+echo x xsd.mk
+cat > xsd.mk << '[@-xsd.mk-EOF]'
+#
+# XSD.MK --Support for XSD.
+#
+# Contents:
+# build:     --xsd-specific customisations for the "build" target.
+# clean:     --Remove XSD's object files.
+# distclean: --Remove XSD-generated include files.
+# src:       --Update the XSD_SRC target.
+#
+# Remarks:
+# The XSD module adds some rules for building C++ marshalling routines
+# from ".xsd" files.  The code is generated into $(archdir), so it won't
+# interfere with any existing C++ files.
+#
+# There's some dependency/fragility here, in that the XSD stuff assumes
+# that you're also including the C++ module, and the library module.
+# In particular, it assumes that $(LIB_ROOT) is defined, and it attempts
+# to install ".$(H++_SUFFIX)" files in the "pre-build" phase, just like the library
+# module does.
+#
+# REVISIT: XmlSchema.h behaviour is broken: install triggers build!
+#
+.PHONY: $(recursive-targets:%=%-xsd)
+
+-include $(XSD_SRC:%.xsd=$(archdir)/%-depend.mk)
+
+C++_SUFFIX ?= cc
+H++_SUFFIX ?= h
+
+XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
+XSD_H++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(H++_SUFFIX))
+XSD_C++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(C++_SUFFIX))
+
+.PRECIOUS: $(XSD_H++) $(XSD_C++)
+
+XSD_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
+XSD_INCLUDE_SRC = $(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(XSD_INCLUDEDIR)/%.$(H++_SUFFIX)) \
+	$(XSD_INCLUDEDIR)/XmlSchema.$(H++_SUFFIX)
+
+XSD.FLAGS = $(OS.XSDFLAGS) $(ARCH.XSDFLAGS) \
+	$(PROJECT.XSDFLAGS) $(LOCAL.XSDFLAGS) $(TARGET.XSDFLAGS) $(XSDFLAGS)
+
+$(XSD_INCLUDEDIR)/%.$(H++_SUFFIX): $(archdir)/%.$(H++_SUFFIX)
+	$(ECHO_TARGET)
+	$(INSTALL_FILE) $? $@
+
+$(datadir)/%.xsd:	%.xsd
+	$(ECHO_TARGET)
+	$(INSTALL_FILE) $? $@
+
+$(archdir)/%.$(C++_SUFFIX) $(archdir)/%.$(H++_SUFFIX):	%.xsd
+	$(ECHO_TARGET)
+	mkdir -p $(archdir)
+	xsd cxx-tree --output-dir $(archdir) $(XSD.FLAGS) \
+		--extern-xml-schema $(archdir)/XmlSchema.$(H++_SUFFIX) $*.xsd
+#
+# build: --xsd-specific customisations for the "build" target.
+#
+$(XSD_OBJ):	$(XSD_INCLUDE_SRC)
+pre-build:      var-defined[XSD_INCLUDEDIR] $(XSD_INCLUDE_SRC)
+build:	$(XSD_OBJ)
+
+install-xsd:	install-xsd-xsd install-xsd-include
+install-xsd-xsd:	$(XSD_SRC:%=$(datadir)/%)
+install-xsd-include:	$(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
+
+$(archdir)/XmlSchema.$(H++_SUFFIX):
+	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
+	xsd cxx-tree --output-dir $(archdir) \
+		--options-file XmlSchema.conf \
+		--generate-xml-schema XmlSchema.$(H++_SUFFIX)
+
+#
+# clean: --Remove XSD's object files.
+#
+clean:	clean-xsd
+clean-xsd:
+	$(RM) $(XSD_OBJ)
+
+#
+# distclean: --Remove XSD-generated include files.
+#
+distclean:	distclean-xsd clean-xsd
+distclean-xsd:
+	$(RM) $(XSD_INCLUDE_SRC)
+
+#
+# src: --Update the XSD_SRC target.
+#
+src:	src-xsd
+src-xsd:
+	$(ECHO_TARGET)
+	@mk-filelist -qn XSD_SRC *.xsd
+[@-xsd.mk-EOF]
+echo x xsl.mk
+cat > xsl.mk << '[@-xsl.mk-EOF]'
+#
+# XSL.MK --Rules for building xsl scripts and libraries.
+#
+# Contents:
+# %.xsl:   --Rules for installing xsl files
+# src-xsl: --Update the XSL_SRC macro.
+# todo:    --Report unfinished work in XSL files.
+#
+.PHONY: $(recursive-targets:%=%-xsl)
+
+#
+# %.xsl: --Rules for installing xsl files
+#
+install-xsl:	$(XSL_SRC:%.xsl=$(libdir)/%.xsl)
+$(libdir)/%.xsl:	%.xsl;	$(INSTALL_FILE) $? $@
+
+#
+# src-xsl: --Update the XSL_SRC macro.
+#
+src:	src-xsl
+.PHONY:	src-xsl
+src-xsl:
+	$(ECHO_TARGET)
+	@mk-filelist -qn XSL_SRC *.xsl
+
+#
+# todo: --Report unfinished work in XSL files.
+#
+.PHONY: todo-xsl
+todo:	todo-xsl
+todo-xsl:
+	$(ECHO_TARGET)
+	@$(GREP) $(TODO_PATTERN) $(XSL_SRC)  /dev/null || true
+[@-xsl.mk-EOF]
+echo x yacc.mk
+cat > yacc.mk << '[@-yacc.mk-EOF]'
+#
+# YACC.MK --Rules for working with YACC objects.
+#
+# Contents:
+# %.y:   --Compile the yacc grammar into ".h" and ".c" files.
+# build: --Compile LEX_SRC to object code.
+# clean: --Remove a yacc grammar's object file.
+# src:   --Get a list of the yacc grammars in this directory.
+# toc:   --Update the YACC_SRC macro with a list of yacc grammars.
+#
+# Remarks:
+# YACC files are compiled into "C" files which are then handled
+# by the rules/definitions for building C programs.  This file
+# contains patterns to define the YACC compilation only, the
+# C processing definitions are defined, and must be included,
+# separately.
+#
+.PHONY: $(recursive-targets:%=%-yacc)
+
+ifdef AUTOSRC
+    LOCAL_YACC_SRC := $(wildcard *.c)
+    YACC_SRC ?= $(LOCAL_YACC_SRC)
+endif
+
+YACC_OBJ	= $(YACC_SRC:%.y=$(archdir)/%_y.o)
+YACC_H_GEN	= $(YACC_SRC:%.y=$(archdir)/%.h)
+YACC_C_GEN	= $(YACC_SRC:%.y=$(archdir)/%_y.c)
+
+.PRECIOUS:	$(YACC_H_GEN) $(YACC_C_GEN)
+
+ALL_YFLAGS = $(OS.YFLAGS) $(ARCH.YFLAGS) \
+    $(PROJECT.YFLAGS) $(LOCAL.YFLAGS) $(TARGET.YFLAGS) $(YFLAGS)
+
+-include $(YACC_SRC:%.y=$(archdir)/%_y.d)
+
+#
+# %.y: --Compile the yacc grammar into ".h" and ".c" files.
+#
+# TODO: build these files into the arch-subdir.
+#
+$(archdir)/%.h $(archdir)/%_y.c:	%.y
+	$(ECHO_TARGET)
+	@mkdir -p $(archdir)
+	$(YACC) -d $(ALL_YFLAGS) $<
+	BASE=$$(echo "$*"| tr a-z A-Z); \
+	sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" <y.tab.h >$(archdir)/$*.h; \
+	sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" <y.tab.c >$(archdir)/$*_y.c
+	$(RM) y.tab.[ch]
+
+#
+# build: --Compile LEX_SRC to object code.
+#
+build:	build-yacc
+build-yacc: $(YACC_OBJ) $(YACC_H)
+
+#
+# clean: --Remove a yacc grammar's object file.
+#
+clean:	clean-yacc
+clean-yacc:
+	$(ECHO_TARGET)
+	$(RM) $(YACC_OBJ) $(YACC_H) $(YACC_SRC:%.y=$(archdir)/%_y.d)
+
+#
+# src: --Get a list of the yacc grammars in this directory.
+#
+src:	src-yacc
+src-yacc:
+	$(ECHO_TARGET)
+	@mk-filelist -qn YACC_SRC *.y
+
+#
+# toc: --Update the YACC_SRC macro with a list of yacc grammars.
+#
+toc:	toc-yacc
+toc-yacc:
+	$(ECHO_TARGET)
+	mk-toc $(YACC_SRC)
+[@-yacc.mk-EOF]

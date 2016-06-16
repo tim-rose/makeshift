@@ -18,8 +18,8 @@
 .PHONY: $(recursive-targets:%=%-yacc)
 
 ifdef AUTOSRC
-    DEFAULT_YACC_SRC := $(wildcard *.c)
-    YACC_SRC ?= $(DEFAULT_YACC_SRC)
+    LOCAL_YACC_SRC := $(wildcard *.c)
+    YACC_SRC ?= $(LOCAL_YACC_SRC)
 endif
 
 YACC_OBJ	= $(YACC_SRC:%.y=$(archdir)/%_y.o)

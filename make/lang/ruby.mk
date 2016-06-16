@@ -12,13 +12,20 @@
 rubylibdir      = $(exec_prefix)/lib/ruby/$(subdir)
 RB_TRG = $(RB_SRC:%.rb=%)
 
+%:			%.rb;	$(INSTALL_PROGRAM) $*.rb $@
 $(rubylibdir)/%.rb:	%.rb;	$(INSTALL_FILE) $? $@
 
-pre-build:	src-var-defined[RB_SRC]
-build:	$(RB_TRG)
+#
+# build-ruby: --Build ruby executables
+#
+# Remarks:
+# Ruby doesn't distinguish between executables and libraries, so
+# nothing is built by default, but this helper target will.
+#
+build-ruby:	$(RB_TRG)
 
 #
-# clean-ruby: --Remove script executables.
+# clean: --Remove ruby script executables.
 #
 clean:	clean-ruby
 clean-ruby:
@@ -33,14 +40,14 @@ toc-ruby:
 	mk-toc $(RB_SRC)
 
 #
-# src-ruby: --Create a list of ruby files as the RB_SRC macro.
+# src: --Define RB_SRC.
 #
 src:	src-ruby
 src-ruby:
 	$(ECHO_TARGET)
 	@mk-filelist -qn RB_SRC *.rb
 #
-# todo: --Report unfinished work (identified by keyword comments)
+# todo: --Report unfinished work in ruby files.
 #
 todo:	todo-ruby
 todo-ruby:

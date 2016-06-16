@@ -34,13 +34,13 @@
 C_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
 
 ifdef AUTOSRC
-    DEFAULT_C_MAIN_SRC := $(shell grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
-    DEFAULT_C_SRC := $(wildcard *.c)
-    DEFAULT_H_SRC := $(wildcard *.h)
+    LOCAL_C_MAIN_SRC := $(shell grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
+    LOCAL_C_SRC := $(wildcard *.c)
+    LOCAL_H_SRC := $(wildcard *.h)
 
-    C_SRC ?= $(DEFAULT_C_SRC)
-    C_MAIN_SRC ?= $(DEFAULT_C_MAIN_SRC)
-    H_SRC ?= $(DEFAULT_H_SRC)
+    C_SRC ?= $(LOCAL_C_SRC)
+    C_MAIN_SRC ?= $(LOCAL_C_MAIN_SRC)
+    H_SRC ?= $(LOCAL_H_SRC)
 endif
 
 #

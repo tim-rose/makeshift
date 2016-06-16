@@ -27,10 +27,17 @@
 # The target `install-shell` will install scripts into $(bindir).
 #
 .PHONY: $(recursive-targets:%=%-shell)
-SH_SRC	?= $(wildcard *.sh)
-SHL_SRC	?= $(wildcard *.shl)
-AWK_SRC	?= $(wildcard *.awk)
-SED_SRC	?= $(wildcard *.sed)
+ifdef AUTOSRC
+    LOCAL_SH_SRC  := $(wildcard *.sh)
+    LOCAL_SHL_SRC := $(wildcard *.shl)
+    LOCAL_AWK_SRC := $(wildcard *.awk)
+    LOCAL_SED_SRC := $(wildcard *.sed)
+
+    SH_SRC	?= $(LOCAL_SH_SRC)
+    SHL_SRC	?= $(LOCAL_SHL_SRC)
+    AWK_SRC	?= $(LOCAL_AWK_SRC)
+    SED_SRC	?= $(LOCAL_SED_SRC)
+endif
 
 shlibdir	:= $(exec_prefix)/lib/sh/$(subdir)
 SHELL_TRG	:= $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)

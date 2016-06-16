@@ -16,8 +16,8 @@
 .PHONY: $(recursive-targets:%=%-lex)
 
 ifdef AUTOSRC
-    DEFAULT_LEX_SRC := $(wildcard *.c)
-    LEX_SRC ?= $(DEFAULT_LEX_SRC)
+    LOCAL_LEX_SRC := $(wildcard *.c)
+    LEX_SRC ?= $(LOCAL_LEX_SRC)
 endif
 LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%_l.o)
 LEX_GEN	= $(LEX_SRC:%.l=$(archdir)/%_l.c)

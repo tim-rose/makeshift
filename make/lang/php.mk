@@ -22,12 +22,7 @@ install-lib-php:	$(PHP_SRC:%.php=$(phplibdir)/%.php)
 install-www-php:	$(PHP_SRC:%.php=$(wwwdir)/%.php)
 
 #
-# php-build: --Make scripts "executable".
-#
-pre-build:	var-defined[PHP_SRC]
-
-#
-# toc-php: --Build the table-of-contents for PHP-ish files.
+# toc: --Build the table-of-contents for PHP-ish files.
 #
 toc:	toc-php
 toc-php:
@@ -35,7 +30,7 @@ toc-php:
 	mk-toc $(PHP_SRC)
 
 #
-# src-php: --php-specific customisations for the "src" target.
+# src: --Define the PHP_SRC macro.
 #
 src:	src-php
 src-php:
@@ -43,7 +38,7 @@ src-php:
 	@mk-filelist -qn PHP_SRC *.php
 
 #
-# todo: --Report unfinished work (identified by keyword comments)
+# todo: --Report unfinished work in PHP source code.
 #
 todo:	todo-php
 todo-php:

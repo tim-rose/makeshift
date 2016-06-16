@@ -23,7 +23,7 @@
 .PHONY: $(recursive-targets:%=%-asciidoc)
 
 ifdef AUTOSRC
-    DEFAULT_TXT_SRC := $(wildcard *.txt)
+    LOCAL_TXT_SRC := $(wildcard *.txt)
     TXT_SRC ?= $(wildcard *.txt)
 endif
 

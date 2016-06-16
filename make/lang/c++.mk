@@ -30,13 +30,13 @@ H++_SUFFIX ?= h
 C++_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
 
 ifdef AUTOSRC
-    DEFAULT_C++_MAIN_SRC := $(shell grep -l $(C++_MAIN_RGX) *.$(C++_SUFFIX) 2>/dev/null)
-    DEFAULT_C++_SRC := $(wildcard *.$(C++_SUFFIX))
-    DEFAULT_H++_SRC := $(wildcard *.$(H++_SUFFIX))
+    LOCAL_C++_MAIN_SRC := $(shell grep -l $(C++_MAIN_RGX) *.$(C++_SUFFIX) 2>/dev/null)
+    LOCAL_C++_SRC := $(wildcard *.$(C++_SUFFIX))
+    LOCAL_H++_SRC := $(wildcard *.$(H++_SUFFIX))
 
-    C++_SRC ?= $(DEFAULT_C++_SRC)
-    C++_MAIN_SRC ?= $(DEFAULT_C++_MAIN_SRC)
-    H++_SRC ?= $(DEFAULT_H_SRC)
+    C++_SRC ?= $(LOCAL_C++_SRC)
+    C++_MAIN_SRC ?= $(LOCAL_C++_MAIN_SRC)
+    H++_SRC ?= $(LOCAL_H_SRC)
 endif
 
 #
