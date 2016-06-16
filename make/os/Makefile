@@ -8,3 +8,4 @@ subdir	= os
 include devkit.mk
 
 install:	install-mk
+uninstall:	uninstall-mk

@@ -59,6 +59,16 @@ conf-src-defined:
 install-conf:	$(CONF_SRC:%=$(sysconfdir)/%) \
     $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
 	$(ECHO_TARGET)
+
+#
+# uninstall-conf: --Uninstall the default config files.
+#
+uninstall-conf:
+	$(ECHO_TARGET)
+	$(RM) $(CONF_SRC:%=$(sysconfdir)/%) \
+            $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
+	$(RMDIR) -p $(sysconfdir) 2>/dev/null || true
+
 #
 # toc: --Build the table-of-contents for config files.
 #

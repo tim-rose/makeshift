@@ -10,4 +10,5 @@ subdir	= lang
 include devkit.mk
 
 install:		install-mk
+uninstall:		uninstall-mk
 

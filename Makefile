@@ -21,3 +21,9 @@ install:	$(includedir)/version.mk
 $(includedir)/version.mk:
 	{ echo 'DEVKIT_VERSION=$(VERSION)'; \
           echo 'DEVKIT_RELEASE=$(RELEASE)';} >$@
+
+uninstall:	uninstall-this
+uninstall-this:
+	$(ECHO_TARGET)
+	$(RM) $(includedir)/version.mk
+	$(RMDIR) -p $(includedir) 2>/dev/null || true

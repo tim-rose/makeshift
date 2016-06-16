@@ -40,6 +40,14 @@ install-css:	$(CSS_SRC:%.css=$(wwwdir)/%.css) \
     $(CSS_MAP_SRC:%.css.map=$(wwwdir)/%.css.map)
 
 #
+# uninstall-css: --Uninstall the default ".css" files.
+#
+uninstall-css:
+	$(ECHO_TARGET)
+	$(RM) 	$(CSS_SRC:%.css=$(wwwdir)/%.css) $(CSS_MAP_SRC:%.css.map=$(wwwdir)/%.css.map)
+	$(RMDIR) -p $(wwwdir) 2>/dev/null || true
+
+#
 # src: --Update the CSS_SRC, SCSS_SRC macros.
 #
 src:	src-css

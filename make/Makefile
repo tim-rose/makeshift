@@ -12,4 +12,5 @@ MK_SRC = coverage.mk deploy.mk devkit.mk doxygen.mk ld.mk \
 
 include devkit.mk
 
-install:		install-mk
+install:	install-mk
+uninstall:	uninstall-mk

@@ -6,4 +6,9 @@ subdir = doc/css
 CSS_SRC = plain.css print.css
 include devkit.mk
 
-install:        $(CSS_SRC:%=$(datadir)/%)
+install:	$(CSS_SRC:%=$(datadir)/%)
+uninstall:	uninstall-this
+uninstall-this:
+	$(ECHO_TARGET)
+	$(RM) $(CSS_SRC:%=$(datadir)/%)
+	$(RMDIR) -p $(datadir) 2>/dev/null || true

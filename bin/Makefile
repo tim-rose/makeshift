@@ -10,4 +10,5 @@ SH_SRC = echo+.sh mk-ar-merge.sh mk-ar.sh mk-deb-buildarch.sh \
 
 include devkit.mk
 
-install:	$(SHELL_TRG:%=$(bindir)/%)
+install:	install-shell
+uninstall:	uninstall-shell

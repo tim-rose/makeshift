@@ -10,6 +10,5 @@ subdir	= test
 
 include devkit.mk
 
-$(includedir)/%:	%;		$(INSTALL_FILE) $< $@
-
-install:		install-mk
+install:	install-mk
+uninstall:	uninstall-mk

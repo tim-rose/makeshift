@@ -9,5 +9,6 @@ include devkit.mk
 
 $(includedir)/.mk:	_mk.sh;		sh _mk.sh >$@
 
-install:		install-mk
-install:		$(includedir)/.mk
+#install:	install-mk
+#install:	$(includedir)/.mk
+uninstall:	uninstall-mk

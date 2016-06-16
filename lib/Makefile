@@ -7,8 +7,8 @@
 #
 language = sh
 SHL_SRC = tap.shl
-subdir = sh
 
 include devkit.mk
 
-install:	$(SHL_SRC:%=$(libdir)/%)
+install:	install-shell
+uninstall:	uninstall-shell
