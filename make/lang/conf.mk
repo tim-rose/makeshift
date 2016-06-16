@@ -46,7 +46,7 @@ $(divertdir)/%.ini:	%.ini;		$(INSTALL_FILE) $? $@
 #
 # conf-src-defined: --Test if any of the "conf" SRC vars. are defined.
 #
-conf-src-var-defined:
+conf-src-defined:
 	@if [ ! '$(CONF_SRC)$(CFG_SRC)$(INI_SRC)' ]; then \
 	    printf $(VAR_UNDEF) "CONF_SRC, CFG_SRC, INI_SRC"; \
 	    echo 'run "make src" to define them'; \
@@ -63,7 +63,7 @@ install-conf:	$(CONF_SRC:%=$(sysconfdir)/%) \
 # toc: --Build the table-of-contents for config files.
 #
 toc:	toc-conf
-toc-conf:	conf-src-var-defined
+toc-conf:	conf-src-defined
 	$(ECHO_TARGET)
 	mk-toc $(CONF_SRC) $(CFG_SRC) $(INI_SRC)
 

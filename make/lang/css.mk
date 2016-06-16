@@ -26,7 +26,7 @@ $(datadir)/%.css.map:	%.css.map;	$(INSTALL_FILE) $? $@
 #
 # css-src-defined: --Test if any of the "css" SRC vars. are defined.
 #
-css-src-var-defined:
+css-src-defined:
 	@if [ ! '$(CSS_SRC)$(SCSS_SRC)$(LESS_SRC)' ]; then \
 	    printf $(VAR_UNDEF) "CSS_SRC, SCSS_SRC, LESS_SRC"; \
 	    echo 'run "make src" to define them'; \
@@ -53,7 +53,7 @@ src-css:
 # toc: --Build the table-of-contents for CSS files.
 #
 toc:	toc-css
-toc-css:	css-src-var-defined
+toc-css:	css-src-defined
 	$(ECHO_TARGET)
 	mk-toc $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC)
 

@@ -5,7 +5,7 @@
 # clean:     --Clean TeX intermediate files.
 # distclean: --Clean TeX derived PDF files.
 # src:       --Update the definition of TEX_SRC.
-# todo-tex:  --Report unfinished work in tex code.
+# todo:      --Report unfinished work in tex code.
 #
 .PHONY: $(recursive-targets:%=%-tex)
 

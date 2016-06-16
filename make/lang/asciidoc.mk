@@ -2,14 +2,16 @@
 # ASCIIDOC.MK --Rules for building documents from asciidoc ".txt" files.
 #
 # Contents:
-# %.xml:  --Rules for converting asciidoc ".txt" files into XML.
-# %.fo:   --Rules for converting asciidoc ".txt" files into flow objects.
-# %.html: --Rules for converting asciidoc ".xml" files into HTML
-# %.pdf:  --Rules for converting asciidoc ".fo" files into PDF
-# build:  --Build PDF and HTML documents from asciidoc files.
-# src:    --Update the TXT_SRC macro with a list of asciidoc text files.
-# clean:  --cleanup asciidoc intermediate files (.xml, .fo, .pdf)
-# todo:   --Report unfinished work in asciidoc files.
+# %.xml:     --Convert asciidoc ".txt" files into XML.
+# %.fo:      --Convert asciidoc ".txt" files into flow objects.
+# %.html:    --Convert asciidoc ".xml" files into HTML.
+# %.pdf:     --Convert asciidoc ".fo" files into PDF.
+# build:     --Build PDF and HTML documents from asciidoc files.
+# install:   --Install PDF documents to docdir
+# uninstall: --Remove PDF documents from docdir.
+# src:       --Update the TXT_SRC macro with a list of asciidoc text files.
+# clean:     --cleanup asciidoc intermediate files (.xml, .fo, .pdf).
+# todo:      --Report unfinished work in asciidoc files.
 #
 # Remarks:
 # The asciidoc module manages a list of simple asciidoc documents with
@@ -38,26 +40,26 @@ FO_XSL = /opt/local/etc/asciidoc/docbook-xsl/fo.xsl
 HTML_XSL = /opt/local/etc/asciidoc/docbook-xsl/xhtml.xsl
 
 #
-# %.xml: --Rules for converting asciidoc ".txt" files into XML.
+# %.xml: --Convert asciidoc ".txt" files into XML.
 #
 %.xml:  %.txt
 	asciidoc --backend docbook --out-file "$@" "$*.txt"
 	xmllint --nonet --noout --valid "$@"
 
 #
-# %.fo: --Rules for converting asciidoc ".txt" files into flow objects.
+# %.fo: --Convert asciidoc ".txt" files into flow objects.
 #
 %.fo:	%.xml
 	xsltproc $(XSL_FLAGS) --output "$*.fo" $(FO_XSL) "$*.xml"
 
 #
-# %.html: --Rules for converting asciidoc ".xml" files into HTML
+# %.html: --Convert asciidoc ".xml" files into HTML.
 #
 %.html:	%.xml
 	xsltproc $(XSL_FLAGS) --output "$*.html" $(HTML_XSL) "$*.xml"
 
 #
-# %.pdf: --Rules for converting asciidoc ".fo" files into PDF
+# %.pdf: --Convert asciidoc ".fo" files into PDF.
 #
 %.pdf:	%.fo
 	fop -fo "$*.fo" -pdf "$@"
@@ -65,7 +67,24 @@ HTML_XSL = /opt/local/etc/asciidoc/docbook-xsl/xhtml.xsl
 #
 # build: --Build PDF and HTML documents from asciidoc files.
 #
-build:	$(TXT_SRC:%.txt=%.pdf) $(TXT_SRC:%.txt=%.html)
+build:	build-asciidoc-html build-asciidoc-pdf
+
+build-asciidoc-html:	$(TXT_SRC:%.txt=%.html)
+build-asciidoc-pdf:	$(TXT_SRC:%.txt=%.pdf)
+
+#
+# install: --Install PDF documents to docdir
+#
+install-asciidoc: $(TXT_SRC:%.txt=$(docdir)/%.pdf)
+	$(ECHO_TARGET)
+
+#
+# uninstall: --Remove PDF documents from docdir.
+#
+uninstall-asciidoc:
+	$(ECHO_TARGET)
+	$(RM) $(TXT_SRC:%.txt=$(docdir)/%.pdf)
+	$(RMDIR) -p $(docdir) 2>/dev/null || true
 
 #
 # src: --Update the TXT_SRC macro with a list of asciidoc text files.
@@ -76,8 +95,9 @@ src-asciidoc:
 	@mk-filelist -qn TXT_SRC *.txt
 
 #
-# clean: --cleanup asciidoc intermediate files (.xml, .fo, .pdf)
+# clean: --cleanup asciidoc intermediate files (.xml, .fo, .pdf).
 #
+distclean:	clean-asciidoc
 clean:	clean-asciidoc
 clean-asciidoc:
 	$(RM) $(TXT_SRC:%.txt=%.xml) $(TXT_SRC:%.txt=%.fo) $(TXT_SRC:%.txt=%.pdf)

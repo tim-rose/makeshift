@@ -16,6 +16,7 @@
 # system_confdir: --Rules for installing into the local system's "etc" dir.
 # %.gz:           --Rules for building compressed/summarised data.
 # %.shx:          --Create a file from a shell script output.
+# %.pdf:          --Convert a PostScript file to PDF.
 #
 # Remarks:
 # The devkit makefiles together define a build system that extends

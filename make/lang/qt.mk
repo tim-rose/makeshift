@@ -25,7 +25,7 @@
 
 -include $(QTR_SRC:%.qrc=$(archdir)/%.d)
 RCC	?= rcc
-MOC	?= moc
+MOC	?= moc-qt4
 
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h

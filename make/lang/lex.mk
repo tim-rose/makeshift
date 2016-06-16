@@ -33,9 +33,8 @@ ALL_LFLAGS = $(OS.LFLAGS) $(ARCH.LFLAGS) \
 # %.l: --Compile the lex grammar into a ".c" file
 #
 
-$(archdir)/%_l.c:	%.l
+$(archdir)/%_l.c:	%.l | mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
 	BASE=$$(echo "$*"| tr a-z A-Z); \
             $(LEX) $(ALL_LFLAGS) -t $< | \
             sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" >$(archdir)/$*_l.c
