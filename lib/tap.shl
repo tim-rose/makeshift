@@ -7,7 +7,7 @@
 # tty_filter()      --Filter stdout suitably/conditionally for a tty.
 # diag()            --Print diagnostic lines as TAP comments.
 # TAP_BEGIN()       --Startup code for the TAP module, print TAP prologue.
-# TAP_EXIT()        --Write some summary diagnostics as TAP epilogue.
+# TAP_EXIT()        --Write a test summary as TAP epilogue, and set exit status.
 # plan()            --Declare the number of tests.
 # todo()            --Mark the start/end of a "todo" block.
 # tap_test_msg()    --Common function to report on tests.

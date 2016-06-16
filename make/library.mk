@@ -68,7 +68,7 @@ $(libbasedir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 #
 # pre-build: --Stage the include files.
 #
-pre-build:      lib-src-var-defined $(LIB_INCLUDE_SRC)
+pre-build:      lib-src-defined $(LIB_INCLUDE_SRC)
 
 #
 # lib-src-defined: --Test if "enough" of the library SRC variables are defined.
