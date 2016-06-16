@@ -39,7 +39,7 @@ To use **devkit**, add the following to your _Makefile_:
 include devkit.mk
 ```
 
-This will include **devkit**'s targets and metarules for doing common
+This will include **devkit**'s targets and pattern rules for doing common
 actions recursively.
 
 ### Help and Debugging
