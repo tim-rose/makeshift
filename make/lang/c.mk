@@ -2,22 +2,23 @@
 # C.MK --Rules for building C objects and programs.
 #
 # Contents:
-# %.o:         --Compile a C file into an arch-specific sub-directory.
-# archdir/%.o: --Compile a generated C file into the arch sub-directory.
-# %.h:         --Install a C header (.h) file.
-# %.c.gcov:    --Build a text-format coverage report.
-# +c-defines:  --Print a list of predefined macros for the "C" language.
-# build:       --Build the C objects and executables.
-# build[%]:    --Build a C file's related object.
-# install:     --Install "C" programs.
-# uninstall:   --Uninstall "C" programs.
-# clean:       --Remove objects and executables created from C files.
-# tidy:        --Reformat C files consistently.
-# lint:        --Perform static analysis for C files.
-# toc:         --Build the table-of-contents for C files.
-# src:         --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
-# tags:        --Build vi, emacs tags files.
-# todo:        --Report "unfinished work" comments in C files.
+# c-src-defined: --Test that the C SRC variable(s) are set.
+# %.o:           --Compile a C file into an arch-specific sub-directory.
+# archdir/%.o:   --Compile a generated C file into the arch sub-directory.
+# %.h:           --Install a C header (.h) file.
+# %.c.gcov:      --Build a text-format coverage report.
+# +c-defines:    --Print a list of predefined macros for the "C" language.
+# build:         --Build the C objects and executables.
+# build[%]:      --Build a C file's related object.
+# install:       --Install "C" programs.
+# uninstall:     --Uninstall "C" programs.
+# clean:         --Remove objects and executables created from C files.
+# tidy:          --Reformat C files consistently.
+# lint:          --Perform static analysis for C files.
+# toc:           --Build the table-of-contents for C files.
+# src:           --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
+# tags:          --Build vi, emacs tags files.
+# todo:          --Report "unfinished work" comments in C files.
 #
 # Remarks:
 # The "lang/c" module provides support for the "C" programming language.
@@ -68,6 +69,16 @@ C_CPPFLAGS = $(CPPFLAGS) \
 C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
 #
+# c-src-defined: --Test that the C SRC variable(s) are set.
+#
+c-src-defined:
+	@if [ ! '$(C_SRC)$(H_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "H_SRC and C_SRC"; \
+	    echo 'run "make src" to define it'; \
+	    false; \
+	fi >&2
+
+#
 # %.o: --Compile a C file into an arch-specific sub-directory.
 #
 # Remarks:
@@ -76,17 +87,15 @@ C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 # dependencies, and the "-include" command allows the files to
 # be absent, so this setup will avoid premature compilation.
 #
-$(archdir)/%.o: %.c
+$(archdir)/%.o: %.c | mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 #
 # archdir/%.o: --Compile a generated C file into the arch sub-directory.
 #
-$(archdir)/%.o: $(archdir)/%.c
+$(archdir)/%.o: $(archdir)/%.c | mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 
@@ -103,7 +112,7 @@ $(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 # The gcov tool outputs some progress information, which is
 # mostly filtered out.
 #
-%.c.gcov:	$(archdir)/%.gcda
+%.c.gcov:	$(archdir)/%.gcda | mkdir[$(archdir)]
 	@echo gcov -o $(archdir) $*.c
 	@gcov -o $(archdir) $*.c | sed -ne '/^Lines/s/.*:/gcov $*.c: /p'
 
@@ -121,9 +130,9 @@ $(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 # build: --Build the C objects and executables.
 #
 build:	build-c
+build-c:	$(C_OBJ) $(C_MAIN); $(ECHO_TARGET)
+
 $(C_OBJ) $(C_MAIN):	| build-subdirs
-build-c:	$(C_OBJ) $(C_MAIN)
-	$(ECHO_TARGET)
 
 #
 # build[%]: --Build a C file's related object.
@@ -137,13 +146,14 @@ build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
 # The install (and uninstall) target is not invoked by default,
 # it must be added as a dependent of the "install" target.
 #
-install-c:	$(C_MAIN:$(archdir)/%=$(bindir)/%)
+install-c:	$(C_MAIN:$(archdir)/%=$(bindir)/%); $(ECHO_TARGET)
+install-strip-c:	install-strip-file[$(C_MAIN:$(archdir)/%=$(bindir)/%)]
 	$(ECHO_TARGET)
 
 #
 # uninstall: --Uninstall "C" programs.
 #
-uninstall-c:
+uninstall-c:	src-var-defined[C_MAIN]
 	$(ECHO_TARGET)
 	$(RM) $(C_MAIN:$(archdir)/%=$(bindir)/%)
 	$(RMDIR) -p $(bindir) 2>/dev/null || true
@@ -152,9 +162,9 @@ uninstall-c:
 # clean: --Remove objects and executables created from C files.
 #
 clean:	clean-c
-clean-c:
+clean-c: src-src-defined[C_SRC]
 	$(ECHO_TARGET)
-	$(RM) $(C_MAIN) $(C_OBJ) $(C_OBJ:%.o=%.d)
+	$(RM) $(C_MAIN) $(C_OBJ) $(C_OBJ:%.o=%.d) $(C_OBJ:%.o=%.map)
 
 #
 # tidy: --Reformat C files consistently.
@@ -163,13 +173,12 @@ C_INDENT ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent
 C_INDENT_FLAGS = $(OS.C_INDENT_FLAGS) $(ARCH.C_INDENT_FLAGS) \
     $(PROJECT.C_INDENT_FLAGS) $(LOCAL.C_INDENT_FLAGS) $(TARGET.C_INDENT_FLAGS)
 tidy:	tidy-c
-tidy-c:
+tidy-c:	c-src-defined
 	$(ECHO_TARGET)
 	$(C_INDENT) $(C_INDENT_FLAGS) $(H_SRC) $(C_SRC)
 #
 # lint: --Perform static analysis for C files.
 #
-
 C_LINT ?= cppcheck --quiet --std=c11 --template=gcc --enable=style,warning,performance,portability,information $(C_CPPFLAGS)
 C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
     $(PROJECT.C_LINT_FLAGS) $(LOCAL.C_LINT_FLAGS) $(TARGET.C_LINT_FLAGS)
@@ -181,7 +190,7 @@ lint-c:
 # toc: --Build the table-of-contents for C files.
 #
 toc:	toc-c
-toc-c:
+toc-c:	c-src-defined
 	$(ECHO_TARGET)
 	mk-toc $(H_SRC) $(C_SRC)
 
@@ -200,10 +209,9 @@ src-c:
 # tags: --Build vi, emacs tags files.
 #
 tags:	tags-c
-tags-c:
+tags-c:	c-src-defined
 	$(ECHO_TARGET)
-	ctags 	$(H_SRC) $(C_SRC) && \
-	etags	$(H_SRC) $(C_SRC); true
+	-ctags $(H_SRC) $(C_SRC) && etags $(H_SRC) $(C_SRC)
 
 #
 # todo: --Report "unfinished work" comments in C files.
