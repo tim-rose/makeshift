@@ -24,6 +24,8 @@ OS.PYTEST_FLAGS = --junit-xml pytest-tests.xml
 OS.RPM_FLAGS    = --define "_tmppath /var/tmp"
 OS.AUTO_CLEAN	= .DS_Store
 
+PS2PDF = pstopdf
+
 +vars:   $(.VARIABLES:%=+var[%])
 
 clean:	clean-darwin

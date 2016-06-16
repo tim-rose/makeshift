@@ -26,10 +26,20 @@
 # See Also:
 # http://www.gnu.org/software/make/manual/make.html#Standard-Targets
 #
-std-targets = build install test uninstall install-strip \
+std-targets = build install test uninstall \
 	clean distclean tags dist doc coverage
 devkit-targets = src toc lint tidy todo
 recursive-targets = $(std-targets) $(devkit-targets)
+
+#
+# install-strip: --install stuff, and strip binaries.
+#
+# Remarks:
+# Because there can't really be multiple rules for building the
+# same file, install-strip is achieved by altering the existing
+# install rule(s) with a flag variable.
+#
+install-strip:;	$(MAKE) install INSTALL_STRIP=1
 
 +var[recursive_rule]:;@: # disable +var[recursive_rule]
 
