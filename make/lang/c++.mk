@@ -70,20 +70,28 @@ C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
 C++_MAIN = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%)
 
 #
+# c++-src-defined: --Test that the C++ SRC variable(s) are set.
+#
+c++-src-defined:
+	@if [ ! '$(C++_SRC)$(H++_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "H++_SRC and C++_SRC"; \
+	    echo 'run "make src" to define it'; \
+	    false; \
+	fi >&2
+
+#
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
 #
-$(archdir)/%.o: %.$(C++_SUFFIX)
+$(archdir)/%.o: %.$(C++_SUFFIX) | mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
 	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
 
 #
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 #
-$(archdir)/%.o: $(archdir)/%.$(C++_SUFFIX)
+$(archdir)/%.o: $(archdir)/%.$(C++_SUFFIX) | mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
 	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
 #
@@ -94,9 +102,8 @@ build[%.$(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
 #
 # %.gcov: --Build a text-format coverage report.
 #
-%.$(C++_SUFFIX).gcov:	$(archdir)/%.gcda
+%.$(C++_SUFFIX).gcov:	$(archdir)/%.gcda mkdir[$(archdir)]
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
 	@echo gcov -o $(archdir) $*.$(C++_SUFFIX)
 	@gcov -o $(archdir) $*.$(C++_SUFFIX) | \
             sed -ne '/^Lines/s/.*:/gcov $*.$(C++_SUFFIX): /p'
@@ -108,7 +115,7 @@ $(includedir)/%.$(H++_SUFFIX):	%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 
-$(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX)
+$(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX) mkdir[$(archdir)]
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 
@@ -131,7 +138,6 @@ build:	build-c++
 build-c++:	$(C++_OBJ) $(C++_MAIN)
 	$(ECHO_TARGET)
 
-
 #
 # install: --Install "C++" programs.
 #
@@ -139,13 +145,13 @@ build-c++:	$(C++_OBJ) $(C++_MAIN)
 # The install (and uninstall) target is not invoked by default,
 # it must be added as a dependent of the "install" target.
 #
-install-c:	$(C++_MAIN:$(archdir)/%=$(bindir)/%)
+install-c++:	$(C++_MAIN:$(archdir)/%=$(bindir)/%)
 	$(ECHO_TARGET)
 
 #
 # uninstall: --Uninstall "C++" programs.
 #
-uninstall-c:
+uninstall-c++: src-var-defined[C++_MAIN_SRC]
 	$(ECHO_TARGET)
 	$(RM) $(C++_MAIN:$(archdir)/%=$(bindir)/%)
 	$(RMDIR) -p $(bindir) 2>/dev/null || true
@@ -165,7 +171,7 @@ C++_INDENT ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent
 C++_INDENT_FLAGS = $(OS.C++_INDENT_FLAGS) $(ARCH.C++_INDENT_FLAGS) \
     $(PROJECT.C++_INDENT_FLAGS) $(LOCAL.C++_INDENT_FLAGS) $(TARGET.C++_INDENT_FLAGS)
 tidy:	tidy-c++
-tidy-c++:
+tidy-c++:	c++-src-defined
 	$(ECHO_TARGET)
 	$(C++_INDENT) $(C++_INDENT_FLAGS) $(H++_SRC) $(C++_SRC)
 #
@@ -176,7 +182,7 @@ C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
     $(PROJECT.C++_LINT_FLAGS) $(LOCAL.C++_LINT_FLAGS) $(TARGET.C++_LINT_FLAGS)
 
 lint:	lint-c++
-lint-c++:
+lint-c++:	c++-src-defined
 	$(ECHO_TARGET)
 	$(C++_LINT) $(C++_LINT_FLAGS) $(H++_SRC) $(C++_SRC)
 
@@ -184,16 +190,12 @@ lint-c++:
 # toc: --Build the table-of-contents for C++ files.
 #
 toc:	toc-c++
-toc-c++:
+toc-c++:	c++-src-defined
 	$(ECHO_TARGET)
 	mk-toc $(H++_SRC) $(C++_SRC)
 
 #
 # src: --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
-#
-# Remarks:
-# Actually, for C++ this is a little involved, because we create
-# SRC macros for every variety of suffix.
 #
 src:	src-c++
 src-c++:
@@ -207,10 +209,9 @@ src-c++:
 # tags: --Build vi, emacs tags files for C++ files.
 #
 tags:	tags-c++
-tags-c++:
+tags-c++:	c++-src-defined
 	$(ECHO_TARGET)
-	ctags 	$(H++_SRC) $(C++_SRC) && \
-	etags	$(H++_SRC) $(C++_SRC); true
+	-ctags $(H++_SRC) $(C++_SRC) && etags $(H++_SRC) $(C++_SRC)
 
 #
 # todo: --Find "unfinished work" comments in C++ files.
