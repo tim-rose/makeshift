@@ -162,7 +162,7 @@ uninstall-c:	src-var-defined[C_MAIN]
 # clean: --Remove objects and executables created from C files.
 #
 clean:	clean-c
-clean-c: src-src-defined[C_SRC]
+clean-c:
 	$(ECHO_TARGET)
 	$(RM) $(C_MAIN) $(C_OBJ) $(C_OBJ:%.o=%.d) $(C_OBJ:%.o=%.map)
 
