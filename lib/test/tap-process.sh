@@ -9,24 +9,19 @@
 . ../tap.shl
 isatty=				# force tty stuff customisations off
 
-#
-# skip_prologue() --Skip the first 3 lines of prologue comments.
-#
-skip_prologue() { sed -e 1,3d; }
-
 plan 5
 
 ( false; . ../tap.shl; ) > /dev/null
-ok_eq $? 0 '"no tests" is successful'
+ok_eq $? 0 '"no tests" is considered successful'
 
 ( false; . ../tap.shl; ok 0; ok 0; plan; ) > /dev/null
-ok_eq $? 0 '"all tests pass" is successful'
+ok_eq $? 0 '"all tests pass" is considered successful'
 
 ( false; . ../tap.shl; ok 0; ok 1; plan; ) > /dev/null
-ok_eq $? 1 '"any test failures" is unsuccessful'
+ok_eq $? 1 '"any test failures" is considered unsuccessful'
 
 ( false; . ../tap.shl; plan 1; ok 0; ok 0; ) > /dev/null
-ok_eq $? 2 'plan mis-match is unsuccessful'
+ok_eq $? 2 'plan mis-match is considered unsuccessful'
 
 ( false; . ../tap.shl; plan 1; ok 0; ok 1; ) > /dev/null
-ok_eq $? 2 'plan and test errors is unsuccessful'
+ok_eq $? 2 'plan and test errors is considered unsuccessful'

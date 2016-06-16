@@ -26,17 +26,17 @@
 # TODO: skip
 #
 version=local.latest
-isatty=
+export isatty=
 tap_test=0
 tap_todo_reason=
 tap_plan=0
 tap_fail=0
 tap_version="${version}"
 
-ok_style=''			# plain
-fail_style='1;31'		# bold+red
-log_style='1'			# bold
-diag_style='36'			# cyan
+export ok_style=''			# plain
+export fail_style='1;31'		# bold+red
+export log_style='1'			# bold
+export diag_style='36'			# cyan
 
 if [ -t 1 ]; then
     isatty=1
@@ -47,6 +47,10 @@ fi
 #
 if ! type caller >/dev/null; then
     caller() { printf '(unknown) unknown (input)\n'; }
+fi
+# TODO: better trap handling for tap.
+if ! type tap_exit >/dev/null; then
+    tap_exit() {:;}
 fi
 
 #
@@ -106,6 +110,7 @@ TAP_EXIT()
     local s=			# plural-suffix
     local status=
 
+    tap_exit
     if [ $tap_test -ne $tap_plan ]; then
 	s=; test $tap_plan -ne 1 && s=s
 	diag "Looks like you planned %d test%s but ran %d." \
