@@ -4,7 +4,7 @@
 # Contents:
 # libdir/%.a:          --Install a static (.a) library
 # pre-build:           --Stage the include files.
-# lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
+# lib-src-defined:     --Test if "enough" of the library SRC variables are defined.
 # %/lib.a:             --Build the sub-librar(ies) in its subdirectory.
 # build:               --Build this directory's library.
 # lib-install-lib:     --Install the library (and include files).
@@ -32,6 +32,8 @@
 LIB_SUFFIX ?= a
 LIB_PREFIX ?= lib
 LIB ?= $(subst lib,,$(notdir $(PWD)))
+
+LIB_NAME = $(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
 LIB_ROOT ?= .
 LIB_OBJ ?= $(C_OBJ) $(C++_OBJ) $(LEX_OBJ) $(YACC_OBJ) \
     $(QTR_OBJ) $(XSD_OBJ) $(PROTOBUF_OBJ)
@@ -69,9 +71,9 @@ $(libbasedir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 pre-build:      lib-src-var-defined $(LIB_INCLUDE_SRC)
 
 #
-# lib-obj-var-defined: --Test if "enough" of the library SRC variables are defined
+# lib-src-defined: --Test if "enough" of the library SRC variables are defined.
 #
-lib-src-var-defined:
+lib-src-defined:
 	@if [ -z '$(LIB_OBJ)$(SUBLIB_SRC)' ]; then \
 	    printf $(VAR_UNDEF) 'LIB_OBJ or SUBLIB_SRC'; \
 	    false; \
@@ -84,14 +86,14 @@ lib-src-var-defined:
 #
 # build: --Build this directory's library.
 #
-build: $(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX) | lib-src-var-defined
+build: $(archdir)/$(LIB_NAME) | lib-src-defined
 
 #
 # lib-install-lib: --Install the library (and include files).
 # lib-install-include: --Install the library include files.
 # lib-install-man: --Install manual pages for the library.
 #
-lib-install-lib:	$(libdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX) lib-install-include
+lib-install-lib:	$(libdir)/$(LIB_NAME) lib-install-include
 lib-install-include:	$(H_SRC:%.h=$(includedir)/%.h)
 lib-install-include:	$(H++_SRC:%=$(includedir)/%)
 lib-install-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3)
@@ -104,7 +106,7 @@ $(archdir)/lib.a:	$(LIB_OBJ) $(SUBLIB_SRC)
 	mk-ar-merge $(ARFLAGS) $@ $(LIB_OBJ) $(SUBLIB_SRC)
 	$(RANLIB) $@
 
-$(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX):	$(archdir)/lib.a
+$(archdir)/$(LIB_NAME):	$(archdir)/lib.a
 	$(ECHO_TARGET)
 	cp $< $@
 	$(RANLIB) $@
@@ -115,7 +117,7 @@ $(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX):	$(archdir)/lib.a
 clean:	lib-clean
 lib-clean:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/$(LIB_PREFIX)$(LIB).$(LIB_SUFFIX) $(archdir)/lib.a
+	$(RM) $(archdir)/$(LIB_NAME) $(archdir)/lib.a
 
 #
 # distclean: --Remove the include files installed at $LIB_ROOT/include.
