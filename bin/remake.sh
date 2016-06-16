@@ -8,7 +8,7 @@ log_message() { printf "remake: "; printf "$@"; printf "\n"; } >&2
 notice()      { log_message "$@"; }
 info()        { if [ "$verbose" ]; then log_message "$@"; fi; }
 debug()       { if [ "$debug" ]; then log_message "$@"; fi; }
-log_quit()    { notice "$@"; exit 1 ; }
+log_quit()    { notice "$@"; exit 1; }
 log_cmd()     { debug "exec: $*"; "$@"; }
 
 command="make"

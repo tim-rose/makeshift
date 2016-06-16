@@ -2,12 +2,12 @@
 # CONF.MK --Rules for building config files.
 #
 # Contents:
-# %.conf:              --Pattern rules for installing config files.
-# pre-build:           --Make sure that the various config SRC macros are defined.
-# conf-src-var-defined: --Test if any of the "conf" SRC vars. are defined.
-# toc-conf:            --Build the table-of-contents for config files.
-# src-conf:            --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
-# todo:                --Report "unfinished work" comments in config files.
+# %.conf:           --Pattern rules for installing config files.
+# conf-src-defined: --Test if any of the "conf" SRC vars. are defined.
+# install:          --Install config files to sysconfdir
+# toc:              --Build the table-of-contents for config files.
+# src:              --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
+# todo:             --Report "unfinished work" comments in config files.
 #
 # Remarks:
 # Config files can have a variety of extensions (".conf", ".ini",
@@ -29,8 +29,6 @@ ifdef AUTOSRC
     INI_SRC ?= $(DEFAULT_INI_SRC)
 endif
 
-install-conf:	$(CONF_SRC:%=$(sysconfdir)/%) \
-    $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
 #
 # %.conf: --Pattern rules for installing config files.
 #
@@ -46,29 +44,31 @@ $(divertdir)/%.cfg:	%.cfg;		$(INSTALL_FILE) $? $@
 $(divertdir)/%.ini:	%.ini;		$(INSTALL_FILE) $? $@
 
 #
-# pre-build: --Make sure that the various config SRC macros are defined.
-#
-pre-build:	conf-src-var-defined
-
-#
-# conf-src-var-defined: --Test if any of the "conf" SRC vars. are defined.
+# conf-src-defined: --Test if any of the "conf" SRC vars. are defined.
 #
 conf-src-var-defined:
-	@if [ -z '$(CONF_SRC)$(CFG_SRC)$(INI_SRC)' ]; then \
+	@if [ ! '$(CONF_SRC)$(CFG_SRC)$(INI_SRC)' ]; then \
 	    printf $(VAR_UNDEF) "CONF_SRC, CFG_SRC, INI_SRC"; \
 	    echo 'run "make src" to define them'; \
 	    false; \
 	fi >&2
+
 #
-# toc-conf: --Build the table-of-contents for config files.
+# install: --Install config files to sysconfdir
+#
+install-conf:	$(CONF_SRC:%=$(sysconfdir)/%) \
+    $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
+	$(ECHO_TARGET)
+#
+# toc: --Build the table-of-contents for config files.
 #
 toc:	toc-conf
-toc-conf:
+toc-conf:	conf-src-var-defined
 	$(ECHO_TARGET)
 	mk-toc $(CONF_SRC) $(CFG_SRC) $(INI_SRC)
 
 #
-# src-conf: --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
+# src: --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
 #
 src:	src-conf
 src-conf:

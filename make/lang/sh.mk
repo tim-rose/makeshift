@@ -6,10 +6,11 @@
 # shell-src-var-defined: --Test if "enough" of the shell SRC vars. are defined.
 # build-shell:         --Make scripts "executable".
 # install-shell:       --install shell scripts to bindir, libraries to shlibdir
-# clean-shell:         --Remove script executables.
-# toc-shell:           --Build the table-of-contents for shell, awk files.
-# src-shell:           --shell-specific customisations for the "src" target.
-# todo-shell:          --Report unfinished work in shell code.
+# uninstall-shell:     --uninstall files installed by "install-shell".
+# clean:               --Remove shell, awk, sed script executables.
+# toc:                 --Build the table-of-contents for shell, awk, sed files.
+# src:                 --Define SH_SRC, SHL_SRC, AWK_SRC, SED_SRC.
+# todo:                --Report unfinished work in shell, awk, sed code.
 #
 # Remarks:
 # For the purposes of building stuff, "shell" covers the "traditional"
@@ -46,7 +47,7 @@ $(shlibdir)/%.sed:	%.sed;	$(INSTALL_FILE) $*.sed $@
 #
 # shell-src-var-defined: --Test if "enough" of the shell SRC vars. are defined.
 #
-shell-src-var-defined:
+shell-src-defined:
 	@if [ -z '$(SH_SRC)$(SHL_SRC)$(AWK_SRC)$(SED_SRC)' ]; then \
 	    printf $(VAR_UNDEF) "SH_SRC, SHL_SRC, AWK_SRC or SED_SRC"; \
 	    echo 'run "make src" to define them'; \
@@ -56,7 +57,7 @@ shell-src-var-defined:
 #
 # build-shell: --Make scripts "executable".
 #
-pre-build:	shell-src-var-defined
+pre-build:	shell-src-defined
 build:	build-shell
 build-shell:	$(SHELL_TRG)
 
@@ -64,10 +65,20 @@ build-shell:	$(SHELL_TRG)
 # install-shell: --install shell scripts to bindir, libraries to shlibdir
 #
 install-shell:	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
-	$(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
+    $(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
+	$(ECHO_TARGET)
 
 #
-# clean-shell: --Remove script executables.
+# uninstall-shell: --uninstall files installed by "install-shell".
+#
+uninstall-shell:
+	$(ECHO_TARGET)
+	$(RM) 	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
+            $(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
+	$(RMDIR) -p $(bindir) $(shlibdir) 2>/dev/null || true
+
+#
+# clean: --Remove shell, awk, sed script executables.
 #
 clean:	clean-shell
 clean-shell:
@@ -76,14 +87,14 @@ clean-shell:
 distclean:	clean-shell
 
 #
-# toc-shell: --Build the table-of-contents for shell, awk files.
+# toc: --Build the table-of-contents for shell, awk, sed files.
 #
 toc:	toc-shell
 toc-shell:
 	$(ECHO_TARGET)
 	mk-toc $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC)
 #
-# src-shell: --shell-specific customisations for the "src" target.
+# src: --Define SH_SRC, SHL_SRC, AWK_SRC, SED_SRC.
 #
 src:	src-shell
 src-shell:
@@ -94,7 +105,7 @@ src-shell:
 	@mk-filelist -qn SED_SRC *.sed
 
 #
-# todo-shell: --Report unfinished work in shell code.
+# todo: --Report unfinished work in shell, awk, sed code.
 #
 todo:	todo-shell
 todo-shell:

@@ -3,7 +3,7 @@
 #
 # Contents:
 # %.class: --Compile a java file into an arch-specific sub-directory.
-# build:   --Compile all the JAV_SRC files.
+# build:   --Compile all the JAVA_SRC files.
 # clean:   --Remove The Java package.
 # src:     --Update the JAVA_SRC macro.
 # tags:    --Build vi, emacs tags files.
@@ -34,7 +34,7 @@ $(archdir)/%.class: %.java mkdir[$(archdir)] var_defined[PACKAGE]
 	$(JAVAC) $(JAVA_FLAGS) -d $(archdir) $*.java
 
 #
-# build: --Compile all the JAV_SRC files.
+# build: --Compile all the JAVA_SRC files.
 #
 build:	$(JAVA_OBJ) var-defined[JAVA_SRC]
 
@@ -58,7 +58,7 @@ src-java:
 # tags: --Build vi, emacs tags files.
 #
 tags:	tags-java
-tags-java:
+tags-java:	src-var-defined[JAVA_SRC]
 	$(ECHO_TARGET)
 	ctags $(JAVA_SRC) && \
 	etags $(JAVA_SRC); true
