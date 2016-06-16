@@ -83,6 +83,7 @@ endif
 #ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"
 #ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$^: $^"
 ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
+#ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ changed(\$$?): $?"; $(ECHO) "++ $$PWD $@ dependants(\$$^): $^"
 
 .SUFFIXES:			# remove default suffix rules
 
@@ -201,3 +202,8 @@ $(system_confdir)/%:	%;	$(INSTALL_FILE) $? $@
 # %.shx: --Create a file from a shell script output.
 #
 %:			%.shx;	sh $*.shx > $@
+
+#
+# %.pdf: --Convert a PostScript file to PDF.
+#
+%.pdf:	%.ps;	$(PS2PDF) $*.ps

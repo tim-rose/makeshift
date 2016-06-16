@@ -31,11 +31,11 @@
 # messages will likely make more sense:
 #
 # ```
-# Error: INPUT_FILES variable(s) not defined
+# Error: INPUT_FILES variable is not defined
 # Error: command "frobnicate" does not exist
 # ```
 #
-VAR_UNDEF = 'Error: %s variable(s) not defined\n'
+VAR_UNDEF = 'Error: %s variable is not defined\n'
 #
 # var-defined[%]: --Test that a variable is defined.
 #
