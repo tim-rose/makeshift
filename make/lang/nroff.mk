@@ -68,23 +68,28 @@ src-nroff:
 	@mk-filelist -qn MAN7_SRC *.7
 	@mk-filelist -qn MAN8_SRC *.8
 
-doc:	$(MAN1_SRC:%.1=%.1.pdf) \
-	$(MAN3_SRC:%.3=%.3.pdf) \
-	$(MAN5_SRC:%.5=%.5.pdf) \
-	$(MAN7_SRC:%.7=%.7.pdf) \
+doc:	$(MAN1_SRC:%.1=%.1.pdf) $(MAN3_SRC:%.3=%.3.pdf) \
+	$(MAN5_SRC:%.5=%.5.pdf) $(MAN7_SRC:%.7=%.7.pdf) \
 	$(MAN8_SRC:%.8=%.8.pdf)
 
-install:        install-man
+install:	install-man
+uninstall:	uninstall-man
 
 #
 # install-man:  --install manual pages in their usual places.
 #
 .PHONY: install-man
-install-man:    $(MAN1_SRC:%=$(man1dir)/%) \
-    $(MAN3_SRC:%=$(man3dir)/%) \
-    $(MAN5_SRC:%=$(man5dir)/%) \
-    $(MAN7_SRC:%=$(man7dir)/%) \
+install-man:    $(MAN1_SRC:%=$(man1dir)/%) $(MAN3_SRC:%=$(man3dir)/%) \
+    $(MAN5_SRC:%=$(man5dir)/%) $(MAN7_SRC:%=$(man7dir)/%) \
     $(MAN8_SRC:%=$(man8dir)/%)
+
+#
+# uninstall-man:  --uninstall manual pages from their usual places.
+#
+.PHONY: uninstall-man
+uninstall-man:
+	$(RM) $(MAN1_SRC:%=$(man1dir)/%) $(MAN3_SRC:%=$(man3dir)/%) $(MAN5_SRC:%=$(man5dir)/%) $(MAN7_SRC:%=$(man7dir)/%) $(MAN8_SRC:%=$(man8dir)/%)
+	$(RMDIR) -p $(man1dir) $(man3dir) $(man5dir) $(man7dir) $(man8dir) 2>/dev/null || true
 
 #
 # clean-nroff: --Cleanup nroff files.
