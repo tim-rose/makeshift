@@ -7,9 +7,9 @@
 # lib-src-defined:     --Test if "enough" of the library SRC variables are defined.
 # %/lib.a:             --Build the sub-librar(ies) in its subdirectory.
 # build:               --Build this directory's library.
-# lib-install-lib:     --Install the library (and include files).
-# lib-install-include: --Install the library include files.
-# lib-install-man:     --Install manual pages for the library.
+# install-lib-lib:     --Install the library (and include files).
+# install-lib-include: --Install the library include files.
+# install-lib-man:     --Install manual pages for the library.
 # archdir/%.a:         --(re)build a library.
 # clean:               --Remove the library file.
 # distclean:           --Remove the include files installed at $LIB_ROOT/include.
@@ -89,14 +89,32 @@ lib-src-defined:
 build: $(archdir)/$(LIB_NAME) | lib-src-defined
 
 #
-# lib-install-lib: --Install the library (and include files).
-# lib-install-include: --Install the library include files.
-# lib-install-man: --Install manual pages for the library.
+# install-lib-lib: --Install the library (and include files).
+# install-lib-include: --Install the library include files.
+# install-lib-man: --Install manual pages for the library.
 #
-lib-install-lib:	$(libdir)/$(LIB_NAME) lib-install-include
-lib-install-include:	$(H_SRC:%.h=$(includedir)/%.h)
-lib-install-include:	$(H++_SRC:%=$(includedir)/%)
-lib-install-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3)
+.PHONY: install-lib-lib install-lib-include install-lib-man
+install-lib-lib:	$(libdir)/$(LIB_NAME) install-lib-include; $(ECHO_TARGET)
+install-lib-include:	$(H_SRC:%.h=$(includedir)/%.h) $(H++_SRC:%=$(includedir)/%)
+	$(ECHO_TARGET)
+
+install-lib-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3); $(ECHO_TARGET)
+
+.PHONY: uninstall-lib-lib uninstall-lib-include uninstall-lib-man
+uninstall-lib-lib:	uninstall-lib-include
+	$(ECHO_TARGET)
+	$(RM) $(libdir)/$(LIB_NAME)
+	$(RMDIR) -p $(libdir) 2>/dev/null || true
+
+uninstall-lib-include:
+	$(ECHO_TARGET)
+	$(RM) $(H_SRC:%.h=$(includedir)/%.h) $(H++_SRC:%.h=$(includedir)/%.h)
+	$(RMDIR) -p $(includedir) 2>/dev/null || true
+
+uninstall-lib-man:
+	$(ECHO_TARGET)
+	$(RM) $(MAN3_SRC:%.3=$(man3dir)/%.3)
+	$(RMDIR) -p $(man3dir) 2>/dev/null || true
 
 #
 # archdir/%.a: --(re)build a library.
