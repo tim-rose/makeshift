@@ -2,10 +2,12 @@
 # XSD.MK --Support for XSD.
 #
 # Contents:
-# build:     --xsd-specific customisations for the "build" target.
-# clean:     --Remove XSD's object files.
-# distclean: --Remove XSD-generated include files.
-# src:       --Update the XSD_SRC target.
+# build:         --xsd-specific customisations for the "build" target.
+# install-xsd:   --Install XSD files and related include files.
+# uninstall-xsd: --Remove XSD files and related include files.
+# clean:         --Remove XSD's object files.
+# distclean:     --Remove XSD-generated include files.
+# src:           --Update the XSD_SRC target.
 #
 # Remarks:
 # The XSD module adds some rules for building C++ marshalling routines
@@ -60,9 +62,29 @@ $(XSD_OBJ):	$(XSD_INCLUDE_SRC)
 pre-build:      var-defined[XSD_INCLUDEDIR] $(XSD_INCLUDE_SRC)
 build:	$(XSD_OBJ)
 
+#
+# install-xsd: --Install XSD files and related include files.
+#
+.PHONY: install-xsd-xsd install-xsd-include
 install-xsd:	install-xsd-xsd install-xsd-include
 install-xsd-xsd:	$(XSD_SRC:%=$(datadir)/%)
 install-xsd-include:	$(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
+
+#
+# uninstall-xsd: --Remove XSD files and related include files.
+#
+.PHONY: uninstall-xsd-xsd uninstall-xsd-include
+uninstall-xsd:	uninstall-xsd-xsd uninstall-xsd-include
+	$(ECHO_TARGET)
+	$(RMDIR) -p $(datadir) $(includedir) 2>/dev/null || true
+
+uninstall-xsd-xsd:
+	$(ECHO_TARGET)
+	$(RM) $(XSD_SRC:%=$(datadir)/%)
+
+uninstall-xsd-include:
+	$(ECHO_TARGET)
+	$(RM) $(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
 
 $(archdir)/XmlSchema.$(H++_SUFFIX):
 	$(ECHO_TARGET)

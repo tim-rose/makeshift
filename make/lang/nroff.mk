@@ -2,11 +2,12 @@
 # NROFF.MK --Rules for building nroff files.
 #
 # Contents:
-# toc-nroff:   --Build the table-of-contents for nroff files.
-# src-nroff:   --specific-nroff customisations for the "src" target.
-# install-man: --install manual pages in their usual places.
-# clean-nroff: --Cleanup nroff files.
-# todo:        --Report unfinished work (identified by keyword comments)
+# toc-nroff:     --Build the table-of-contents for nroff files.
+# src-nroff:     --specific-nroff customisations for the "src" target.
+# install-man:   --install manual pages in their usual places.
+# uninstall-man: --uninstall manual pages from their usual places.
+# clean-nroff:   --Cleanup nroff files.
+# todo:          --Report unfinished work (identified by keyword comments)
 #
 .PHONY: $(recursive-targets:%=%-nroff)
 
@@ -77,6 +78,10 @@ uninstall:	uninstall-man
 
 #
 # install-man:  --install manual pages in their usual places.
+#
+# Remarks:
+# Most documents aren't "installed" as such, but somewhat famously,
+# Unix manual pages *are*.
 #
 .PHONY: install-man
 install-man:    $(MAN1_SRC:%=$(man1dir)/%) $(MAN3_SRC:%=$(man3dir)/%) \

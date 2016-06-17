@@ -5,6 +5,7 @@
 # %.conf:           --Pattern rules for installing config files.
 # conf-src-defined: --Test if any of the "conf" SRC vars. are defined.
 # install:          --Install config files to sysconfdir
+# uninstall-conf:   --Uninstall the default config files.
 # toc:              --Build the table-of-contents for config files.
 # src:              --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.
 # todo:             --Report "unfinished work" comments in config files.

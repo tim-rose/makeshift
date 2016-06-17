@@ -4,6 +4,7 @@
 # Contents:
 # css-src-defined: --Test if any of the "css" SRC vars. are defined.
 # install-css:     --install css files.
+# uninstall-css:   --Uninstall the default ".css" files.
 # src:             --Update the CSS_SRC, SCSS_SRC macros.
 # toc:             --Build the table-of-contents for CSS files.
 # todo:            --Report "unfinished work" comments in CSS files.
@@ -38,13 +39,14 @@ css-src-defined:
 #
 install-css:	$(CSS_SRC:%.css=$(wwwdir)/%.css) \
     $(CSS_MAP_SRC:%.css.map=$(wwwdir)/%.css.map)
+	$(ECHO_TARGET)
 
 #
 # uninstall-css: --Uninstall the default ".css" files.
 #
 uninstall-css:
 	$(ECHO_TARGET)
-	$(RM) 	$(CSS_SRC:%.css=$(wwwdir)/%.css) $(CSS_MAP_SRC:%.css.map=$(wwwdir)/%.css.map)
+	$(RM) $(CSS_SRC:%.css=$(wwwdir)/%.css) $(CSS_MAP_SRC:%.css.map=$(wwwdir)/%.css.map)
 	$(RMDIR) -p $(wwwdir) 2>/dev/null || true
 
 #

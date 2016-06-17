@@ -2,10 +2,9 @@
 # PHP.MK --Rules for building PHP objects and programs.
 #
 # Contents:
-# php-build:      --Make scripts "executable".
-# toc-php:        --Build the table-of-contents for PHP-ish files.
-# src-php:        --php-specific customisations for the "src" target.
-# todo:           --Report unfinished work (identified by keyword comments)
+# toc:            --Build the table-of-contents for PHP-ish files.
+# src:            --Define the PHP_SRC macro.
+# todo:           --Report unfinished work in PHP source code.
 # system-php.ini: --Create a PHP configuration file based on current system settings.
 #
 .PHONY: $(recursive-targets:%=%-php)

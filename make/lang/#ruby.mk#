@@ -26,6 +26,26 @@ $(rubylibdir)/%.rb:	%.rb;	$(INSTALL_FILE) $? $@
 build-ruby:	$(RB_TRG)
 
 #
+# install-ruby: --Install ruby as executables.
+#
+install-ruby: $(RB_SRC:%.rb=$(bindir)/%); $(ECHO_TARGET)
+uninstall-ruby:
+	$(ECHO_TARGET)
+	$(RM) $(RB_SRC:%.rb=$(bindir)/%)
+	$(RMDIR) -p $(bindir) 2>/dev/null || true
+
+#
+# install-ruby-lib: --Install ruby as library modules.
+#
+.PHONY: install-ruby-lib uninstall-ruby-lib
+install-ruby-lib: $(RB_SRC:%.rb=$(rubylibdir)/%.rb); $(ECHO_TARGET)
+uninstall-ruby-lib:
+	$(ECHO_TARGET)
+	$(RM) $(RB_SRC:%.rb=$(rubylibdir)/%)
+	$(RMDIR) -p $(rubylibdir) 2>/dev/null || true
+
+
+#
 # clean: --Remove ruby script executables.
 #
 clean:	clean-ruby

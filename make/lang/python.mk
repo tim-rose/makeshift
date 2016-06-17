@@ -32,12 +32,21 @@ build-python:	$(PY_TRG)
 #
 # install-python: --Install python as executables.
 #
-install-python: $(PY_SRC:%.py=$(bindir)/%)
+install-python: $(PY_SRC:%.py=$(bindir)/%); $(ECHO_TARGET)
+uninstall-python:
+	$(ECHO_TARGET)
+	$(RM) $(PY_SRC:%.py=$(bindir)/%)
+	$(RMDIR) -p $(bindir) 2>/dev/null || true
 
 #
 # install-python-lib: --Install python as library modules.
 #
-install-python-lib: $(PY_SRC:%.py=$(pythonlibdir)/%.py)
+.PHONY: install-python-lib uninstall-python-lib
+install-python-lib: $(PY_SRC:%.py=$(pythonlibdir)/%.py); $(ECHO_TARGET)
+uninstall-python-lib:
+	$(ECHO_TARGET)
+	$(RM) $(PY_SRC:%.py=$(pythonlibdir)/%)
+	$(RMDIR) -p $(pythonlibdir) 2>/dev/null || true
 
 #
 # clean: --Remove python executables.
