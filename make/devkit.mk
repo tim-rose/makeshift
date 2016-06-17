@@ -53,11 +53,11 @@ DEVKIT_RELEASE ?= latest
 SUBDIRS := $(subst /.,,$(wildcard */.))
 PWD := $(shell echo $$PWD)
 
-DEFAULT_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
-DEFAULT_ARCH := $(shell uname -m | tr A-Z a-z)
+LOCAL_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
+LOCAL_ARCH := $(shell uname -m | tr A-Z a-z)
 
-OS      ?= $(DEFAULT_OS)
-ARCH    ?= $(DEFAULT_ARCH)
+OS      ?= $(LOCAL_OS)
+ARCH    ?= $(LOCAL_ARCH)
 PROJECT ?= default
 DEVKIT_HOME ?= /usr/local
 

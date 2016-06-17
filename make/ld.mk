@@ -23,6 +23,7 @@ include coverage.mk
 ifeq ($(LD), ld)
     LD = $(CC)
 endif
+VPATH += $(LIB_PATH:%=%/$(archdir))
 
 ALL_LDFLAGS = $(LDFLAGS) $(LANG.LDFLAGS) \
     $(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) $(PROJECT.LDFLAGS) \
