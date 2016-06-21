@@ -2,19 +2,24 @@
 # XML.MK --Rules for installing xml data.
 #
 # Contents:
-# %.xml: --Rules for installing xml files
-# src:   --Update the XML_SRC macro.
-# todo:  --Report unfinished work in XML files.
+# %.xml:       --Rules for installing xml files in other places.
+# install-xml: --Install XML files to datadir.
+# src:         --Update the XML_SRC macro.
+# todo:        --Report unfinished work in XML files.
 #
 
 .PHONY: $(recursive-targets:%=%-xml)
 
 #
-# %.xml: --Rules for installing xml files
+# %.xml: --Rules for installing xml files in other places.
 #
-
 $(sysconfdir)/%.xml:	%.xml;	$(INSTALL_FILE) $? $@
 $(libdir)/%.xml:	%.xml;	$(INSTALL_FILE) $? $@
+
+#
+# install-xml: --Install XML files to datadir.
+#
+install-xml: $(XML_SRC:%=$(datadir)/%)
 
 #
 # src: --Update the XML_SRC macro.
