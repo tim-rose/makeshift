@@ -31,7 +31,8 @@
 #
 LIB_SUFFIX ?= a
 LIB_PREFIX ?= lib
-LIB ?= $(subst lib,,$(notdir $(PWD)))
+LOCAL_LIB := $(subst lib,,$(notdir $(PWD)))
+LIB ?= $(LOCAL_LIB)
 
 LIB_NAME = $(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
 LIB_ROOT ?= .
@@ -43,6 +44,9 @@ LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%) \
     $(H++_SRC:%=$(LIB_INCLUDEDIR)/%) \
     $(YACC_SRC:%.y=$(LIB_INCLUDEDIR)/%.h)
 
+#
+# Pattern rules for doing a staged install of the library's ".h" files.
+#
 $(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_FILE) $* $@
 $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
 
@@ -95,7 +99,9 @@ build: $(archdir)/$(LIB_NAME) | lib-src-defined
 #
 .PHONY: install-lib-lib install-lib-include install-lib-man
 install-lib-lib:	$(libdir)/$(LIB_NAME) install-lib-include; $(ECHO_TARGET)
-install-lib-include:	$(H_SRC:%.h=$(includedir)/%.h) $(H++_SRC:%=$(includedir)/%)
+install-lib-include:	$(H_SRC:%.h=$(includedir)/%.h) \
+    $(H++_SRC:%=$(includedir)/%) \
+    $(YACC_SRC:%.y=$(includedir)/%.h)
 	$(ECHO_TARGET)
 
 install-lib-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3); $(ECHO_TARGET)
@@ -108,7 +114,7 @@ uninstall-lib-lib:	uninstall-lib-include
 
 uninstall-lib-include:
 	$(ECHO_TARGET)
-	$(RM) $(H_SRC:%.h=$(includedir)/%.h) $(H++_SRC:%.h=$(includedir)/%.h)
+	$(RM) $(H_SRC:%=$(includedir)/%) $(H++_SRC:%=$(includedir)/%) $(YACC_SRC:%=$(LIB_INCLUDEDIR)/%)
 	$(RMDIR) -p $(includedir) 2>/dev/null || true
 
 uninstall-lib-man:
@@ -132,24 +138,24 @@ $(archdir)/$(LIB_NAME):	$(archdir)/lib.a
 #
 # clean: --Remove the library file.
 #
-clean:	lib-clean
-lib-clean:
+clean:	clean-lib
+clean-lib:
 	$(ECHO_TARGET)
 	$(RM) $(archdir)/$(LIB_NAME) $(archdir)/lib.a
 
 #
 # distclean: --Remove the include files installed at $LIB_ROOT/include.
 #
-distclean: lib-clean lib-distclean
-lib-distclean:
+distclean: clean-lib distclean-lib
+distclean-lib:
 	$(ECHO_TARGET)
 	if [ "$(LIB_ROOT)" = "." ]; then $(RM) -r $(LIB_INCLUDEDIR); fi
 
 #
 # src: --Get a list of sub-directories that are libraries.
 #
-src:	lib-src
-lib-src:
+src:	src-lib
+src-lib:
 	$(ECHO_TARGET)
 	@mk-filelist -qpn SUBLIB_SRC $$( \
 	    grep -l '^include.* library.mk' */Makefile 2>/dev/null | \
