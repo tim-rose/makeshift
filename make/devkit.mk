@@ -2,21 +2,24 @@
 # devkit.mk --Recursive make considered useful.
 #
 # Contents:
-# DEVKIT_VERSION: --define the version of devkit that's running.
-# VERBOSE:        --Control how (+how much) is output via echo.
-# ECHO_TARGET:    --Common macro for logging in devkit targets.
-# build:          --The default target
-# package:        --By default, (successfully) do no packaging.
-# src:            --Make sure the src target can write to the Makefile.
-# clean:          --Devkit-specific customisations for the "clean" target.
-# distclean:      --Remove artefacts that devkit creates/updates.
-# +help:          --Output some help text extracted from the included makefiles.
-# stddir/%        --Common pattern rules for installing stuff into the "standard" places.
-# bindir/archdir: --Rules for installing any executable from archdir.
-# system_confdir: --Rules for installing into the local system's "etc" dir.
-# %.gz:           --Rules for building compressed/summarised data.
-# %.shx:          --Create a file from a shell script output.
-# %.pdf:          --Convert a PostScript file to PDF.
+# DEVKIT_VERSION:    --define the version of devkit that's running.
+# PWD:               --Force reset of PWD
+# OS:                --Set OS macro by interpolating "uname -s".
+# ARCH:              --Set ARCH macro by interpolating "uname -m".
+# VERBOSE:           --Control how (+how much) is output via echo.
+# ECHO_TARGET:       --Common macro for logging in devkit targets.
+# no-implicit-rules: --Disable the archaic Makefile rules
+# build:             --The default target
+# package:           --By default, (successfully) do no packaging.
+# src:               --Make sure the src target can write to the Makefile.
+# clean:             --Devkit-specific customisations for the "clean" target.
+# distclean:         --Remove artefacts that devkit creates/updates.
+# +help:             --Output some help text extracted from the included makefiles.
+# stddir/%           --Common pattern rules for installing stuff into the "standard" places.
+# bindir/archdir:    --Rules for installing any executable from archdir.
+# system_confdir:    --Rules for installing into the local system's "etc" dir.
+# %.gz:              --Rules for building compressed/summarised data.
+# %.pdf:             --Convert a PostScript file to PDF.
 #
 # Remarks:
 # The devkit makefiles together define a build system that extends
@@ -51,13 +54,30 @@ DEVKIT_RELEASE ?= latest
 -include version.mk
 
 SUBDIRS := $(subst /.,,$(wildcard */.))
+
+#
+# PWD: --Force reset of PWD
+#
+# REVISIT: needed for indirect makes invoked by packages
+#
 PWD := $(shell echo $$PWD)
 
-LOCAL_OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
-LOCAL_ARCH := $(shell uname -m | tr A-Z a-z)
+#
+# OS: --Set OS macro by interpolating "uname -s".
+#
+ifndef OS
+    OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
+endif
+export OS
 
-OS      ?= $(LOCAL_OS)
-ARCH    ?= $(LOCAL_ARCH)
+#
+# ARCH: --Set ARCH macro by interpolating "uname -m".
+#
+ifndef ARCH
+    ARCH := $(shell uname -m | tr A-Z a-z)
+endif
+export ARCH
+
 PROJECT ?= default
 DEVKIT_HOME ?= /usr/local
 
@@ -86,8 +106,23 @@ endif
 ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
 #ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ changed(\$$?): $?"; $(ECHO) "++ $$PWD $@ dependants(\$$^): $^"
 
-.SUFFIXES:			# remove default suffix rules
-
+#
+# no-implicit-rules: --Disable the archaic Makefile rules
+#
+.SUFFIXES:
+# disable archaic VCS rules
+%:: %,v
+%:: RCS/%
+%:: RCS/%,v
+%:: s.%
+%:: SCCS/s.%
+# Disable Knuth's venerable (but admired from afar) "web" system.
+# (It doesn't seem to disable them...)
+%.c: %.w %.ch
+%.tex: %.w %.ch
+.w.c:
+.w.tex:
+.web.tex:
 #
 # build: --The default target
 #
@@ -198,11 +233,6 @@ $(system_confdir)/%:	%;	$(INSTALL_FILE) $? $@
 %.gpg:			%;	gpg -b -o $? $@
 %.sum:			%;	sum $? | sed -e 's/ .*//' >$@
 %.md5:			%;	md5sum $? | sed -e 's/ .*//' >$@
-
-#
-# %.shx: --Create a file from a shell script output.
-#
-%:			%.shx;	sh $*.shx > $@
 
 #
 # %.pdf: --Convert a PostScript file to PDF.
