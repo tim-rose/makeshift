@@ -18,44 +18,44 @@
 # install devkit into $HOME, you must use/alias make as
 # "make -I$HOME/include".
 #
-export system_root	= $(DESTDIR)
-export system_confdir	= $(system_root)/etc/$(subdir)
-export pkgver		= $(PACKAGE)$(VERSION:%=-%)
+system_root	= $(DESTDIR)
+system_confdir	= $(system_root)/etc/$(subdir)
+pkgver		= $(PACKAGE)$(VERSION:%=-%)
 
 export archdir		= $(HW:%=%-)$(OS:%=%-)$(ARCH)
-export rootdir	 	= $(DESTDIR)/$(prefix)
-export rootdir_opt 	= $(DESTDIR)/$(prefix)/$(opt)
-#export exec_prefix = $(rootdir)/$(archdir)	# (GNU std)
-export exec_prefix	= $(rootdir_opt)/$(usr)
+rootdir	 	= $(DESTDIR)/$(prefix)
+rootdir_opt 	= $(DESTDIR)/$(prefix)/$(opt)
+#exec_prefix = $(rootdir)/$(archdir)	# (GNU std)
+exec_prefix	= $(rootdir_opt)/$(usr)
 
-export bindir		= $(exec_prefix)/bin
-export sbindir 	= $(exec_prefix)/sbin
-#export libexecdir	= $(exec_prefix)/libexec/$(archdir)/$(subdir)	# (GNU std)
-export libexecdir	= $(exec_prefix)/libexec/$(subdir)
-export datadir		= $(exec_prefix)/share/$(subdir)
+bindir		= $(exec_prefix)/bin
+sbindir 	= $(exec_prefix)/sbin
+#libexecdir	= $(exec_prefix)/libexec/$(archdir)/$(subdir)	# (GNU std)
+libexecdir	= $(exec_prefix)/libexec/$(subdir)
+datadir		= $(exec_prefix)/share/$(subdir)
 
-export sysconfdir	= $(rootdir)/etc/$(opt)/$(subdir)
+sysconfdir	= $(rootdir)/etc/$(opt)/$(subdir)
 
-export divertdir	= $(rootdir)/var/lib/divert/$(subdir)
-export sharedstatedir	= $(rootdir_opt)/com/$(subdir)
-export localstatedir	= $(rootdir)/var/$(opt)/$(subdir)
-export srvdir 		= $(rootdir)/srv/$(subdir)
-export wwwdir 		= $(rootdir)/srv/www/$(subdir)
+divertdir	= $(rootdir)/var/lib/divert/$(subdir)
+sharedstatedir	= $(rootdir_opt)/com/$(subdir)
+localstatedir	= $(rootdir)/var/$(opt)/$(subdir)
+srvdir 		= $(rootdir)/srv/$(subdir)
+wwwdir 		= $(rootdir)/srv/www/$(subdir)
 
-#export libdir		= $(exec_prefix)/lib/$(archdir)	# (GNU std)
-export libdir		= $(exec_prefix)/lib/$(subdir)
-export libbasedir	= $(exec_prefix)/lib
-export infodir		= $(rootdir_opt)/info
-export lispdir		= $(rootdir_opt)/share/emacs/site-lisp
+#libdir		= $(exec_prefix)/lib/$(archdir)	# (GNU std)
+libdir		= $(exec_prefix)/lib/$(subdir)
+libbasedir	= $(exec_prefix)/lib
+infodir		= $(rootdir_opt)/info
+lispdir		= $(rootdir_opt)/share/emacs/site-lisp
 
-export includedir	= $(rootdir_opt)/$(usr)/include/$(subdir)
-export docdir		= $(exec_prefix)/share/doc/$(pkgver)/$(subdir)
-export mandir		= $(datadir)/man
-export man1dir		= $(mandir)/man1
-export man2dir		= $(mandir)/man2
-export man3dir		= $(mandir)/man3
-export man4dir		= $(mandir)/man4
-export man5dir		= $(mandir)/man5
-export man6dir		= $(mandir)/man6
-export man7dir		= $(mandir)/man7
-export man8dir		= $(mandir)/man8
+includedir	= $(rootdir_opt)/$(usr)/include/$(subdir)
+docdir		= $(exec_prefix)/share/doc/$(pkgver)/$(subdir)
+mandir		= $(datadir)/man
+man1dir		= $(mandir)/man1
+man2dir		= $(mandir)/man2
+man3dir		= $(mandir)/man3
+man4dir		= $(mandir)/man4
+man5dir		= $(mandir)/man5
+man6dir		= $(mandir)/man6
+man7dir		= $(mandir)/man7
+man8dir		= $(mandir)/man8
