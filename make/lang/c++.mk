@@ -62,13 +62,14 @@ C++_CPPFLAGS = $(CPPFLAGS) \
     $(TARGET.C++_CPPFLAGS) $(LOCAL.C++_CPPFLAGS) $(PROJECT.C++_CPPFLAGS) \
     $(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
     $(LIB_ROOT:%=-I%/include) $(LIB_PATH:%=-I%/include) \
-    -I. -I$(includedir)
+    -I$(includedir)
 
 C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
-C++_OBJ  = $(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
 C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
+C++_OBJ  = $(filter-out $(C++_MAIN_OBJ),$(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o))
 C++_MAIN = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%)
+.PRECIOUS: $(C++_MAIN_OBJ)
 
 #
 # c++-src-defined: --Test that the C++ SRC variable(s) are set.
@@ -136,7 +137,7 @@ $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX) mkdir[$(archdir)]
 # build: --Compile the C++ files, and link any complete programs.
 #
 build:	build-c++
-build-c++:	$(C++_OBJ) $(C++_MAIN)
+build-c++:	$(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN)
 	$(ECHO_TARGET)
 
 #

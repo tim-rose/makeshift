@@ -48,9 +48,10 @@ endif
 #
 -include $(C_SRC:%.c=$(archdir)/%.d)
 
-C_OBJ	= $(C_SRC:%.c=$(archdir)/%.o)
 C_MAIN_OBJ = $(C_MAIN_SRC:%.c=$(archdir)/%.o)
+C_OBJ	= $(filter-out $(C_MAIN_OBJ),$(C_SRC:%.c=$(archdir)/%.o))
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
+.PRECIOUS: $(C_MAIN_OBJ)
 
 C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS)\
     $(PROJECT.C_DEFS) $(LOCAL.C_DEFS) $(TARGET.C_DEFS)
@@ -65,7 +66,7 @@ C_CPPFLAGS = $(CPPFLAGS) \
     $(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) $(PROJECT.C_CPPFLAGS) \
     $(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
     $(LIB_ROOT:%=-I%/include) $(LIB_PATH:%=-I%/include) \
-    -I. -I$(includedir)
+    -I$(includedir)
 
 C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
@@ -131,7 +132,7 @@ $(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 # build: --Build the C objects and executables.
 #
 build:	build-c
-build-c:	$(C_OBJ) $(C_MAIN); $(ECHO_TARGET)
+build-c:	$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN); $(ECHO_TARGET)
 
 $(C_OBJ) $(C_MAIN):	| build-subdirs
 
