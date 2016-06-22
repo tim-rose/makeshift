@@ -29,26 +29,27 @@
 #  * LIB      --the name of the library to build (default: name of current dir)
 #  * LIB_OBJ  --the objects to put into the library (default: C/C++ objects)
 #
-LIB_SUFFIX ?= a
-LIB_PREFIX ?= lib
-LOCAL_LIB := $(subst lib,,$(notdir $(PWD)))
-LIB ?= $(LOCAL_LIB)
+LIB_SUFFIX	?= a
+LIB_PREFIX	?= lib
+LOCAL_LIB	:= $(subst lib,,$(notdir $(PWD)))
+LIB		?= $(LOCAL_LIB)
 
-LIB_NAME = $(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
-LIB_ROOT ?= .
-LIB_OBJ ?= $(C_OBJ) $(C++_OBJ) $(LEX_OBJ) $(YACC_OBJ) \
-    $(QTR_OBJ) $(XSD_OBJ) $(PROTOBUF_OBJ)
+LIB_NAME	= $(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
+LIB_ROOT	?= .
+LIB_OBJ		?= $(C_OBJ) $(C++_OBJ) $(LEX_OBJ) $(YACC_OBJ) \
+                   $(QTR_OBJ) $(XSD_OBJ) $(PROTOBUF_OBJ)
 
-LIB_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
+LIB_INCLUDEDIR = $(LIB_ROOT)/include/$(subdir)
 LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%) \
     $(H++_SRC:%=$(LIB_INCLUDEDIR)/%) \
-    $(YACC_SRC:%.y=$(LIB_INCLUDEDIR)/%.h)
+    $(YACC_SRC:%.y=$(LIB_INCLUDEDIR)/%.h) \
+    $(PROTOBUF_SRC:%.proto=$(LIB_INCLUDEDIR)/%.pb.$(H++_SUFFIX))
 
 #
 # Pattern rules for doing a staged install of the library's ".h" files.
 #
-$(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_FILE) $* $@
 $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
+$(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_FILE) $* $@
 
 #
 # libdir/%.a: --Install a static (.a) library
