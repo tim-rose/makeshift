@@ -109,20 +109,9 @@ ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
 #
 # no-implicit-rules: --Disable the archaic Makefile rules
 #
+MAKEFLAGS += --no-builtin-rules
 .SUFFIXES:
-# disable archaic VCS rules
-%:: %,v
-%:: RCS/%
-%:: RCS/%,v
-%:: s.%
-%:: SCCS/s.%
-# Disable Knuth's venerable (but admired from afar) "web" system.
-# (It doesn't seem to disable them...)
-%.c: %.w %.ch
-%.tex: %.w %.ch
-.w.c:
-.w.tex:
-.web.tex:
+
 #
 # build: --The default target
 #
