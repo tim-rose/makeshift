@@ -58,16 +58,16 @@ control.tar.gz:	debian/md5sums debian/conffiles
 # which is also used by the md5sums target.  ".data" is removed
 # by the clean target.
 #
-data.tar.gz:	$(STAGING_ROOT)
+data.tar.gz:	$(DESTDIR_ROOT)
 	$(ECHO_TARGET)
-	(cd $(STAGING_ROOT); $(FAKEROOT) tar zcf ../$@ *)
+	(cd $(DESTDIR_ROOT); $(FAKEROOT) tar zcf ../$@ *)
 
 #
 # md5sums: --Calculate the md5sums for all the installed files.
 #
-debian/md5sums: $(STAGING_ROOT)
+debian/md5sums: $(DESTDIR_ROOT)
 	$(ECHO_TARGET)
-	find $(STAGING_ROOT) -type f | xargs md5sum | sed -e s@$(STAGING_ROOT)/@@ > $@
+	find $(DESTDIR_ROOT) -type f | xargs md5sum | sed -e s@$(DESTDIR_ROOT)/@@ > $@
 	chmod 644 $@
 
 #
@@ -77,12 +77,12 @@ debian/md5sums: $(STAGING_ROOT)
 # This rule makes the file if it doesn't exist, but if it's
 # subsequently modified it won't be trashed by this rule.
 #
-debian/conffiles: $(STAGING_ROOT)
+debian/conffiles: $(DESTDIR_ROOT)
 	$(ECHO_TARGET)
 	@touch $@
-	@if [ -d $(STAGING_ROOT)/etc ]; then \
+	@if [ -d $(DESTDIR_ROOT)/etc ]; then \
 	    $(ECHO) '++make[$@]: automatically generated'; \
-	    find $(STAGING_ROOT)/etc -type f | sed -e s@$(STAGING_ROOT)/@/@ > $@; \
+	    find $(DESTDIR_ROOT)/etc -type f | sed -e s@$(DESTDIR_ROOT)/@/@ > $@; \
 	    chmod 644 $@; \
 	fi
 
@@ -95,7 +95,7 @@ control-ok:	debian/control
 	    (echo "Error: Package is incorrect in debian/control"; false)
 	@grep >/dev/null '^Version: *$(VERSION).$(RELEASE)$$' debian/control ||\
 	    (echo "Error: Version is incorrect in debian/control"; false)
-#	@size=$$(du -sk  $(STAGING_ROOT) | cut -d '	' -f1);\
+#	@size=$$(du -sk  $(DESTDIR_ROOT) | cut -d '	' -f1);\
 #	    grep >/dev/null '^Installed-Size: *$$size' debian/control ||\
 #	    (echo "Error: Installed size is incorrect in debian/control"; false)
 

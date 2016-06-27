@@ -116,10 +116,10 @@ srpm:	SOURCES/$(P-V).tar.gz SPECS/$(PACKAGE).spec | mkdir[SRPMS]
 # an explicit rule if needed.
 #
 .PRECIOUS:	%-rpm-files.txt
-%-rpm-files.txt:	$(STAGING_ROOT)
+%-rpm-files.txt:	$(DESTDIR_ROOT)
 	$(ECHO_TARGET)
-	find $(STAGING_ROOT) -not -type d | \
-            sed -e 's|^$(STAGING_ROOT)||' | mk-rpm-files >$@
+	find $(DESTDIR_ROOT) -not -type d | \
+            sed -e 's|^$(DESTDIR_ROOT)||' | mk-rpm-files >$@
 
 clean:	clean-rpm
 distclean:	clean-rpm distclean-rpm
