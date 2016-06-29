@@ -5,6 +5,7 @@
 # perl-src-defined: --Test if "enough" of the perl SRC vars. are defined.
 # %.pm:             --Rules for installing perl programs and libraries.
 # build:            --Make perl scripts "executable".
+# install:          --install perl binaries and libraries.
 # clean:            --Remove perl script executables.
 # tidy:             --perl-specific customisations for the "tidy" target.
 # toc:              --Build the table-of-contents for perl files.
@@ -16,6 +17,11 @@
 perllibdir      = $(exec_prefix)/lib/perl5/$(subdir)
 PERL_SRC=$(PL_SRC) $(PM_SRC) $(T_SRC)
 PERL_TRG = $(PL_SRC:%.pl=%)
+
+%:			%.pl;	$(INSTALL_PROGRAM) $? $@
+$(bindir)/%:		%.pl;	$(INSTALL_PROGRAM) $? $@
+$(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
+$(perllibdir)/%.pm:	$(archdir)/%.pm;	$(INSTALL_FILE) $? $@
 
 #
 # perl-src-defined: --Test if "enough" of the perl SRC vars. are defined.

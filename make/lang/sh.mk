@@ -81,7 +81,7 @@ install-shell:	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
 #
 uninstall-shell:
 	$(ECHO_TARGET)
-	$(RM) 	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
+	$(RM) $(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
             $(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
 	$(RMDIR) -p $(bindir) $(shlibdir) 2>/dev/null || true
 
