@@ -40,6 +40,17 @@ build:	build-perl
 build-perl:	$(PERL_TRG)
 
 #
+# install: --install perl binaries and libraries.
+#
+install-perl:	$(PL_SRC:%.pl=$(bindir)/%) $(PL_SRC:%.pm=$(perllibdir)/%.pm)
+	$(ECHO_TARGET)
+
+uninstall-perl:	$(PL_SRC:%.pl=$(bindir)/%) $(PL_SRC:%.pm=$(perllibdir)/%.pm)
+	$(ECHO_TARGET)
+	$(RM) $(PL_SRC:%.pl=$(bindir)/%) $(PL_SRC:%.pm=$(perllibdir)/%.pm)
+	$(RMDIR) -p $(bindir) $(perllibdir) 2>/dev/null || true
+
+#
 # xgettext support
 #
 X_PL_FLAGS = -k__ '-k$$__' -k%__ -k__x -k__n:1,2 -k__nx:1,2 -k__xn:1,2 -kN__ -k
