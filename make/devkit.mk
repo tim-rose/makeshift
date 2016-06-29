@@ -127,8 +127,6 @@ include os/$(OS).mk arch/$(ARCH).mk
 DESTDIR ?= /
 PREFIX  ?= /usr/local
 prefix  ?= $(PREFIX)
-# REVISIT: consider setting VPATH (for "-lxxx" library search)
-# (c.f GNU Make, @4.4.6)
 
 include std-directories.mk
 include recursive-targets.mk valid.mk

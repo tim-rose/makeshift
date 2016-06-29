@@ -49,8 +49,8 @@ if ! type caller >/dev/null; then
     caller() { printf '(unknown) unknown (input)\n'; }
 fi
 # TODO: better trap handling for tap.
-if ! type tap_exit >/dev/null; then
-    tap_exit() {:;}
+if ! type tap_exit >/dev/null 2>&1; then
+    tap_exit() { :; }
 fi
 
 #

@@ -22,7 +22,7 @@
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
 
-XSD ?= XSD
+XSD ?= xsd
 XML_SCHEMA ?= XmlSchema
 
 XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
@@ -69,7 +69,7 @@ $(archdir)/$(XML_SCHEMA).$(H++_SUFFIX):
 	@mkdir -p $(archdir)
 	$(XSD) cxx-tree --output-dir $(archdir) \
 		--options-file $(XML_SCHEMA).conf \
-		--generate-xml-schema $@
+		--generate-xml-schema $@ 2>/dev/null
 
 #
 # clean: --Remove XSD's object files.
