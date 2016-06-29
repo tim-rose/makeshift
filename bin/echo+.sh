@@ -33,7 +33,7 @@ if [ "$delay" ]; then
     sleep $delay
 fi
 
-echo $*
+echo "$@"
 
 if [ "$signal" ]; then
     info 'sending %s signal to %s...' "$signal" "$$"

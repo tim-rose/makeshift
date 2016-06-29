@@ -8,7 +8,7 @@ RELEASE = 1
 
 include devkit.mk package.mk
 
-$(STAGING_ROOT):
+$(DESTDIR_ROOT):
 	$(ECHO_TARGET)
 	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=/usr/local usr=$(usr) opt=$(opt)
 
@@ -20,7 +20,7 @@ devkit.mk:
 install:	$(includedir)/version.mk
 $(includedir)/version.mk:
 	{ echo 'DEVKIT_VERSION=$(VERSION)'; \
-          echo 'DEVKIT_RELEASE=$(RELEASE)';} >$@
+          echo 'DEVKIT_RELEASE=$(RELEASE)'; } >$@
 
 uninstall:	uninstall-this
 uninstall-this:
