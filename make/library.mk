@@ -45,6 +45,8 @@ LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%) \
     $(YACC_SRC:%.y=$(LIB_INCLUDEDIR)/%.h) \
     $(PROTOBUF_SRC:%.proto=$(LIB_INCLUDEDIR)/%.pb.$(H++_SUFFIX))
 
+-include $(language:%=lang/%-library.mk)
+
 #
 # Pattern rules for doing a staged install of the library's ".h" files.
 #
@@ -73,7 +75,8 @@ $(libbasedir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 #
 # pre-build: --Stage the include files.
 #
-pre-build:      lib-src-defined $(LIB_INCLUDE_SRC)
+pre-build:      pre-build-lib
+pre-build-lib:;$(ECHO_TARGET)
 
 #
 # lib-src-defined: --Test if "enough" of the library SRC variables are defined.
@@ -98,12 +101,13 @@ build: $(archdir)/$(LIB_NAME) | lib-src-defined
 # install-lib-include: --Install the library include files.
 # install-lib-man: --Install manual pages for the library.
 #
+# Remarks:
+# The include files are (un)installed by language-specific rules
+# that are dependants of these targets.
+#
 .PHONY: install-lib-lib install-lib-include install-lib-man
 install-lib-lib:	$(libdir)/$(LIB_NAME) install-lib-include; $(ECHO_TARGET)
-install-lib-include:	$(H_SRC:%.h=$(includedir)/%.h) \
-    $(H++_SRC:%=$(includedir)/%) \
-    $(YACC_SRC:%.y=$(includedir)/%.h)
-	$(ECHO_TARGET)
+install-lib-include:; $(ECHO_TARGET)
 
 install-lib-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3); $(ECHO_TARGET)
 
@@ -115,7 +119,6 @@ uninstall-lib-lib:	uninstall-lib-include
 
 uninstall-lib-include:
 	$(ECHO_TARGET)
-	$(RM) $(H_SRC:%=$(includedir)/%) $(H++_SRC:%=$(includedir)/%) $(YACC_SRC:%=$(LIB_INCLUDEDIR)/%)
 	$(RMDIR) -p $(includedir) 2>/dev/null || true
 
 uninstall-lib-man:
@@ -150,7 +153,7 @@ clean-lib:
 distclean: clean-lib distclean-lib
 distclean-lib:
 	$(ECHO_TARGET)
-	if [ "$(LIB_ROOT)" = "." ]; then $(RM) -r $(LIB_INCLUDEDIR); fi
+	$(RMDIR) -p $(LIB_INCLUDEDIR) 2>/dev/null || true
 
 #
 # src: --Get a list of sub-directories that are libraries.

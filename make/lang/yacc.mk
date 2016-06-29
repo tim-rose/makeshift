@@ -3,7 +3,7 @@
 #
 # Contents:
 # %.y:   --Compile the yacc grammar into ".h" and ".c" files.
-# build: --Compile LEX_SRC to object code.
+# build: --Compile YACC_SRC to object code.
 # clean: --Remove a yacc grammar's object file.
 # src:   --Get a list of the yacc grammars in this directory.
 # toc:   --Update the YACC_SRC macro with a list of yacc grammars.
@@ -22,11 +22,11 @@ ifdef AUTOSRC
     YACC_SRC ?= $(LOCAL_YACC_SRC)
 endif
 
-YACC_OBJ	= $(YACC_SRC:%.y=$(archdir)/%_y.o)
-YACC_H_GEN	= $(YACC_SRC:%.y=$(archdir)/%.h)
-YACC_C_GEN	= $(YACC_SRC:%.y=$(archdir)/%_y.c)
+YACC_OBJ = $(YACC_SRC:%.y=$(archdir)/%_y.o)
+YACC_H	= $(YACC_SRC:%.y=$(archdir)/%.h)
+YACC_C	= $(YACC_SRC:%.y=$(archdir)/%_y.c)
 
-.PRECIOUS:	$(YACC_H_GEN) $(YACC_C_GEN)
+.PRECIOUS:	$(YACC_H) $(YACC_C)
 
 ALL_YFLAGS = $(OS.YFLAGS) $(ARCH.YFLAGS) \
     $(PROJECT.YFLAGS) $(LOCAL.YFLAGS) $(TARGET.YFLAGS) $(YFLAGS)
@@ -48,7 +48,7 @@ $(archdir)/%.h $(archdir)/%_y.c:	%.y
 	$(RM) y.tab.[ch]
 
 #
-# build: --Compile LEX_SRC to object code.
+# build: --Compile YACC_SRC to object code.
 #
 build:	build-yacc
 build-yacc: $(YACC_OBJ) $(YACC_H)

@@ -6,6 +6,7 @@
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 # %.gcov:      --Build a text-format coverage report.
 # build:       --Compile the C++ files, and link any complete programs.
+# build[%]:    --Build a C++ file's related object.
 # install:     --Install "C++" programs.
 # uninstall:   --Uninstall "C++" programs.
 # clean:       --Remove objects and executables created from C++ files.
@@ -62,7 +63,7 @@ C++_CPPFLAGS = $(CPPFLAGS) \
     $(TARGET.C++_CPPFLAGS) $(LOCAL.C++_CPPFLAGS) $(PROJECT.C++_CPPFLAGS) \
     $(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
     $(LIB_ROOT:%=-I%/include) $(LIB_PATH:%=-I%/include) \
-    -I$(includedir)
+    -I. -I$(includedir)
 
 C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
@@ -139,6 +140,12 @@ $(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX) mkdir[$(archdir)]
 build:	build-c++
 build-c++:	$(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN)
 	$(ECHO_TARGET)
+$(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN):	| build-subdirs
+
+#
+# build[%]: --Build a C++ file's related object.
+#
+build[%.%(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
 
 #
 # install: --Install "C++" programs.

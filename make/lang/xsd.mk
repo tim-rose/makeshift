@@ -2,23 +2,16 @@
 # XSD.MK --Support for XSD.
 #
 # Contents:
-# build:         --xsd-specific customisations for the "build" target.
-# install-xsd:   --Install XSD files and related include files.
+# build:         --Build XSD objects via C++.
+# install-xsd:   --Install the XSD files into datadir.
 # uninstall-xsd: --Remove XSD files and related include files.
 # clean:         --Remove XSD's object files.
-# distclean:     --Remove XSD-generated include files.
 # src:           --Update the XSD_SRC target.
 #
 # Remarks:
 # The XSD module adds some rules for building C++ marshalling routines
 # from ".xsd" files.  The code is generated into $(archdir), so it won't
 # interfere with any existing C++ files.
-#
-# There's some dependency/fragility here, in that the XSD stuff assumes
-# that you're also including the C++ module, and the library module.
-# In particular, it assumes that $(LIB_ROOT) is defined, and it attempts
-# to install ".$(H++_SUFFIX)" files in the "pre-build" phase, just like the library
-# module does.
 #
 # REVISIT: XmlSchema.h behaviour is broken: install triggers build!
 #
@@ -29,22 +22,17 @@
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
 
+XSD ?= XSD
+XML_SCHEMA ?= XmlSchema
+
 XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
 XSD_H++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(H++_SUFFIX))
 XSD_C++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(C++_SUFFIX))
 
 .PRECIOUS: $(XSD_H++) $(XSD_C++)
 
-XSD_INCLUDEDIR=$(LIB_ROOT)/include/$(subdir)
-XSD_INCLUDE_SRC = $(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(XSD_INCLUDEDIR)/%.$(H++_SUFFIX)) \
-	$(XSD_INCLUDEDIR)/XmlSchema.$(H++_SUFFIX)
-
 XSD.FLAGS = $(OS.XSDFLAGS) $(ARCH.XSDFLAGS) \
 	$(PROJECT.XSDFLAGS) $(LOCAL.XSDFLAGS) $(TARGET.XSDFLAGS) $(XSDFLAGS)
-
-$(XSD_INCLUDEDIR)/%.$(H++_SUFFIX): $(archdir)/%.$(H++_SUFFIX)
-	$(ECHO_TARGET)
-	$(INSTALL_FILE) $? $@
 
 $(datadir)/%.xsd:	%.xsd
 	$(ECHO_TARGET)
@@ -53,22 +41,19 @@ $(datadir)/%.xsd:	%.xsd
 $(archdir)/%.$(C++_SUFFIX) $(archdir)/%.$(H++_SUFFIX):	%.xsd
 	$(ECHO_TARGET)
 	mkdir -p $(archdir)
-	xsd cxx-tree --output-dir $(archdir) $(XSD.FLAGS) \
-		--extern-xml-schema $(archdir)/XmlSchema.$(H++_SUFFIX) $*.xsd
+	$(XSD) cxx-tree --output-dir $(archdir) $(XSD.FLAGS) \
+		--extern-xml-schema $(archdir)/$(XML_SCHEMA).$(H++_SUFFIX) $*.xsd 2>/dev/null
+
 #
-# build: --xsd-specific customisations for the "build" target.
+# build: --Build XSD objects via C++.
 #
-$(XSD_OBJ):	$(XSD_INCLUDE_SRC)
-pre-build:      var-defined[XSD_INCLUDEDIR] $(XSD_INCLUDE_SRC)
 build:	$(XSD_OBJ)
 
 #
-# install-xsd: --Install XSD files and related include files.
+# install-xsd: --Install the XSD files into datadir.
 #
-.PHONY: install-xsd-xsd install-xsd-include
-install-xsd:	install-xsd-xsd install-xsd-include
-install-xsd-xsd:	$(XSD_SRC:%=$(datadir)/%)
-install-xsd-include:	$(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
+.PHONY: install-xsd
+install-xsd: $(XSD_SRC:%=$(datadir)/%)
 
 #
 # uninstall-xsd: --Remove XSD files and related include files.
@@ -76,36 +61,23 @@ install-xsd-include:	$(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_
 .PHONY: uninstall-xsd-xsd uninstall-xsd-include
 uninstall-xsd:	uninstall-xsd-xsd uninstall-xsd-include
 	$(ECHO_TARGET)
-	$(RMDIR) -p $(datadir) $(includedir) 2>/dev/null || true
-
-uninstall-xsd-xsd:
-	$(ECHO_TARGET)
 	$(RM) $(XSD_SRC:%=$(datadir)/%)
+	$(RMDIR) -p $(datadir) 2>/dev/null || true
 
-uninstall-xsd-include:
-	$(ECHO_TARGET)
-	$(RM) $(XSD_H++:$(archdir)/%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
-
-$(archdir)/XmlSchema.$(H++_SUFFIX):
+$(archdir)/$(XML_SCHEMA).$(H++_SUFFIX):
 	$(ECHO_TARGET)
 	@mkdir -p $(archdir)
-	xsd cxx-tree --output-dir $(archdir) \
-		--options-file XmlSchema.conf \
-		--generate-xml-schema XmlSchema.$(H++_SUFFIX)
+	$(XSD) cxx-tree --output-dir $(archdir) \
+		--options-file $(XML_SCHEMA).conf \
+		--generate-xml-schema $@
 
 #
 # clean: --Remove XSD's object files.
 #
 clean:	clean-xsd
+distclean: clean-xsd
 clean-xsd:
 	$(RM) $(XSD_OBJ)
-
-#
-# distclean: --Remove XSD-generated include files.
-#
-distclean:	distclean-xsd clean-xsd
-distclean-xsd:
-	$(RM) $(XSD_INCLUDE_SRC)
 
 #
 # src: --Update the XSD_SRC target.

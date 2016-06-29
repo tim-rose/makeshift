@@ -2,10 +2,11 @@
 # QT.MK --Rules for building Qt GUI applications
 #
 # Contents:
-# build: --Build the Qt files
-# clean: --Remove objects and intermediates created from Qt files.
-# src:   --Update the QTH_SRC, QTR_SRC macros.
-# todo:  --Find "unfinished work" comments in QT files.
+# build:               --Build the Qt files
+# install-lib-include-qt: --Install a library's QT include files.
+# clean:               --Remove objects and intermediates created from Qt files.
+# src:                 --Update the QTH_SRC, QTR_SRC macros.
+# todo:                --Find "unfinished work" comments in QT files.
 #
 # Remarks:
 # The qt module adds support for building Qt-related software.
@@ -54,6 +55,20 @@ $(archdir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
 	@mkdir -p $(archdir)
 	$(MOC) $(MOC_FLAGS) -o $@ $<
+
+
+#
+# install-lib-include-qt: --Install a library's QT include files.
+#
+# Remarks:
+# These targets customise the library.mk behaviour.
+#
+.PHONY: install-lib-include-qt
+install-lib-include:	install-lib-include-qt
+install-lib-include-qt:  $(QTH_SRC:%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
+.PHONY: uninstall-lib-include-qt
+uninstall-lib-include:	uninstall-lib-include-qt
+uninstall-lib-include-qt:; $(RM) $(QTH_SRC:%=$(includedir)/%)
 
 #
 # clean: --Remove objects and intermediates created from Qt files.

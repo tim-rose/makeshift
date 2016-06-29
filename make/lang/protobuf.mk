@@ -23,17 +23,22 @@ PROTOBUF_FLAGS = $(TARGET.PROTOBUF_FLAGS) $(LOCAL.PROTOBUF_FLAGS) \
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
 
-PROTOBUF_C++_TRG = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(C++_SUFFIX))
-PROTOBUF_H++_TRG = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(H++_SUFFIX))
-PROTOBUF_PY_TRG = $(PROTOBUF_SRC:%.proto=$(archdir)/%.py)
-PROTOBUF_TRG  = $(PROTOBUF_C++_TRG) $(PROTOBUF_H++_TRG) $(PROTOBUF_PY_TRG)
+PROTOBUF_C++ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(C++_SUFFIX))
+PROTOBUF_H++ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(H++_SUFFIX))
+PROTOBUF_PY = $(PROTOBUF_SRC:%.proto=$(archdir)/%.py)
+PROTOBUF_TRG  = $(PROTOBUF_C++) $(PROTOBUF_H++) $(PROTOBUF_PY)
 
 .PRECIOUS: $(PROTOBUF_TRG)
 
-PROTOBUF_OBJ = $(PROTOBUF_C++_TRG:%.$(C++_SUFFIX)=%.o)
+PROTOBUF_OBJ = $(PROTOBUF_C++:%.$(C++_SUFFIX)=%.o)
 
 #
 # %.pb.cc: --build the C++ stubs from a ".proto" file.
+#
+# Remarks:
+# This is a little more involved than a simple tool invocation,
+# because devkit supports custom C++ file extensions, and so this
+# rule adapts protoc's output accordingly.
 #
 $(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto
 	$(ECHO_TARGET)

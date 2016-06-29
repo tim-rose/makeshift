@@ -66,7 +66,7 @@ C_CPPFLAGS = $(CPPFLAGS) \
     $(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) $(PROJECT.C_CPPFLAGS) \
     $(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
     $(LIB_ROOT:%=-I%/include) $(LIB_PATH:%=-I%/include) \
-    -I$(includedir)
+    -I. -I$(includedir)
 
 C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
@@ -133,8 +133,7 @@ $(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 #
 build:	build-c
 build-c:	$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN); $(ECHO_TARGET)
-
-$(C_OBJ) $(C_MAIN):	| build-subdirs
+$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN):	| build-subdirs
 
 #
 # build[%]: --Build a C file's related object.
