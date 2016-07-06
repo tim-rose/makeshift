@@ -129,9 +129,14 @@ uninstall-lib-man:
 #
 # archdir/%.a: --(re)build a library.
 #
-$(archdir)/lib.a:	$(LIB_OBJ) $(SUBLIB_SRC)
+# Remarks:
+# The only dependents listed here are the sub-libraries (if any), but
+# the various <lang>-library.mk rules will add their language-specific
+# objects as dependents too.
+#
+$(archdir)/lib.a: $(SUBLIB_SRC)
 	$(ECHO_TARGET)
-	mk-ar-merge $(ARFLAGS) $@ $(LIB_OBJ) $(SUBLIB_SRC)
+	mk-ar-merge $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 
 $(archdir)/$(LIB_NAME):	$(archdir)/lib.a

@@ -6,7 +6,10 @@
 # clean-lib:           --Remove the staged include files.
 # install-lib-include-xsd: --Install a library's include files.
 #
+
 ALL_XSD_H++ = $(XSD_H++) $(archdir)/$(XML_SCHEMA).$(H++_SUFFIX)
+
+$(archdir)/lib.a:	$(XSD_OBJ)
 
 #
 # pre-build-lib: --Install headers into library root, via lib's pre-build.

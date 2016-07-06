@@ -107,9 +107,18 @@ ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
 #ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ changed(\$$?): $?"; $(ECHO) "++ $$PWD $@ dependants(\$$^): $^"
 
 #
-# no-implicit-rules: --Disable the archaic Makefile rules
+# no-implicit-rules: --Disable the archaic Makefile rules.
 #
-MAKEFLAGS += --no-builtin-rules
+# Remarks:
+# It's tempting to set Make's default settings like so:
+#
+#     MAKEFLAGS += --no-builtin-rules --no-print-directory
+#
+# ...and this will work, as long as all the recursive makes are
+# using devkit.  However, if a leaf make is *not* using devkit,
+# it's probably relying on some of those builtin rules, and will
+# fail badly.
+#
 .SUFFIXES:
 
 #

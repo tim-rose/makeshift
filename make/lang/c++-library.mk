@@ -7,6 +7,8 @@
 # install-lib-include-c++: --Install a library's include files.
 #
 
+$(archdir)/lib.a:	$(C++_OBJ)
+
 #
 # pre-build-lib: --Install headers into library root, via lib's pre-build.
 #
@@ -22,7 +24,7 @@ pre-build-lib-c++: $(H++_SRC:%=$(LIB_INCLUDEDIR)/%)
 #
 .PHONY: clean-lib-c++
 clean-lib: clean-lib-c++
-clean-lib-c++:; $(RM) $(H_SRC:%=$(LIB_INCLUDEDIR)/%)
+clean-lib-c++:; $(RM) $(H++_SRC:%=$(LIB_INCLUDEDIR)/%)
 
 #
 # install-lib-include-c++: --Install a library's include files.

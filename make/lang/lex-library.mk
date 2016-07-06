@@ -7,6 +7,8 @@
 # install-lib-include-lex: --Install a library's include files.
 #
 
+$(archdir)/lib.a:	$(LEX_OBJ)
+
 #
 # install-lib-include-lex: --Install a library's include files.
 #

@@ -7,6 +7,8 @@
 # install-lib-include-protobuf: --Install a library's include files.
 #
 
+$(archdir)/lib.a:	$(PROTOBUF_OBJ)
+
 #
 # pre-build-lib: --Install headers into library root, via lib's pre-build.
 #

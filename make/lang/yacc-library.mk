@@ -7,6 +7,8 @@
 # install-lib-include-yacc: --Install a library's include files.
 #
 
+$(archdir)/lib.a:	$(YACC_OBJ)
+
 #
 # pre-build-lib: --Install headers into library root, via lib's pre-build.
 #
