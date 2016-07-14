@@ -171,7 +171,7 @@ uninstall-c++: src-var-defined[C++_MAIN_SRC]
 clean:	clean-c++
 clean-c++:
 	$(ECHO_TARGET)
-	$(RM) $(C++_MAIN) $(C++_OBJ) $(C++_OBJ:%.o=%.d)
+	$(RM) $(C++_MAIN) $(C++_MAIN_OBJ) $(C++_MAIN_OBJ:%.o=%.d) $(C++_MAIN_OBJ:%.o=%.map) $(C++_OBJ) $(C++_OBJ:%.o=%.d)
 
 #
 # tidy: --Reformat C++ files consistently.

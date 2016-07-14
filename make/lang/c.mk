@@ -165,7 +165,7 @@ uninstall-c:	src-var-defined[C_MAIN]
 clean:	clean-c
 clean-c:
 	$(ECHO_TARGET)
-	$(RM) $(C_MAIN) $(C_OBJ) $(C_OBJ:%.o=%.d) $(C_OBJ:%.o=%.map)
+	$(RM) $(C_MAIN) $(C_MAIN_OBJ) $(C_MAIN_OBJ:%.o=%.d) $(C_MAIN_OBJ:%.o=%.map) $(C_OBJ) $(C_OBJ:%.o=%.d)
 
 #
 # tidy: --Reformat C files consistently.
