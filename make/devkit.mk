@@ -8,8 +8,9 @@
 # ARCH:              --Set ARCH macro by interpolating "uname -m".
 # VERBOSE:           --Control how (+how much) is output via echo.
 # ECHO_TARGET:       --Common macro for logging in devkit targets.
-# no-implicit-rules: --Disable the archaic Makefile rules
+# no-implicit-rules: --Disable the archaic Makefile rules.
 # build:             --The default target
+# install-all:       --Install all language-specific items.
 # package:           --By default, (successfully) do no packaging.
 # src:               --Make sure the src target can write to the Makefile.
 # clean:             --Devkit-specific customisations for the "clean" target.
@@ -140,6 +141,18 @@ prefix  ?= $(PREFIX)
 include std-directories.mk
 include recursive-targets.mk valid.mk
 include lang/mk.mk $(language:%=lang/%.mk) ld.mk
+
+#
+# install-all: --Install all language-specific items.
+#
+# Remarks:
+# Devkit doesn't have any action for the install target, because
+# it often makes good sense *not* to install everything that's built
+# (e.g. if it's just a local build utility, or it's part of something
+# bigger, etc.)
+#
+install-all: $(language:%=install-%)
+uninstall-all: $(language:%=uninstall-%)
 
 #
 # package: --By default, (successfully) do no packaging.
