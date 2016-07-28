@@ -2,7 +2,8 @@
 #
 # TAP-PROTOCOL.SH --Test that taplib outputs the TAP protocol.
 #
-. ../tap.shl
+PATH=..:$PATH
+. tap.shl
 isatty=				# force tty stuff customisations off
 
 #

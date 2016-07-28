@@ -6,7 +6,7 @@
 # an implementation of the tap protocol.
 #
 language = sh
-SHL_SRC = tap.shl
+SHL_SRC = tap.shl test-more.shl
 
 include devkit.mk
 

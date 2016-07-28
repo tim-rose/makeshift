@@ -1,0 +1,179 @@
+#!/bin/sh
+#
+# TEST-MORE.SHL --Utility functions inspired by Test::More.
+#
+# Remarks:
+# This library is an implementation Perl's TAP system for shell scripts.
+#
+# Contents:
+# pass()      --An alias for ok(0).
+# fail()      --An alias for ok(1).
+# ok_eq()     --compare two strings for equality, report differences.
+# is()        --An alias for ok_eq().
+# ok_neq()    --compare two strings for inequality, report differences.
+# ok_match()  --Compare a string to a glob-pattern, report differences.
+# matches()   --An alias for ok_match().
+# nok_match() --Compare a string to a glob-pattern, report differences.
+# ok_grep()   --Compare a string to a regex pattern, report differences.
+# nok_grep()  --Compare a string to a regex pattern, report differences.
+# ok_lt()     --compare two numbers with -lt.
+# ok_le()     --compare two numbers with -le.
+# ok_gt()     --compare two numbers with -gt.
+# ok_ge()     --compare two numbers with -ge.
+#
+
+#
+# pass() --An alias for ok(0).
+# fail() --An alias for ok(1).
+#
+pass() { local caller_level=2; ok 0 "$@"; }
+fail() { local caller_level=2; ok 1 "$@"; }
+
+#
+# ok_eq() --compare two strings for equality, report differences.
+# is() --An alias for ok_eq().
+#
+ok_eq()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    test "$have" = "$expect";
+    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
+}
+
+is() { local caller_level=2; ok_eq "$@"; }
+
+#
+# ok_neq() --compare two strings for inequality, report differences.
+#
+# Remarks:
+# differences?
+#
+ok_neq()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    test "$have" != "$expect";
+    tap_test_msg $? "$@" || tap_report_diff "$have" "something else"
+}
+
+isnt() { local caller_level=2; ok_neq "$@"; }
+
+#
+# ok_match() --Compare a string to a glob-pattern, report differences.
+# matches() --An alias for ok_match().
+#
+ok_match()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    case "$have" in
+    $expect) true;;
+    *) false;;
+    esac
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a glob matching  \"$expect\""
+}
+
+matches() { local caller_level=2; ok_match "$@"; }
+
+#
+# nok_match() --Compare a string to a glob-pattern, report differences.
+#
+nok_match()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    case "$have" in
+    $expect) false;;
+    *) true;;
+    esac
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a glob matching  \"$expect\""
+}
+
+#
+# ok_grep() --Compare a string to a regex pattern, report differences.
+#
+ok_grep()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    echo "$have" | grep -q -- "$expect"
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a regex matching \"$expect\""
+}
+
+like() { local caller_level=2; ok_grep "$@"; }
+unlike() { local caller_level=2; nok_grep "$@"; }
+
+#
+# nok_grep() --Compare a string to a regex pattern, report differences.
+#
+nok_grep()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    echo "$have" | grep -q -- "$expect"
+    test $? -ne 0
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a regex not matching \"$expect\""
+}
+
+#
+# ok_lt() --compare two numbers with -lt.
+#
+ok_lt()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    test "$have" -lt "$expect";
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a number less than $expect"
+}
+
+#
+# ok_le() --compare two numbers with -le.
+#
+ok_le()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    test "$have" -le "$expect";
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a number less than or equal to $expect"
+}
+
+#
+# ok_gt() --compare two numbers with -gt.
+#
+ok_gt()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    test "$have" -gt "$expect";
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a number greater than $expect"
+}
+
+#
+# ok_ge() --compare two numbers with -ge.
+#
+ok_ge()
+{
+    local have="$1"; shift
+    local expect="$1"; shift
+
+    test "$have" -ge "$expect";
+    tap_test_msg $? "$@" ||
+	tap_report_diff "$have" "a number greater than or equal to $expect"
+}

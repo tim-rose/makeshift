@@ -2,6 +2,10 @@
 #
 # TAP.SHL --Test-Anything-Protocol functions.
 #
+# Remarks:
+# This library is an implementation Perl's TAP system for shell scripts.
+# TODO: skip
+#
 # Contents:
 # caller()          --Fake implementation of bash's caller().
 # tty_filter()      --Filter stdout suitably/conditionally for a tty.
@@ -14,17 +18,8 @@
 # tap_report_diff() --Report differences between two strings.
 # ok()              --Check a process result, and emit TAP output.
 # nok()             --Check a process result, and emit TAP output.
-# ok_eq()           --compare two strings for equality, report differences.
-# nok_eq()          --compare two strings for inequality, report differences.
-# ok_match()        --Compare a string to a glob-pattern, report differences.
-# nok_match()       --Compare a string to a glob-pattern, report differences.
-# ok_grep()         --Compare a string to a regex pattern, report differences.
-# nok_grep()        --Compare a string to a regex pattern, report differences.
 #
-# Remarks:
-# This library is an implementation Perl's TAP system for shell scripts.
-# TODO: skip
-#
+. test-more.shl
 version=local.latest
 export isatty=
 tap_test=0
@@ -144,19 +139,30 @@ plan()
 #
 todo()
 {
-    tap_todo_reason="$1"; shift
+    if [ "$#" -ne 0 ]; then
+	local tap_todo_reason="$1"; shift
+	"$@"
+    else
+	tap_todo_reason="$1"; shift
+    fi
 }
 
 #
 # tap_test_msg() --Common function to report on tests.
 #
+# Parameters:
+# result	--the test result (0: success, other: failure)
+# ...		--printf arg.s
+#
 tap_test_msg()
 {
     local result=$1; shift
+    local type=
     local msg=
+    local msg_suffix=
+    local caller_level=${caller_level:-1}
     local status=ok
     local style=$ok_style
-
     tap_test=$(( $tap_test + 1))
 
     if [ $# -gt 0 ]; then
@@ -168,23 +174,27 @@ tap_test_msg()
 	msg=" - $msg"
     fi
     if [ "$tap_todo_reason" ]; then
-	msg="$msg  # TODO $tap_todo_reason"
+	type=" (TODO)"
+	msg_suffix=" # TODO $tap_todo_reason"
+	caller_level=$(($caller_level+1))
     fi
 
     if [ $result -ne 0 ]; then
 	status="not ok"
-        style=$fail_style
+	if [ ! "$tap_todo_reason" ]; then
+            style=$fail_style
+	fi
 	if [ ! "$tap_todo_reason" ]; then
 	    tap_fail=$(( $tap_fail + 1))
 	fi
     fi
-    printf '%s %d%s\n' "$status" $tap_test "$msg" | tty_filter "$style"
+    printf '%s %d%s%s\n' "$status" $tap_test "$msg" "$msg_suffix" | tty_filter "$style"
     if [ $result -ne 0 ]; then
-	local file=$(caller 1 | cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
-	local line=$(caller 1 | cut -d' ' -f1)
+	local file=$(caller $caller_level | cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
+	local line=$(caller $caller_level | cut -d' ' -f1)
 
-	diag '   Failed test %s' "$tap_test"
-	diag '   in "%s" at line %s' "${file:-stdin}" "$line"
+	diag '   Failed%s test%s' "$type" "$msg"
+	diag '   in %s at line %s' "${file:-stdin}" "${line:-unknown}"
     fi
     return $result
 }
@@ -199,14 +209,10 @@ tap_report_diff()
     false
 }
 
-
 #
 # ok() --Check a process result, and emit TAP output.
 #
-ok()
-{
-    tap_test_msg "$@"
-}
+ok() { tap_test_msg "$@"; }
 
 #
 # nok() --Check a process result, and emit TAP output.
@@ -221,90 +227,4 @@ nok()
        tap_status=0;
    fi
    tap_test_msg $tap_status "$@"
-}
-
-#
-# ok_eq() --compare two strings for equality, report differences.
-#
-ok_eq()
-{
-    local have="$1"; shift
-    local expect="$1"; shift
-
-    test "$have" = "$expect";
-    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
-}
-
-#
-# nok_eq() --compare two strings for inequality, report differences.
-#
-# Remarks:
-# differences?
-#
-nok_eq()
-{
-    local have="$1"; shift
-    local expect="$1"; shift
-
-    test "$have" != "$expect";
-    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
-}
-
-#
-# ok_match() --Compare a string to a glob-pattern, report differences.
-#
-ok_match()
-{
-    local have="$1"; shift
-    local expect="$1"; shift
-
-    case "$have" in
-    $expect) true;;
-    *) false;;
-    esac
-    tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a glob matching  \"$expect\""
-}
-
-#
-# nok_match() --Compare a string to a glob-pattern, report differences.
-#
-nok_match()
-{
-    local have="$1"; shift
-    local expect="$1"; shift
-
-    case "$have" in
-    $expect) false;;
-    *) true;;
-    esac
-    tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a glob matching  \"$expect\""
-}
-
-#
-# ok_grep() --Compare a string to a regex pattern, report differences.
-#
-ok_grep()
-{
-    local have="$1"; shift
-    local expect="$1"; shift
-
-    echo "$have" | grep -q -- "$expect"
-    tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a regex matching \"$expect\""
-}
-
-#
-# nok_grep() --Compare a string to a regex pattern, report differences.
-#
-nok_grep()
-{
-    local have="$1"; shift
-    local expect="$1"; shift
-
-    echo "$have" | grep -q -- "$expect"
-    test $? -ne 0
-    tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a regex not matching \"$expect\""
 }

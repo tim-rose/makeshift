@@ -6,7 +6,8 @@
 # These tests examine the exit status of test runs, ignoring
 # any output formatting etc.
 #
-. ../tap.shl
+PATH=..:$PATH
+. tap.shl
 isatty=				# force tty stuff customisations off
 
 plan 5
