@@ -39,7 +39,7 @@ V-R.A	= $(VERSION)-$(RELEASE).$(RPM_ARCH)
 P-V-R.A	= $(PACKAGE)-$(VERSION)-$(RELEASE).$(RPM_ARCH)
 
 RPMBUILD ?= rpmbuild
-RPM_FLAGS = --define "_topdir $$PWD" \
+RPM_FLAGS = --define "_topdir $(CURDIR)" \
     $(TARGET.RPM_FLAGS) $(LOCAL.RPM_FLAGS) $(PROJECT.RPM_FLAGS) \
     $(ARCH.RPM_FLAGS) $(OS.RPM_FLAGS)
 
@@ -82,7 +82,7 @@ SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
 	echo "%build"; \
 	echo "make $(RPM_MAKEFLAGS) build prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
 	echo "%install"; \
-	echo "make $(RPM_MAKEFLAGS) install DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
+	echo "make $(RPM_MAKEFLAGS) install-strip DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
 	echo "%clean"; \
 	echo "%{__rm} -rf \$$RPM_BUILD_ROOT"; \
         echo "%files"; \

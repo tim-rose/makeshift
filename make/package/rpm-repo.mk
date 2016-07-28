@@ -24,7 +24,7 @@ DEFAULT_SPEC_SRC := $(subst SPECS/,,$(wildcard SPECS/*.spec))
 SPEC_SRC ?= $(DEFAULT_SPEC_SRC)
 
 RPMBUILD ?= rpmbuild
-RPM_FLAGS = --define "_topdir $$PWD" \
+RPM_FLAGS = --define "_topdir $(CURDIR)" \
     $(OS.RPM_FLAGS) $(ARCH.RPM_FLAGS) \
     $(PROJECT.RPM_FLAGS) $(LOCAL.RPM_FLAGS) $(TARGET.RPM_FLAGS)
 

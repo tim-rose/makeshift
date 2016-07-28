@@ -102,10 +102,10 @@ endif
 #
 # ECHO_TARGET: --Common macro for logging in devkit targets.
 #
-#ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"
-#ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$^: $^"
-ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ \$$?: $?"; $(ECHO) "++ $$PWD $@ \$$^: $^"
-#ECHO_TARGET = @+$(ECHO) "++ $$PWD $@ changed(\$$?): $?"; $(ECHO) "++ $$PWD $@ dependants(\$$^): $^"
+#ECHO_TARGET = @+$(ECHO) "++ $(CURDIR) $@ \$$?: $?"
+#ECHO_TARGET = @+$(ECHO) "++ $(CURDIR) $@ \$$^: $^"
+ECHO_TARGET = @+$(ECHO) "++ $(CURDIR) $@ \$$?: $?"; $(ECHO) "++ $(CURDIR) $@ \$$^: $^"
+#ECHO_TARGET = @+$(ECHO) "++ $(CURDIR) $@ changed(\$$?): $?"; $(ECHO) "++ $(CURDIR) $@ dependants(\$$^): $^"
 
 #
 # no-implicit-rules: --Disable the archaic Makefile rules.

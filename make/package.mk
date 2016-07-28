@@ -26,7 +26,7 @@
 # See Also:
 # https://semver.org
 #
-LOCAL_PACKAGE := $(notdir $(PWD))
+LOCAL_PACKAGE := $(notdir $(CURDIR))
 PACKAGE ?= $(LOCAL_PACKAGE)
 VERSION ?= local
 RELEASE ?= latest

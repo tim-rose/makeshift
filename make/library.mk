@@ -31,7 +31,7 @@
 #
 LIB_SUFFIX	?= a
 LIB_PREFIX	?= lib
-LOCAL_LIB	:= $(subst lib,,$(notdir $(PWD)))
+LOCAL_LIB	:= $(subst lib,,$(notdir $(CURDIR)))
 LIB		?= $(LOCAL_LIB)
 
 LIB_NAME	= $(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
@@ -40,10 +40,6 @@ LIB_OBJ		?= $(C_OBJ) $(C++_OBJ) $(LEX_OBJ) $(YACC_OBJ) \
                    $(QTR_OBJ) $(XSD_OBJ) $(PROTOBUF_OBJ)
 
 LIB_INCLUDEDIR = $(LIB_ROOT)/include/$(subdir)
-LIB_INCLUDE_SRC = $(H_SRC:%=$(LIB_INCLUDEDIR)/%) \
-    $(H++_SRC:%=$(LIB_INCLUDEDIR)/%) \
-    $(YACC_SRC:%.y=$(LIB_INCLUDEDIR)/%.h) \
-    $(PROTOBUF_SRC:%.proto=$(LIB_INCLUDEDIR)/%.pb.$(H++_SUFFIX))
 
 -include $(language:%=lang/%-library.mk)
 
