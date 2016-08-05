@@ -75,7 +75,7 @@ ok_match()
     *) false;;
     esac
     tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a glob matching  \"$expect\""
+	tap_report_diff "$have" "a glob matching \"$expect\""
 }
 
 matches() { local caller_level=2; ok_match "$@"; }
@@ -93,7 +93,7 @@ nok_match()
     *) true;;
     esac
     tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a glob matching  \"$expect\""
+	tap_report_diff "$have" "a glob matching \"$expect\""
 }
 
 #

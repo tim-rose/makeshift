@@ -28,7 +28,7 @@ tap_plan=0
 tap_fail=0
 tap_version="${version}"
 
-export ok_style=''			# plain
+export ok_style=			# plain
 export fail_style='1;31'		# bold+red
 export log_style='1'			# bold
 export diag_style='36'			# cyan
@@ -137,14 +137,30 @@ plan()
 #
 # todo() --Mark the start/end of a "todo" block.
 #
+# Remarks:
+# This function can be used in two ways: as a delimited block, or
+# as a command modifier (like nice, nohup etc.). e.g.:
+#
+#     todo "not implemented yet"
+#     ok 1 "some test"
+#     todo
+#
+#     todo "not implemented yet" ok 1 "some test"
+#
 todo()
 {
-    if [ "$#" -ne 0 ]; then
-	local tap_todo_reason="$1"; shift
-	"$@"
-    else
-	tap_todo_reason="$1"; shift
-    fi
+    case "$#" in
+	(0)
+	    tap_todo_reason="$1"
+	    ;;
+	(1)
+	    tap_todo_reason="$1"
+	    ;;
+	(*)
+	    local tap_todo_reason="$1"; shift
+	    "$@"
+	    ;;
+    esac
 }
 
 #
