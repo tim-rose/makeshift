@@ -7,46 +7,26 @@
 # TODO: skip
 #
 # Contents:
-# caller()          --Fake implementation of bash's caller().
-# tty_filter()      --Filter stdout suitably/conditionally for a tty.
-# diag()            --Print diagnostic lines as TAP comments.
-# TAP_BEGIN()       --Startup code for the TAP module, print TAP prologue.
-# TAP_EXIT()        --Write a test summary as TAP epilogue, and set exit status.
-# plan()            --Declare the number of tests.
-# todo()            --Mark the start/end of a "todo" block.
-# tap_test_msg()    --Common function to report on tests.
-# tap_report_diff() --Report differences between two strings.
-# ok()              --Check a process result, and emit TAP output.
-# nok()             --Check a process result, and emit TAP output.
+# tty_filter()    --Filter stdout suitably/conditionally for a tty.
+# caller()        --Fallback implementation of bash's caller().
+# tap_exit()      --(Fallback) user exit function.
+# diag()          --Print diagnostic lines as TAP comments.
+# TAP_BEGIN()     --Startup code for the TAP module, print TAP prologue.
+# TAP_EXIT_TRAP() --Write a test summary as TAP epilogue, and set exit status.
+# plan()          --Declare the number of tests.
+# todo()          --Mark the start/end of a "todo" block.
+# tap_test_msg()  --Common function to report on tests.
+# ok()            --Check a process result, and emit TAP output.
+# nok()           --Check a process result, and emit TAP output.
 #
 . test-more.shl
 version=local.latest
-export isatty=
 tap_test=0
 tap_todo_reason=
-tap_plan=0
+tap_plan=
 tap_fail=0
 tap_version="${version}"
-
-export ok_style=			# plain
-export fail_style='1;31'		# bold+red
-export log_style='1'			# bold
-export diag_style='36'			# cyan
-
-if [ -t 1 ]; then
-    isatty=1
-fi
-
-#
-# caller() --Fake implementation of bash's caller().
-#
-if ! type caller >/dev/null; then
-    caller() { printf '(unknown) unknown (input)\n'; }
-fi
-# TODO: better trap handling for tap.
-if ! type tap_exit >/dev/null 2>&1; then
-    tap_exit() { :; }
-fi
+TAP_COLORS=${TAP_COLORS:-"ok=:fail=1;31:plan=1:diag=2"}
 
 #
 # tty_filter() --Filter stdout suitably/conditionally for a tty.
@@ -54,18 +34,48 @@ fi
 # Parameters:
 # style	--the preferred output styling, as an ANSI mode arg (e.g. "1;33")
 #
+# Remarks:
+# it seems everyone wants colour, so here's an attempt at it.  This
+# routine is run as a filter, reading stdin and "wrapping" them
+# in ANSI X3.64 commands for altering the colour.
+#
 tty_filter()
 {
     local style=$1; shift
 
-    if [ "$isatty" ]; then
-        while read line; do
-            printf "\033[%sm%s\033[m\n" "$style" "$line"
-        done
+    if [ "$style" ]; then
+        printf "\033[%sm" "$style"
+	cat
+        printf "\033[m"
     else
         cat
     fi
 }
+
+#
+# caller() --Fallback implementation of bash's caller().
+#
+# Remarks:
+# tap.shl uses bash's caller() builtin to provide file/line context
+# information.  The dash shell doesn't implement this, so we fake up a
+# function that will at least return something syntactically similar.
+#
+if ! type caller >/dev/null; then
+    caller() { printf '(unknown) unknown (input)\n'; }
+fi
+
+#
+# tap_exit() --(Fallback) user exit function.
+#
+# Remarks:
+# This routine is called by TAP_EXIT_TRAP().  The function defined
+# here is a do-nothing fallback, but may be redefined as needed.
+#
+# TODO: better trap handling for tap?
+#
+if ! type tap_exit >/dev/null 2>&1; then
+    tap_exit() { :; }
+fi
 
 #
 # diag() --Print diagnostic lines as TAP comments.
@@ -90,24 +100,46 @@ diag()
 #
 TAP_BEGIN()
 {
-    diag 'current time local: %s' "$(date)"
+    if [ -t 1 ]; then		# stdout is a tty: setup ANSI X3.64 styles
+	eval $(
+            IFS=:
+	    for level in $TAP_COLORS; do
+		echo $level | sed -e 's/=/_style="/' -e 's/$/"/'
+	    done
+	 )
+    fi
+    diag 'current time local: %s' "$(date)" # output preamble
     diag 'current time UTC:   %s' "$(TZ=UTC date)"
     diag 'tap.shl version:    %s' "$tap_version"
-    trap TAP_EXIT 0
+    trap TAP_EXIT_TRAP 0	# enable process exit handler
 }
 TAP_BEGIN
 
 #
-# TAP_EXIT() --Write a test summary as TAP epilogue, and set exit status.
+# TAP_EXIT_TRAP() --Write a test summary as TAP epilogue, and set exit status.
 #
-TAP_EXIT()
+# Remarks:
+# This code must run after (and summarises) all the tests, and so it
+# is installed as an exit trap by TAP_BEGIN.  It calls the function
+# tap_exit(), which may be defined by the user, and sets the process
+# exit status:
+#
+# * 0 --all tests passed
+# * 1 --all tests ran, but some failed
+# * 2 --not all (or too many!) tests ran
+#
+TAP_EXIT_TRAP()
 {
     local s=			# plural-suffix
     local status=
 
-    tap_exit
-    if [ $tap_test -ne $tap_plan ]; then
-	s=; test $tap_plan -ne 1 && s=s
+    if [ ! "$tap_plan" ]; then
+	if [ "$tap_test" -ne 0 ]; then
+	    diag "Tests were run but no plan was declared."
+	    status=2
+	fi
+    elif [ $tap_test != "$tap_plan" ]; then
+	s=; test "$tap_plan" != "1" && s=s
 	diag "Looks like you planned %d test%s but ran %d." \
 	    "$tap_plan" "$s"  "$tap_test"
 	status=2
@@ -118,11 +150,21 @@ TAP_EXIT()
 	"$tap_fail" "$s" "$tap_test"
 	status=${status:-1}
     fi
+    if ! tap_exit; then
+	status=$?
+	diag "Looks like your exit handler failed"
+    fi
     exit ${status:-0}
 }
 
 #
 # plan() --Declare the number of tests.
+#
+# Remarks:
+# TAP uses the declared plan to determine if there where any
+# catastrophic failures (e.g. if the suite crashed after a few passing
+# tests).  The plan *should* be output first, however the protocol
+# allows the plan to come at the end of the tests.
 #
 plan()
 {
@@ -131,15 +173,15 @@ plan()
     else
 	tap_plan=$tap_test
     fi
-    echo "1..$tap_plan" | tty_filter "$log_style"
+    echo "1..$tap_plan" | tty_filter "$plan_style"
 }
 
 #
 # todo() --Mark the start/end of a "todo" block.
 #
 # Remarks:
-# This function can be used in two ways: as a delimited block, or
-# as a command modifier (like nice, nohup etc.). e.g.:
+# This function can be used in two ways: as a delimited block, or as a
+# command modifier (like nice, nohup etc.). e.g.:
 #
 #     todo "not implemented yet"
 #     ok 1 "some test"
@@ -150,13 +192,13 @@ plan()
 todo()
 {
     case "$#" in
-	(0)
+	(1)			# begin block: remember reason
 	    tap_todo_reason="$1"
 	    ;;
-	(1)
-	    tap_todo_reason="$1"
+	(0)			# end of block: clear todo reason
+	    tap_todo_reason=
 	    ;;
-	(*)
+	(*)			# command modifier
 	    local tap_todo_reason="$1"; shift
 	    "$@"
 	    ;;
@@ -210,19 +252,9 @@ tap_test_msg()
 	local line=$(caller $caller_level | cut -d' ' -f1)
 
 	diag '   Failed%s test%s' "$type" "$msg"
-	diag '   in %s at line %s' "${file:-stdin}" "${line:-unknown}"
+	diag '   at %s line %s' "${file:-(stdin)}" "${line:-(unknown)}"
     fi
     return $result
-}
-
-#
-# tap_report_diff() --Report differences between two strings.
-#
-tap_report_diff()
-{
-    diag "%12s: '%s'" 'got' "$1"
-    diag "%12s: '%s'" 'expected' "$2"
-    false
 }
 
 #

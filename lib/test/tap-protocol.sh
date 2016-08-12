@@ -4,30 +4,45 @@
 #
 PATH=..:$PATH
 . tap.shl
-isatty=				# force tty stuff customisations off
 
 #
 # skip_prologue() --Skip the first 3 lines of prologue comments.
 #
 skip_prologue() { sed -e 1,3d; }
 
-plan 6
+#
+# run_tests() --Run the specified tests in a sub-shell.
+#
+run_tests()
+{
+    (
+	TAP_COLORS=ok=		# reset colourful logging...
+	ok_style= fail_style= plan_style= diag_style=
+	. tap.shl
+	eval "$@"
+    ) | skip_prologue
+}
 
-plan_text=$( ( . ../tap.shl; plan 2; ok 0; ok 0; ) | skip_prologue | sed -ne1p)
-ok_match "$plan_text" '1..[0-9]*' 'plan is the first non-comment line'
-ok_eq "$plan_text" '1..2' 'plan identifies the number of planned tests'
+plan 7
 
-plan_text=$( ( . ../tap.shl; ok 0; ok 0; plan; ) | skip_prologue | sed -ne '$p')
-ok_eq "$plan_text" '1..2' 'plan can be defined at the end'
+tap_text=$(run_tests "ok 0; ok 0" | sed -ne '$p')
+ok_eq "$tap_text" '# Tests were run but no plan was declared.' 'warn if no plan'
 
-plan_text=$( ( . ../tap.shl; plan 3; ok 0; ) | skip_prologue | sed -ne '$p')
-ok_eq "$plan_text" '# Looks like you planned 3 tests but ran 1.' \
+tap_text=$(run_tests "plan 2; ok 0; ok 0" | sed -ne1p)
+ok_match "$tap_text" '1..[0-9]*' 'plan is the first non-comment line'
+ok_eq "$tap_text" '1..2' 'plan identifies the number of planned tests'
+
+tap_text=$(run_tests "ok 0; ok 0; plan" | sed -ne '$p')
+ok_eq "$tap_text" '1..2' 'plan can be defined at the end'
+
+tap_text=$(run_tests "plan 3; ok 0" | sed -ne '$p')
+ok_eq "$tap_text" '# Looks like you planned 3 tests but ran 1.' \
       'plan mismatch (too few) is reported in epilogue'
 
-plan_text=$( ( . ../tap.shl; plan 1; ok 0; ok 0; ) | skip_prologue | sed -ne '$p')
-ok_eq "$plan_text" '# Looks like you planned 1 test but ran 2.' \
+tap_text=$(run_tests "plan 1; ok 0; ok 0" | sed -ne '$p')
+ok_eq "$tap_text" '# Looks like you planned 1 test but ran 2.' \
       'plan mismatch (too many) is reported in epilogue'
 
-plan_text=$( ( . ../tap.shl; plan 2; ok 0; ok 1; ) | skip_prologue | sed -ne '$p')
-ok_eq "$plan_text" '# Looks like you failed 1 test of 2 run.' \
+tap_text=$(run_tests "plan 2; ok 0; ok 1" | sed -ne '$p')
+ok_eq "$tap_text" '# Looks like you failed 1 test of 2 run.' \
       'test failures are summarised'
