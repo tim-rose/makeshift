@@ -34,18 +34,23 @@ html-coverage:	$(archdir)/coverage/index.html
 $(archdir)/%.gcda:;@:
 
 #
-# coverage.trace: --Collate the coverage data for this tree of files.
+# trace.info: --Collate the coverage data for this tree of files.
 #
-$(archdir)/coverage.trace:	$(GCOV_GCDA_FILES) mkdir[$(archdir)]
-	lcov --capture $(LCOV_EXCLUDE) --directory . >$@
-	lcov --remove $@ '/usr/include/*' >$$$$.tmp && mv $$$$.tmp $@
+# Remarks:
+#
+$(archdir)/trace.info:	$(GCOV_GCDA_FILES) | mkdir[$(archdir)]
+	lcov --initial --capture $(LCOV_EXCLUDE) --directory . >zero.info
+	lcov --capture $(LCOV_EXCLUDE) --directory . >base.info
+	lcov --add-tracefile zero.info --add-tracefile base.info >all.info
+	lcov --remove all.info '/usr/include/*' >$@
+	$(RM) zero.info base.info all.info
 
 #
 # coverage/index.html: --Create the html-formatted coverage reports.
 #
-$(archdir)/coverage/index.html:	$(archdir)/coverage.trace mkdir[$(archdir)]
+$(archdir)/coverage/index.html:	$(archdir)/trace.info | mkdir[$(archdir)]
 	genhtml --demangle-cpp --output-directory $(archdir)/coverage \
-	    $(archdir)/coverage.trace
+	    $(archdir)/trace.info
 
 #
 # clean: --Remove the coverage data and reports
@@ -54,4 +59,4 @@ $(archdir)/coverage/index.html:	$(archdir)/coverage.trace mkdir[$(archdir)]
 clean:	clean-coverage
 clean-coverage:
 	$(ECHO_TARGET)
-	$(RM) -r $(GCOV_FILES) $(archdir)/coverage.trace $(archdir)/coverage
+	$(RM) -r $(GCOV_FILES) $(archdir)/trace.info $(archdir)/coverage
