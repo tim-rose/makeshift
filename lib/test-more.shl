@@ -198,3 +198,12 @@ ok_ge()
     tap_test_msg $? "$@" ||
 	tap_report_diff "$have" "a number greater than or equal to $expect"
 }
+
+ok_test()
+{
+    local msg=$1; shift
+
+    eval "$@"
+    tap_test_msg $? "$msg" ||
+	tap_report_diff "$have" "a number greater than or equal to $expect"
+}
