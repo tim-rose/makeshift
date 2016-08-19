@@ -25,7 +25,7 @@ PROJECT.C++_DEFS =
 
 PROJECT.CFLAGS = -std=c99 -O
 PROJECT.C_WARN_FLAGS = -pedantic -Wall -Wextra \
-    -Waggregate-return  -Wcast-align  -Wcast-qual -Wdisabled-optimization \
+    -Waggregate-return  -Wcast-align  -Wdisabled-optimization \
     -Wformat=2  -Wimplicit -Wmissing-declarations  -Wmissing-include-dirs \
     -Wmissing-prototypes -Wnested-externs  -Wpointer-arith \
     -Wredundant-decls -Wshadow  -Wsign-conversion \

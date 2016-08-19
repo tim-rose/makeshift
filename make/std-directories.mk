@@ -19,6 +19,12 @@
 # "make -I$HOME/include".
 #
 system_root	= $(DESTDIR)
+
+#
+# Remarks:
+# system_confdir is a bit of a hack, for folks that want to install
+# into "/etc" as well as the adjusted $sysconfdir.
+#
 system_confdir	= $(system_root)/etc/$(subdir)
 pkgver		= $(PACKAGE)$(VERSION:%=-%)
 
