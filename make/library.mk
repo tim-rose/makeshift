@@ -4,13 +4,13 @@
 # Contents:
 # libdir/%.a:          --Install a static (.a) library
 # pre-build:           --Stage the include files.
-# lib-src-defined:     --Test if "enough" of the library SRC variables are defined.
 # %/lib.a:             --Build the sub-librar(ies) in its subdirectory.
 # build:               --Build this directory's library.
 # install-lib-lib:     --Install the library (and include files).
 # install-lib-include: --Install the library include files.
 # install-lib-man:     --Install manual pages for the library.
 # archdir/%.a:         --(re)build a library.
+# archdir/%.so:        --(re)build a shared library.
 # clean:               --Remove the library file.
 # distclean:           --Remove the include files installed at $LIB_ROOT/include.
 # src:                 --Get a list of sub-directories that are libraries.
@@ -27,17 +27,19 @@
 #
 #  * LIB_ROOT --the root location of the main top-level library (default: ".")
 #  * LIB      --the name of the library to build (default: name of current dir)
-#  * LIB_OBJ  --the objects to put into the library (default: C/C++ objects)
+#
+# The list of objects to add to the library are defined as the dependants
+# of the library target, and these are added to by language-specific
+# definitions. See c-library.mk for example.
 #
 LIB_SUFFIX	?= a
+LIB_SHARED_SUFFIX ?= .so
 LIB_PREFIX	?= lib
 LOCAL_LIB	:= $(subst lib,,$(notdir $(CURDIR)))
 LIB		?= $(LOCAL_LIB)
 
-LIB_NAME	= $(LIB_PREFIX)$(LIB).$(LIB_SUFFIX)
+LIB_NAME	= $(LIB_PREFIX)$(LIB)
 LIB_ROOT	?= .
-LIB_OBJ		?= $(C_OBJ) $(C++_OBJ) $(LEX_OBJ) $(YACC_OBJ) \
-                   $(QTR_OBJ) $(XSD_OBJ) $(PROTOBUF_OBJ)
 
 LIB_INCLUDEDIR = $(LIB_ROOT)/include/$(subdir)
 
@@ -75,22 +77,14 @@ pre-build:      pre-build-lib
 pre-build-lib:;$(ECHO_TARGET)
 
 #
-# lib-src-defined: --Test if "enough" of the library SRC variables are defined.
-#
-lib-src-defined:
-	@if [ -z '$(LIB_OBJ)$(SUBLIB_SRC)' ]; then \
-	    printf $(VAR_UNDEF) 'LIB_OBJ or SUBLIB_SRC'; \
-	    false; \
-	fi >&2
-#
 # %/lib.a: --Build the sub-librar(ies) in its subdirectory.
 #
-%/$(archdir)/lib.a:     build@%;     $(ECHO_TARGET)
+%/$(archdir)/lib.$(LIB_SUFFIX):     build@%;     $(ECHO_TARGET)
 
 #
 # build: --Build this directory's library.
 #
-build: $(archdir)/$(LIB_NAME) | lib-src-defined
+build: $(archdir)/$(LIB_NAME)
 
 #
 # install-lib-lib: --Install the library (and include files).
@@ -135,10 +129,17 @@ $(archdir)/lib.a: $(SUBLIB_SRC)
 	mk-ar-merge $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 
-$(archdir)/$(LIB_NAME):	$(archdir)/lib.a
+$(archdir)/$(LIB_NAME).$(LIB_SUFFIX):	$(archdir)/lib.$(LIB_SUFFIX)
 	$(ECHO_TARGET)
 	cp $< $@
 	$(RANLIB) $@
+
+#
+# archdir/%.so: --(re)build a shared library.
+#
+$(archdir)/lib.so.a: $(SUBLIB_SRC)
+	$(ECHO_TARGET)
+	mk-ar-merge $(ARFLAGS) $@ $^
 
 #
 # clean: --Remove the library file.
@@ -146,7 +147,7 @@ $(archdir)/$(LIB_NAME):	$(archdir)/lib.a
 clean:	clean-lib
 clean-lib:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/$(LIB_NAME) $(archdir)/lib.a
+	$(RM) $(archdir)/$(LIB_NAME) $(archdir)/lib.$(LIB_SUFFIX)
 
 #
 # distclean: --Remove the include files installed at $LIB_ROOT/include.
