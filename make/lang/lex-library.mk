@@ -2,8 +2,6 @@
 # LEX-LIBRARY.MK --Rules for libraries with LEX objects.
 #
 # Contents:
-# pre-build-lib:       --Install headers into library root, via lib's pre-build.
-# clean-lib:           --Remove the staged include files.
 # install-lib-include-lex: --Install a library's include files.
 #
 
