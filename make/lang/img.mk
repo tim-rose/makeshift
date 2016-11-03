@@ -10,6 +10,9 @@
 
 IMG_SRC = $(PNG_SRC) $(GIF_SRC) $(JPG_SRC) $(SVG_SRC)
 
+#
+# Installation pattern rules...
+#
 $(wwwdir)/%.png:	%.png;	$(INSTALL_FILE) $? $@
 $(wwwdir)/%.gif:	%.gif;	$(INSTALL_FILE) $? $@
 $(wwwdir)/%.jpeg:	%.jpeg;	$(INSTALL_FILE) $? $@
@@ -21,6 +24,18 @@ $(datadir)/%.gif:	%.gif;	$(INSTALL_FILE) $? $@
 $(datadir)/%.jpeg:	%.jpeg;	$(INSTALL_FILE) $? $@
 $(datadir)/%.jpg:	%.jpg;	$(INSTALL_FILE) $? $@
 $(datadir)/%.svg:	%.svg;	$(INSTALL_FILE) $? $@
+
+#
+# Conversion pattern rules.
+#
+# Remarks:
+# Images are typically "binary" files, which are not handled
+# well by most VCSs.  These pattern rules define a path for
+# building the binary file from SVG, which is (UTF8) text.
+#
+%.png:	%.svg;		$(CONVERT) $*.svg $@
+%.jpg:	%.svg;		$(CONVERT) $*.svg $@
+%.gif:	%.svg;		$(CONVERT) $*.svg $@
 
 #
 # install-img: --Install various image files to wwwdir.
@@ -39,10 +54,6 @@ uninstall-img:
 	$(ECHO_TARGET)
 	$(RM) $(PNG_SRC:%=$(wwwdir)/%) $(GIF_SRC:%=$(wwwdir)/%) $(JPG_SRC:%=$(wwwdir)/%) $(SVG_SRC:%=$(wwwdir)/%)
 	$(RMDIR) -p $(wwwdir) 2>/dev/null || true
-#
-#
-#
-
 
 #
 # src-img: --Update PNG_SRC, GIF_SRC, JPG_SRC macros.

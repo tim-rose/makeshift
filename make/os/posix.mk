@@ -23,6 +23,9 @@ else
     INSTALL_PROGRAM = $(INSTALL) -m 755
 endif
 
+OS.C_SHARED_FLAGS = -fpic
+OS.C++_SHARED_FLAGS = -fpic
+
 CHMOD	= chmod
 CP 	= cp
 FAKEROOT = fakeroot

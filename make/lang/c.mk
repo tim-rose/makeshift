@@ -5,6 +5,8 @@
 # c-src-defined: --Test that the C SRC variable(s) are set.
 # %.o:           --Compile a C file into an arch-specific sub-directory.
 # archdir/%.o:   --Compile a generated C file into the arch sub-directory.
+# %.s.o:         --Compile a C file into Position Independent Code (PIC).
+# archdir/%.s.o: --Compile a generated C file into PIC.
 # %.h:           --Install a C header (.h) file.
 # %.c.gcov:      --Build a text-format coverage report.
 # +c-defines:    --Print a list of predefined macros for the "C" language.
@@ -50,6 +52,7 @@ endif
 
 C_MAIN_OBJ = $(C_MAIN_SRC:%.c=$(archdir)/%.o)
 C_OBJ	= $(filter-out $(C_MAIN_OBJ),$(C_SRC:%.c=$(archdir)/%.o))
+C_SHARED_OBJ	= $(filter-out $(C_MAIN_OBJ),$(C_SRC:%.c=$(archdir)/%.s.o))
 C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
 .PRECIOUS: $(C_MAIN_OBJ)
 
@@ -67,6 +70,9 @@ C_CPPFLAGS = $(CPPFLAGS) \
     $(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
     $(LIB_ROOT:%=-I%/include) $(LIB_PATH:%=-I%/include) \
     -I. -I$(includedir)
+
+C_SHARED_FLAGS = $(OS.C_SHARED_FLAGS) $(ARCH.C_SHARED_FLAGS) \
+    $(PROJECT.C_SHARED_FLAGS) $(LOCAL.C_SHARED_FLAGS) $(TARGET.C_SHARED_FLAGS)
 
 C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
@@ -102,6 +108,24 @@ $(archdir)/%.o: $(archdir)/%.c | mkdir[$(archdir)]
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 
 #
+# %.s.o: --Compile a C file into Position Independent Code (PIC).
+#
+# Remarks:
+# This is a repeat of the static build rules, but for shared libraries.
+#
+$(archdir)/%.s.o: %.c | mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	@echo $(CC) $(C_ALL_FLAGS)  $(C_SHARED_FLAGS) -c -o $@ $<
+	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
+#
+# archdir/%.s.o: --Compile a generated C file into PIC.
+#
+$(archdir)/%.s.o: $(archdir)/%.c | mkdir[$(archdir)]
+	$(ECHO_TARGET)
+	@echo $(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
+	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
+
+#
 # %.h: --Install a C header (.h) file.
 #
 $(includedir)/%.h:	%.h;		$(INSTALL_FILE) $? $@
@@ -135,6 +159,9 @@ build:	build-c
 build-c:	$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN); $(ECHO_TARGET)
 $(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN):	| build-subdirs
 
+build-shared: build-c-shared
+build-c-shared: $(C_SHARED_OBJ); $(ECHO_TARGET)
+
 #
 # build[%]: --Build a C file's related object.
 #
@@ -165,7 +192,7 @@ uninstall-c:	src-var-defined[C_MAIN]
 clean:	clean-c
 clean-c:
 	$(ECHO_TARGET)
-	$(RM) $(C_MAIN) $(C_MAIN_OBJ) $(C_MAIN_OBJ:%.o=%.d) $(C_MAIN_OBJ:%.o=%.map) $(C_OBJ) $(C_OBJ:%.o=%.d)
+	$(RM) $(C_MAIN) $(C_MAIN_OBJ) $(C_MAIN_OBJ:%.o=%.d) $(C_MAIN_OBJ:%.o=%.map) $(C_OBJ) $(C_OBJ:%.o=%.d) $(C_SHARED_OBJ)  $(C_SHARED_OBJ:%.o=%.d)
 
 #
 # tidy: --Reformat C files consistently.

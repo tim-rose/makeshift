@@ -7,6 +7,7 @@
 # install-lib-include-c: --Install a library's include files.
 #
 $(archdir)/lib.a:	$(C_OBJ)
+$(archdir)/lib.so:	$(C_SHARED_OBJ)
 
 #
 # pre-build-lib: --Install headers into library root, via lib's pre-build.
