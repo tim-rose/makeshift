@@ -4,15 +4,15 @@
 # Contents:
 # %.html/%.md:    --build a HTML document from a mulitmarkdown file.
 # %.pdf:          --Create a PDF document from a HTML file.
-# build:          --Create HTML documents from MMD_SRC, MD_SRC.
-# doc-markdown:   --Create PDF documents from MMD_SRC, MD_SRC.
+# build:          --Create HTML documents from TXT_SRC, MD_SRC.
+# doc-markdown:   --Create PDF documents from TXT_SRC, MD_SRC.
 # clean-markdown: --Clean up markdown's derived files.
-# src-markdown:   --Update MD_SRC, MMD_SRC macros.
+# src-markdown:   --Update MD_SRC, TXT_SRC macros.
 # todo-markdown:  --Report unfinished work in markdown files.
 #
 # Remarks:
 # The markdown module recognises both "multimarkdown" markdown files
-# (".mmd"), and simple markdown/text files (".md"), defined by MMD_SRC and
+# ("txt"), and simple markdown/text files (".md"), defined by TXT_SRC and
 # MD_SRC respectively. The markdown files are assumed to create full
 # documents, and are created by `build`, using multimarkdown.
 #
@@ -26,15 +26,15 @@ MD = multimarkdown
 MDFLAGS ?= --process-html
 
 ifdef AUTOSRC
-    LOCAL_MMD_SRC := $(wildcard *.mmd)
+    LOCAL_TXT_SRC := $(wildcard *txt)
     LOCAL_MD_SRC := $(wildcard *.md)
 
-    MMD_SRC ?= $(LOCAL_MMD_SRC)
+    TXT_SRC ?= $(LOCAL_TXT_SRC)
     MD_SRC ?= $(LOCAL_MD_SRC)
 endif
 
-MMD_CSS = $(exec_prefix)/share/doc/css/plain.css
-PDF_CSS = $(exec_prefix)/share/doc/css/print.css
+MMD_CSS ?= $(DEVKIT_HOME)/share/doc/css/plain.css
+PDF_CSS ?= $(DEVKIT_HOME)/share/doc/css/print.css
 
 $(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
 $(datadir)/%.html:	%.html; $(INSTALL_FILE) $? $@
@@ -42,9 +42,9 @@ $(datadir)/%.html:	%.html; $(INSTALL_FILE) $? $@
 #
 # %.html/%.md: --build a HTML document from a mulitmarkdown file.
 #
-%.html:	%.mmd
+%.html:	%.txt
 	$(ECHO_TARGET)
-	$(MD) $(MDFLAGS) $*.mmd > $@
+	$(MD) $(MDFLAGS) $*.txt > $@
 
 #
 # %.html/%.md: build HTML document from a simple markdown file.
@@ -62,16 +62,16 @@ $(datadir)/%.html:	%.html; $(INSTALL_FILE) $? $@
 	$(ECHO_TARGET)
 	prince -s $(PDF_CSS) $*.html -o $@
 #
-# build: --Create HTML documents from MMD_SRC, MD_SRC.
+# build: --Create HTML documents from TXT_SRC, MD_SRC.
 #
 build:	build-markdown
-build-mardkown:	$(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html)
+build-mardkown:	$(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html)
 
 #
-# doc-markdown: --Create PDF documents from MMD_SRC, MD_SRC.
+# doc-markdown: --Create PDF documents from TXT_SRC, MD_SRC.
 #
 doc:	doc-markdown
-doc-markdown:	$(MMD_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
+doc-markdown:	$(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
 
 #
 # clean-markdown: --Clean up markdown's derived files.
@@ -80,15 +80,15 @@ distclean:	clean-markdown
 clean:	clean-markdown
 clean-markdown:
 	$(ECHO_TARGET)
-	$(RM) $(MMD_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html) $(MMD_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
+	$(RM) $(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html) $(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
 
 #
-# src-markdown: --Update MD_SRC, MMD_SRC macros.
+# src-markdown: --Update MD_SRC, TXT_SRC macros.
 #
 src:	src-markdown
 src-markdown:
 	$(ECHO_TARGET)
-	@mk-filelist -qn MMD_SRC *.mmd
+	@mk-filelist -qn TXT_SRC *.txt
 	@mk-filelist -qn MD_SRC *.md
 
 #
@@ -97,4 +97,4 @@ src-markdown:
 todo:	todo-markdown
 todo-markdown:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(MMD_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(TXT_SRC) /dev/null || true
