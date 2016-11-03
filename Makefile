@@ -18,7 +18,7 @@ devkit.mk:
 	@false
 
 install:	$(includedir)/version.mk
-$(includedir)/version.mk:
+$(includedir)/version.mk:	Makefile
 	{ echo 'DEVKIT_VERSION=$(VERSION)'; \
           echo 'DEVKIT_RELEASE=$(RELEASE)'; } >$@
 
