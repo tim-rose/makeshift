@@ -38,12 +38,14 @@ $(archdir)/%.gcda:;@:
 #
 # Remarks:
 #
-$(archdir)/trace.info:	$(GCOV_GCDA_FILES) | mkdir[$(archdir)]
-	lcov --initial --capture $(LCOV_EXCLUDE) --directory . >zero.info
-	lcov --capture $(LCOV_EXCLUDE) --directory . >base.info
-	lcov --add-tracefile zero.info --add-tracefile base.info >all.info
-	lcov --remove all.info '/usr/include/*' >$@
-	$(RM) zero.info base.info all.info
+$(archdir)/zero.info:	$(GCOV_GCDA_FILES) | mkdir[$(archdir)]
+	lcov --initial --capture --no-external --directory . >$@
+
+$(archdir)/trace.info:	$(archdir)/zero.info | mkdir[$(archdir)]
+	lcov --capture --no-external --directory . --test-name 'unit tests' >$(archdir)/base.info
+	lcov --add-tracefile $(archdir)/zero.info \
+	     --add-tracefile $(archdir)/base.info >$@
+	$(RM) $(archdir)/zero.info $(archdir)/base.info
 
 #
 # coverage/index.html: --Create the html-formatted coverage reports.
