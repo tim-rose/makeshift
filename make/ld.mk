@@ -24,15 +24,17 @@ ifeq ($(LD), ld)
     LD = $(CC)
 endif
 
-VPATH = $(archdir) $(LIB_ROOT:%=%/$(archdir)) $(LIB_PATH:%=%/$(archdir)) /usr/local/lib
+ALL_LIB_PATH = . $(LIB_ROOT) $(LIB_PATH)
+
+VPATH = $(ALL_LIB_PATH:%=%/$(archdir)) $(libdir)
 
 ALL_LDFLAGS = $(LDFLAGS) $(LANG.LDFLAGS) \
     $(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) $(PROJECT.LDFLAGS) \
-    $(ARCH.LDFLAGS) $(OS.LDFLAGS)
+    $(ARCH.LDFLAGS) $(OS.LDFLAGS) \
+    $(VPATH:%=-L%) -L$(libdir)
 
 ALL_LDLIBS = $(TARGET.LDLIBS) $(LOCAL.LDLIBS) $(PROJECT.LDLIBS) \
-    $(ARCH.LDLIBS) $(OS.LDLIBS) $(LDLIBS) $(LOADLIBES) \
-    -L$(libdir)
+    $(ARCH.LDLIBS) $(OS.LDLIBS) $(LDLIBS) $(LOADLIBES)
 
 #
 # main: --Build a program from a file that contains "main".
