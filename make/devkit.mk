@@ -50,6 +50,7 @@
 #
 # DEVKIT_VERSION: --define the version of devkit that's running.
 #
+DEVKIT_HOME ?= /usr/local
 DEVKIT_VERSION ?= local
 DEVKIT_RELEASE ?= latest
 -include version.mk
@@ -80,7 +81,6 @@ endif
 export ARCH
 
 PROJECT ?= default
-DEVKIT_HOME ?= /usr/local
 
 #
 # Patterns matched by the "todo" target
