@@ -26,7 +26,7 @@ tap_todo_reason=
 tap_plan=
 tap_fail=0
 tap_version="${version}"
-TAP_COLORS=${TAP_COLORS:-"ok=:fail=1;31:plan=1:diag=2"}
+TAP_COLORS=${TAP_COLORS:-"ok=:fail=31:plan=1:diag=2"}
 
 #
 # tty_filter() --Filter stdout suitably/conditionally for a tty.
@@ -144,7 +144,7 @@ TAP_EXIT_TRAP()
 	    "$tap_plan" "$s"  "$tap_test"
 	status=2
     fi
-    if [ $tap_fail -ne 0 ]; then
+    if [ "$tap_fail" -ne 0 ]; then
 	s=; test $tap_fail -gt 1 && s=s
 	diag "Looks like you failed %d test%s of %d run." \
 	"$tap_fail" "$s" "$tap_test"
@@ -221,6 +221,7 @@ tap_test_msg()
     local caller_level=${caller_level:-1}
     local status=ok
     local style=$ok_style
+
     tap_test=$(( $tap_test + 1))
 
     if [ $# -gt 0 ]; then
@@ -237,7 +238,7 @@ tap_test_msg()
 	caller_level=$(($caller_level+1))
     fi
 
-    if [ $result -ne 0 ]; then
+    if [ "$result" -ne 0 ]; then
 	status="not ok"
 	if [ ! "$tap_todo_reason" ]; then
             style=$fail_style
@@ -247,7 +248,7 @@ tap_test_msg()
 	fi
     fi
     printf '%s %d%s%s\n' "$status" $tap_test "$msg" "$msg_suffix" | tty_filter "$style"
-    if [ $result -ne 0 ]; then
+    if [ "$result" -ne 0 ]; then
 	local file=$(caller $caller_level | cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
 	local line=$(caller $caller_level | cut -d' ' -f1)
 
