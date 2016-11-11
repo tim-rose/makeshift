@@ -42,12 +42,7 @@ $(archdir)/%.class: %.java | mkdir[$(archdir)]
 	$(JAVAC) $(ALL_JAVA_FLAGS) -d $(archdir) $*.java
 
 #
-# build: --Compile all the JAVA_SRC files.
-#
-build:		build-java
-
-#
-# build-java: --Build all the java sources that have changed.
+# build: --Build all the java sources that have changed.
 #
 # Remarks:
 # Because the JVM is slow to startup, it is usually inefficient
@@ -56,6 +51,7 @@ build:		build-java
 # log file, which in turn depends on the java sources.  The log
 # target builds the files that are more recent than the log file.
 #
+build:		build-java
 build-java: $(archdir)/build-java.log
 
 $(archdir)/build-java.log: $(JAVA_SRC) | mkdir[$(archdir)]

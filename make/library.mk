@@ -84,7 +84,7 @@ pre-build-lib:;$(ECHO_TARGET)
 #
 # build: --Build this directory's library.
 #
-build: $(archdir)/$(LIB_NAME)
+build: $(archdir)/$(LIB_NAME).$(LIB_SUFFIX)
 
 #
 # install-lib-lib: --Install the library (and include files).
@@ -96,7 +96,7 @@ build: $(archdir)/$(LIB_NAME)
 # that are dependants of these targets.
 #
 .PHONY: install-lib-lib install-lib-include install-lib-man
-install-lib-lib:	$(libdir)/$(LIB_NAME) install-lib-include; $(ECHO_TARGET)
+install-lib-lib:	$(libdir)/$(LIB_NAME).$(LIB_SUFFIX) install-lib-include; $(ECHO_TARGET)
 install-lib-include:; $(ECHO_TARGET)
 
 install-lib-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3); $(ECHO_TARGET)
@@ -104,7 +104,7 @@ install-lib-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3); $(ECHO_TARGET)
 .PHONY: uninstall-lib-lib uninstall-lib-include uninstall-lib-man
 uninstall-lib-lib:	uninstall-lib-include
 	$(ECHO_TARGET)
-	$(RM) $(libdir)/$(LIB_NAME)
+	$(RM) $(libdir)/$(LIB_NAME).$(LIB_SUFFIX)
 	$(RMDIR) -p $(libdir) 2>/dev/null || true
 
 uninstall-lib-include:
@@ -147,7 +147,7 @@ $(archdir)/lib.so.a: $(SUBLIB_SRC)
 clean:	clean-lib
 clean-lib:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/$(LIB_NAME) $(archdir)/lib.$(LIB_SUFFIX)
+	$(RM) $(archdir)/$(LIB_NAME).$(LIB_SUFFIX) $(archdir)/lib.$(LIB_SUFFIX)
 
 #
 # distclean: --Remove the include files installed at $LIB_ROOT/include.
