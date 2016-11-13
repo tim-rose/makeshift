@@ -103,13 +103,10 @@ cmd-exists[%]:
 # mkdir[%]: --Create a directory.
 #
 # Remarks:
-# This rule doesn't work as a dependency in the simple sense, but is
-# still useful as an abstraction to portably make a directory.
+# This dependency only works for a simple sub-directory.
+# REVISIT: why does it work like that?
 #
-mkdir[%]:
-	@if [ ! -d "$*" ]; then \
-	    $(INSTALL_DIRECTORY) "$*"; \
-	fi
+mkdir[%]:;@$(MKDIR) "$*"
 
 #
 # sleep[%]: --Sleep for the specified time.
@@ -117,4 +114,4 @@ mkdir[%]:
 # Remarks:
 # Useful for debugging.
 #
-sleep[%]:;@sleep $*
+sleep[%]:;sleep "$*"

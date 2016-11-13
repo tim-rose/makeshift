@@ -49,6 +49,7 @@ LIB_INCLUDEDIR = $(LIB_ROOT)/include/$(subdir)
 # Pattern rules for doing a staged install of the library's ".h" files.
 #
 $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
+$(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(INSTALL_FILE) $? $@
 $(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_FILE) $* $@
 
 #
