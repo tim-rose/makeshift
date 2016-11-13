@@ -32,6 +32,7 @@ FAKEROOT = fakeroot
 GREP	= grep
 INDENT	= gnuindent
 MV	= mv
+MKDIR   = mkdir -p
 PS2PDF	= pstopdf
 RANLIB	= ranlib
 RMDIR	= rmdir
