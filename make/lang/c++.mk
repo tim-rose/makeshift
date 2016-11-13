@@ -93,7 +93,7 @@ $(archdir)/%.o: %.$(C++_SUFFIX) | mkdir[$(archdir)]
 #
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 #
-$(archdir)/%.o: $(archdir)/%.$(C++_SUFFIX) | mkdir[$(archdir)]
+$(archdir)/%.o: $(gendir)/%.$(C++_SUFFIX) | mkdir[$(archdir)]
 	$(ECHO_TARGET)
 	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
@@ -105,7 +105,7 @@ build[%.$(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
 #
 # %.gcov: --Build a text-format coverage report.
 #
-%.$(C++_SUFFIX).gcov:	$(archdir)/%.gcda mkdir[$(archdir)]
+%.$(C++_SUFFIX).gcov:	$(archdir)/%.gcda
 	$(ECHO_TARGET)
 	@echo gcov -o $(archdir) $*.$(C++_SUFFIX)
 	@gcov -o $(archdir) $*.$(C++_SUFFIX) | \
@@ -118,7 +118,7 @@ $(includedir)/%.$(H++_SUFFIX):	%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 
-$(includedir)/%.$(H++_SUFFIX):	$(archdir)/%.$(H++_SUFFIX) mkdir[$(archdir)]
+$(includedir)/%.$(H++_SUFFIX):	$(gendir)/%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 

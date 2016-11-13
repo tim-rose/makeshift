@@ -20,7 +20,7 @@ ifdef AUTOSRC
     LEX_SRC ?= $(LOCAL_LEX_SRC)
 endif
 LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%_l.o)
-LEX_C	= $(LEX_SRC:%.l=$(archdir)/%_l.c)
+LEX_C	= $(LEX_SRC:%.l=$(gendir)/%_l.c)
 
 .PRECIOUS:	$(LEX_C)
 
@@ -33,11 +33,12 @@ ALL_LFLAGS = $(OS.LFLAGS) $(ARCH.LFLAGS) \
 # %.l: --Compile the lex grammar into a ".c" file
 #
 
-$(archdir)/%_l.c:	%.l | mkdir[$(archdir)]
+$(gendir)/%_l.c:	%.l
 	$(ECHO_TARGET)
-	BASE=$$(echo "$*"| tr a-z A-Z); \
+	$(MKDIR) $(gendir)
+	base=$$(echo "$*"| tr a-z A-Z); \
             $(LEX) $(ALL_LFLAGS) -t $< | \
-            sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" >$(archdir)/$*_l.c
+            sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" >$(gendir)/$*_l.c
 
 #
 # build: --Compile LEX_SRC to object code.

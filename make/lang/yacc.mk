@@ -23,8 +23,8 @@ ifdef AUTOSRC
 endif
 
 YACC_OBJ = $(YACC_SRC:%.y=$(archdir)/%_y.o)
-YACC_H	= $(YACC_SRC:%.y=$(archdir)/%.h)
-YACC_C	= $(YACC_SRC:%.y=$(archdir)/%_y.c)
+YACC_H	= $(YACC_SRC:%.y=$(gendir)/%.h)
+YACC_C	= $(YACC_SRC:%.y=$(gendir)/%_y.c)
 
 .PRECIOUS:	$(YACC_H) $(YACC_C)
 
@@ -38,13 +38,13 @@ ALL_YFLAGS = $(OS.YFLAGS) $(ARCH.YFLAGS) \
 #
 # TODO: build these files into the arch-subdir.
 #
-$(archdir)/%.h $(archdir)/%_y.c:	%.y
+$(gendir)/%.h $(gendir)/%_y.c:	%.y
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
+	$(MKDIR) $(gendir)
 	$(YACC) -d $(ALL_YFLAGS) $<
 	BASE=$$(echo "$*"| tr a-z A-Z); \
-	sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" <y.tab.h >$(archdir)/$*.h; \
-	sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" <y.tab.c >$(archdir)/$*_y.c
+	sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" <y.tab.h >$(gendir)/$*.h; \
+	sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" <y.tab.c >$(gendir)/$*_y.c
 	$(RM) y.tab.[ch]
 
 #

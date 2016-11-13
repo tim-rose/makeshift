@@ -17,14 +17,14 @@ $(archdir)/lib.a:	$(PROTOBUF_OBJ)
 #
 .PHONY: pre-build-lib-protobuf
 pre-build-lib: pre-build-lib-protobuf
-pre-build-lib-protobuf: $(PROTOBUF_H++:$(archdir)/%=$(LIB_INCLUDEDIR)/%)
+pre-build-lib-protobuf: $(PROTOBUF_H++:$(gendir)/%=$(LIB_INCLUDEDIR)/%)
 
 #
 # clean-lib: --Remove the staged include files.
 #
 .PHONY: clean-lib-protobuf
 clean-lib: clean-lib-protobuf
-clean-lib-c:; $(RM) $(PROTOBUF_H++:$(archdir)/%=$(LIB_INCLUDEDIR)/%)
+clean-lib-protobuf:; $(RM) $(PROTOBUF_H++:$(gendir)/%=$(LIB_INCLUDEDIR)/%)
 
 #
 # install-lib-include-protobuf: --Install a library's include files.

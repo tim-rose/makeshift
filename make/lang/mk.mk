@@ -67,6 +67,7 @@ todo-mk:
 	@echo "usr:            $(usr)"
 	@echo "subdir:         $(subdir)"
 	@echo "archdir:        $(archdir)"
+	@echo "gendir:         $(gendir)"
 	@echo "pkgver:         $(pkgver)"
 	@echo ""; echo "rootdir:        $(rootdir)"
 	@echo "bindir:         $(bindir)"

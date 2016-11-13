@@ -32,8 +32,8 @@ C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
 QRC_SUFFIX ?= qrc
 
-QTR_TRG = $(QTR_SRC:%.$(QRC_SUFFIX)=$(archdir)/%.$(C++_SUFFIX))
-QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(archdir)/moc-%.$(C++_SUFFIX))
+QTR_TRG = $(QTR_SRC:%.$(QRC_SUFFIX)=$(gendir)/%.$(C++_SUFFIX))
+QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(gendir)/moc-%.$(C++_SUFFIX))
 QT_TRG  = $(QTR_TRG) $(QTH_TRG)
 
 QTR_OBJ = $(QTR_TRG:%.$(C++_SUFFIX)=%.o)
@@ -46,14 +46,14 @@ QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
 #
 build:	$(QT_OBJ)
 
-$(archdir)/%.$(C++_SUFFIX):	%.qrc
+$(gendir)/%.$(C++_SUFFIX):	%.qrc
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
+	$(MKDIR) $(gendir)
 	$(RCC) $(RCC_FLAGS) $< >$@
 
-$(archdir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX)
+$(gendir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
+	$(MKDIR) $(gendir)
 	$(MOC) $(MOC_FLAGS) -o $@ $<
 
 

@@ -23,14 +23,14 @@ PROTOBUF_FLAGS = $(TARGET.PROTOBUF_FLAGS) $(LOCAL.PROTOBUF_FLAGS) \
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
 
-PROTOBUF_C++ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(C++_SUFFIX))
-PROTOBUF_H++ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(H++_SUFFIX))
-PROTOBUF_PY = $(PROTOBUF_SRC:%.proto=$(archdir)/%.py)
+PROTOBUF_C++ = $(PROTOBUF_SRC:%.proto=$(gendir)/%.pb.$(C++_SUFFIX))
+PROTOBUF_H++ = $(PROTOBUF_SRC:%.proto=$(gendir)/%.pb.$(H++_SUFFIX))
+PROTOBUF_PY = $(PROTOBUF_SRC:%.proto=$(gendir)/%.py)
 PROTOBUF_TRG  = $(PROTOBUF_C++) $(PROTOBUF_H++) $(PROTOBUF_PY)
 
 .PRECIOUS: $(PROTOBUF_TRG)
 
-PROTOBUF_OBJ = $(PROTOBUF_C++:%.$(C++_SUFFIX)=%.o)
+PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.o)
 
 #
 # %.pb.cc: --build the C++ stubs from a ".proto" file.
@@ -40,18 +40,18 @@ PROTOBUF_OBJ = $(PROTOBUF_C++:%.$(C++_SUFFIX)=%.o)
 # because devkit supports custom C++ file extensions, and so this
 # rule adapts protoc's output accordingly.
 #
-$(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto
+$(gendir)/%.pb.$(C++_SUFFIX) $(gendir)/%.pb.$(H++_SUFFIX):	%.proto
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
-	$(PROTOC) $(PROTOBUF_FLAGS) --cpp_out=$(archdir) $<
-	cd $(archdir) ; \
+	$(MKDIR) $(gendir)
+	$(PROTOC) $(PROTOBUF_FLAGS) --cpp_out=$(gendir) $<
+	cd $(gendir) ; \
 	if [ "$(H++_SUFFIX)" != "h" ]; then \
 	    $(MV) $*.pb.h $*.pb.$(H++_SUFFIX); \
 	    $(CP) $*.pb.cc $*.pb.cc.bak; \
 	    sed -e "s/$*\.pb\.h/$*.pb.$(H++_SUFFIX)/" <$*.pb.cc.bak >$*.pb.cc; \
 	    $(RM)  $*.pb.cc.bak; \
 	fi
-	cd $(archdir) ; \
+	cd $(gendir) ; \
 	if [ "$(C++_SUFFIX)" != "cc" ]; then \
 	    $(MV) $*.pb.cc $*.pb.$(C++_SUFFIX); \
 	fi
@@ -59,11 +59,11 @@ $(archdir)/%.pb.$(C++_SUFFIX) $(archdir)/%.pb.$(H++_SUFFIX):	%.proto
 #
 # %.py: --Build the python stubs from a ".proto" file.
 #
-$(archdir)/%.py:	%.proto
+$(gendir)/%.py:	%.proto
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
-	$(PROTOC) $(PROTOBUF_FLAGS) --python_out=$(archdir) $<
-	cd $(archdir); $(MV) $*_pb2.py $*.py
+	$(MKDIR) $(gendir)
+	$(PROTOC) $(PROTOBUF_FLAGS) --python_out=$(gendir) $<
+	cd $(gendir); $(MV) $*_pb2.py $*.py
 
 #
 # build: --Build the protobuf files.
@@ -76,7 +76,7 @@ build:	$(PROTOBUF_OBJ)
 clean:	clean-protobuf
 clean-protobuf:
 	$(ECHO_TARGET)
-	$(RM) $(PROTOBUF_TRG) $(PROTOBUF_OBJ)
+	$(RM) $(PROTOBUF_TRG) $(PROTOBUF_OBJ) $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.d)
 
 #
 # src: --Update the PROTOBUF_SRC macro.

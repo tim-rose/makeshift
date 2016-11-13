@@ -53,19 +53,9 @@ $(shlibdir)/%.awk:	%.awk;	$(INSTALL_FILE) $*.awk $@
 $(shlibdir)/%.sed:	%.sed;	$(INSTALL_FILE) $*.sed $@
 
 #
-# shell-src-defined: --Test if "enough" of the shell SRC vars. are defined.
-#
-shell-src-defined:
-	@if [ -z '$(SH_SRC)$(SHL_SRC)$(AWK_SRC)$(SED_SRC)' ]; then \
-	    printf $(VAR_UNDEF) "SH_SRC, SHL_SRC, AWK_SRC or SED_SRC"; \
-	    echo 'run "make src" to define them'; \
-	    false; \
-	fi >&2
-
-#
 # build-shell: --Make scripts "executable".
 #
-pre-build:	shell-src-defined
+pre-build:
 build:	build-shell
 build-shell:	$(SHELL_TRG)
 

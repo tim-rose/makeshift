@@ -102,8 +102,9 @@ $(archdir)/%.o: %.c | mkdir[$(archdir)]
 #
 # archdir/%.o: --Compile a generated C file into the arch sub-directory.
 #
-$(archdir)/%.o: $(archdir)/%.c | mkdir[$(archdir)]
+$(gendir)/%.o: $(archdir)/%.c
 	$(ECHO_TARGET)
+	$(MKDIR) $(gendir)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 
@@ -120,7 +121,7 @@ $(archdir)/%.s.o: %.c | mkdir[$(archdir)]
 #
 # archdir/%.s.o: --Compile a generated C file into PIC.
 #
-$(archdir)/%.s.o: $(archdir)/%.c | mkdir[$(archdir)]
+$(archdir)/%.s.o: $(gendir)/%.c | mkdir[$(archdir)]
 	$(ECHO_TARGET)
 	@echo $(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
@@ -128,8 +129,13 @@ $(archdir)/%.s.o: $(archdir)/%.c | mkdir[$(archdir)]
 #
 # %.h: --Install a C header (.h) file.
 #
-$(includedir)/%.h:	%.h;		$(INSTALL_FILE) $? $@
-$(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
+$(includedir)/%.h:	%.h
+	$(ECHO_TARGET)
+	$(INSTALL_FILE) $? $@
+
+$(includedir)/%.h:	$(gendir)/%.h
+	$(ECHO_TARGET)
+	$(INSTALL_FILE) $? $@
 
 #
 # %.c.gcov: --Build a text-format coverage report.
@@ -138,7 +144,7 @@ $(includedir)/%.h:	$(archdir)/%.h;	$(INSTALL_FILE) $? $@
 # The gcov tool outputs some progress information, which is
 # mostly filtered out.
 #
-%.c.gcov:	$(archdir)/%.gcda | mkdir[$(archdir)]
+%.c.gcov:	$(archdir)/%.gcda
 	@echo gcov -o $(archdir) $*.c
 	@gcov -o $(archdir) $*.c | sed -ne '/^Lines/s/.*:/gcov $*.c: /p'
 

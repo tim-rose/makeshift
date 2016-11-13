@@ -10,7 +10,7 @@
 #
 # Remarks:
 # The XSD module adds some rules for building C++ marshalling routines
-# from ".xsd" files.  The code is generated into $(archdir), so it won't
+# from ".xsd" files.  The code is generated into $(gendir), so it won't
 # interfere with any existing C++ files.
 #
 # REVISIT: XmlSchema.h behaviour is broken: install triggers build!
@@ -26,8 +26,8 @@ XSD ?= xsd
 XML_SCHEMA ?= XmlSchema
 
 XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
-XSD_H++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(H++_SUFFIX))
-XSD_C++ = $(XSD_SRC:%.xsd=$(archdir)/%.$(C++_SUFFIX))
+XSD_H++ = $(XSD_SRC:%.xsd=$(gendir)/%.$(H++_SUFFIX))
+XSD_C++ = $(XSD_SRC:%.xsd=$(gendir)/%.$(C++_SUFFIX))
 
 .PRECIOUS: $(XSD_H++) $(XSD_C++)
 
@@ -38,11 +38,11 @@ $(datadir)/%.xsd:	%.xsd
 	$(ECHO_TARGET)
 	$(INSTALL_FILE) $? $@
 
-$(archdir)/%.$(C++_SUFFIX) $(archdir)/%.$(H++_SUFFIX):	%.xsd
+$(gendir)/%.$(C++_SUFFIX) $(gendir)/%.$(H++_SUFFIX):	%.xsd
 	$(ECHO_TARGET)
-	mkdir -p $(archdir)
-	$(XSD) cxx-tree --output-dir $(archdir) $(XSD.FLAGS) \
-		--extern-xml-schema $(archdir)/$(XML_SCHEMA).$(H++_SUFFIX) $*.xsd 2>/dev/null
+	$(MKDIR) $(gendir)
+	$(XSD) cxx-tree --output-dir $(gendir) $(XSD.FLAGS) \
+		--extern-xml-schema $(gendir)/$(XML_SCHEMA).$(H++_SUFFIX) $*.xsd 2>/dev/null
 
 #
 # build: --Build XSD objects via C++.
@@ -64,10 +64,10 @@ uninstall-xsd:	uninstall-xsd-xsd uninstall-xsd-include
 	$(RM) $(XSD_SRC:%=$(datadir)/%)
 	$(RMDIR) -p $(datadir) 2>/dev/null || true
 
-$(archdir)/$(XML_SCHEMA).$(H++_SUFFIX):
+$(gendir)/$(XML_SCHEMA).$(H++_SUFFIX):
 	$(ECHO_TARGET)
-	@mkdir -p $(archdir)
-	$(XSD) cxx-tree --output-dir $(archdir) \
+	$(MKDIR) $(gendir)
+	$(XSD) cxx-tree --output-dir $(gendir) \
 		--options-file $(XML_SCHEMA).conf \
 		--generate-xml-schema $@ 2>/dev/null
 
