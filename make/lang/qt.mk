@@ -48,12 +48,12 @@ build:	$(QT_OBJ)
 
 $(gendir)/%.$(C++_SUFFIX):	%.qrc
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
+	$(MKDIR) $(@D)
 	$(RCC) $(RCC_FLAGS) $< >$@
 
 $(gendir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
+	$(MKDIR) $(@D)
 	$(MOC) $(MOC_FLAGS) -o $@ $<
 
 

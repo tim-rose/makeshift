@@ -40,7 +40,7 @@ $(datadir)/%.xsd:	%.xsd
 
 $(gendir)/%.$(C++_SUFFIX) $(gendir)/%.$(H++_SUFFIX):	%.xsd
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
+	$(MKDIR) $(@D)
 	$(XSD) cxx-tree --output-dir $(gendir) $(XSD.FLAGS) \
 		--extern-xml-schema $(gendir)/$(XML_SCHEMA).$(H++_SUFFIX) $*.xsd 2>/dev/null
 
@@ -66,7 +66,7 @@ uninstall-xsd:	uninstall-xsd-xsd uninstall-xsd-include
 
 $(gendir)/$(XML_SCHEMA).$(H++_SUFFIX):
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
+	$(MKDIR) $(@D)
 	$(XSD) cxx-tree --output-dir $(gendir) \
 		--options-file $(XML_SCHEMA).conf \
 		--generate-xml-schema $@ 2>/dev/null

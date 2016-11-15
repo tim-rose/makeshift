@@ -42,7 +42,7 @@ PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.o)
 #
 $(gendir)/%.pb.$(C++_SUFFIX) $(gendir)/%.pb.$(H++_SUFFIX):	%.proto
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
+	$(MKDIR) $(@D)
 	$(PROTOC) $(PROTOBUF_FLAGS) --cpp_out=$(gendir) $<
 	cd $(gendir) ; \
 	if [ "$(H++_SUFFIX)" != "h" ]; then \
@@ -61,7 +61,7 @@ $(gendir)/%.pb.$(C++_SUFFIX) $(gendir)/%.pb.$(H++_SUFFIX):	%.proto
 #
 $(gendir)/%.py:	%.proto
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
+	$(MKDIR) $(@D)
 	$(PROTOC) $(PROTOBUF_FLAGS) --python_out=$(gendir) $<
 	cd $(gendir); $(MV) $*_pb2.py $*.py
 

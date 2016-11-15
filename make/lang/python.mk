@@ -25,7 +25,7 @@ PY_TRG = $(PY_SRC:%.py=%)
 %:			%.py;	$(CP) $*.py $@ && $(CHMOD) +x $@
 $(pythonlibdir)/%.py:	%.py;	$(INSTALL_FILE) $? $@
 
-$(pythonlibdir)/%.py:	$(archdir)/%.py;	$(INSTALL_FILE) $? $@
+$(pythonlibdir)/%.py:	$(gendir)/%.py;	$(INSTALL_FILE) $? $@
 
 build-python:	$(PY_TRG)
 
@@ -42,7 +42,9 @@ uninstall-python:
 # install-python-lib: --Install python as library modules.
 #
 .PHONY: install-python-lib uninstall-python-lib
-install-python-lib: $(PY_SRC:%.py=$(pythonlibdir)/%.py); $(ECHO_TARGET)
+install-python-lib: $(PY_SRC:%.py=$(pythonlibdir)/%.py)
+	$(ECHO_TARGET)
+
 uninstall-python-lib:
 	$(ECHO_TARGET)
 	$(RM) $(PY_SRC:%.py=$(pythonlibdir)/%)

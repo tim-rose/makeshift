@@ -35,7 +35,7 @@ ALL_LFLAGS = $(OS.LFLAGS) $(ARCH.LFLAGS) \
 
 $(gendir)/%_l.c:	%.l
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
+	$(MKDIR) $(@D)
 	base=$$(echo "$*"| tr a-z A-Z); \
             $(LEX) $(ALL_LFLAGS) -t $< | \
             sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" >$(gendir)/$*_l.c

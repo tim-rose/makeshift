@@ -104,7 +104,7 @@ $(archdir)/%.o: %.c | mkdir[$(archdir)]
 #
 $(gendir)/%.o: $(archdir)/%.c
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
+	$(MKDIR) $(@D)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 

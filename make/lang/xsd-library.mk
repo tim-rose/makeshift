@@ -7,7 +7,9 @@
 # install-lib-include-xsd: --Install a library's include files.
 #
 
-ALL_XSD_H++ = $(XSD_H++) $(archdir)/$(XML_SCHEMA).$(H++_SUFFIX)
+ALL_XSD_H++ = $(XSD_H++) $(gendir)/$(XML_SCHEMA).$(H++_SUFFIX)
+
+LIB_INCLUDEDIR_XSD = $(ALL_XSD_H++:$(gendir)/%=$(LIB_INCLUDEDIR)/%)
 
 $(archdir)/lib.a:	$(XSD_OBJ)
 
@@ -19,14 +21,14 @@ $(archdir)/lib.a:	$(XSD_OBJ)
 #
 .PHONY: pre-build-lib-xsd
 pre-build-lib: pre-build-lib-xsd
-pre-build-lib-xsd: $(ALL_XSD_H++:$(archdir)/%=$(LIB_INCLUDEDIR)/%)
+pre-build-lib-xsd: $(LIB_INCLUDEDIR_XSD)
 
 #
 # clean-lib: --Remove the staged include files.
 #
 .PHONY: clean-lib-xsd
 clean-lib: clean-lib-xsd
-clean-lib-xsd:; $(RM) $(ALL_XSD_H++:$(archdir)/%=$(LIB_INCLUDEDIR)/%)
+clean-lib-xsd:; $(RM) $(LIB_INCLUDEDIR_XSD)
 
 #
 # install-lib-include-xsd: --Install a library's include files.
@@ -36,8 +38,8 @@ clean-lib-xsd:; $(RM) $(ALL_XSD_H++:$(archdir)/%=$(LIB_INCLUDEDIR)/%)
 #
 .PHONY: install-lib-include-xsd
 install-lib-include:	install-lib-include-xsd
-install-lib-include-xsd:  $(ALL_XSD_H++:$(archdir)/%=$(includedir)/%)
+install-lib-include-xsd:  $(ALL_XSD_H++:$(gendir)/%=$(includedir)/%)
 
 .PHONY: uninstall-lib-include-xsd
 uninstall-lib-include:	uninstall-lib-include-xsd
-uninstall-lib-include-xsd:; $(RM) $(ALL_XSD_H++:$(archdir)/%=$(includedir)/%)
+uninstall-lib-include-xsd:; $(RM) $(ALL_XSD_H++:$(gendir)/%=$(includedir)/%)

@@ -40,7 +40,7 @@ ALL_YFLAGS = $(OS.YFLAGS) $(ARCH.YFLAGS) \
 #
 $(gendir)/%.h $(gendir)/%_y.c:	%.y
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
+	$(MKDIR) $(@D)
 	$(YACC) -d $(ALL_YFLAGS) $<
 	BASE=$$(echo "$*"| tr a-z A-Z); \
 	sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" <y.tab.h >$(gendir)/$*.h; \
