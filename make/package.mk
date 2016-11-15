@@ -35,7 +35,7 @@ P-V	= $(PACKAGE)-$(VERSION)
 PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
 VRA	= $(VERSION).$(RELEASE)_$(ARCH)
 PVRA	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
-DESTDIR_ROOT = $(PACKAGE)-destdir
+DESTDIR_ROOT = staging-$(PACKAGE)
 VCS_EXCLUDES = --exclude .git --exclude .svn
 
 include $(package-type:%=package/%.mk)
@@ -53,7 +53,7 @@ package: $(package:%=package-%)
 # can override it.
 #
 .SECONDARY: $(DESTDIR_ROOT)
-%-destdir:
+staging-%:
 	$(ECHO_TARGET)
 	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=$(prefix) usr=$(usr) opt=$(opt)
 
