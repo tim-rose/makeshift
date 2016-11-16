@@ -25,6 +25,14 @@ test-tap:	$(TAP_TESTS)
 	prove $(ALL_PROVE_FLAGS) $(TAP_TESTS)
 
 #
-# test[%] --Run a particular test.
+# test[%]: --Run a particular test.
 #
 test[%]:        %;      ./$*
+
+clean:	clean-tap
+distclean:	clean-tap
+#
+# clean: --Cleanup after TAP tests.
+#
+.PHONY: clean-tap
+	clean-tap:;
