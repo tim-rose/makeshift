@@ -112,7 +112,7 @@ nok_match()
     *) ;;
     esac
     tap_test_msg $status "$@" ||
-	tap_report_diff "$have" "a glob matching \"$expect\""
+	tap_report_diff "$have" "a glob not matching \"$expect\""
 }
 
 #
