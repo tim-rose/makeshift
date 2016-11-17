@@ -29,9 +29,9 @@ ALL_LIB_PATH = . $(LIB_ROOT) $(LIB_PATH)
 VPATH = $(ALL_LIB_PATH:%=%/$(archdir)) $(libdir)
 
 ALL_LDFLAGS = $(LDFLAGS) $(LANG.LDFLAGS) \
-    $(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) $(PROJECT.LDFLAGS) \
-    $(ARCH.LDFLAGS) $(OS.LDFLAGS) \
-    $(VPATH:%=-L%) -L$(libdir)
+    $(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) \
+    $(VPATH:%=-L%) -L$(libdir) \
+    $(PROJECT.LDFLAGS) $(ARCH.LDFLAGS) $(OS.LDFLAGS) \
 
 ALL_LDLIBS = $(TARGET.LDLIBS) $(LOCAL.LDLIBS) $(PROJECT.LDLIBS) \
     $(ARCH.LDLIBS) $(OS.LDLIBS) $(LDLIBS) $(LOADLIBES)
@@ -42,3 +42,15 @@ ALL_LDLIBS = $(TARGET.LDLIBS) $(LOCAL.LDLIBS) $(PROJECT.LDLIBS) \
 $(archdir)/%: $(archdir)/%.o
 	$(ECHO_TARGET)
 	$(LD) $(ALL_LDFLAGS) -o $@ $^ $(ALL_LDLIBS)
+
+#
+# subdir/lib.a: --Force sublibs do be re-evaluated
+#
+# Remarks:
+# This rule is a bit of a hack to do something in *this* directory,
+# which will force its timestamp to be re-evaluated if a "main"
+# depends on it.  For other sub-directory dependants, an explicit
+# rule (similar to this) must be used.
+#
+%/$(archdir)/lib.$(LIB_SUFFIX): build@%
+	$(ECHO_TARGET)
