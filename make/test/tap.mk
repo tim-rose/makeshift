@@ -9,7 +9,6 @@
 # This defines some tap-specific targets related to testing,
 # and actions that are triggered by the "test" target.
 #
-TAP_TRG	= $(TAP_TESTS:%=%.tap)
 ALL_PROVE_FLAGS = $(TARGET.PROVE_FLAGS) $(LOCAL.PROVE_FLAGS) \
     $(PROJECT.PROVE_FLAGS) $(ARCH.PROVE_FLAGS) $(OS.PROVE_FLAGS) \
     $(PROVE_FLAGS)

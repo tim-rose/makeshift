@@ -1,6 +1,9 @@
 #
 # Makefile --Build rules for devkit, the developer utilities kit.
 #
+language = markdown
+MD_SRC = README.md RELEASE.md
+
 package-type = rpm deb
 PACKAGE = devkit
 VERSION = 0.4.0
