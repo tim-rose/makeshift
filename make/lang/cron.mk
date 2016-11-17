@@ -11,10 +11,10 @@ $(system_confdir)/cron.d/%.cron:	%.cron;	$(INSTALL_FILE) $? $@
 #
 # rules to install to the system cron run-parts locations.
 #
-$(system_confdir)/cron.hourly/%:	%;	$(INSTALL_PROGRAM) $? $@
-$(system_confdir)/cron.daily/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(system_confdir)/cron.weekly/%:	%;	$(INSTALL_PROGRAM) $? $@
-$(system_confdir)/cron.monthly/%:	%;	$(INSTALL_PROGRAM) $? $@
+$(system_confdir)/cron.hourly/%:	%;	$(INSTALL_SCRIPT) $? $@
+$(system_confdir)/cron.daily/%:		%;	$(INSTALL_SCRIPT) $? $@
+$(system_confdir)/cron.weekly/%:	%;	$(INSTALL_SCRIPT) $? $@
+$(system_confdir)/cron.monthly/%:	%;	$(INSTALL_SCRIPT) $? $@
 
 #
 # src-cron: --Update the CRON_SRC macro.

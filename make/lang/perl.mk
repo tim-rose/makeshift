@@ -18,8 +18,8 @@ perllibdir      = $(exec_prefix)/lib/perl5/$(subdir)
 PERL_SRC=$(PL_SRC) $(PM_SRC) $(T_SRC)
 PERL_TRG = $(PL_SRC:%.pl=%)
 
-%:			%.pl;	$(INSTALL_PROGRAM) $? $@
-$(bindir)/%:		%.pl;	$(INSTALL_PROGRAM) $? $@
+%:			%.pl;	$(INSTALL_SCRIPT) $? $@
+$(bindir)/%:		%.pl;	$(INSTALL_SCRIPT) $? $@
 $(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
 $(perllibdir)/%.pm:	$(archdir)/%.pm;	$(INSTALL_FILE) $? $@
 
@@ -36,7 +36,7 @@ perl-src-defined:
 #
 # %.pm: --Rules for installing perl programs and libraries.
 #
-%:			%.pl;	$(INSTALL_PROGRAM) $*.pl $@
+%:			%.pl;	$(INSTALL_SCRIPT) $*.pl $@
 $(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
 
 #
