@@ -23,8 +23,8 @@ pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
 PY_TRG = $(PY_SRC:%.py=%)
 
 %:			%.py;	$(CP) $*.py $@ && $(CHMOD) +x $@
+$(bindir)/%:		%.py;	$(INSTALL_SCRIPT) $*.py $@
 $(pythonlibdir)/%.py:	%.py;	$(INSTALL_FILE) $? $@
-
 $(pythonlibdir)/%.py:	$(gendir)/%.py;	$(INSTALL_FILE) $? $@
 
 build-python:	$(PY_TRG)
@@ -32,7 +32,9 @@ build-python:	$(PY_TRG)
 #
 # install-python: --Install python as executables.
 #
-install-python: $(PY_SRC:%.py=$(bindir)/%); $(ECHO_TARGET)
+install-python: $(PY_SRC:%.py=$(bindir)/%)
+	 $(ECHO_TARGET)
+
 uninstall-python:
 	$(ECHO_TARGET)
 	$(RM) $(PY_SRC:%.py=$(bindir)/%)

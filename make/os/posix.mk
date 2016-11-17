@@ -9,21 +9,6 @@
 # their own, or find a way to emulate these commands.
 #
 
-#
-# INSTALL_*: --Specialised install commands.
-#
-INSTALL 	  ?= install -D
-INSTALL_FILE      := $(INSTALL) -m 644
-INSTALL_DIRECTORY := $(INSTALL) -d
-INSTALL_SCRIPT    := $(INSTALL) -m 755
-ifneq "$(INSTALL_STRIP)" ""
-    INSTALL_PROGRAM := \
-        install_program() { $(INSTALL) -m755 $$1 $$2 && $(STRIP) $$2 2>/dev/null; };\
-        install_program
-else
-    INSTALL_PROGRAM := $(INSTALL) -m 755
-endif
-
 LIB_SUFFIX = a
 OBJ_SUFFIX = o
 
@@ -41,3 +26,18 @@ PS2PDF	= pstopdf
 RANLIB	= ranlib
 RMDIR	= rmdir
 STRIP	= strip
+
+#
+# INSTALL_*: --Specialised install commands.
+#
+INSTALL 	  ?= install -D
+INSTALL_FILE      := $(INSTALL) -m 644
+INSTALL_DIRECTORY := $(INSTALL) -d
+INSTALL_SCRIPT    := $(INSTALL) -m 755
+ifneq "$(INSTALL_STRIP)" ""
+    INSTALL_PROGRAM := \
+        install_program() { $(INSTALL) -m755 $$1 $$2 && $(STRIP) $$2 2>/dev/null; };\
+        install_program
+else
+    INSTALL_PROGRAM := $(INSTALL) -m 755
+endif
