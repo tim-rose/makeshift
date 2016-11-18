@@ -2,7 +2,7 @@
 
 This document summarises the changes and features for each devkit release.
 
-## Release 0.4.2
+## Release 0.4.3
 
 * fixes to install-strip
 
