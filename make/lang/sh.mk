@@ -48,6 +48,8 @@ SHELL_TRG	:= $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
 %:			%.awk;	$(CP) $*.awk $@ && $(CHMOD) +x $@
 %:			%.sed;	$(CP) $*.sed $@ && $(CHMOD) +x $@
 $(bindir)/%:		%.sh;	$(INSTALL_SCRIPT) $*.sh $@
+$(bindir)/%:		%.sed;	$(INSTALL_SCRIPT) $*.sed $@
+$(bindir)/%:		%.awk;	$(INSTALL_SCRIPT) $*.swk $@
 $(shlibdir)/%.shl:	%.shl;	$(INSTALL_FILE) $*.shl $@
 $(shlibdir)/%.awk:	%.awk;	$(INSTALL_FILE) $*.awk $@
 $(shlibdir)/%.sed:	%.sed;	$(INSTALL_FILE) $*.sed $@
