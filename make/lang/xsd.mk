@@ -72,12 +72,12 @@ $(gendir)/$(XML_SCHEMA).$(H++_SUFFIX):
 		--generate-xml-schema $@ 2>/dev/null
 
 #
-# clean: --Remove XSD's object files.
+# clean: --Remove XSD's generated and object files.
 #
 clean:	clean-xsd
 distclean: clean-xsd
 clean-xsd:
-	$(RM) $(XSD_OBJ)
+	$(RM) $(XSD_OBJ) $(XSD_H++) $(XSD_C++)
 
 #
 # src: --Update the XSD_SRC target.

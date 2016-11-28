@@ -51,7 +51,7 @@ build:	$(LEX_OBJ)
 clean:	clean-lex
 clean-lex:
 	$(ECHO_TARGET)
-	$(RM) $(LEX_OBJ) $(LEX_SRC:%.l=$(archdir)/%_l.d)
+	$(RM) $(LEX_C) $(LEX_OBJ) $(LEX_SRC:%.l=$(archdir)/%_l.d)
 
 #
 # src: --Update the LEX_SRC macro.

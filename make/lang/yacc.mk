@@ -59,7 +59,7 @@ build-yacc: $(YACC_OBJ) $(YACC_H)
 clean:	clean-yacc
 clean-yacc:
 	$(ECHO_TARGET)
-	$(RM) $(YACC_OBJ) $(YACC_H) $(YACC_SRC:%.y=$(archdir)/%_y.d)
+	$(RM) $(YACC_H) $(YACC_C) $(YACC_OBJ) $(YACC_SRC:%.y=$(archdir)/%_y.d)
 
 #
 # src: --Get a list of the yacc grammars in this directory.
