@@ -49,7 +49,7 @@ install-python-lib: $(PY_SRC:%.py=$(pythonlibdir)/%.py)
 
 uninstall-python-lib:
 	$(ECHO_TARGET)
-	$(RM) $(PY_SRC:%.py=$(pythonlibdir)/%)
+	$(RM) $(PY_SRC:%.py=$(pythonlibdir)/%.py)
 	$(RMDIR) -p $(pythonlibdir) 2>/dev/null || true
 
 #

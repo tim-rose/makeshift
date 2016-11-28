@@ -46,6 +46,12 @@ LIB_INCLUDEDIR = $(LIB_ROOT)/include/$(subdir)
 -include $(language:%=lang/%-library.mk)
 
 #
+# Include custom rules for the type(s) of library to build
+#
+export library ?= static
+#include $(library:%=library-%.mk)
+
+#
 # Pattern rules for doing a staged install of the library's ".h" files.
 #
 $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@

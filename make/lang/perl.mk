@@ -2,7 +2,6 @@
 # PERL.MK --Rules for building PERL objects and programs.
 #
 # Contents:
-# perl-src-defined: --Test if "enough" of the perl SRC vars. are defined.
 # %.pm:             --Rules for installing perl programs and libraries.
 # build:            --Make perl scripts "executable".
 # install:          --install perl binaries and libraries.
@@ -22,16 +21,6 @@ PERL_TRG = $(PL_SRC:%.pl=%)
 $(bindir)/%:		%.pl;	$(INSTALL_SCRIPT) $? $@
 $(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
 $(perllibdir)/%.pm:	$(archdir)/%.pm;	$(INSTALL_FILE) $? $@
-
-#
-# perl-src-defined: --Test if "enough" of the perl SRC vars. are defined.
-#
-perl-src-defined:
-	@if [ -z '$(PL_SRC)$(PM_SRC)$(T_SRC)' ]; then \
-	    printf $(VAR_UNDEF) "PL_SRC, PM_SRC or T_SRC" \
-	    echo 'run "make src" to define them'; \
-	    false; \
-	fi >&2
 
 #
 # %.pm: --Rules for installing perl programs and libraries.
