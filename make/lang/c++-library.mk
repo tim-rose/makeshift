@@ -1,5 +1,5 @@
 #
-# C++-LIBRARY.MK --Rules for managing libraries of C objects.
+# C++-LIBRARY.MK --Rules for managing libraries of C++ objects.
 #
 # Contents:
 # pre-build-lib: --Install headers into library root, via lib's pre-build.

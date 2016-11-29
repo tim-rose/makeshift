@@ -36,8 +36,8 @@ QTR_TRG = $(QTR_SRC:%.$(QRC_SUFFIX)=$(gendir)/%.$(C++_SUFFIX))
 QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(gendir)/moc-%.$(C++_SUFFIX))
 QT_TRG  = $(QTR_TRG) $(QTH_TRG)
 
-QTR_OBJ = $(QTR_TRG:%.$(C++_SUFFIX)=%.o)
-QTH_OBJ = $(QTH_TRG:%.$(C++_SUFFIX)=%.o)
+QTR_OBJ = $(QTR_TRG:$(gendir)/%.$(C++_SUFFIX)=$(archdir)/%.o)
+QTH_OBJ = $(QTH_TRG:$(gendir)/%.$(C++_SUFFIX)=$(archdir)/%.o)
 QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
 
 .PRECIOUS:	$(QT_TRG)
@@ -56,19 +56,6 @@ $(gendir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX)
 	$(MKDIR) $(@D)
 	$(MOC) $(MOC_FLAGS) -o $@ $<
 
-
-#
-# install-lib-include-qt: --Install a library's QT include files.
-#
-# Remarks:
-# These targets customise the library.mk behaviour.
-#
-.PHONY: install-lib-include-qt
-install-lib-include:	install-lib-include-qt
-install-lib-include-qt:  $(QTH_SRC:%.$(H++_SUFFIX)=$(includedir)/%.$(H++_SUFFIX))
-.PHONY: uninstall-lib-include-qt
-uninstall-lib-include:	uninstall-lib-include-qt
-uninstall-lib-include-qt:; $(RM) $(QTH_SRC:%=$(includedir)/%)
 
 #
 # clean: --Remove objects and intermediates created from Qt files.
