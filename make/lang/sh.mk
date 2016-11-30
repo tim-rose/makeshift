@@ -50,9 +50,9 @@ SHELL_TRG	:= $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
 $(bindir)/%:		%.sh;	$(INSTALL_SCRIPT) $*.sh $@
 $(bindir)/%:		%.sed;	$(INSTALL_SCRIPT) $*.sed $@
 $(bindir)/%:		%.awk;	$(INSTALL_SCRIPT) $*.swk $@
-$(shlibdir)/%.shl:	%.shl;	$(INSTALL_FILE) $*.shl $@
-$(shlibdir)/%.awk:	%.awk;	$(INSTALL_FILE) $*.awk $@
-$(shlibdir)/%.sed:	%.sed;	$(INSTALL_FILE) $*.sed $@
+$(shlibdir)/%.shl:	%.shl;	$(INSTALL_DATA) $*.shl $@
+$(shlibdir)/%.awk:	%.awk;	$(INSTALL_DATA) $*.awk $@
+$(shlibdir)/%.sed:	%.sed;	$(INSTALL_DATA) $*.sed $@
 
 #
 # build-shell: --Make scripts "executable".

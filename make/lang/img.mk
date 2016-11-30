@@ -13,17 +13,17 @@ IMG_SRC = $(PNG_SRC) $(GIF_SRC) $(JPG_SRC) $(SVG_SRC)
 #
 # Installation pattern rules...
 #
-$(wwwdir)/%.png:	%.png;	$(INSTALL_FILE) $? $@
-$(wwwdir)/%.gif:	%.gif;	$(INSTALL_FILE) $? $@
-$(wwwdir)/%.jpeg:	%.jpeg;	$(INSTALL_FILE) $? $@
-$(wwwdir)/%.jpg:	%.jpg;	$(INSTALL_FILE) $? $@
-$(wwwdir)/%.svg:	%.svg;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.png:	%.png;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.gif:	%.gif;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.jpeg:	%.jpeg;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.jpg:	%.jpg;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.svg:	%.svg;	$(INSTALL_DATA) $? $@
 
-$(datadir)/%.png:	%.png;	$(INSTALL_FILE) $? $@
-$(datadir)/%.gif:	%.gif;	$(INSTALL_FILE) $? $@
-$(datadir)/%.jpeg:	%.jpeg;	$(INSTALL_FILE) $? $@
-$(datadir)/%.jpg:	%.jpg;	$(INSTALL_FILE) $? $@
-$(datadir)/%.svg:	%.svg;	$(INSTALL_FILE) $? $@
+$(datadir)/%.png:	%.png;	$(INSTALL_DATA) $? $@
+$(datadir)/%.gif:	%.gif;	$(INSTALL_DATA) $? $@
+$(datadir)/%.jpeg:	%.jpeg;	$(INSTALL_DATA) $? $@
+$(datadir)/%.jpg:	%.jpg;	$(INSTALL_DATA) $? $@
+$(datadir)/%.svg:	%.svg;	$(INSTALL_DATA) $? $@
 
 #
 # Conversion pattern rules.

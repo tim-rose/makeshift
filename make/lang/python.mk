@@ -24,8 +24,8 @@ PY_TRG = $(PY_SRC:%.py=%)
 
 %:			%.py;	$(CP) $*.py $@ && $(CHMOD) +x $@
 $(bindir)/%:		%.py;	$(INSTALL_SCRIPT) $*.py $@
-$(pythonlibdir)/%.py:	%.py;	$(INSTALL_FILE) $? $@
-$(pythonlibdir)/%.py:	$(gendir)/%.py;	$(INSTALL_FILE) $? $@
+$(pythonlibdir)/%.py:	%.py;	$(INSTALL_DATA) $? $@
+$(pythonlibdir)/%.py:	$(gendir)/%.py;	$(INSTALL_DATA) $? $@
 
 build-python:	$(PY_TRG)
 

@@ -17,8 +17,8 @@
 #
 # %.el: --Rules for installing elisp scripts.
 #
-$(elispdir)/%.el:	%.el;	$(INSTALL_FILE) $? $@
-$(elispdir)/%.elc:	%.elc;	$(INSTALL_FILE) $? $@
+$(elispdir)/%.el:	%.el;	$(INSTALL_DATA) $? $@
+$(elispdir)/%.elc:	%.elc;	$(INSTALL_DATA) $? $@
 
 ELISP_OBJ = $(ELISP_SRC:%.el=%.elc)
 

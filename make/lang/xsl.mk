@@ -14,7 +14,7 @@
 # %.xsl: --Rules for installing xsl files
 #
 install-xsl:	$(XSL_SRC:%.xsl=$(libdir)/%.xsl)
-$(libdir)/%.xsl:	%.xsl;	$(INSTALL_FILE) $? $@
+$(libdir)/%.xsl:	%.xsl;	$(INSTALL_DATA) $? $@
 
 #
 # install-xsl: --Install XSL files and related include files.

@@ -10,7 +10,7 @@
 #
 .PHONY: $(recursive-targets:%=%-javascript)
 
-$(wwwdir)/%.js:	%.js;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.js:	%.js;	$(INSTALL_DATA) $? $@
 
 #
 # install-javascript: --Install JavaScript files to wwwdir(?).

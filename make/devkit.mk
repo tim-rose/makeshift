@@ -216,24 +216,24 @@ distclean-devkit:
 #
 $(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(sysconfdir)/%:	%;	$(INSTALL_FILE) $? $@
+$(sysconfdir)/%:	%;	$(INSTALL_DATA) $? $@
 $(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
-$(libdir)/%:		%;	$(INSTALL_FILE) $? $@
-$(datadir)/%:		%;	$(INSTALL_FILE) $? $@
-$(sharedstatedir)/%:	%;	$(INSTALL_FILE) $? $@
-$(localstatedir)/%:	%;	$(INSTALL_FILE) $? $@
-$(wwwdir)/%:		%;	$(INSTALL_FILE) $? $@
+$(libdir)/%:		%;	$(INSTALL_DATA) $? $@
+$(datadir)/%:		%;	$(INSTALL_DATA) $? $@
+$(sharedstatedir)/%:	%;	$(INSTALL_DATA) $? $@
+$(localstatedir)/%:	%;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%:		%;	$(INSTALL_DATA) $? $@
 #
 # bindir/archdir: --Rules for installing any executable from archdir.
 #
 $(bindir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%:	$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
-#$(libdir)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
+#$(libdir)/%:		$(archdir)/%;	$(INSTALL_DATA) $? $@
 
 #
 # system_confdir: --Rules for installing into the local system's "etc" dir.
 #
-$(system_confdir)/%:	%;	$(INSTALL_FILE) $? $@
+$(system_confdir)/%:	%;	$(INSTALL_DATA) $? $@
 
 #
 # %.gz: --Rules for building compressed/summarised data.

@@ -116,11 +116,11 @@ build[%.$(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
 #
 $(includedir)/%.$(H++_SUFFIX):	%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
-	$(INSTALL_FILE) $? $@
+	$(INSTALL_DATA) $? $@
 
 $(includedir)/%.$(H++_SUFFIX):	$(gendir)/%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
-	$(INSTALL_FILE) $? $@
+	$(INSTALL_DATA) $? $@
 
 #
 # +c++-defines: --Print a list of predefined macros for the "C++" language.

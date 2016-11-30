@@ -19,14 +19,14 @@ PERL_TRG = $(PL_SRC:%.pl=%)
 
 %:			%.pl;	$(INSTALL_SCRIPT) $? $@
 $(bindir)/%:		%.pl;	$(INSTALL_SCRIPT) $? $@
-$(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
-$(perllibdir)/%.pm:	$(archdir)/%.pm;	$(INSTALL_FILE) $? $@
+$(perllibdir)/%.pm:	%.pm;	$(INSTALL_DATA) $? $@
+$(perllibdir)/%.pm:	$(archdir)/%.pm;	$(INSTALL_DATA) $? $@
 
 #
 # %.pm: --Rules for installing perl programs and libraries.
 #
 %:			%.pl;	$(INSTALL_SCRIPT) $*.pl $@
-$(perllibdir)/%.pm:	%.pm;	$(INSTALL_FILE) $? $@
+$(perllibdir)/%.pm:	%.pm;	$(INSTALL_DATA) $? $@
 
 #
 # build: --Make perl scripts "executable".

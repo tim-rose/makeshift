@@ -54,9 +54,9 @@ export library ?= static
 #
 # Pattern rules for doing a staged install of the library's ".h" files.
 #
-$(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_FILE) $? $@
-$(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(INSTALL_FILE) $? $@
-$(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_FILE) $* $@
+$(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_DATA) $? $@
+$(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(INSTALL_DATA) $? $@
+$(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_DATA) $* $@
 
 #
 # libdir/%.a: --Install a static (.a) library
@@ -67,15 +67,15 @@ $(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_FILE) $* $@
 #
 $(libdir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 	$(ECHO_TARGET)
-	$(INSTALL_FILE) $? $@
+	$(INSTALL_DATA) $? $@
 	$(RANLIB) $@
 $(libbasedir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 	$(ECHO_TARGET)
-	$(INSTALL_FILE) $? $@
+	$(INSTALL_DATA) $? $@
 	$(RANLIB) $@
 ../$(archdir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 	$(ECHO_TARGET)
-	$(INSTALL_FILE) $? $@
+	$(INSTALL_DATA) $? $@
 	$(RANLIB) $@
 #
 # pre-build: --Stage the include files.

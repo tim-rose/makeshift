@@ -36,8 +36,8 @@ endif
 MMD_CSS ?= $(DEVKIT_HOME)/share/doc/css/plain.css
 PDF_CSS ?= $(DEVKIT_HOME)/share/doc/css/print.css
 
-$(wwwdir)/%.html:	%.html;	$(INSTALL_FILE) $? $@
-$(datadir)/%.html:	%.html; $(INSTALL_FILE) $? $@
+$(wwwdir)/%.html:	%.html;	$(INSTALL_DATA) $? $@
+$(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 
 #
 # %.html/%.md: --build a HTML document from a mulitmarkdown file.

@@ -16,10 +16,10 @@
 #
 .PHONY: $(recursive-targets:%=%-css)
 
-$(wwwdir)/%.css:	%.css;		$(INSTALL_FILE) $? $@
-$(datadir)/%.css:	%.css;		$(INSTALL_FILE) $? $@
-$(wwwdir)/%.css.map:	%.css.map;	$(INSTALL_FILE) $? $@
-$(datadir)/%.css.map:	%.css.map;	$(INSTALL_FILE) $? $@
+$(wwwdir)/%.css:	%.css;		$(INSTALL_DATA) $? $@
+$(datadir)/%.css:	%.css;		$(INSTALL_DATA) $? $@
+$(wwwdir)/%.css.map:	%.css.map;	$(INSTALL_DATA) $? $@
+$(datadir)/%.css.map:	%.css.map;	$(INSTALL_DATA) $? $@
 
 %.css:	%.scss;	scss $*.scss >$@
 %.css:	%.less;	plessc $*.less >$@

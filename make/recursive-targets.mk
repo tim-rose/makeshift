@@ -39,7 +39,7 @@ recursive-targets = $(std-targets) $(devkit-targets)
 # same file, install-strip is achieved by altering the existing
 # install rule(s) with a flag variable.
 #
-install-strip:;	$(MAKE) install INSTALL_STRIP=1
+install-strip:;	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
 
 +var[recursive_rule]:;@: # disable +var[recursive_rule]
 

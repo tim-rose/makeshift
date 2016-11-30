@@ -131,11 +131,11 @@ $(archdir)/%.s.o: $(gendir)/%.c | mkdir[$(archdir)]
 #
 $(includedir)/%.h:	%.h
 	$(ECHO_TARGET)
-	$(INSTALL_FILE) $? $@
+	$(INSTALL_DATA) $? $@
 
 $(includedir)/%.h:	$(gendir)/%.h
 	$(ECHO_TARGET)
-	$(INSTALL_FILE) $? $@
+	$(INSTALL_DATA) $? $@
 
 #
 # %.c.gcov: --Build a text-format coverage report.

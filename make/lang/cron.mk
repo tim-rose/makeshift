@@ -6,7 +6,7 @@
 #
 .PHONY: $(recursive-targets:%=%-cron)
 
-$(system_confdir)/cron.d/%.cron:	%.cron;	$(INSTALL_FILE) $? $@
+$(system_confdir)/cron.d/%.cron:	%.cron;	$(INSTALL_DATA) $? $@
 
 #
 # rules to install to the system cron run-parts locations.

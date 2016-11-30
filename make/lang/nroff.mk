@@ -30,14 +30,14 @@ endif
 #
 # TODO: finish implementing patterns for all sections
 
-$(man1dir)/%.1:	%.1;	$(INSTALL_FILE) $? $@
-$(man2dir)/%.2:	%.2;	$(INSTALL_FILE) $? $@
-$(man3dir)/%.3:	%.3;	$(INSTALL_FILE) $? $@
-$(man4dir)/%.4:	%.4;	$(INSTALL_FILE) $? $@
-$(man5dir)/%.5:	%.5;	$(INSTALL_FILE) $? $@
-$(man6dir)/%.6:	%.6;	$(INSTALL_FILE) $? $@
-$(man7dir)/%.7:	%.7;	$(INSTALL_FILE) $? $@
-$(man8dir)/%.8:	%.8;	$(INSTALL_FILE) $? $@
+$(man1dir)/%.1:	%.1;	$(INSTALL_DATA) $? $@
+$(man2dir)/%.2:	%.2;	$(INSTALL_DATA) $? $@
+$(man3dir)/%.3:	%.3;	$(INSTALL_DATA) $? $@
+$(man4dir)/%.4:	%.4;	$(INSTALL_DATA) $? $@
+$(man5dir)/%.5:	%.5;	$(INSTALL_DATA) $? $@
+$(man6dir)/%.6:	%.6;	$(INSTALL_DATA) $? $@
+$(man7dir)/%.7:	%.7;	$(INSTALL_DATA) $? $@
+$(man8dir)/%.8:	%.8;	$(INSTALL_DATA) $? $@
 
 %.1.pdf:	%.1;	man -t ./$*.1 | ps2pdf - - > $@
 %.3.pdf:	%.3;	man -t ./$*.3 | ps2pdf - - > $@

@@ -16,7 +16,7 @@ rubylibdir      = $(exec_prefix)/lib/ruby/$(subdir)
 RB_TRG = $(RB_SRC:%.rb=%)
 
 %:			%.rb;	$(INSTALL_SCRIPT) $*.rb $@
-$(rubylibdir)/%.rb:	%.rb;	$(INSTALL_FILE) $? $@
+$(rubylibdir)/%.rb:	%.rb;	$(INSTALL_DATA) $? $@
 
 #
 # build-ruby: --Build ruby executables

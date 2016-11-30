@@ -13,8 +13,8 @@
 #
 # %.xml: --Rules for installing xml files in other places.
 #
-$(sysconfdir)/%.xml:	%.xml;	$(INSTALL_FILE) $? $@
-$(libdir)/%.xml:	%.xml;	$(INSTALL_FILE) $? $@
+$(sysconfdir)/%.xml:	%.xml;	$(INSTALL_DATA) $? $@
+$(libdir)/%.xml:	%.xml;	$(INSTALL_DATA) $? $@
 
 #
 # install-xml: --Install XML files to datadir.

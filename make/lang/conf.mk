@@ -33,16 +33,16 @@ endif
 #
 # %.conf: --Pattern rules for installing config files.
 #
-$(sysconfdir)/%:	%.conf;		$(INSTALL_FILE) $? $@
-$(divertdir)/%:		%.conf;		$(INSTALL_FILE) $? $@
+$(sysconfdir)/%:	%.conf;		$(INSTALL_DATA) $? $@
+$(divertdir)/%:		%.conf;		$(INSTALL_DATA) $? $@
 
-$(sysconfdir)/%.conf:	%.conf;		$(INSTALL_FILE) $? $@
-$(sysconfdir)/%.cfg:	%.cfg;		$(INSTALL_FILE) $? $@
-$(sysconfdir)/%.ini:	%.ini;		$(INSTALL_FILE) $? $@
+$(sysconfdir)/%.conf:	%.conf;		$(INSTALL_DATA) $? $@
+$(sysconfdir)/%.cfg:	%.cfg;		$(INSTALL_DATA) $? $@
+$(sysconfdir)/%.ini:	%.ini;		$(INSTALL_DATA) $? $@
 
-$(divertdir)/%.conf:	%.conf;		$(INSTALL_FILE) $? $@
-$(divertdir)/%.cfg:	%.cfg;		$(INSTALL_FILE) $? $@
-$(divertdir)/%.ini:	%.ini;		$(INSTALL_FILE) $? $@
+$(divertdir)/%.conf:	%.conf;		$(INSTALL_DATA) $? $@
+$(divertdir)/%.cfg:	%.cfg;		$(INSTALL_DATA) $? $@
+$(divertdir)/%.ini:	%.ini;		$(INSTALL_DATA) $? $@
 
 #
 # conf-src-defined: --Test if any of the "conf" SRC vars. are defined.

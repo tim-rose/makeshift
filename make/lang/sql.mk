@@ -15,7 +15,7 @@ sqllibdir	:= $(exec_prefix)/lib/sql/$(subdir)
 #
 # %.sql: --Rules for installing SQL scripts into libdir
 #
-$(sqllibdir)/%.sql:	%.sql;	$(INSTALL_FILE) $? $@
+$(sqllibdir)/%.sql:	%.sql;	$(INSTALL_DATA) $? $@
 
 #
 # install-sql: --Install SQL files.

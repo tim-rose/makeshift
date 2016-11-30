@@ -13,8 +13,8 @@ phplibdir      = $(exec_prefix)/lib/php/$(subdir)
 #
 # %.php:		--Rules for installing php scripts
 #
-$(phplibdir)/%.php:    	%.php;	$(INSTALL_FILE) $? $@
-$(wwwdir)/%.php:	%.php;	$(INSTALL_FILE) $? $@
+$(phplibdir)/%.php:    	%.php;	$(INSTALL_DATA) $? $@
+$(wwwdir)/%.php:	%.php;	$(INSTALL_DATA) $? $@
 $(bindir)/%:		%.php;	$(INSTALL_SCRIPT) $? $@
 
 install-lib-php:	$(PHP_SRC:%.php=$(phplibdir)/%.php)

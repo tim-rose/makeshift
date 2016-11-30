@@ -36,7 +36,7 @@ XSD.FLAGS = $(OS.XSDFLAGS) $(ARCH.XSDFLAGS) \
 
 $(datadir)/%.xsd:	%.xsd
 	$(ECHO_TARGET)
-	$(INSTALL_FILE) $? $@
+	$(INSTALL_DATA) $? $@
 
 $(gendir)/%.$(C++_SUFFIX) $(gendir)/%.$(H++_SUFFIX):	%.xsd
 	$(ECHO_TARGET)

@@ -29,7 +29,7 @@ JAVA_OBJ	= $(JAVA_SRC:%.java=$(archdir)/%.class)
 
 javalibdir      = $(exec_prefix)/lib/java/$(subdir)
 
-$(javalibdir)/%.class:	$(archdir)/%.class;	$(INSTALL_FILE) $? $@
+$(javalibdir)/%.class:	$(archdir)/%.class;	$(INSTALL_DATA) $? $@
 
 #
 # %.class: --Compile a java file into an arch-specific sub-directory.

@@ -17,7 +17,7 @@ ifdef AUTOSRC
     MK_SRC ?= $(LOCAL_MK_SRC)
 endif
 
-$(includedir)/%.mk:	%.mk;	$(INSTALL_FILE) $< $@
+$(includedir)/%.mk:	%.mk;	$(INSTALL_DATA) $< $@
 
 #
 # install-mk: --Install ".mk" files to their usual places.
