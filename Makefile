@@ -6,7 +6,7 @@ MD_SRC = README.md RELEASE.md
 
 package-type = rpm deb
 PACKAGE = devkit
-VERSION = 0.4.6
+VERSION = 0.4.7
 RELEASE = 1
 
 include devkit.mk package.mk
@@ -14,6 +14,8 @@ include devkit.mk package.mk
 $(DESTDIR_ROOT):
 	$(ECHO_TARGET)
 	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=/usr/local usr=$(usr) opt=$(opt)
+
+SPECS/devkit.spec: Makefile
 
 devkit.mk:
 	@echo "you need to do a self-hosted install:"
