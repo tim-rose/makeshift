@@ -35,11 +35,13 @@ recursive-targets = $(std-targets) $(devkit-targets)
 # install-strip: --install stuff, and strip binaries.
 #
 # Remarks:
-# Because there can't really be multiple rules for building the
-# same file, install-strip is achieved by altering the existing
-# install rule(s) with a flag variable.
+# Because there can't really be multiple rules for building the same
+# file, install-strip is achieved by re-invoking the same makefile,
+# with an altered definition of INSTALL_PROGRAM.  Note that the "-f"
+# option is not automatically passed to the child make, so we must do
+# it explicitly.
 #
-install-strip:;	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
+install-strip:;	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
 
 +var[recursive_rule]:;@: # disable +var[recursive_rule]
 

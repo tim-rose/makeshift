@@ -51,7 +51,7 @@ package:	package-rpm
 rpm:	package-rpm
 package-rpm:	SPECS/$(PACKAGE).spec
 	$(ECHO_TARGET)
-	mkdir -p RPMS
+	$(MKDIR) RPMS
 	$(RPMBUILD) -bb $(RPM_FLAGS) SPECS/$(PACKAGE).spec
 
 #
@@ -67,7 +67,7 @@ package-rpm:	SPECS/$(PACKAGE).spec
 .PRECIOUS:	SPECS/$(PACKAGE).spec
 SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
 	$(ECHO_TARGET)
-	mkdir -p SPECS
+	$(MKDIR) SPECS
 	{ echo "%define name $(PACKAGE)"; \
 	echo "%define version $(VERSION)"; \
 	echo "%define release $(RELEASE)"; \
@@ -91,8 +91,9 @@ SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
 #
 # Create the package's source tarball.
 #
-SOURCES/$(P-V).tar.gz:	$(P-V).tar.gz | mkdir[SOURCES]
+SOURCES/$(P-V).tar.gz:	$(P-V).tar.gz
 	$(ECHO_TARGET)
+	$(MKDIR) SOURCES
 	ln $< $@
 
 #
@@ -103,9 +104,9 @@ SOURCES/$(P-V).tar.gz:	$(P-V).tar.gz | mkdir[SOURCES]
 # a distclean of the current directory.
 #
 .PHONY: srpm
-srpm:	SOURCES/$(P-V).tar.gz SPECS/$(PACKAGE).spec | mkdir[SRPMS]
+srpm:	SOURCES/$(P-V).tar.gz SPECS/$(PACKAGE).spec
 	$(ECHO_TARGET)
-	mkdir -p SRPMS
+	$(MKDIR) SRPMS
 	$(RPMBUILD) -bs $(RPM_FLAGS) SPECS/$(PACKAGE).spec
 
 #
@@ -137,6 +138,3 @@ clean-rpm:
 .PHONY:	distclean-rpm
 distclean-rpm:
 	$(RM) -r $(RPMDIRS) $(P-V).tar.gz
-#
-# rpm: --Build an RPM package for the current source.
-#
