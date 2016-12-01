@@ -30,8 +30,9 @@ STRIP	= strip
 #
 # INSTALL_*: --Specialised install commands.
 #
-INSTALL 	  ?= install -D
-INSTALL_FILE      := $(INSTALL) -m 644
-INSTALL_DATA      := $(INSTALL) -m 644
-INSTALL_DIRECTORY := $(INSTALL) -d
-INSTALL_SCRIPT    := $(INSTALL) -m 755
+INSTALL 	  ?= install
+INSTALL_FILE      = $(INSTALL) -D -m 644
+INSTALL_DATA      = $(INSTALL) -D -m 644
+INSTALL_DIRECTORY = $(INSTALL) -d
+INSTALL_SCRIPT    = $(INSTALL) -D -m 755
+INSTALL_PROGRAM   = $(INSTALL) -D -m 755
