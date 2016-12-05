@@ -23,7 +23,8 @@ C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
 
 XSD ?= xsd
-XML_SCHEMA ?= XmlSchema
+XML_SCHEMA ?= xml-schema
+xsddir = $(exec_prefix)/share/xsd
 
 XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
 XSD_H++ = $(XSD_SRC:%.xsd=$(gendir)/%.$(H++_SUFFIX))
@@ -34,7 +35,7 @@ XSD_C++ = $(XSD_SRC:%.xsd=$(gendir)/%.$(C++_SUFFIX))
 XSD.FLAGS = $(OS.XSDFLAGS) $(ARCH.XSDFLAGS) \
 	$(PROJECT.XSDFLAGS) $(LOCAL.XSDFLAGS) $(TARGET.XSDFLAGS) $(XSDFLAGS)
 
-$(datadir)/%.xsd:	%.xsd
+$(xsddir)/%.xsd:	%.xsd
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
 
@@ -53,7 +54,7 @@ build:	$(XSD_OBJ)
 # install-xsd: --Install the XSD files into datadir.
 #
 .PHONY: install-xsd
-install-xsd: $(XSD_SRC:%=$(datadir)/%)
+install-xsd: $(XSD_SRC:%=$(xsddir)/%)
 
 #
 # uninstall-xsd: --Remove XSD files and related include files.
@@ -61,8 +62,8 @@ install-xsd: $(XSD_SRC:%=$(datadir)/%)
 .PHONY: uninstall-xsd-xsd uninstall-xsd-include
 uninstall-xsd:	uninstall-xsd-xsd uninstall-xsd-include
 	$(ECHO_TARGET)
-	$(RM) $(XSD_SRC:%=$(datadir)/%)
-	$(RMDIR) -p $(datadir) 2>/dev/null || true
+	$(RM) $(XSD_SRC:%=$(xsddir)/%)
+	$(RMDIR) -p $(xsddir) 2>/dev/null || true
 
 $(gendir)/$(XML_SCHEMA).$(H++_SUFFIX):
 	$(ECHO_TARGET)
