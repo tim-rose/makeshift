@@ -31,10 +31,7 @@ PACKAGE ?= $(LOCAL_PACKAGE)
 VERSION ?= local
 RELEASE ?= latest
 
-P-V	= $(PACKAGE)-$(VERSION)
-PVR	= $(PACKAGE)_$(VERSION).$(RELEASE)
-VRA	= $(VERSION).$(RELEASE)_$(ARCH)
-PVRA	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
+P-V	= $(PACKAGE)$(VERSION:%=-%)
 DESTDIR_ROOT = staging-$(PACKAGE)
 VCS_EXCLUDES = --exclude .git --exclude .svn
 
@@ -77,13 +74,13 @@ $(P-V).tar.gz:
 	root=$$PWD; \
 	    cd ..; ln -s $$root $(P-V); \
 	    tar czf $(P-V).tar.gz --dereference $(VCS_EXCLUDES) $(P-V); \
-	    $(RM) $(P-V); \
-	    mv $(P-V).tar.gz $$root
+	    $(RM) -- $(P-V); \
+	    $(MV) $(P-V).tar.gz $$root
 #
 # clean: --Remove the tarball created by "dist", and the destdir root.
 #
 clean:	clean-package
 distclean:	clean-package
 clean-package:
-	$(RM) $(P-V).tar.gz
-	$(RM) -r $(DESTDIR_ROOT)
+	$(RM) -- $(P-V).tar.gz
+	$(RM) -r -- $(DESTDIR_ROOT)
