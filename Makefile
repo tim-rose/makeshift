@@ -6,7 +6,7 @@ MD_SRC = README.md RELEASE.md
 
 package-type = rpm deb
 PACKAGE = devkit
-VERSION = 0.4.8
+VERSION = 0.4.9
 RELEASE = 1
 
 include devkit.mk package.mk
