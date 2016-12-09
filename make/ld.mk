@@ -2,7 +2,8 @@
 # LD.MK --Rules for linking objects into executables.
 #
 # Contents:
-# main: --Build a program from a file that contains "main".
+# main:         --Build a program from a file that contains "main".
+# subdir/lib.a: --Force sublibs do be re-evaluated
 #
 # Remarks:
 # The "ld" module defines pattern rules for building executables from

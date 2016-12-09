@@ -5,7 +5,7 @@
 # build:         --Build XSD objects via C++.
 # install-xsd:   --Install the XSD files into datadir.
 # uninstall-xsd: --Remove XSD files and related include files.
-# clean:         --Remove XSD's object files.
+# clean:         --Remove XSD's generated and object files.
 # src:           --Update the XSD_SRC target.
 #
 # Remarks:

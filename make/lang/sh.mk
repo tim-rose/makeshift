@@ -2,15 +2,14 @@
 # SHELL.MK --Rules for building shell, awk scripts and libraries.
 #
 # Contents:
-# %.sh:              --Rules for installing shell scripts, libraries
-# shell-src-defined: --Test if "enough" of the shell SRC vars. are defined.
-# build-shell:       --Make scripts "executable".
-# install-shell:     --install shell scripts to bindir, libraries to shlibdir
-# uninstall-shell:   --uninstall files installed by "install-shell".
-# clean:             --Remove shell, awk, sed script executables.
-# toc:               --Build the table-of-contents for shell, awk, sed files.
-# src:               --Define SH_SRC, SHL_SRC, AWK_SRC, SED_SRC.
-# todo:              --Report unfinished work in shell, awk, sed code.
+# %.sh:            --Rules for installing shell scripts, libraries
+# build-shell:     --Make scripts "executable".
+# install-shell:   --install shell scripts to bindir, libraries to shlibdir
+# uninstall-shell: --uninstall files installed by "install-shell".
+# clean:           --Remove shell, awk, sed script executables.
+# toc:             --Build the table-of-contents for shell, awk, sed files.
+# src:             --Define SH_SRC, SHL_SRC, AWK_SRC, SED_SRC.
+# todo:            --Report unfinished work in shell, awk, sed code.
 #
 # Remarks:
 # For the purposes of building stuff, "shell" covers the "traditional"

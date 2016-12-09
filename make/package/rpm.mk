@@ -8,7 +8,6 @@
 # %-rpm-files.txt:    --Build a manifest file for the RPM's "file" section.
 # clean:              --Remove the RPM manifest file.
 # distclean:          --Remove the RPM file.
-# rpm:                --Build an RPM package for the current source.
 #
 # Remarks:
 # The package/rpm module provides support for building an RPM package

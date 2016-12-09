@@ -2,14 +2,13 @@
 # JAVA.MK --Rules for building Java objects and programs.
 #
 # Contents:
-# %.class:    --Compile a java file into an arch-specific sub-directory.
-# build:      --Compile all the JAVA_SRC files.
-# build-java: --Build all the java sources that have changed.
-# install:    --install java binaries and libraries.
-# clean:      --Remove java class files.
-# src:        --Update the JAVA_SRC macro.
-# tags:       --Build vi, emacs tags files.
-# todo:       --Report "unfinished work" comments in Java files.
+# %.class: --Compile a java file into an arch-specific sub-directory.
+# build:   --Build all the java sources that have changed.
+# install: --install java binaries and libraries.
+# clean:   --Remove java class files.
+# src:     --Update the JAVA_SRC macro.
+# tags:    --Build vi, emacs tags files.
+# todo:    --Report "unfinished work" comments in Java files.
 #
 # Remarks:
 # The "lang/java" module provides support for the Java programming

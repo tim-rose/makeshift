@@ -2,8 +2,9 @@
 # TAP.MK --Rules for running unit tests with the TAP framework.
 #
 # Contents:
-# test:   --Run all the tests, and summarise them.
-# test[%] --Run a particular test.
+# test:    --Run all the tests, and summarise them.
+# test[%]: --Run a particular test.
+# clean:   --Cleanup after TAP tests.
 #
 # Remarks:
 # This defines some tap-specific targets related to testing,

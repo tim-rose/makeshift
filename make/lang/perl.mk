@@ -2,14 +2,14 @@
 # PERL.MK --Rules for building PERL objects and programs.
 #
 # Contents:
-# %.pm:             --Rules for installing perl programs and libraries.
-# build:            --Make perl scripts "executable".
-# install:          --install perl binaries and libraries.
-# clean:            --Remove perl script executables.
-# tidy:             --perl-specific customisations for the "tidy" target.
-# toc:              --Build the table-of-contents for perl files.
-# src:              --Define PL_SRC, PM_SRC, T_SRC.
-# todo:             --Report unfinished work (identified by keyword comments)
+# %.pm:    --Rules for installing perl programs and libraries.
+# build:   --Make perl scripts "executable".
+# install: --install perl binaries and libraries.
+# clean:   --Remove perl script executables.
+# tidy:    --perl-specific customisations for the "tidy" target.
+# toc:     --Build the table-of-contents for perl files.
+# src:     --Define PL_SRC, PM_SRC, T_SRC.
+# todo:    --Report unfinished work (identified by keyword comments)
 #
 .PHONY: $(recursive-targets:%=%-perl)
 

@@ -2,8 +2,9 @@
 # QT-LIBRARY.MK --Rules for managing libraries of QT objects.
 #
 # Contents:
-# pre-build-lib: --Install headers into library root, via lib's pre-build.
-# clean-lib:     --Remove the staged include files.
+# pre-build-lib:       --Nothing to do?
+# clean-lib:           --Nothing to do?
+# install-lib-include-qt: --Install a library's QT include files.
 # install-lib-include-c++: --Install a library's include files.
 #
 
