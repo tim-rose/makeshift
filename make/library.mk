@@ -94,21 +94,25 @@ pre-build-lib:;$(ECHO_TARGET)
 build: $(archdir)/$(LIB_NAME).$(LIB_SUFFIX)
 
 #
-# install-lib-lib: --Install the library (and include files).
-# install-lib-include: --Install the library include files.
-# install-lib-man: --Install manual pages for the library.
+# install-lib: --Install all the library components
+# install-lib-lib: --Install the library ".a", ".so" files only.
+# install-lib-include: --Install the library include files only.
+# install-lib-man: --Install manual pages for the library only.
 #
 # Remarks:
 # The include files are (un)installed by language-specific rules
 # that are dependants of these targets.
 #
-.PHONY: install-lib-lib install-lib-include install-lib-man
-install-lib-lib:	$(libdir)/$(LIB_NAME).$(LIB_SUFFIX) install-lib-include; $(ECHO_TARGET)
+.PHONY: install-lib install-lib-lib install-lib-include install-lib-man
+install-lib:	install-lib-lib install-lib-include install-lib-man; $(ECHO_TARGET)
+install-lib-lib:	$(libdir)/$(LIB_NAME).$(LIB_SUFFIX); $(ECHO_TARGET)
 install-lib-include:; $(ECHO_TARGET)
 
 install-lib-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3); $(ECHO_TARGET)
 
-.PHONY: uninstall-lib-lib uninstall-lib-include uninstall-lib-man
+.PHONY: uninstall-lib uninstall-lib-lib uninstall-lib-include uninstall-lib-man
+uninstall-lib: uninstall-lib-lib uninstall-lib-include uninstall-lib-man
+
 uninstall-lib-lib:	uninstall-lib-include
 	$(ECHO_TARGET)
 	$(RM) $(libdir)/$(LIB_NAME).$(LIB_SUFFIX)
