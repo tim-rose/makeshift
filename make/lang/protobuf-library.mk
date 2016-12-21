@@ -32,9 +32,23 @@ clean-lib-protobuf:; $(RM) $(PROTOBUF_H++:$(gendir)/%=$(LIB_INCLUDEDIR)/%)
 # Remarks:
 # These targets customise the library.mk behaviour.
 #
-.PHONY: install-lib-include-protobuf
+.PHONY: install-lib-include-protobuf install-lib-python-protobuf
+
 install-lib-include:	install-lib-include-protobuf
+
 install-lib-include-protobuf:  $(PROTOBUF_SRC:%.proto=$(includedir)/%.pb.$(H++_SUFFIX))
-.PHONY: uninstall-lib-include-protobuf
+
+install-lib-lib:		install-lib-python-protobuf
+install-lib-python-protobuf:	$(PROTOBUF_SRC:%.proto=$(pythonlibdir)/%.py)
+
+.PHONY: uninstall-lib-include-protobuf uninstall-lib-python-protobuf
+
 uninstall-lib-include:	uninstall-lib-include-protobuf
-uninstall-lib-include-protobuf:; $(RM) $(PROTOBUF_SRC:%.proto=$(includedir)/%.pb.$(H++_SUFFIX))
+
+uninstall-lib-include-protobuf:
+	$(RM) $(PROTOBUF_SRC:%.proto=$(includedir)/%.pb.$(H++_SUFFIX))
+	$(RMDIR) -p $(includedir) 2>/dev/null || true
+
+uninstall-lib-python-protobuf:
+	$(RM) $(PROTOBUF_SRC:%.proto=$(pythonlibdir)/%.py)
+	$(RMDIR) -p $(pythonlibdir) 2>/dev/null || true
