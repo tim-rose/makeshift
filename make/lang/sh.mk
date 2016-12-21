@@ -26,7 +26,7 @@
 # The target `install-shell` will install scripts into $(bindir).
 #
 .PHONY: $(recursive-targets:%=%-shell)
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_SH_SRC  := $(wildcard *.sh)
     LOCAL_SHL_SRC := $(wildcard *.shl)
     LOCAL_AWK_SRC := $(wildcard *.awk)

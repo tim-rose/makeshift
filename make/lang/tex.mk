@@ -9,7 +9,7 @@
 #
 .PHONY: $(recursive-targets:%=%-tex)
 
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_TEX_SRC := $(wildcard *.tex)
     TEX_SRC ?= $(wildcard *.tex)
 endif

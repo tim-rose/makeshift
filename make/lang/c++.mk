@@ -30,7 +30,7 @@ C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
 C++_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
 
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_C++_MAIN_SRC := $(shell grep -l $(C++_MAIN_RGX) *.$(C++_SUFFIX) 2>/dev/null)
     LOCAL_C++_SRC := $(wildcard *.$(C++_SUFFIX))
     LOCAL_H++_SRC := $(wildcard *.$(H++_SUFFIX))
@@ -85,16 +85,18 @@ c++-src-defined:
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
 #
-$(archdir)/%.o: %.$(C++_SUFFIX) | mkdir[$(archdir)]
+$(archdir)/%.o: %.$(C++_SUFFIX)
 	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
 
 #
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 #
-$(archdir)/%.o: $(gendir)/%.$(C++_SUFFIX) | mkdir[$(archdir)]
+$(archdir)/%.o: $(gendir)/%.$(C++_SUFFIX)
 	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
 #

@@ -22,7 +22,7 @@
 #
 .PHONY: $(recursive-targets:%=%-asciidoc)
 
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_TXT_SRC := $(wildcard *.txt)
     TXT_SRC ?= $(wildcard *.txt)
 endif

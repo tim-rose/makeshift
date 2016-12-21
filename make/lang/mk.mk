@@ -11,7 +11,7 @@
 #
 .PHONY: $(recursive-targets:%=%-mk)
 
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_MK_SRC := $(wildcard *.mk)
 
     MK_SRC ?= $(LOCAL_MK_SRC)

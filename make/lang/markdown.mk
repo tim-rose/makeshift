@@ -25,7 +25,7 @@
 MD = multimarkdown
 MDFLAGS ?= --process-html
 
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_TXT_SRC := $(wildcard *txt)
     LOCAL_MD_SRC := $(wildcard *.md)
 

@@ -11,7 +11,7 @@
 #
 .PHONY: $(recursive-targets:%=%-nroff)
 
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_MAN1_SRC := $(wildcard *.1)
     LOCAL_MAN3_SRC := $(wildcard *.3)
     LOCAL_MAN5_SRC := $(wildcard *.5)

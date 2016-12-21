@@ -20,7 +20,7 @@
 #
 .PHONY: $(recursive-targets:%=%-conf)
 
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_CONF_SRC := $(wildcard *.conf)
     LOCAL_CFG_SRC := $(wildcard *.cfg)
     LOCAL_INI_SRC := $(wildcard *.ini)

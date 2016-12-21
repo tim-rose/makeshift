@@ -15,7 +15,7 @@
 #
 .PHONY: $(recursive-targets:%=%-lex)
 
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_LEX_SRC := $(wildcard *.c)
     LEX_SRC ?= $(LOCAL_LEX_SRC)
 endif

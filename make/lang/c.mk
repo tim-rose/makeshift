@@ -35,7 +35,7 @@
 
 C_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
 
-ifdef AUTOSRC
+ifdef autosrc
     LOCAL_C_MAIN_SRC := $(shell grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
     LOCAL_C_SRC := $(wildcard *.c)
     LOCAL_H_SRC := $(wildcard *.h)
@@ -95,8 +95,9 @@ c-src-defined:
 # dependencies, and the "-include" command allows the files to
 # be absent, so this setup will avoid premature compilation.
 #
-$(archdir)/%.o: %.c | mkdir[$(archdir)]
+$(archdir)/%.o: %.c
 	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 #
