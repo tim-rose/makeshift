@@ -127,7 +127,7 @@ ECHO_TARGET = @+$(ECHO) "++ $(CURDIR) $@ \$$?: $?"; $(ECHO) "++ $(CURDIR) $@ \$$
 #
 all:	build
 
-include os/$(OS).mk arch/$(ARCH).mk
+include $(HW:%=hw/%.mk) os/$(OS).mk arch/$(ARCH).mk
 include project/$(PROJECT).mk
 #include vcs/$(VCS).mk
 
