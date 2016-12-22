@@ -10,6 +10,12 @@
 #
 .PHONY: $(recursive-targets:%=%-javascript)
 
+ifdef autosrc
+    LOCAL_JS_SRC := $(wildcard *.js)
+
+    JS_SRC ?= $(LOCAL_JS_SRC)
+endif
+
 $(wwwdir)/%.js:	%.js;	$(INSTALL_DATA) $? $@
 
 #

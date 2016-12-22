@@ -19,6 +19,12 @@
 
 -include $(XSD_SRC:%.xsd=$(archdir)/%-depend.mk)
 
+ifdef autosrc
+    LOCAL_XSD_SRC := $(wildcard *.xsd)
+
+    XSD_SRC ?= $(LOCAL_XSD_SRC)
+endif
+
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
 

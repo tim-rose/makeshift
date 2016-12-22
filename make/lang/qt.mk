@@ -35,8 +35,8 @@ QRC_SUFFIX ?= qrc
 QUI_SUFFIX ?= ui
 
 ifdef autosrc
-    LOCAL_QTR_SRC := $(wildcard *.qrc)
-    LOCAL_QUI_SRC := $(wildcard *.ui)
+    LOCAL_QTR_SRC := $(wildcard *.$(QRC_SUFFIX)
+    LOCAL_QUI_SRC := $(wildcard *.$(QUI_SUFFIX))
     LOCAL_QTH_SRC := $(shell grep -l Q_OBJECT *.$(H++_SUFFIX) 2>/dev/null)
 
     QTR_SRC ?= $(LOCAL_QTR_SRC)
@@ -54,8 +54,8 @@ ALL_UIC_FLAGS = $(OS.UIC_FLAGS) $(ARCH.UIC_FLAGS) \
     $(PROJECT.UIC_FLAGS) $(LOCAL.UIC_FLAGS) $(TARGET.UIC_FLAGS) $(UIC_FLAGS)
 
 QTR_TRG = $(QTR_SRC:%.$(QRC_SUFFIX)=$(gendir)/%.$(C++_SUFFIX))
-QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(gendir)/moc-%.$(C++_SUFFIX))
-QUI_TRG = $(QUI_SRC:%.$(QUI_SUFFIX)=$(gendir)/uic-%.$(H++_SUFFIX))
+QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(gendir)/%.moc.$(C++_SUFFIX))
+QUI_TRG = $(QUI_SRC:%.$(QUI_SUFFIX)=$(gendir)/%.$(QUI_SUFFIX).$(H++_SUFFIX))
 QT_TRG  = $(QTR_TRG) $(QTH_TRG) $(QUI_TRG)
 
 QTR_OBJ = $(QTR_TRG:$(gendir)/%.$(C++_SUFFIX)=$(archdir)/%.o)
@@ -64,7 +64,7 @@ QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
 
 .PRECIOUS:	$(QT_TRG)
 #
-# build: --Build the Qt files
+# build: --Build the Qt files.
 #
 build:	$(QT_OBJ) $(QT_TRG)
 
@@ -73,12 +73,12 @@ $(gendir)/%.$(C++_SUFFIX):	%.qrc
 	$(MKDIR) $(@D)
 	$(RCC) $(ALL_RCC_FLAGS) $< >$@
 
-$(gendir)/moc-%.$(C++_SUFFIX):	%.$(H++_SUFFIX)
+$(gendir)/%.moc.$(C++_SUFFIX):	%.$(H++_SUFFIX)
 	$(ECHO_TARGET)
 	$(MKDIR) $(@D)
 	$(MOC) $(ALL_MOC_FLAGS) -o $@ $<
 
-$(gendir)/uic-%.$(H++_SUFFIX):	%.$(QUI_SUFFIX)
+$(gendir)/%.$(QUI_SUFFIX).$(H++_SUFFIX):	%.$(QUI_SUFFIX)
 	$(ECHO_TARGET)
 	$(MKDIR) $(@D)
 	$(UIC) $(ALL_UIC_FLAGS) -o $@ $<
@@ -97,8 +97,8 @@ clean-qt:
 src:	src-qt
 src-qt:
 	$(ECHO_TARGET)
-	@mk-filelist -qn QTR_SRC *.qrc
-	@mk-filelist -qn QUI_SRC *.ui
+	@mk-filelist -qn QTR_SRC *.$(QRC_SUFFIX)
+	@mk-filelist -qn QUI_SRC *.$(QUI_SUFFIX)
 	@mk-filelist -qn QTH_SRC $$(grep -l Q_OBJECT *.$(H++_SUFFIX))
 
 #

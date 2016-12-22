@@ -16,6 +16,12 @@
 #
 .PHONY: $(recursive-targets:%=%-python)
 
+ifdef autosrc
+    LOCAL_PY_SRC := $(wildcard *.py)
+
+    PY_SRC ?= $(LOCAL_PY_SRC)
+endif
+
 #
 # %.py:		--Rules for installing python scripts
 #
@@ -93,6 +99,8 @@ todo-python:
 #
 # * E402 module level import not at top of file
 # * E721 do not compare types, use 'isinstance()'
+#
+# REVISIT: make this more customisable...
 #
 lint:	lint-python
 lint-python:	| cmd-exists[pep8] var-defined[PY_SRC]

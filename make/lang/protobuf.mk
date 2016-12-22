@@ -17,6 +17,12 @@
 #
 .PHONY: $(recursive-targets:%=%-protobuf)
 
+ifdef autosrc
+    LOCAL_PROTOBUF_SRC := $(wildcard *.proto)
+
+    PROTOBUF_SRC ?= $(LOCAL_PROTOBUF_SRC)
+endif
+
 PROTOC	?= protoc
 PROTOBUF_FLAGS = $(TARGET.PROTOBUF_FLAGS) $(LOCAL.PROTOBUF_FLAGS) \
     $(PROJECT.PROTOBUF_FLAGS) $(ARCH.PROTOBUF_FLAGS) $(OS.PROTOBUF_FLAGS)

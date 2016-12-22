@@ -20,6 +20,12 @@
 #
 .PHONY: $(recursive-targets:%=%-java)
 
+ifdef autosrc
+    LOCAL_JAVA_SRC := $(shell find . -type f -name '*.java')
+
+    JAVA_SRC ?= $(LOCAL_JAVA_SRC)
+endif
+
 JAVAC	?= javac
 ALL_JAVA_FLAGS = $(OS.JAVA_FLAGS) $(ARCH.JAVA_FLAGS) $(LOCAL.JAVA_FLAGS) \
     $(TARGET.JAVA_FLAGS) $(JAVA_FLAGS)
@@ -36,8 +42,9 @@ $(javalibdir)/%.class:	$(archdir)/%.class;	$(INSTALL_DATA) $? $@
 # Remarks:
 # ".class" files are arch-neutral aren't they?
 #
-$(archdir)/%.class: %.java | mkdir[$(archdir)]
+$(archdir)/%.class: %.java
 	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	$(JAVAC) $(ALL_JAVA_FLAGS) -d $(archdir) $*.java
 
 #
@@ -53,8 +60,9 @@ $(archdir)/%.class: %.java | mkdir[$(archdir)]
 build:		build-java
 build-java: $(archdir)/build-java.log
 
-$(archdir)/build-java.log: $(JAVA_SRC) | mkdir[$(archdir)]
+$(archdir)/build-java.log: $(JAVA_SRC)
 	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	$(JAVAC) $(ALL_JAVA_FLAGS) -d $(archdir) $?
 	date '+%Y-%m-%d %H:%M:%S: $?' > $@
 
@@ -92,7 +100,7 @@ clean-java:
 src:	src-java
 src-java:
 	$(ECHO_TARGET)
-	mk-filelist -qn JAVA_SRC $$(find . -name '*.java')
+	@mk-filelist -qn JAVA_SRC $$(find . -type f -name '*.java')
 #
 # tags: --Build vi, emacs tags files.
 #

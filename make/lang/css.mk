@@ -16,6 +16,16 @@
 #
 .PHONY: $(recursive-targets:%=%-css)
 
+ifdef autosrc
+    LOCAL_CSS_SRC := $(wildcard *.css)
+    LOCAL_SCSS_SRC := $(wildcard *.scss)
+    LOCAL_LESS_SRC := $(wildcard *.less)
+
+    CSS_SRC ?= $(LOCAL_CSS_SRC)
+    SCSS_SRC ?= $(LOCAL_SCSS_SRC)
+    LESS_SRC ?= $(LOCAL_LESS_SRC)
+endif
+
 $(wwwdir)/%.css:	%.css;		$(INSTALL_DATA) $? $@
 $(datadir)/%.css:	%.css;		$(INSTALL_DATA) $? $@
 $(wwwdir)/%.css.map:	%.css.map;	$(INSTALL_DATA) $? $@

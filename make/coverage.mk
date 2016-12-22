@@ -38,10 +38,14 @@ $(archdir)/%.gcda:;@:
 #
 # Remarks:
 #
-$(archdir)/zero.info:	$(GCOV_GCDA_FILES) | mkdir[$(archdir)]
+$(archdir)/zero.info:	$(GCOV_GCDA_FILES)
+	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	lcov --initial --capture --no-external --directory . >$@
 
-$(archdir)/trace.info:	$(archdir)/zero.info | mkdir[$(archdir)]
+$(archdir)/trace.info:	$(archdir)/zero.info
+	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	lcov --capture --no-external --directory . --test-name 'unit tests' >$(archdir)/base.info
 	lcov --add-tracefile $(archdir)/zero.info \
 	     --add-tracefile $(archdir)/base.info >$@
@@ -50,7 +54,9 @@ $(archdir)/trace.info:	$(archdir)/zero.info | mkdir[$(archdir)]
 #
 # coverage/index.html: --Create the html-formatted coverage reports.
 #
-$(archdir)/coverage/index.html:	$(archdir)/trace.info | mkdir[$(archdir)]
+$(archdir)/coverage/index.html:	$(archdir)/trace.info
+	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	genhtml --demangle-cpp --output-directory $(archdir)/coverage \
 	    $(archdir)/trace.info
 

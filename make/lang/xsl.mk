@@ -10,6 +10,12 @@
 #
 .PHONY: $(recursive-targets:%=%-xsl)
 
+ifdef autosrc
+    LOCAL_XSL_SRC := $(wildcard *.xsl)
+
+    XSL_SRC ?= $(LOCAL_XSL_SRC)
+endif
+
 #
 # %.xsl: --Rules for installing xsl files
 #

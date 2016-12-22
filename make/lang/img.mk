@@ -8,6 +8,18 @@
 #
 .PHONY: $(recursive-targets:%=%-img)
 
+ifdef autosrc
+    LOCAL_PNG_SRC := $(wildcard *.png)
+    LOCAL_GIF_SRC := $(wildcard *.gif)
+    LOCAL_JPG_SRC := $(wildcard *.jpg)
+    LOCAL_SVG_SRC := $(wildcard *.svg)
+
+    PNG_SRC ?= $(LOCAL_PNG_SRC)
+    GIF_SRC ?= $(LOCAL_GIF_SRC)
+    JPG_SRC ?= $(LOCAL_JPG_SRC)
+    SVG_SRC ?= $(LOCAL_SVG_SRC)
+endif
+
 IMG_SRC = $(PNG_SRC) $(GIF_SRC) $(JPG_SRC) $(SVG_SRC)
 
 #
@@ -63,5 +75,5 @@ src-img:
 	$(ECHO_TARGET)
 	@mk-filelist -qn PNG_SRC *.png
 	@mk-filelist -qn GIF_SRC *.gif
-	@mk-filelist -qn JPG_SRC *.jpeg *.jpg
+	@mk-filelist -qn JPG_SRC *.jpg
 	@mk-filelist -qn SVG_SRC *.svg

@@ -13,6 +13,16 @@
 #
 .PHONY: $(recursive-targets:%=%-perl)
 
+ifdef autosrc
+    LOCAL_PL_SRC := $(wildcard *.pl)
+    LOCAL_PM_SRC := $(wildcard *.pm)
+    LOCAL_T_SRC := $(wildcard *.t)
+
+    PL_SRC ?= $(LOCAL_PL_SRC)
+    PM_SRC ?= $(LOCAL_PM_SRC)
+    T_SRC ?= $(LOCAL_T_SRC)
+endif
+
 perllibdir      = $(exec_prefix)/lib/perl5/$(subdir)
 PERL_SRC=$(PL_SRC) $(PM_SRC) $(T_SRC)
 PERL_TRG = $(PL_SRC:%.pl=%)

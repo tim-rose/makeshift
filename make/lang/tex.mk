@@ -11,7 +11,8 @@
 
 ifdef autosrc
     LOCAL_TEX_SRC := $(wildcard *.tex)
-    TEX_SRC ?= $(wildcard *.tex)
+
+    TEX_SRC ?= $(LOCAL_TEX_SRC)
 endif
 
 %.pdf:	%.dvi;	dvipdf $*.dvi

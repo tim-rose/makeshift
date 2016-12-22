@@ -16,6 +16,7 @@ build: $(TEST_EXE)
 
 $(TEST_EXE):	$(TEST_OBJ)
 	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $(ALL_LDFLAGS) \
 	    $^ $(ALL_LDLIBS) $(GTEST_LIBS:%=-l%)
 	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(ALL_LDFLAGS) \

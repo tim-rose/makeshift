@@ -6,6 +6,12 @@
 #
 .PHONY: $(recursive-targets:%=%-cron)
 
+ifdef autosrc
+    LOCAL_CRON_SRC := $(wildcard *.cron)
+
+    CRON_SRC ?= $(LOCAL_CRON_SRC)
+endif
+
 $(system_confdir)/cron.d/%.cron:	%.cron;	$(INSTALL_DATA) $? $@
 
 #

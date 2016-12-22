@@ -8,6 +8,13 @@
 # system-php.ini: --Create a PHP configuration file based on current system settings.
 #
 .PHONY: $(recursive-targets:%=%-php)
+
+ifdef autosrc
+    LOCAL_PHP_SRC := $(wildcard *.php)
+
+    PHP_SRC ?= $(LOCAL_PHP_SRC)
+endif
+
 phplibdir      = $(exec_prefix)/lib/php/$(subdir)
 
 #

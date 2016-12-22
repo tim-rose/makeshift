@@ -20,6 +20,12 @@
 $(elispdir)/%.el:	%.el;	$(INSTALL_DATA) $? $@
 $(elispdir)/%.elc:	%.elc;	$(INSTALL_DATA) $? $@
 
+ifdef autosrc
+    LOCAL_ELISP_SRC := $(wildcard *.el)
+
+    ELISP_SRC ?= $(LOCAL_ELISP_SRC)
+endif
+
 ELISP_OBJ = $(ELISP_SRC:%.el=%.elc)
 
 #

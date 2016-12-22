@@ -19,6 +19,7 @@ ifdef autosrc
     LOCAL_LEX_SRC := $(wildcard *.c)
     LEX_SRC ?= $(LOCAL_LEX_SRC)
 endif
+
 LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%_l.o)
 LEX_C	= $(LEX_SRC:%.l=$(gendir)/%_l.c)
 

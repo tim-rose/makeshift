@@ -10,6 +10,12 @@
 #
 .PHONY: $(recursive-targets:%=%-sql)
 
+ifdef autosrc
+    LOCAL_SQL_SRC := $(wildcard *.sql)
+
+    SQL_SRC ?= $(LOCAL_SQL_SRC)
+endif
+
 sqllibdir	:= $(exec_prefix)/lib/sql/$(subdir)
 
 #

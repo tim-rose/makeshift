@@ -10,6 +10,12 @@
 
 .PHONY: $(recursive-targets:%=%-xml)
 
+ifdef autosrc
+    LOCAL_XML_SRC := $(wildcard *.xml)
+
+    XML_SRC ?= $(LOCAL_XML_SRC)
+endif
+
 #
 # %.xml: --Rules for installing xml files in other places.
 #

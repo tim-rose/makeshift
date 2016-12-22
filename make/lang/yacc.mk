@@ -18,7 +18,7 @@
 .PHONY: $(recursive-targets:%=%-yacc)
 
 ifdef autosrc
-    LOCAL_YACC_SRC := $(wildcard *.c)
+    LOCAL_YACC_SRC := $(wildcard *.y)
     YACC_SRC ?= $(LOCAL_YACC_SRC)
 endif
 

@@ -115,15 +115,17 @@ $(gendir)/%.o: $(archdir)/%.c
 # Remarks:
 # This is a repeat of the static build rules, but for shared libraries.
 #
-$(archdir)/%.s.o: %.c | mkdir[$(archdir)]
+$(archdir)/%.s.o: %.c
 	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	@echo $(CC) $(C_ALL_FLAGS)  $(C_SHARED_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
 #
 # archdir/%.s.o: --Compile a generated C file into PIC.
 #
-$(archdir)/%.s.o: $(gendir)/%.c | mkdir[$(archdir)]
+$(archdir)/%.s.o: $(gendir)/%.c
 	$(ECHO_TARGET)
+	$(MKDIR) $(@D)
 	@echo $(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
 
