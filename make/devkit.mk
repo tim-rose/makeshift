@@ -94,7 +94,7 @@ TODO_PATTERN = $(TODO_KEYWORDS:%=-e %)
 ifeq "$(VERBOSE)" "color"
     ECHO = colour_echo() { printf '\033[36m%s\033[m\n' "$$*"; }; colour_echo
 else ifneq "$(VERBOSE)" ""
-    ECHO = echo
+    ECHO = echo '++ $(CURDIR) $@: '
 else
     ECHO = :
 endif
@@ -102,10 +102,10 @@ endif
 #
 # ECHO_TARGET: --Common macro for logging in devkit targets.
 #
-#ECHO_TARGET = @+$(ECHO) "++ $(CURDIR) $@ \$$?: $?"
-#ECHO_TARGET = @+$(ECHO) "++ $(CURDIR) $@ \$$^: $^"
-ECHO_TARGET = @+$(ECHO) "++ $(CURDIR) $@ \$$?: $?"; $(ECHO) "++ $(CURDIR) $@ \$$^: $^"
-#ECHO_TARGET = @+$(ECHO) "++ $(CURDIR) $@ changed(\$$?): $?"; $(ECHO) "++ $(CURDIR) $@ dependants(\$$^): $^"
+#ECHO_TARGET = @+$(ECHO) "\$$?: $?"
+#ECHO_TARGET = @+$(ECHO) "\$$^: $^"
+ECHO_TARGET = @+$(ECHO) "\$$?: $?"; $(ECHO) "\$$^: $^"
+#ECHO_TARGET = @+$(ECHO) "changed(\$$?): $?"; $(ECHO) "$@ dependants(\$$^): $^"
 
 #
 # no-implicit-rules: --Disable the archaic Makefile rules.

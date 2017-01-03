@@ -69,7 +69,7 @@ C_CPPFLAGS = $(CPPFLAGS) \
     $(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) \
     $(LIB_PATH:%=-I%/include) $(LIB_ROOT:%=-I%/include) \
     $(PROJECT.C_CPPFLAGS) $(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
-    -I. -I$(includedir)
+    -I. -I$(gendir) -I$(includedir)
 
 C_SHARED_FLAGS = $(OS.C_SHARED_FLAGS) $(ARCH.C_SHARED_FLAGS) \
     $(PROJECT.C_SHARED_FLAGS) $(LOCAL.C_SHARED_FLAGS) $(TARGET.C_SHARED_FLAGS)
