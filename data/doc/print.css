@@ -1,6 +1,11 @@
 /*
  * PRINT.CSS --Stylesheet for printing HTML documents with Prince.
  */
+
+html {
+    font-size: 8pt;
+}
+
 @page {
     size: A4;
     padding: 0;

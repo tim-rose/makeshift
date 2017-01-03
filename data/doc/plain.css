@@ -7,19 +7,12 @@ html {
     /* font-family: "Palatino", "Times New Roman", Times, serif; */
     font-family: "Verdana", sans-serif;
     line-height: 1.2em;
-    font-size: 10pt;
-}
-
-@media print {
-    html {
-	font-size: 8pt;
-    }
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: "Helvetica Neue", Calibri, "Helvetica", Arial, sans-serif;
     font-weight: normal;
-    color: #777;
+    color: #666;
     margin: 0.8em 0 0.2em 0;
     line-height: 1.2em;
 }
@@ -121,9 +114,6 @@ ul ul ul { list-style-type: disc; }
 ul ul ul ul { list-style-type: square; }
 ul ul ul ul ul { list-style-type: disc; }
 ul ul ul ul ul ul { list-style-type: square; }
-
-li::marker { color: #07b; }
-li::-moz-list-bullet { color: #07b; }
 
 /*
  * LINK presentation.
