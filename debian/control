@@ -3,7 +3,7 @@ Section: misc
 Priority: extra
 Maintainer: Tim Rose <tim.rose@acm.org>
 Architecture: all
-Version: 0.4.10
+Version: 0.4.11
 Description: 
 A build system using recursive make.
 

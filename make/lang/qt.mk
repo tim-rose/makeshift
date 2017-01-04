@@ -46,7 +46,7 @@ ifdef autosrc
 endif
 
 QT_INCLUDES = $(QT:%=-I/usr/include/Qt%)
-QT_LIBS = $(QT:%=-l/Qt%)
+QT_LIBS = $(QT:%=-lQt%)
 
 ALL_RCC_FLAGS = $(OS.RCC_FLAGS) $(ARCH.RCC_FLAGS) \
     $(PROJECT.RCC_FLAGS) $(LOCAL.RCC_FLAGS) $(TARGET.RCC_FLAGS) $(RCC_FLAGS)
