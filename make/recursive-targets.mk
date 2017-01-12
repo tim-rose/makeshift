@@ -41,7 +41,8 @@ recursive-targets = $(std-targets) $(devkit-targets)
 # option is not automatically passed to the child make, so we must do
 # it explicitly.
 #
-install-strip:;	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
+install-strip:
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
 
 +var[recursive_rule]:;@: # disable +var[recursive_rule]
 
@@ -50,16 +51,18 @@ install-strip:;	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) INSTALL_PROGRAM='$(INST
 #
 # Parameters:
 # $1 --the name of the recursive target
-# $2 --flag: define the action for the recursive target.
+#
+# Remarks:
+# This macro creates a set of targets that allow some control over the
+# recursion:
+# * pre-<target>	--things to be done before running <target>
+# * post-<target>	--things to be done after running the recursive targets
+# * <target>@%		--a pattern rule for running <target> in a sub-directory
 #
 define recursive_rule
 .PHONY:	$1 pre-$1 post-$1 $1-subdirs
-ifeq "$2" "1"
 $1:	$$(SUBDIRS:%=$1@%) post-$1;	$$(ECHO_TARGET)
-else
-$1:	$$(SUBDIRS:%=$1@%) post-$1
-endif
-$1 $(SUBDIRS:%=$1@%):	pre-$1
+$1 $(SUBDIRS:%=$1@%) post-$1:	pre-$1
 $1-subdirs: $(SUBDIRS:%=$1@%)
 post-$1: $(SUBDIRS:%=$1@%)
 $1@%:
@@ -76,4 +79,7 @@ $1@%:
 	else (cd $$*); fi
 endef
 
-$(foreach target,$(recursive-targets),$(eval $(call recursive_rule,$(target),1)))
+#
+# define all the standard recursive targets...
+#
+$(foreach target,$(recursive-targets),$(eval $(call recursive_rule,$(target))))
