@@ -26,9 +26,9 @@ system_root	= $(DESTDIR)
 # into "/etc" as well as the adjusted $sysconfdir.
 #
 system_confdir	= $(system_root)/etc/$(subdir)
-pkgver		= $(PACKAGE)$(VERSION:%=-%)
+export pkgver		= $(PACKAGE)$(VERSION:%=-%)
 
-export archdir	= $(HW:%=%-)$(OS:%=%-)$(ARCH)
+export archdir	= $(VARIANT:%=%-)$(OS:%=%-)$(ARCH)
 export gendir	= $(archdir)/gen
 rootdir	 	= $(DESTDIR)/$(prefix)
 rootdir_opt 	= $(DESTDIR)/$(prefix)/$(opt)
@@ -37,9 +37,11 @@ exec_prefix	= $(rootdir_opt)/$(usr)
 
 bindir		= $(exec_prefix)/bin
 sbindir 	= $(exec_prefix)/sbin
-#libexecdir	= $(exec_prefix)/libexec/$(archdir)/$(subdir)	# (GNU std)
+#libexecdir	= $(exec_prefix)/libexec/$(pkgver)/$(archdir)/$(subdir)	# (GNU std)
 libexecdir	= $(exec_prefix)/libexec/$(subdir)
-datadir		= $(exec_prefix)/share/$(subdir)
+datarootdir     = $(exec_prefix)/share/$(subdir)
+#datadir	= $(exec_prefix)/share/$(pkgver)/$(subdir)	# (GNU std)
+datadir		= $(datarootdir)
 
 sysconfdir	= $(rootdir)/etc/$(opt)/$(subdir)
 
@@ -48,15 +50,20 @@ sharedstatedir	= $(rootdir_opt)/com/$(subdir)
 localstatedir	= $(rootdir)/var/$(opt)/$(subdir)
 srvdir 		= $(rootdir)/srv/$(subdir)
 wwwdir 		= $(rootdir)/srv/www/$(subdir)
-
-#libdir		= $(exec_prefix)/lib/$(archdir)	# (GNU std)
-libdir		= $(exec_prefix)/lib/$(subdir)
-libbasedir	= $(exec_prefix)/lib
-infodir		= $(rootdir_opt)/info
-lispdir		= $(rootdir_opt)/share/emacs/site-lisp
+localedir 	= $(exec_prefix)/share/locale
 
 includedir	= $(rootdir_opt)/$(usr)/include/$(subdir)
+librootdir	= $(exec_prefix)/lib
+libdir		= $(librootdir)/$(subdir)
+lispdir		= $(rootdir_opt)/share/emacs/site-lisp
+
+infodir		= $(rootdir_opt)/info
 docdir		= $(exec_prefix)/share/doc/$(pkgver)/$(subdir)
+htmldir		= $(docdir)
+dvidir		= $(docdir)
+psdir		= $(docdir)
+pdfdir		= $(docdir)
+
 mandir		= $(datadir)/man
 man1dir		= $(mandir)/man1
 man2dir		= $(mandir)/man2

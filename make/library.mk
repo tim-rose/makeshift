@@ -48,8 +48,8 @@ LIB_INCLUDEDIR = $(LIB_ROOT)/include/$(subdir)
 #
 # Include custom rules for the type(s) of library to build
 #
-export library ?= static
-#include $(library:%=library-%.mk)
+export library-type ?= static
+#include $(library-type:%=library/%.mk)
 
 #
 # Pattern rules for doing a staged install of the library's ".h" files.
@@ -69,7 +69,7 @@ $(libdir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
 	$(RANLIB) $@
-$(libbasedir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
+$(librootdir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
 	$(RANLIB) $@
@@ -171,9 +171,13 @@ distclean-lib:
 #
 # src: --Get a list of sub-directories that are libraries.
 #
+# Remarks:
+# This target "guesses" the sub-libraries by looking for Makefiles
+# that include the "library.mk".
+#
 src:	src-lib
 src-lib:
 	$(ECHO_TARGET)
 	@mk-filelist -qpn SUBLIB_SRC $$( \
-	    grep -l '^include.* library.mk' */Makefile 2>/dev/null | \
-	    sed -e 's|Makefile|$$(archdir)/lib.a|g')
+	    grep -l '^include.* library.mk' */Makefile* 2>/dev/null | \
+	    sed -e 's|Makefile.*|$$(archdir)/lib.a|g' | sort -u)
