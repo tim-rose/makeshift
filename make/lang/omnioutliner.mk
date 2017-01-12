@@ -2,15 +2,19 @@
 # OMNIOUTLINER.MK --Rules for dealing with omnioutliner files.
 #
 # Contents:
+# %.html/%.md:        --build a HTML document from a mulitomnioutliner file.
+# build:              --Create HTML documents from OO_SRC.
+# clean-omnioutliner: --Clean up omnioutliner's derived files.
+# src-omnioutliner:   --Update OO_SRC.
+# todo-omnioutliner:  --Report unfinished work in omnioutliner files.
 #
 # Remarks:
-# Omnioutliner stores outlines as <name>.oo3/content.xml.  The actual file content is usually compressed
-#
-#
 
-# I use omnioutliner to write document drafts that are then converted to
-# markdown.  These rules convert the OO XML files into markdown text using
-# Fletcher Penney's excellent XSL.
+# Omnioutliner stores outlines as <name>.oo3/content.xml.  The actual
+# file content is usually compressed.  This module contains rules for converting
+# the XML into markdown, for subsequent processing.
+#
+# @todo: write a "boom!" format processor...
 #
 # See Also:
 # http://omnigroup.com
@@ -31,10 +35,11 @@ OO_MD_XSL = $(libdir)/xsl/oo-md.xsl
 $(archdir)/gen/%.txt:	%.oo3
 	$(ECHO_TARGET)
 	$(MKDIR) $(archdir)/gen
-	if [ "$$(head -c 5 $*.oo3/contents.xml)" != "<?xml" ]; then gzcat $*.oo3/contents.xml; else cat $*.oo3/contents.xml; fi |	xsltproc $(OOFLAGS) $(OO_MD_XSL) - > $@
+	gzcat -cf $*.oo3/contents.xml $*.oo3/contents.xml | \
+            xsltproc $(OOFLAGS) $(OO_MD_XSL) - > $@
 
 #
-# build: --Create HTML documents from TXT_SRC, OO_SRC.
+# build: --Create HTML documents from OO_SRC.
 #
 build:	build-omnioutliner
 build-omnioutliner:	$(OO_SRC:%.oo3=$(archdir)/gen/%.txt)

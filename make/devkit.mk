@@ -6,7 +6,7 @@
 # PWD:               --Force reset of PWD
 # OS:                --Set OS macro by interpolating "uname -s".
 # ARCH:              --Set ARCH macro by interpolating "uname -m".
-# VERBOSE:           --Control how (+how much) is output via echo.
+# VERBOSE:           --Control how (+how much, how colourful) echo's output is.
 # ECHO_TARGET:       --Common macro for logging in devkit targets.
 # no-implicit-rules: --Disable the archaic Makefile rules.
 # build:             --The default target

@@ -6,9 +6,10 @@
 # pre-build:           --Stage the include files.
 # %/lib.a:             --Build the sub-librar(ies) in its subdirectory.
 # build:               --Build this directory's library.
-# install-lib-lib:     --Install the library (and include files).
-# install-lib-include: --Install the library include files.
-# install-lib-man:     --Install manual pages for the library.
+# install-lib:         --Install all the library components
+# install-lib-lib:     --Install the library ".a", ".so" files only.
+# install-lib-include: --Install the library include files only.
+# install-lib-man:     --Install manual pages for the library only.
 # archdir/%.a:         --(re)build a library.
 # archdir/%.so:        --(re)build a shared library.
 # clean:               --Remove the library file.
