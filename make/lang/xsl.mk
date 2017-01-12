@@ -19,21 +19,22 @@ endif
 #
 # %.xsl: --Rules for installing xsl files
 #
-install-xsl:	$(XSL_SRC:%.xsl=$(libdir)/%.xsl)
-$(libdir)/%.xsl:	%.xsl;	$(INSTALL_DATA) $? $@
+xsllibdir = $(libdir)/xsl
+install-xsl:	$(XSL_SRC:%.xsl=$(xsllibdir)/%.xsl)
+$(xsllibdir)/%.xsl:	%.xsl;	$(INSTALL_DATA) $? $@
 
 #
 # install-xsl: --Install XSL files and related include files.
 #
-install-xsl:	$(XSL_SRC:%=$(libdir)/%)
+install-xsl:	$(XSL_SRC:%=$(xsllibdir)/%)
 
 #
 # uninstall-xsl: --Remove XSL files and related include files.
 #
 uninstall-xsl:
 	$(ECHO_TARGET)
-	$(RM) $(XSL_SRC:%=$(libdir)/%)
-	$(RMDIR) -p $(libdir) 2>/dev/null || true
+	$(RM) $(XSL_SRC:%=$(xsllibdir)/%)
+	$(RMDIR) -p $(xsllibdir) 2>/dev/null || true
 
 #
 # src-xsl: --Update the XSL_SRC macro.
