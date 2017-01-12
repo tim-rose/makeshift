@@ -33,6 +33,11 @@ ifdef autosrc
     MD_SRC ?= $(LOCAL_MD_SRC)
 endif
 
+#
+# Include any dependency information that's available.
+#
+-include $(MD_SRC:%.md=$(archdir)/%.d)
+
 MMD_CSS ?= $(DEVKIT_HOME)/share/doc/css/plain.css
 PDF_CSS ?= $(DEVKIT_HOME)/share/doc/css/print.css
 
@@ -46,14 +51,18 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 	$(ECHO_TARGET)
 	$(MD) $(MDFLAGS) $*.txt > $@
 
+%.html:	$(archdir)/gen/%.txt
+	$(ECHO_TARGET)
+	$(MD) $(MDFLAGS) $(archdir)/gen/$*.txt > $@
+
 #
 # %.html/%.md: build HTML document from a simple markdown file.
 #
 %.html:	%.md
 	$(ECHO_TARGET)
-	{ echo "title: $*"; \
-          echo "css: file://$(MMD_CSS)"; \
-          echo; cat $*.md; } | $(MD) $(MDFLAGS) > $@
+	{ printf "title: $*\ncss: %s\n\n" "$(MMD_CSS)"; cat $*.md; } | $(MD) $(MDFLAGS) > $@
+	$(MKDIR) $(archdir)
+	printf "%s: %s\n" "$@" "$(MMD_CSS)" >$(archdir)/$(*F).d
 
 #
 # %.pdf: --Create a PDF document from a HTML file.
@@ -65,7 +74,7 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 # build: --Create HTML documents from TXT_SRC, MD_SRC.
 #
 build:	build-markdown
-build-mardkown:	$(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html)
+build-markdown:	$(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html)
 
 #
 # doc-markdown: --Create PDF documents from TXT_SRC, MD_SRC.
