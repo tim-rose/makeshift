@@ -89,7 +89,7 @@ TODO_KEYWORDS = TODO FIXME REVISIT @todo @fixme @revisit
 TODO_PATTERN = $(TODO_KEYWORDS:%=-e %)
 
 #
-# VERBOSE: --Control how (+how much) is output via echo.
+# VERBOSE: --Control how (+how much, how colourful) echo's output is.
 #
 ifeq "$(VERBOSE)" "color"
     ECHO = colour_echo() { printf '\033[36m%s\033[m\n' "$$*"; }; colour_echo
@@ -101,6 +101,8 @@ endif
 
 #
 # ECHO_TARGET: --Common macro for logging in devkit targets.
+#
+# Remarks:
 #
 #ECHO_TARGET = @+$(ECHO) "\$$?: $?"
 #ECHO_TARGET = @+$(ECHO) "\$$^: $^"
@@ -127,7 +129,7 @@ ECHO_TARGET = @+$(ECHO) "\$$?: $?"; $(ECHO) "\$$^: $^"
 #
 all:	build
 
-include $(HW:%=hw/%.mk) os/$(OS).mk arch/$(ARCH).mk
+include $(VARIANT:%=variant/%.mk) os/$(OS).mk arch/$(ARCH).mk
 include project/$(PROJECT).mk
 #include vcs/$(VCS).mk
 
