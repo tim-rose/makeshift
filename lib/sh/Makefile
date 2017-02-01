@@ -10,5 +10,5 @@ SHL_SRC = tap.shl test-more.shl
 
 include devkit.mk
 
-install:	install-shell
-uninstall:	uninstall-shell
+install:	install-all
+uninstall:	uninstall-all
