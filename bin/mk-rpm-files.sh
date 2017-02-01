@@ -9,6 +9,11 @@ while read file; do
     (*.txt)	echo "%doc $file";;
     (*.pdf)	echo "%doc $file";;
 
+    (*/etc/cron.hourly/*)	echo "$file";;
+    (*/etc/cron.daily/*)	echo "$file";;
+    (*/etc/cron.weekly/*)	echo "$file";;
+    (*/etc/cron.monthly/*)	echo "$file";;
+
     (*/etc/*)	echo "%config $file";;
     (*.conf)	echo "%config $file";;
     (*.cfg)	echo "%config $file";;
