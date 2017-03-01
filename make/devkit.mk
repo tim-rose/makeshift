@@ -92,7 +92,7 @@ TODO_PATTERN = $(TODO_KEYWORDS:%=-e %)
 # VERBOSE: --Control how (+how much, how colourful) echo's output is.
 #
 ifeq "$(VERBOSE)" "color"
-    ECHO = colour_echo() { printf '\033[36m%s\033[m\n' "$$*"; }; colour_echo
+    ECHO = colour_echo() { printf '\033[36m++ $(CURDIR) $@: %s\033[m\n' "$$*"; }; colour_echo
 else ifneq "$(VERBOSE)" ""
     ECHO = echo '++ $(CURDIR) $@: '
 else
@@ -216,10 +216,17 @@ distclean-devkit:
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.
 #
+# Remarks:
+# Most executables are installed via the INSTALL_PROGRAM macro, which
+# may "strip" the executable in some contexts (e.g. "make
+# install-strip").  Scripting languages will typically have
+# language-specific install targets that use INSTALL_SCRIPT to
+# override this behaviour.
+#
 $(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(sysconfdir)/%:	%;	$(INSTALL_DATA) $? $@
 $(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
+$(sysconfdir)/%:	%;	$(INSTALL_DATA) $? $@
 $(libdir)/%:		%;	$(INSTALL_DATA) $? $@
 $(datadir)/%:		%;	$(INSTALL_DATA) $? $@
 $(sharedstatedir)/%:	%;	$(INSTALL_DATA) $? $@

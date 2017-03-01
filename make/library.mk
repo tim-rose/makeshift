@@ -33,8 +33,11 @@
 # of the library target, and these are added to by language-specific
 # definitions. See c-library.mk for example.
 #
-LIB_SUFFIX	?= a
-LIB_SHARED_SUFFIX ?= .so
+
+# The suffix for code library files varies from system to system.
+.a ?= a
+.so ?= so
+
 LIB_PREFIX	?= lib
 LOCAL_LIB	:= $(subst lib,,$(notdir $(CURDIR)))
 LIB		?= $(LOCAL_LIB)
@@ -58,6 +61,14 @@ export library-type ?= static
 $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_DATA) $? $@
 $(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(INSTALL_DATA) $? $@
 $(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_DATA) $* $@
+#
+# Respecify pattern rules to avoid the trailing // if subdir is empty,
+# so that dependencies can be declared more naturally (otherwise make
+# would only match "lib_root/include//dependant.h").
+#
+$(LIB_ROOT)/include/%:		$(archdir)/%;	$(INSTALL_DATA) $? $@
+$(LIB_ROOT)/include/%:		$(gendir)/%;	$(INSTALL_DATA) $? $@
+$(LIB_ROOT)/include/%:		%;		$(INSTALL_DATA) $* $@
 
 #
 # libdir/%.a: --Install a static (.a) library
@@ -66,33 +77,33 @@ $(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_DATA) $* $@
 # In the process of building, ".a" files are copied around a little,
 # depending on the final composition/breakdown of sub-libraries.
 #
-$(libdir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
+$(libdir)/%.$(.a):	$(archdir)/%.$(.a)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
 	$(RANLIB) $@
-$(librootdir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
+$(librootdir)/%.$(.a):	$(archdir)/%.$(.a)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
 	$(RANLIB) $@
-../$(archdir)/%.$(LIB_SUFFIX):	$(archdir)/%.$(LIB_SUFFIX)
+../$(archdir)/%.$(.a):	$(archdir)/%.$(.a)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
 	$(RANLIB) $@
 #
 # pre-build: --Stage the include files.
 #
-pre-build:      pre-build-lib
+pre-build:	pre-build-lib
 pre-build-lib:;$(ECHO_TARGET)
 
 #
 # %/lib.a: --Build the sub-librar(ies) in its subdirectory.
 #
-%/$(archdir)/lib.$(LIB_SUFFIX):     build@%;     $(ECHO_TARGET)
+%/$(archdir)/lib.$(.a):     build@%;     $(ECHO_TARGET)
 
 #
 # build: --Build this directory's library.
 #
-build: $(archdir)/$(LIB_NAME).$(LIB_SUFFIX)
+build: $(archdir)/$(LIB_NAME).$(.a)
 
 #
 # install-lib: --Install all the library components
@@ -106,7 +117,7 @@ build: $(archdir)/$(LIB_NAME).$(LIB_SUFFIX)
 #
 .PHONY: install-lib install-lib-lib install-lib-include install-lib-man
 install-lib:	install-lib-lib install-lib-include install-lib-man; $(ECHO_TARGET)
-install-lib-lib:	$(libdir)/$(LIB_NAME).$(LIB_SUFFIX); $(ECHO_TARGET)
+install-lib-lib:	$(libdir)/$(LIB_NAME).$(.a); $(ECHO_TARGET)
 install-lib-include:; $(ECHO_TARGET)
 
 install-lib-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3); $(ECHO_TARGET)
@@ -116,7 +127,7 @@ uninstall-lib: uninstall-lib-lib uninstall-lib-include uninstall-lib-man
 
 uninstall-lib-lib:	uninstall-lib-include
 	$(ECHO_TARGET)
-	$(RM) $(libdir)/$(LIB_NAME).$(LIB_SUFFIX)
+	$(RM) $(libdir)/$(LIB_NAME).$(.a)
 	$(RMDIR) -p $(libdir) 2>/dev/null || true
 
 uninstall-lib-include:
@@ -136,12 +147,12 @@ uninstall-lib-man:
 # the various <lang>-library.mk rules will add their language-specific
 # objects as dependants too.
 #
-$(archdir)/lib.$(LIB_SUFFIX): $(SUBLIB_SRC)
+$(archdir)/lib.$(.a): $(SUBLIB_SRC)
 	$(ECHO_TARGET)
 	mk-ar-merge $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 
-$(archdir)/$(LIB_NAME).$(LIB_SUFFIX):	$(archdir)/lib.$(LIB_SUFFIX)
+$(archdir)/$(LIB_NAME).$(.a):	$(archdir)/lib.$(.a)
 	$(ECHO_TARGET)
 	cp $< $@
 	$(RANLIB) $@
@@ -159,7 +170,7 @@ $(archdir)/lib.so.a: $(SUBLIB_SRC)
 clean:	clean-lib
 clean-lib:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/$(LIB_NAME).$(LIB_SUFFIX) $(archdir)/lib.$(LIB_SUFFIX)
+	$(RM) $(archdir)/$(LIB_NAME).$(.a) $(archdir)/lib.$(.a)
 
 #
 # distclean: --Remove the include files installed at $LIB_ROOT/include.
@@ -180,5 +191,5 @@ src:	src-lib
 src-lib:
 	$(ECHO_TARGET)
 	@mk-filelist -qpn SUBLIB_SRC $$( \
-	    grep -l '^include.* library.mk' */Makefile* 2>/dev/null | \
-	    sed -e 's|Makefile.*|$$(archdir)/lib.a|g' | sort -u)
+	    grep -l '^include.* library.mk' */*[Mm]akefile* 2>/dev/null | \
+	    sed -e 's|/[^/]*[Mm]akefile.*|/$$(archdir)/lib.$(.a)|g' | sort -u)

@@ -33,6 +33,7 @@ endif
 #
 # %.conf: --Pattern rules for installing config files.
 #
+$(system_confdir)/%:	%.conf;		$(INSTALL_DATA) $? $@
 $(sysconfdir)/%:	%.conf;		$(INSTALL_DATA) $? $@
 $(divertdir)/%:		%.conf;		$(INSTALL_DATA) $? $@
 
@@ -43,6 +44,10 @@ $(sysconfdir)/%.ini:	%.ini;		$(INSTALL_DATA) $? $@
 $(divertdir)/%.conf:	%.conf;		$(INSTALL_DATA) $? $@
 $(divertdir)/%.cfg:	%.cfg;		$(INSTALL_DATA) $? $@
 $(divertdir)/%.ini:	%.ini;		$(INSTALL_DATA) $? $@
+
+$(system_confdir)/%.conf:	%.conf;		$(INSTALL_DATA) $? $@
+$(system_confdir)/%.cfg:	%.cfg;		$(INSTALL_DATA) $? $@
+$(system_confdir)/%.ini:	%.ini;		$(INSTALL_DATA) $? $@
 
 #
 # conf-src-defined: --Test if any of the "conf" SRC vars. are defined.
@@ -55,20 +60,28 @@ conf-src-defined:
 	fi >&2
 
 #
-# install: --Install config files to sysconfdir
+# install: --Install config files to sysconfdir.
 #
 install-conf:	$(CONF_SRC:%=$(sysconfdir)/%) \
     $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
 	$(ECHO_TARGET)
+install-system_conf:	$(CONF_SRC:%=$(system_confdir)/%) \
+    $(CFG_SRC:%=$(system_confdir)/%) $(INI_SRC:%=$(system_confdir)/%)
+	$(ECHO_TARGET)
 
 #
-# uninstall-conf: --Uninstall the default config files.
+# uninstall: --Uninstall the default config files.
 #
 uninstall-conf:
 	$(ECHO_TARGET)
 	$(RM) $(CONF_SRC:%=$(sysconfdir)/%) \
             $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
 	$(RMDIR) -p $(sysconfdir) 2>/dev/null || true
+uninstall-system_conf:
+	$(ECHO_TARGET)
+	$(RM) $(CONF_SRC:%=$(system_confdir)/%) \
+            $(CFG_SRC:%=$(system_confdir)/%) $(INI_SRC:%=$(system_confdir)/%)
+	$(RMDIR) -p $(system_confdir) 2>/dev/null || true
 
 #
 # toc: --Build the table-of-contents for config files.
