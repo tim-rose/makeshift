@@ -17,7 +17,7 @@
 #
 .PHONY: $(recursive-targets:%=%-xsd)
 
--include $(XSD_SRC:%.xsd=$(archdir)/%-depend.mk)
+#-include $(XSD_SRC:%.xsd=$(archdir)/%-depend.mk)
 
 ifdef autosrc
     LOCAL_XSD_SRC := $(wildcard *.xsd)
@@ -54,7 +54,8 @@ $(gendir)/%.$(C++_SUFFIX) $(gendir)/%.$(H++_SUFFIX):	%.xsd
 #
 # build: --Build XSD objects via C++.
 #
-build:	$(XSD_OBJ)
+build:	build-xsd
+build-xsd:	$(XSD_OBJ); $(ECHO_TARGET)
 
 #
 # install-xsd: --Install the XSD files into datadir.
