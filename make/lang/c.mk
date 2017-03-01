@@ -103,7 +103,7 @@ $(archdir)/%.o: %.c
 #
 # archdir/%.o: --Compile a generated C file into the arch sub-directory.
 #
-$(gendir)/%.o: $(archdir)/%.c
+$(archdir)/%.o: $(gendir)/%.c
 	$(ECHO_TARGET)
 	$(MKDIR) $(@D)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<

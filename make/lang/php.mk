@@ -27,6 +27,14 @@ $(bindir)/%:		%.php;	$(INSTALL_SCRIPT) $? $@
 install-lib-php:	$(PHP_SRC:%.php=$(phplibdir)/%.php)
 install-www-php:	$(PHP_SRC:%.php=$(wwwdir)/%.php)
 
+uninstall-lib-php:
+	$(RM) $(PHP_SRC:%.php=$(phplibdir)/%.php)
+	$(RMDIR) -p $(phplibdir) 2>/dev/null || true
+
+uninstall-www-php:
+	$(RM) $(PHP_SRC:%.php=$(wwwdir)/%.php)
+	$(RMDIR) -p $(wwwdir) 2>/dev/null || true
+
 #
 # toc: --Build the table-of-contents for PHP-ish files.
 #

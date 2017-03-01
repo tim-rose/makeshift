@@ -15,7 +15,7 @@ $(archdir)/lib.a:	$(LEX_OBJ)
 #
 .PHONY: install-lib-include-lex
 install-lib-include:	install-lib-include-lex
-install-lib-include-lex:  $(LEX_SRC:%.y=$(includedir)/%.h)
+install-lib-include-lex:  $(LEX_SRC:%.l=$(includedir)/%.h)
 .PHONY: uninstall-lib-include-lex
 uninstall-lib-include:	uninstall-lib-include-lex
 uninstall-lib-include-lex:; $(RM) $(LEX_SRC:%=$(includedir)/%)

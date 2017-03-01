@@ -142,6 +142,7 @@ $(includedir)/%.$(H++_SUFFIX):	$(gendir)/%.$(H++_SUFFIX)
 build:	build-c++
 build-c++:	$(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN)
 	$(ECHO_TARGET)
+
 $(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN):	| build-subdirs
 
 #

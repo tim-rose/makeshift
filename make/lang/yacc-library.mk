@@ -17,14 +17,14 @@ $(archdir)/lib.a:	$(YACC_OBJ)
 #
 .PHONY: pre-build-lib-yacc
 pre-build-lib: pre-build-lib-yacc
-pre-build-lib-yacc: $(YACC_H:%=$(LIB_INCLUDEDIR)/%)
+pre-build-lib-yacc: $(YACC_H:$(gendir)/%=$(LIB_INCLUDEDIR)/%)
 
 #
 # clean-lib: --Remove the staged include files.
 #
 .PHONY: clean-lib-yacc
 clean-lib: clean-lib-yacc
-clean-lib-yacc:; $(RM) $(YACC_H:%=$(LIB_INCLUDEDIR)/%)
+clean-lib-yacc:; $(RM) $(YACC_H:$(gendir)/%=$(LIB_INCLUDEDIR)/%)
 
 #
 # install-lib-include-yacc: --Install a library's include files.

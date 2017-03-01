@@ -14,7 +14,7 @@ LIB_INCLUDEDIR_XSD = $(ALL_XSD_H++:$(gendir)/%=$(LIB_INCLUDEDIR)/%)
 $(archdir)/lib.a:	$(XSD_OBJ)
 
 #
-# pre-build-lib: --Install headers into library root, via lib's pre-build.
+# pre-build-lib-xsd: --Install headers into library root, via lib's pre-build.
 #
 # Remarks:
 # library.mk defines LIB_INCLUDEDIR, and pre-build-lib.
@@ -22,6 +22,14 @@ $(archdir)/lib.a:	$(XSD_OBJ)
 .PHONY: pre-build-lib-xsd
 pre-build-lib: pre-build-lib-xsd
 pre-build-lib-xsd: $(LIB_INCLUDEDIR_XSD)
+
+#
+# The XSD objects depend on the generated/staged include files.
+# This dependency is a bit broad; all the objects will be rebuilt if
+# any of the sources are touched...
+# TODO: better dependency declaration for XSD library files.
+#
+$(XSD_OBJ): $(LIB_INCLUDEDIR_XSD)
 
 #
 # clean-lib: --Remove the staged include files.

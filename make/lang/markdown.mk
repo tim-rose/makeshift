@@ -16,6 +16,8 @@
 # MD_SRC respectively. The markdown files are assumed to create full
 # documents, and are created by `build`, using multimarkdown.
 #
+# @todo: support other formats (latex etc.)
+#
 # See Also:
 # http://alistapart.com/article/building-books-with-css3
 # http://www.princexml.com/doc
