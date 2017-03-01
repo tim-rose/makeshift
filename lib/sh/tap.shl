@@ -71,8 +71,6 @@ fi
 # This routine is called by TAP_EXIT_TRAP().  The function defined
 # here is a do-nothing fallback, but may be redefined as needed.
 #
-# TODO: better trap handling for tap?
-#
 if ! type tap_exit >/dev/null 2>&1; then
     tap_exit() { :; }
 fi
@@ -100,6 +98,7 @@ diag()
 #
 TAP_BEGIN()
 {
+    local exit_trap=$(trap | sed -n -e 's/trap -- //' -e 's/ EXIT$//p')
     if [ -t 1 ]; then		# stdout is a tty: setup ANSI X3.64 styles
 	eval $(
             IFS=:
@@ -111,7 +110,7 @@ TAP_BEGIN()
     diag 'current time local: %s' "$(date)" # output preamble
     diag 'current time UTC:   %s' "$(TZ=UTC date)"
     diag 'tap.shl version:    %s' "$tap_version"
-    trap TAP_EXIT_TRAP 0	# enable process exit handler
+    trap "${exit_trap:+$exit_trap; }TAP_EXIT_TRAP" 0	# enable process exit handler
 }
 TAP_BEGIN
 
