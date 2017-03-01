@@ -36,16 +36,22 @@ ALL_YFLAGS = $(OS.YFLAGS) $(ARCH.YFLAGS) \
 #
 # %.y: --Compile the yacc grammar into ".h" and ".c" files.
 #
-# TODO: build these files into the arch-subdir.
+# Remarks:
+# Building the ".c" files from yacc is a little tricky, because the
+# (traditional) yacc output is the same (y.tab.c) regardless of the
+# input file.  This makes parallel builds problematic, so the source
+# is copied into a temporary directory so that the y.tab.c file can be
+# created independently and in parallel.
+# Note: "modern" yacc (usually, bison) avoids these problems.
 #
 $(gendir)/%.h $(gendir)/%_y.c:	%.y
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
-	$(YACC) -d $(ALL_YFLAGS) $<
-	BASE=$$(echo "$*"| tr a-z A-Z); \
-	sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" <y.tab.h >$(gendir)/$*.h; \
-	sed -e "s/yy/$*_/g" -e "s/YY/$${BASE}_/g" <y.tab.c >$(gendir)/$*_y.c
-	$(RM) y.tab.[ch]
+	$(MKDIR) $(@D) tmp-$*
+	$(CP) $*.y tmp-$* && cd tmp-$* && $(YACC) -d $(ALL_YFLAGS) $<
+	base=$$(echo "$*"| tr a-z A-Z); \
+	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <tmp-$*/y.tab.h >$(gendir)/$*.h; \
+	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <tmp-$*/y.tab.c >$(gendir)/$*_y.c
+	$(RM) -r tmp-$*
 
 #
 # build: --Compile YACC_SRC to object code.
