@@ -20,12 +20,14 @@ CP 	= cp
 FAKEROOT = fakeroot
 GREP	= grep
 INDENT	= gnuindent
+LN      = ln
 MV	= mv
 MKDIR   = mkdir -p
 PS2PDF	= pstopdf
 RANLIB	= ranlib
 RMDIR	= rmdir
 STRIP	= strip
+SYMLINK = ln -sf
 
 #
 # INSTALL_*: --Specialised install commands.

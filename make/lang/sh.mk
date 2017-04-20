@@ -113,6 +113,16 @@ todo-sh:
 	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null || true
 
 #
+# lint: --Check sh style.
+#
+SH_LINT ?= shellcheck
+SH_LINT_FLAGS = $(OS.SH_LINT_FLAGS) $(ARCH.SH_LINT_FLAGS) \
+    $(PROJECT.SH_LINT_FLAGS) $(LOCAL.SH_LINT_FLAGS) $(TARGET.SH_LINT_FLAGS)
+lint:	lint-sh
+lint-sh:	c-src-defined
+	$(ECHO_TARGET)
+	$(SH_LINT) $(SH_LINT_FLAGS) $(SH_SRC) $(SHL_SRC)
+#
 # install-shell: --Compatibility targets
 #
 .PHONY:	install-shell
