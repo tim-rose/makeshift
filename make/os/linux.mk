@@ -7,13 +7,17 @@
 # include file sets up some definitions to assist building Debian
 # packages.
 #
+# _XOPEN_SOURCE ensures some definitions and typedefs are visible
+# (e.g. pid_t, stat.mode masks, etc.).  Likewise _BSD_SOURCE ensures
+# some functions and type variations (strdup, tm.tm_gmtoff, etc.) are
+# defined.
+#
 include os/posix.mk
 
 OS.CFLAGS 	= -MMD
-#OS.C_DEFS	= -D__Linux__ -D_XOPEN_SOURCE
-OS.C_DEFS	= -D__Linux__
+OS.C_DEFS	= -D__Linux__ -D_XOPEN_SOURCE -DBSD_SOURCE
 
-OS.C++_DEFS	= -D__Linux__ -D_XOPEN_SOURCE
+OS.C++_DEFS	= -D__Linux__ -D_XOPEN_SOURCE -DBSD_SOURCE
 OS.CXXFLAGS 	= -MMD
 OS.LDFLAGS	= -Wl,-Map,$@.map
 
