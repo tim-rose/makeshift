@@ -1,9 +1,6 @@
 #
 # Makefile --Build rules for devkit, the developer utilities kit.
 #
-language = markdown
-MD_SRC = README.md RELEASE.md
-
 package-type = rpm deb
 PACKAGE = devkit
 VERSION = 0.4.11
@@ -17,7 +14,10 @@ $(DESTDIR_ROOT):
 
 SPECS/devkit.spec: Makefile
 
-devkit.mk:
+#
+# devkit.mk --Fail if devkit is not available.
+#
+$(includedir)/devkit.mk:
 	@echo "you need to do a self-hosted install:"
 	@echo "    sh install.sh [make-arg.s...]"
 	@false
@@ -27,8 +27,8 @@ $(includedir)/version.mk:	Makefile
 	{ echo 'DEVKIT_VERSION=$(VERSION)'; \
           echo 'DEVKIT_RELEASE=$(RELEASE)'; } >$@
 
-uninstall:	uninstall-this
-uninstall-this:
+uninstall:	uninstall-local
+uninstall-local:
 	$(ECHO_TARGET)
 	$(RM) $(includedir)/version.mk
-	$(RMDIR) -p $(includedir) 2>/dev/null || true
+	-$(RMDIR) -p $(includedir) 2>/dev/null
