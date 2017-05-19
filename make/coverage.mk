@@ -46,7 +46,7 @@ $(archdir)/zero.info:	$(GCOV_GCDA_FILES)
 $(archdir)/trace.info:	$(archdir)/zero.info
 	$(ECHO_TARGET)
 	$(MKDIR) $(@D)
-	lcov --capture --no-external --directory . --test-name 'unit tests' >$(archdir)/base.info
+	lcov --capture --no-external --directory . --test-name 'unit_tests' >$(archdir)/base.info
 	lcov --add-tracefile $(archdir)/zero.info \
 	     --add-tracefile $(archdir)/base.info >$@
 	$(RM) $(archdir)/zero.info $(archdir)/base.info
@@ -61,10 +61,14 @@ $(archdir)/coverage/index.html:	$(archdir)/trace.info
 	    $(archdir)/trace.info
 
 #
-# clean: --Remove the coverage data and reports
+# clean: --Remove the coverage data and reports.
+#
+# Remarks:
+# All coverage files are generated into $(archdir), so no distclean
+# action is required.
 #
 .PHONY:	clean-coverage
-clean:	clean-coverage
+clean: clean-coverage
 clean-coverage:
 	$(ECHO_TARGET)
 	$(RM) -r $(GCOV_FILES) $(archdir)/trace.info $(archdir)/coverage
