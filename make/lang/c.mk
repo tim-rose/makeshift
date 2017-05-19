@@ -67,7 +67,7 @@ C_WARN_FLAGS = $(OS.C_WARN_FLAGS) $(ARCH.C_WARN_FLAGS) \
 
 C_CPPFLAGS = $(CPPFLAGS) \
     $(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) \
-    $(LIB_PATH:%=-I%/include) $(LIB_ROOT:%=-I%/include) \
+    $(BUILD_PATH:%=-I%/include) $(LIB_ROOT:%=-I%/include) \
     $(PROJECT.C_CPPFLAGS) $(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
     -I. -I$(gendir) -I$(includedir)
 

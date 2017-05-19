@@ -10,6 +10,8 @@
 #
 include os/posix.mk
 
+.LIBPATTERNS = lib%.a lib%.dylib lib%.so
+
 OS.CFLAGS 	= -MMD
 OS.C_WARN_FLAGS = -Wno-gnu-zero-variadic-macro-arguments
 OS.C_CPPFLAGS   = -I/usr/local/include -I/opt/local/include

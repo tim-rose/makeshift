@@ -25,9 +25,9 @@ ifeq ($(LD), ld)
     LD = $(CC)
 endif
 
-ALL_LIB_PATH = . $(LIB_ROOT) $(LIB_PATH)
+ALL_BUILD_PATH = . $(LIB_ROOT) $(BUILD_PATH)
 
-VPATH = $(ALL_LIB_PATH:%=%/$(archdir)) $(libdir)
+VPATH = $(ALL_BUILD_PATH:%=%/$(archdir)) $(libdir)
 
 ALL_LDFLAGS = $(LDFLAGS) $(LANG.LDFLAGS) \
     $(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) \
