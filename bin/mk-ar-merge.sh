@@ -6,8 +6,10 @@
 usage="Usage: mk-ar-merge [options] [ar-flags] archive object+archive-files..."
 tmpdir=${TMPDIR:-/tmp}/mk-ar$$
 ar=${AR:-ar}
+status=0
 
 log_message() { printf "$@"; printf "\n"; } >&2
+warning() { log_message "$@"; status=1; }
 notice() { log_message "$@"; }
 info()   { if [ "$verbose" ]; then log_message "$@"; fi; }
 debug()  { if [ "$debug" ]; then log_message "$@"; fi; }
@@ -29,18 +31,22 @@ mung_lib_name()
 #
 expand_ar()
 {
-    local prefix=$(mung_lib_name $1)
+    local prefix=$(mung_lib_name $1) file= saved_pwd=$PWD
 
     log_cmd mkdir -p $tmpdir/$prefix
-    (
-	log_cmd ln -s $PWD/$1 $tmpdir/$prefix/lib.a
-	cd $tmpdir/$prefix;
-	debug 'building library in "%s"' "$PWD"
-	$ar x lib.a
-	for f in *.o; do
-	    mv $f ../${prefix}-$f
-	done
-    )
+    log_cmd ln -s $PWD/$1 $tmpdir/$prefix/lib.a
+    cd $tmpdir/$prefix;
+    debug 'building library in "%s"' "$PWD"
+    $ar x lib.a
+
+    for file in *.o; do
+	if [ -e $file ]; then
+	    mv $file ../${prefix}-$file
+	else
+	    warning 'cannot archive file: "%s"' "$file"
+	fi
+    done
+    cd $saved_pwd
     rm -rf $tmpdir/$prefix
 }
 
@@ -75,4 +81,6 @@ for file; do
 done
 
 mkdir -p $(dirname $library)
-$ar $ar_flags $library $tmpdir/*.o
+if $ar $ar_flags $library $tmpdir/*.o; then
+    exit $status		# signal any failures
+fi
