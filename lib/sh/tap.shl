@@ -19,6 +19,7 @@
 # ok()           --Check a process result, and emit TAP output.
 # nok()          --Check a process result, and emit TAP output.
 #
+PATH=$PATH:/usr/local/lib/sh:/usr/lib/sh # hopefully we can find test-more somewhere...
 . test-more.shl
 version=local.latest
 tap_test=0
@@ -29,7 +30,7 @@ tap_version="${version}"
 TAP_COLORS=${TAP_COLORS:-"ok=:fail=31:plan=1:diag=2"}
 
 #
-# tty_tint() --Filter stdout suitably/conditionally for a tty.
+# tty_tint() --A filter to apply some colour to the stdout.
 #
 # Parameters:
 # style	--the preferred output styling, as an ANSI mode arg (e.g. "1;33")
