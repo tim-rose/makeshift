@@ -32,7 +32,7 @@ nok 1 fail 'nok: success'
 todo 'expected failure' nok 1 fail 'nok: failure'
 
 ok_eq blah blah 'eq: success'
-todo 'expected failure' ok_eq black white 'eq: success'
+todo 'expected failure' ok_eq black white 'eq: failure'
 
 is 0 0 'is() is an alias for ok_eq()'
 todo 'expected failure' is 0 1 'is() is an alias for ok_eq()'

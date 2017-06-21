@@ -7,17 +7,17 @@
 # TODO: skip
 #
 # Contents:
-# tty_filter()    --Filter stdout suitably/conditionally for a tty.
-# caller()        --Fallback implementation of bash's caller().
-# tap_exit()      --(Fallback) user exit function.
-# diag()          --Print diagnostic lines as TAP comments.
-# TAP_BEGIN()     --Startup code for the TAP module, print TAP prologue.
-# TAP_EXIT_TRAP() --Write a test summary as TAP epilogue, and set exit status.
-# plan()          --Declare the number of tests.
-# todo()          --Mark the start/end of a "todo" block.
-# tap_test_msg()  --Common function to report on tests.
-# ok()            --Check a process result, and emit TAP output.
-# nok()           --Check a process result, and emit TAP output.
+# tty_tint()     --Filter stdout suitably/conditionally for a tty.
+# caller()       --Fallback implementation of bash's caller().
+# atexit()       --Add a command to be run when the process exits.
+# diag()         --Print diagnostic lines as TAP comments.
+# TAP_BEGIN()    --Startup code for the TAP module, print TAP prologue.
+# TAP_EXIT()     --Write a test summary as TAP epilogue, and set exit status.
+# plan()         --Declare the number of tests.
+# todo()         --Mark the start/end of a "todo" block.
+# tap_test_msg() --Common function to report on tests.
+# ok()           --Check a process result, and emit TAP output.
+# nok()          --Check a process result, and emit TAP output.
 #
 . test-more.shl
 version=local.latest
@@ -29,7 +29,7 @@ tap_version="${version}"
 TAP_COLORS=${TAP_COLORS:-"ok=:fail=31:plan=1:diag=2"}
 
 #
-# tty_filter() --Filter stdout suitably/conditionally for a tty.
+# tty_tint() --Filter stdout suitably/conditionally for a tty.
 #
 # Parameters:
 # style	--the preferred output styling, as an ANSI mode arg (e.g. "1;33")
@@ -39,7 +39,7 @@ TAP_COLORS=${TAP_COLORS:-"ok=:fail=31:plan=1:diag=2"}
 # routine is run as a filter, reading stdin and "wrapping" them
 # in ANSI X3.64 commands for altering the colour.
 #
-tty_filter()
+tty_tint()
 {
     local style=$1; shift
 
@@ -60,19 +60,25 @@ tty_filter()
 # information.  The dash shell doesn't implement this, so we fake up a
 # function that will at least return something syntactically similar.
 #
-if ! type caller >/dev/null; then
+if ! type caller >/dev/null 2>&1; then
     caller() { printf '(unknown) unknown (input)\n'; }
 fi
 
 #
-# tap_exit() --(Fallback) user exit function.
+# atexit() --Add a command to be run when the process exits.
 #
 # Remarks:
-# This routine is called by TAP_EXIT_TRAP().  The function defined
-# here is a do-nothing fallback, but may be redefined as needed.
+# This routine mimics the behaviour of atexit(3).
 #
-if ! type tap_exit >/dev/null 2>&1; then
-    tap_exit() { :; }
+if ! type atexit >/dev/null 2>&1; then
+    atexit()
+    {
+	local exit_trap=$(
+	    trap -- |
+		sed -n -e "s/trap -- [']//" -e "s/['] EXIT\$//p")
+
+	trap "$*${exit_trap:+; $exit_trap}" 0
+    }
 fi
 
 #
@@ -90,7 +96,7 @@ diag()
 	printf "\n"
     else
 	cat
-    fi | sed -e "s/^/# "/ | tty_filter "$diag_style"
+    fi | sed -e "s/^/# "/ | tty_tint "$diag_style"
 }
 
 #
@@ -98,7 +104,7 @@ diag()
 #
 TAP_BEGIN()
 {
-    local exit_trap=$(trap | sed -n -e 's/trap -- //' -e 's/ EXIT$//p')
+    local exit_trap=$(trap -- | sed -n -e 's/trap -- //' -e 's/ EXIT$//p')
     if [ -t 1 ]; then		# stdout is a tty: setup ANSI X3.64 styles
 	eval $(
             IFS=:
@@ -110,12 +116,12 @@ TAP_BEGIN()
     diag 'current time local: %s' "$(date)" # output preamble
     diag 'current time UTC:   %s' "$(TZ=UTC date)"
     diag 'tap.shl version:    %s' "$tap_version"
-    trap "${exit_trap:+$exit_trap; }TAP_EXIT_TRAP" 0	# enable process exit handler
+    atexit TAP_EXIT
 }
 TAP_BEGIN
 
 #
-# TAP_EXIT_TRAP() --Write a test summary as TAP epilogue, and set exit status.
+# TAP_EXIT() --Write a test summary as TAP epilogue, and set exit status.
 #
 # Remarks:
 # This code must run after (and summarises) all the tests, and so it
@@ -127,7 +133,7 @@ TAP_BEGIN
 # * 1 --all tests ran, but some failed
 # * 2 --not all (or too many!) tests ran
 #
-TAP_EXIT_TRAP()
+TAP_EXIT()
 {
     local s=			# plural-suffix
     local status=
@@ -149,10 +155,6 @@ TAP_EXIT_TRAP()
 	"$tap_fail" "$s" "$tap_test"
 	status=${status:-1}
     fi
-    if ! tap_exit; then
-	status=$?
-	diag "Looks like your exit handler failed"
-    fi
     exit ${status:-0}
 }
 
@@ -172,7 +174,7 @@ plan()
     else
 	tap_plan=$tap_test
     fi
-    echo "1..$tap_plan" | tty_filter "$plan_style"
+    echo "1..$tap_plan" | tty_tint "$plan_style"
 }
 
 #
@@ -246,7 +248,7 @@ tap_test_msg()
 	    tap_fail=$(( $tap_fail + 1))
 	fi
     fi
-    printf '%s %d%s%s\n' "$status" $tap_test "$msg" "$msg_suffix" | tty_filter "$style"
+    printf '%s %d%s%s\n' "$status" $tap_test "$msg" "$msg_suffix" | tty_tint "$style"
     if [ "$result" -ne 0 ]; then
 	local file=$(caller $caller_level | cut -d' ' -f3 | sed -e 's/^NULL$/(input)/')
 	local line=$(caller $caller_level | cut -d' ' -f1)

@@ -22,6 +22,7 @@
 # like()            --An alias for ok_grep().
 # nok_grep()        --Compare a string to a regex pattern.
 # unlike()          --An alias for nok_grep().
+# ok_diff()         --Compare two files for equality.
 # ok_lt()           --compare two numbers with -lt.
 # ok_le()           --compare two numbers with -le.
 # ok_gt()           --compare two numbers with -gt.
