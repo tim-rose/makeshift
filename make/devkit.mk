@@ -55,7 +55,7 @@ DEVKIT_VERSION ?= local
 DEVKIT_RELEASE ?= latest
 -include version.mk
 
-SUBDIRS := $(subst /.,,$(wildcard */.))
+SUBDIRS := $(sort $(dir $(wildcard */Makefile*)))
 
 #
 # PWD: --Force reset of PWD

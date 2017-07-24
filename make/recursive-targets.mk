@@ -59,6 +59,11 @@ install-strip:
 # * post-<target>	--things to be done after running the recursive targets
 # * <target>@%		--a pattern rule for running <target> in a sub-directory
 #
+# Note that the target@dir rule will fail if the directory doesn't
+# exist, so (e.g.)  `make build@bogus` will return an error, not
+# silently do nothing.  This can easily occur through stale dependency
+# declarations to directories that no longer exist.
+#
 define recursive_rule
 .PHONY:	$1 pre-$1 post-$1 $1-subdirs
 $1 $(SUBDIRS:%=$1@%) post-$1:	pre-$1
@@ -68,15 +73,18 @@ post-$1: $(SUBDIRS:%=$1@%); $$(ECHO_TARGET)
 $1@%:
 	@$$(ECHO_TARGET)
 	@if [ -e $$*/Makefile-$(OS) ]; then \
-            $$(ECHO) ++ make: recursively building $$@ for $(OS); \
+            $$(ECHO) recursively building $$@ for $(OS); \
             $$(MAKE) --directory $$* -f Makefile-$(OS) $1; \
         elif [ -e $$*/Makefile-$(ARCH) ]; then \
-            $$(ECHO) ++ make: recursively building $$@ for $(ARCH); \
+            $$(ECHO) recursively building $$@ for $(ARCH); \
             $$(MAKE) --directory $$* -f Makefile-$(ARCH) $1; \
         elif [ -e $$*/Makefile ]; then \
-            $$(ECHO) ++ make: recursively building $$@; \
+            $$(ECHO) recursively building $$@; \
             $$(MAKE) --directory $$* $1; \
-	else (cd $$*); fi
+	else \
+            $$(ECHO) no Makefile in $$@; \
+            cd $$*; \
+	fi
 endef
 
 #

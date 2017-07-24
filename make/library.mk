@@ -58,17 +58,17 @@ export library-type ?= static
 #
 # Pattern rules for doing a staged install of the library's ".h" files.
 #
-$(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_DATA) $? $@
-$(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(INSTALL_DATA) $? $@
-$(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_DATA) $* $@
+$(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_RDONLY) $? $@
+$(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(INSTALL_RDONLY) $? $@
+$(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_RDONLY) $* $@
 #
 # Respecify pattern rules to avoid the trailing // if subdir is empty,
 # so that dependencies can be declared more naturally (otherwise make
 # would only match "lib_root/include//dependant.h").
 #
-$(LIB_ROOT)/include/%:		$(archdir)/%;	$(INSTALL_DATA) $? $@
-$(LIB_ROOT)/include/%:		$(gendir)/%;	$(INSTALL_DATA) $? $@
-$(LIB_ROOT)/include/%:		%;		$(INSTALL_DATA) $* $@
+$(LIB_ROOT)/include/%:		$(archdir)/%;	$(INSTALL_RDONLY) $? $@
+$(LIB_ROOT)/include/%:		$(gendir)/%;	$(INSTALL_RDONLY) $? $@
+$(LIB_ROOT)/include/%:		%;		$(INSTALL_RDONLY) $* $@
 
 #
 # libdir/%.a: --Install a static (.a) library

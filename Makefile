@@ -22,10 +22,13 @@ $(includedir)/devkit.mk:
 	@echo "    sh install.sh [make-arg.s...]"
 	@false
 
+#
+# version.mk: --Install a file recording devkit version.
+#
 install:	$(includedir)/version.mk
 $(includedir)/version.mk:	Makefile
-	{ echo 'DEVKIT_VERSION=$(VERSION)'; \
-          echo 'DEVKIT_RELEASE=$(RELEASE)'; } >$@
+	echo 'DEVKIT_VERSION=$(VERSION)' >$@
+	echo 'DEVKIT_RELEASE=$(RELEASE)' >>$@
 
 uninstall:	uninstall-local
 uninstall-local:

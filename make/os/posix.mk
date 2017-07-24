@@ -33,8 +33,13 @@ SYMLINK = ln -sf
 # INSTALL_*: --Specialised install commands.
 #
 INSTALL 	  ?= install
-INSTALL_FILE      = $(INSTALL) -D -m 644
 INSTALL_DATA      = $(INSTALL) -D -m 644
+INSTALL_RDONLY    = $(INSTALL) -D -m 444
 INSTALL_DIRECTORY = $(INSTALL) -d
 INSTALL_SCRIPT    = $(INSTALL) -D -m 755
 INSTALL_PROGRAM   = $(INSTALL) -D -m 755
+
+#
+# INSTALL_FILE is obsolete, use INSTALL_DATA.
+#
+INSTALL_FILE      = $(INSTALL) -D -m 644
