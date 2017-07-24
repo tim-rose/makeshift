@@ -30,7 +30,7 @@ tap_version="${version}"
 TAP_COLORS=${TAP_COLORS:-"ok=:fail=31:plan=1:diag=2"}
 
 #
-# tty_tint() --A filter to apply some colour to the stdout.
+# tty_tint() --A filter to apply some colour to stdout.
 #
 # Parameters:
 # style	--the preferred output styling, as an ANSI mode arg (e.g. "1;33")
@@ -97,7 +97,9 @@ diag()
 	printf "\n"
     else
 	cat
-    fi | sed -e "s/^/# "/ | tty_tint "$diag_style"
+    fi |
+	sed -e "s/^/# "/ |
+	tty_tint "$diag_style"
 }
 
 #
@@ -147,7 +149,7 @@ TAP_EXIT()
     elif [ $tap_test != "$tap_plan" ]; then
 	s=; test "$tap_plan" != "1" && s=s
 	diag "Looks like you planned %d test%s but ran %d." \
-	    "$tap_plan" "$s"  "$tap_test"
+	    "$tap_plan" "$s" "$tap_test"
 	status=2
     fi
     if [ "$tap_fail" -ne 0 ]; then
@@ -246,7 +248,7 @@ tap_test_msg()
             style=$fail_style
 	fi
 	if [ ! "$tap_todo_reason" ]; then
-	    tap_fail=$(( $tap_fail + 1))
+	    tap_fail=$(($tap_fail + 1))
 	fi
     fi
     printf '%s %d%s%s\n' "$status" $tap_test "$msg" "$msg_suffix" | tty_tint "$style"
