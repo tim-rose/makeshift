@@ -2,7 +2,7 @@
 # XSD-LIBRARY.MK --Rules for libraries containing XSD objects.
 #
 # Contents:
-# pre-build-lib:       --Install headers into library root, via lib's pre-build.
+# pre-build-lib-xsd:   --Install headers into library root, via lib's pre-build.
 # clean-lib:           --Remove the staged include files.
 # install-lib-include-xsd: --Install a library's include files.
 #

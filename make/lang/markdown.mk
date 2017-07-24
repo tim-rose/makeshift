@@ -3,6 +3,7 @@
 #
 # Contents:
 # %.html/%.md:    --build a HTML document from a mulitmarkdown file.
+# %.txt/%.md:     --Create a full (multi)markdown file from a simple text file.
 # %.pdf:          --Create a PDF document from a HTML file.
 # build:          --Create HTML documents from TXT_SRC, MD_SRC.
 # doc-markdown:   --Create PDF documents from TXT_SRC, MD_SRC.
@@ -12,8 +13,8 @@
 #
 # Remarks:
 # The markdown module recognises both "multimarkdown" markdown files
-# ("txt"), and simple markdown/text files (".md"), defined by TXT_SRC and
-# MD_SRC respectively. The markdown files are assumed to create full
+# (".md"), and simple markdown/text files (".txt"), defined by MD_SRC and
+# TXT_SRC respectively. The markdown files are assumed to create full
 # documents, and are created by `build`, using multimarkdown.
 #
 # @todo: support other formats (latex etc.)
@@ -24,8 +25,15 @@
 #
 .PHONY: $(recursive-targets:%=%-markdown)
 
-MD = multimarkdown
-MDFLAGS ?= --process-html
+MD ?= multimarkdown
+ALL_MDFLAGS ?= --process-html $(OS.MDFLAGS) $(ARCH.MDFLAGS) \
+    $(PROJECT.MDFLAGS) $(LOCAL.MDFLAGS) $(TARGET.MDFLAGS) $(MDFLAGS)
+
+MD_FILTER ?= cat
+
+HTML_PDF ?= prince
+ALL_HTML_PDFFLAGS ?= --process-html $(OS.HTML_PDFFLAGS) $(ARCH.HTML_PDFFLAGS) \
+    $(PROJECT.HTML_PDFFLAGS) $(LOCAL.HTML_PDFFLAGS) $(TARGET.HTML_PDFFLAGS) $(HTML_PDFFLAGS)
 
 ifdef autosrc
     LOCAL_TXT_SRC := $(wildcard *txt)
@@ -49,22 +57,51 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 #
 # %.html/%.md: --build a HTML document from a mulitmarkdown file.
 #
-%.html:	%.txt
-	$(ECHO_TARGET)
-	$(MD) $(MDFLAGS) $*.txt > $@
-
-%.html:	$(archdir)/gen/%.txt
-	$(ECHO_TARGET)
-	$(MD) $(MDFLAGS) $(archdir)/gen/$*.txt > $@
-
-#
-# %.html/%.md: build HTML document from a simple markdown file.
+# Remarks:
+# This rule creates a (simplistic) dependency file too.
 #
 %.html:	%.md
 	$(ECHO_TARGET)
-	{ printf "title: $*\ncss: %s\n\n" "$(MMD_CSS)"; cat $*.md; } | $(MD) $(MDFLAGS) > $@
+	$(MD) $(ALL_MDFLAGS) $*.md | $(MD_FILTER) > $@
 	$(MKDIR) $(archdir)
-	printf "%s: %s\n" "$@" "$(MMD_CSS)" >$(archdir)/$(*F).d
+	sed -ne '/css:/s|css: *\(file://\)*|$@: |p' $*.md > $(archdir)/$*.d
+
+%.html:	$(gendir)/%.md
+	$(ECHO_TARGET)
+	$(MD) $(ALL_MDFLAGS) $(gendir)/$*.md > $@
+	sed -ne '/css:/s|css: *\(file://\)*|$@: |p' $(gendir)/$*.md  > $(archdir)/$*.d
+
+#
+# README.html --Special handling for generating README doc.s
+#
+README.html:	$(gendir)/README.md
+	$(ECHO_TARGET)
+	$(MD) $(ALL_MDFLAGS) $(gendir)/README.md | $(MD_FILTER) > $@
+	sed -ne '/css:/s|css: *\(file://\)*|$@: |p' $(gendir)/README.md > $(archdir)/README.d
+
+#
+# %.txt/%.md: --Create a full (multi)markdown file from a simple text file.
+#
+$(gendir)/%.md: %.txt
+	$(ECHO_TARGET)
+	$(MKDIR) $(gendir)
+	printf "title: $*\ncss: %s\n\n" "$(MMD_CSS)" > $@
+	cat $*.txt >> $@
+
+#
+# README.md --Special rules for handling README markdown files.
+#
+# Remarks:
+# README.md files tend to be github format markdown, which is
+# a little simpler than multimarkdown, and in particular lacks
+# a header block.  This rule generates the header block with
+# some basic CSS styling.
+#
+$(gendir)/README.md: README.md
+	$(ECHO_TARGET)
+	$(MKDIR) $(gendir)
+	printf "title: README\ncss: %s\n\n" "$(MMD_CSS)" > $@
+	cat README.md >> $@
 
 #
 # %.pdf: --Create a PDF document from a HTML file.
@@ -72,6 +109,7 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 %.pdf: %.html
 	$(ECHO_TARGET)
 	prince -s $(PDF_CSS) $*.html -o $@
+
 #
 # build: --Create HTML documents from TXT_SRC, MD_SRC.
 #
@@ -91,7 +129,7 @@ distclean:	clean-markdown
 clean:	clean-markdown
 clean-markdown:
 	$(ECHO_TARGET)
-	$(RM) $(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html) $(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
+	$(RM) $(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html) $(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf) $(TXT_SRC:%.txt=$(archdir)/%.d) $(MD_SRC:%.md=$(archdir)/%.d) $(TXT_SRC:%.txt=$(genhdir)/%.md)
 
 #
 # src-markdown: --Update MD_SRC, TXT_SRC macros.
