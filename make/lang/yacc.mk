@@ -44,9 +44,9 @@ ALL_YFLAGS = $(OS.YFLAGS) $(ARCH.YFLAGS) \
 # created independently and in parallel.
 # Note: "modern" yacc (usually, bison) avoids these problems.
 #
-$(gendir)/%.h $(gendir)/%_y.c:	%.y
+$(gendir)/%.h $(gendir)/%_y.c:	%.y | $(gendir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D) tmp-$*
+	$(MKDIR) tmp-$*
 	$(CP) $*.y tmp-$* && cd tmp-$* && $(YACC) -d $(ALL_YFLAGS) $<
 	base=$$(echo "$*"| tr a-z A-Z); \
 	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <tmp-$*/y.tab.h >$(gendir)/$*.h; \

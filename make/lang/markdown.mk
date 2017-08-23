@@ -60,10 +60,9 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 # Remarks:
 # This rule creates a (simplistic) dependency file too.
 #
-%.html:	%.md
+%.html:	%.md | $(archdir)
 	$(ECHO_TARGET)
 	$(MD) $(ALL_MDFLAGS) $*.md | $(MD_FILTER) > $@
-	$(MKDIR) $(archdir)
 	sed -ne '/css:/s|css: *\(file://\)*|$@: |p' $*.md > $(archdir)/$*.d
 
 %.html:	$(gendir)/%.md
@@ -82,9 +81,8 @@ README.html:	$(gendir)/README.md
 #
 # %.txt/%.md: --Create a full (multi)markdown file from a simple text file.
 #
-$(gendir)/%.md: %.txt
+$(gendir)/%.md: %.txt | $(gendir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
 	printf "title: $*\ncss: %s\n\n" "$(MMD_CSS)" > $@
 	cat $*.txt >> $@
 
@@ -97,9 +95,8 @@ $(gendir)/%.md: %.txt
 # a header block.  This rule generates the header block with
 # some basic CSS styling.
 #
-$(gendir)/README.md: README.md
+$(gendir)/README.md: README.md | $(gendir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(gendir)
 	printf "title: README\ncss: %s\n\n" "$(MMD_CSS)" > $@
 	cat README.md >> $@
 

@@ -56,6 +56,16 @@ $(shlibdir)/%.awk:	%.awk;	$(INSTALL_DATA) $*.awk $@
 $(shlibdir)/%.sed:	%.sed;	$(INSTALL_DATA) $*.sed $@
 
 #
+# sh-src-defined: --Test that the SH_SRC variable(s) are set.
+#
+sh-src-defined:
+	@if [ ! '$(SH_SRC)$(SHL_SRC)' ]; then \
+	    printf $(VAR_UNDEF) "SH_SRC or SHL_SRC"; \
+	    echo 'run "make src" to define it'; \
+	    false; \
+	fi >&2
+
+#
 # build-sh: --Make scripts "executable".
 #
 pre-build:
@@ -121,9 +131,16 @@ SH_LINT ?= shellcheck
 SH_LINT_FLAGS = $(OS.SH_LINT_FLAGS) $(ARCH.SH_LINT_FLAGS) \
     $(PROJECT.SH_LINT_FLAGS) $(LOCAL.SH_LINT_FLAGS) $(TARGET.SH_LINT_FLAGS)
 lint:	lint-sh
-lint-sh:	c-src-defined
+lint-sh:	sh-src-defined
 	$(ECHO_TARGET)
 	$(SH_LINT) $(SH_LINT_FLAGS) $(SH_SRC) $(SHL_SRC)
+lint[%.sh]:
+	$(ECHO_TARGET)
+	$(SH_LINT) $(SH_LINT_FLAGS) $*.sh
+lint[%.shl]:
+	$(ECHO_TARGET)
+	$(SH_LINT) $(SH_LINT_FLAGS) $*.shl
+
 #
 # install-shell: --Compatibility targets
 #

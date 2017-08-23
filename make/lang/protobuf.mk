@@ -47,9 +47,8 @@ PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.o)
 # because devkit supports custom C++ file extensions, and so this
 # rule adapts protoc's output accordingly.
 #
-$(gendir)/%.pb.$(C++_SUFFIX) $(gendir)/%.pb.$(H++_SUFFIX):	%.proto
+$(gendir)/%.pb.$(C++_SUFFIX) $(gendir)/%.pb.$(H++_SUFFIX):	%.proto | $(gendir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	$(PROTOC) $(PROTOBUF_FLAGS) --cpp_out=$(gendir) $<
 	cd $(gendir) ; \
 	if [ "$(H++_SUFFIX)" != "h" ]; then \
@@ -66,9 +65,8 @@ $(gendir)/%.pb.$(C++_SUFFIX) $(gendir)/%.pb.$(H++_SUFFIX):	%.proto
 #
 # %.py: --Build the python stubs from a ".proto" file.
 #
-$(gendir)/%.py:	%.proto
+$(gendir)/%.py:	%.proto | $(gendir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	$(PROTOC) $(PROTOBUF_FLAGS) --python_out=$(gendir) $<
 	cd $(gendir); $(MV) $*_pb2.py $*.py
 

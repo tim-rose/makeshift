@@ -14,9 +14,12 @@ ALL_GTEST_FLAGS = $(TARGET.GTEST_FLAGS) $(LOCAL.GTEST_FLAGS) \
 
 build: $(TEST_EXE)
 
-$(TEST_EXE):	$(TEST_OBJ)
+#
+# REVISIT: shouldn't need a separate rule for building executables, just
+# use the existing C++ rule.
+#
+$(TEST_EXE):	$(TEST_OBJ) | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $(ALL_LDFLAGS) \
 	    $^ $(ALL_LDLIBS) $(GTEST_LIBS:%=-l%)
 	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(ALL_LDFLAGS) \

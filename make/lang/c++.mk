@@ -85,18 +85,16 @@ c++-src-defined:
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
 #
-$(archdir)/%.o: %.$(C++_SUFFIX)
+$(archdir)/%.o: %.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
 
 #
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 #
-$(archdir)/%.o: $(gendir)/%.$(C++_SUFFIX)
+$(archdir)/%.o: $(gendir)/%.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
 #

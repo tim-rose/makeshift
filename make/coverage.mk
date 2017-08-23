@@ -27,6 +27,8 @@ GCOV_GCDA_FILES := $(C_OBJ:%.o=%.gcda) $(C++_OBJ:%.o=%.gcda)
 coverage:	$(GCOV_FILES)
 html-coverage:	$(archdir)/coverage/index.html
 
+$(archdir)/coverage:; $(MKDIR) $@
+
 #
 # the ".gcda" files won't exist if the code hasn't been run, so we
 # have a dummy target that silently returns true.
@@ -38,14 +40,12 @@ $(archdir)/%.gcda:;@:
 #
 # Remarks:
 #
-$(archdir)/zero.info:	$(GCOV_GCDA_FILES)
+$(archdir)/zero.info:	$(GCOV_GCDA_FILES) | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	lcov --initial --capture --no-external --directory . >$@
 
-$(archdir)/trace.info:	$(archdir)/zero.info
+$(archdir)/trace.info:	$(archdir)/zero.info | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	lcov --capture --no-external --directory . --test-name 'unit_tests' >$(archdir)/base.info
 	lcov --add-tracefile $(archdir)/zero.info \
 	     --add-tracefile $(archdir)/base.info >$@
@@ -54,9 +54,8 @@ $(archdir)/trace.info:	$(archdir)/zero.info
 #
 # coverage/index.html: --Create the html-formatted coverage reports.
 #
-$(archdir)/coverage/index.html:	$(archdir)/trace.info
+$(archdir)/coverage/index.html:	$(archdir)/trace.info | $(archdir)/coverage
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	genhtml --demangle-cpp --output-directory $(archdir)/coverage \
 	    $(archdir)/trace.info
 

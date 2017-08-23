@@ -72,19 +72,16 @@ QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
 #
 build:	$(QT_OBJ) $(QT_TRG)
 
-$(gendir)/%.$(C++_SUFFIX):	%.qrc
+$(gendir)/%.$(C++_SUFFIX):	%.qrc | $(gendir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	$(RCC) $(ALL_RCC_FLAGS) $< >$@
 
-$(gendir)/%.moc.$(C++_SUFFIX):	%.$(H++_SUFFIX)
+$(gendir)/%.moc.$(C++_SUFFIX):	%.$(H++_SUFFIX) | $(gendir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	$(MOC) $(ALL_MOC_FLAGS) -o $@ $<
 
-$(gendir)/%.$(QUI_SUFFIX).$(H++_SUFFIX):	%.$(QUI_SUFFIX)
+$(gendir)/%.$(QUI_SUFFIX).$(H++_SUFFIX):	%.$(QUI_SUFFIX) | $(gendir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	$(UIC) $(ALL_UIC_FLAGS) -o $@ $<
 
 #

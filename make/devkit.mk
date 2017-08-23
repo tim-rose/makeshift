@@ -223,6 +223,9 @@ distclean-devkit:
 # language-specific install targets that use INSTALL_SCRIPT to
 # override this behaviour.
 #
+$(archdir):		;	$(MKDIR) $@
+$(gendir):		;	$(MKDIR) $@
+
 $(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@

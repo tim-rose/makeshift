@@ -42,9 +42,8 @@ $(javalibdir)/%.class:	$(archdir)/%.class;	$(INSTALL_DATA) $? $@
 # Remarks:
 # ".class" files are arch-neutral aren't they?
 #
-$(archdir)/%.class: %.java
+$(archdir)/%.class: %.java | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	$(JAVAC) $(ALL_JAVA_FLAGS) -d $(archdir) $*.java
 
 #
@@ -60,9 +59,8 @@ $(archdir)/%.class: %.java
 build:		build-java
 build-java: $(archdir)/build-java.log
 
-$(archdir)/build-java.log: $(JAVA_SRC)
+$(archdir)/build-java.log: $(JAVA_SRC) | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	$(JAVAC) $(ALL_JAVA_FLAGS) -d $(archdir) $?
 	date '+%Y-%m-%d %H:%M:%S: $?' > $@
 

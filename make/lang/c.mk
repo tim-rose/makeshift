@@ -95,17 +95,15 @@ c-src-defined:
 # dependencies, and the "-include" command allows the files to
 # be absent, so this setup will avoid premature compilation.
 #
-$(archdir)/%.o: %.c
+$(archdir)/%.o: %.c | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 #
 # archdir/%.o: --Compile a generated C file into the arch sub-directory.
 #
-$(archdir)/%.o: $(gendir)/%.c
+$(archdir)/%.o: $(gendir)/%.c | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
 
@@ -115,17 +113,15 @@ $(archdir)/%.o: $(gendir)/%.c
 # Remarks:
 # This is a repeat of the static build rules, but for shared libraries.
 #
-$(archdir)/%.s.o: %.c
+$(archdir)/%.s.o: %.c | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	@echo $(CC) $(C_ALL_FLAGS)  $(C_SHARED_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
 #
 # archdir/%.s.o: --Compile a generated C file into PIC.
 #
-$(archdir)/%.s.o: $(gendir)/%.c
+$(archdir)/%.s.o: $(gendir)/%.c | $(archdir)
 	$(ECHO_TARGET)
-	$(MKDIR) $(@D)
 	@echo $(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
 	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
 
@@ -213,6 +209,13 @@ tidy:	tidy-c
 tidy-c:	c-src-defined
 	$(ECHO_TARGET)
 	$(C_INDENT) $(C_INDENT_FLAGS) $(H_SRC) $(C_SRC)
+tidy[%.c]:
+	$(ECHO_TARGET)
+	$(C_INDENT) $(C_INDENT_FLAGS) $*.c
+tidy[%.h]:
+	$(ECHO_TARGET)
+	$(C_INDENT) $(C_INDENT_FLAGS) $*.h
+
 #
 # lint: --Perform static analysis for C files.
 #
@@ -220,9 +223,16 @@ C_LINT ?= cppcheck --quiet --std=c11 --template=gcc --enable=style,warning,perfo
 C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
     $(PROJECT.C_LINT_FLAGS) $(LOCAL.C_LINT_FLAGS) $(TARGET.C_LINT_FLAGS)
 lint:	lint-c
-lint-c:
+lint-c: c-src-defined
 	$(ECHO_TARGET)
 	$(C_LINT) $(C_LINT_FLAGS) $(H_SRC) $(C_SRC)
+lint[%.c]:
+	$(ECHO_TARGET)
+	$(C_LINT) $(C_LINT_FLAGS) $*.c
+lint[%.h]:
+	$(ECHO_TARGET)
+	$(C_LINT) $(C_LINT_FLAGS) $*.h
+
 #
 # toc: --Build the table-of-contents for C files.
 #
@@ -230,6 +240,12 @@ toc:	toc-c
 toc-c:	c-src-defined
 	$(ECHO_TARGET)
 	mk-toc $(H_SRC) $(C_SRC)
+toc[%.c]:
+	$(ECHO_TARGET)
+	mk-toc $*.c
+toc[%.h]:
+	$(ECHO_TARGET)
+	mk-toc $*.h
 
 #
 # src: --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
