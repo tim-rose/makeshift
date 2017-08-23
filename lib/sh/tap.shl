@@ -107,7 +107,6 @@ diag()
 #
 TAP_BEGIN()
 {
-    local exit_trap=$(trap -- | sed -n -e 's/trap -- //' -e 's/ EXIT$//p')
     if [ -t 1 ]; then		# stdout is a tty: setup ANSI X3.64 styles
 	eval $(
             IFS=:
