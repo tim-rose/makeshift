@@ -8,7 +8,6 @@
 #
 PATH=..:$PATH
 . tap.shl
-isatty=				# force tty stuff customisations off
 
 plan 5
 

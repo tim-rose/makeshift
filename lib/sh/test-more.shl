@@ -160,12 +160,12 @@ ok_diff()
     local expect="$1"; shift
     local tmp=${TMPDIR:-/tmp}/tap-$$
 
-    diff "$have" "$expect" >$tmp 2>/dev/null
+    diff "$have" "$expect" >"$tmp" 2>/dev/null
     if ! tap_test_msg $? "$@"; then
         tap_report_diff "$have" "file contents matching \"$expect\""
-        diag < $tmp
+        diag < "$tmp"
     fi
-    rm -f $tmp
+    rm -f "$tmp"
 }
 
 #

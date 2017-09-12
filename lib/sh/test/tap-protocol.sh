@@ -17,7 +17,7 @@ run_tests()
 {
     (
 	TAP_COLORS=ok=		# reset colourful logging...
-	ok_style= fail_style= plan_style= diag_style=
+	ok_style='' fail_style='' plan_style='' diag_style=''
 	. tap.shl
 	eval "$@"
     ) | skip_prologue

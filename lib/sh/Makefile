@@ -7,6 +7,7 @@
 #
 language = sh
 SHL_SRC = tap.shl test-more.shl
+LOCAL.SH_LINT_FLAGS = -e SC2034,SC2039,SC2059,SC2064,SC2154
 
 include devkit.mk
 
