@@ -2,7 +2,12 @@
 #
 # REMAKE --Watch some files, and run a "make" command when any change.
 #
-usage="Usage: remake [-c command] [-t target] [-d delay] files..."
+# Contents:
+# main()        --loop forever, checking for file changes.
+# duration()    --Format a duration in seconds to <x>m<y>s.
+# find_change() --Find a file that has changed since some timestamp.
+#
+usage="Usage: remake [-c command] [-o options] [-t target] [-d delay] files..."
 
 log_message() { printf "remake: "; printf "$@"; printf "\n"; } >&2
 notice()      { log_message "$@"; }
@@ -12,7 +17,7 @@ log_quit()    { notice "$@"; exit 1; }
 log_cmd()     { debug "exec: $*"; "$@"; }
 
 command="make"
-target=
+target=build
 delay=10
 
 #
@@ -20,7 +25,7 @@ delay=10
 #
 main()
 {
-    local now=0	changed=
+    local now=0	changed='' start='' build=1 status=''
 
     while :; do
 	debug '%d: reference' $now
@@ -28,13 +33,35 @@ main()
 	changed=$(find_change "$now" "$@")
 	if [ "$changed" ]; then
 	    info '%s: %s' "$target" "$changed"
-            log_cmd $command $target
+
+	    start=$(date '+%s')
+            if log_cmd $command $opts $target; then
+		status='succeeded'
+	    else
+		status='failed'
+	    fi
             now=$(date '+%s')
+
+	    notice 'build %d %s after %s' \
+		   "$build" "$status" "$(duration $((now-start)))"
+	    build=$((build+1))
 	fi
 
-	debug 'waiting %d seconds' $delay
-	sleep $delay
+	debug 'waiting %ds' "$delay"
+	sleep "$delay"
     done
+}
+
+#
+# duration() --Format a duration in seconds to <x>m<y>s.
+#
+duration()
+{
+    local min=$(($1/60)) sec=$(($1%60))
+    if [ "$min" -gt 0 ]; then
+	printf '%dm' "$min"
+    fi
+    printf '%ds\n' "$sec"
 }
 
 #
@@ -73,11 +100,12 @@ find_change()
 #
 # process command-line options
 #
-while getopts "c:d:t:vq_" c
+while getopts "c:d:t:o:vq_" c
 do
     case $c in
     c)  command=$OPTARG;;
     d)  delay=$OPTARG;;
+    o)  opts=$OPTARG;;
     t)  target=$OPTARG;;
     v)  verbose=1; debug=;;
     q)  verbose=; debug=;;
