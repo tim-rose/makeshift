@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# TEST-TAPLIB.SH --Test taplib.
+# TEST-API.SH --Test the extended assertions in test-more.
 #
 PATH=..:$PATH
 . tap.shl
@@ -22,7 +22,7 @@ PATH=..:$PATH
 plan 23
 
 pass 'pass: success'
-todo 'expected failure' fail 'fail: failure' 
+todo 'expected failure' fail 'fail: failure'
 
 ok 0            # no-args is OK
 ok 0 'ok: success'

@@ -27,7 +27,7 @@ tap_todo_reason=
 tap_plan=
 tap_fail=0
 tap_version="${version}"
-TAP_COLORS=${TAP_COLORS:-"ok=:fail=31:plan=1:diag=2"}
+TAP_COLORS=${TAP_COLORS:-"ok=:fail=31:todo=36:plan=1:diag=3"}
 
 #
 # tty_tint() --A filter to apply some colour to stdout.
@@ -231,6 +231,7 @@ tap_test_msg()
 	(*) msg=" - $(printf "$@")";;
     esac
     if [ "$tap_todo_reason" ]; then
+	style=$todo_style
 	type=" (TODO)"
 	msg_suffix=" # TODO $tap_todo_reason"
 	caller_level=$((caller_level+1))
