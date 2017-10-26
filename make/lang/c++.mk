@@ -184,6 +184,12 @@ tidy:	tidy-c++
 tidy-c++:	c++-src-defined
 	$(ECHO_TARGET)
 	$(C++_INDENT) $(C++_INDENT_FLAGS) $(H++_SRC) $(C++_SRC)
+tidy[%.$(C++_SUFFIX)]:
+	$(ECHO_TARGET)
+	$(C++_INDENT) $(C++_INDENT_FLAGS) $*.$(C++_SUFFIX)
+tidy[%.$(H++_SUFFIX)]:
+	$(ECHO_TARGET)
+	$(C++_INDENT) $(C++_INDENT_FLAGS) $*.$(H++_SUFFIX)
 #
 # lint: --Perform static analysis for C++ files.
 #
@@ -195,6 +201,12 @@ lint:	lint-c++
 lint-c++:	c++-src-defined
 	$(ECHO_TARGET)
 	$(C++_LINT) $(C++_LINT_FLAGS) $(H++_SRC) $(C++_SRC)
+lint[%.$(C++_SUFFIX)]:
+	$(ECHO_TARGET)
+	$(C++_LINT) $(C++_LINT_FLAGS) $*.$(C++_SUFFIX)
+lint[%.$(H++_SUFFIX)]:
+	$(ECHO_TARGET)
+	$(C++_LINT) $(C++_LINT_FLAGS) $*.$(H++_SUFFIX)
 
 #
 # toc: --Build the table-of-contents for C++ files.
@@ -203,6 +215,12 @@ toc:	toc-c++
 toc-c++:	c++-src-defined
 	$(ECHO_TARGET)
 	mk-toc $(H++_SRC) $(C++_SRC)
+toc[%.$(C++_SUFFIX)]:
+	$(ECHO_TARGET)
+	mk-toc $*.$(C++_SUFFIX)
+toc[%.$(H++_SUFFIX)]:
+	$(ECHO_TARGET)
+	mk-toc $*.$(H++_SUFFIX)
 
 #
 # src: --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.

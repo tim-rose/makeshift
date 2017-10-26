@@ -90,6 +90,15 @@ toc:	toc-conf
 toc-conf:	conf-src-defined
 	$(ECHO_TARGET)
 	mk-toc $(CONF_SRC) $(CFG_SRC) $(INI_SRC)
+toc[%.conf]:
+	$(ECHO_TARGET)
+	mk-toc $*.conf
+toc[%.cfg]:
+	$(ECHO_TARGET)
+	mk-toc $*.cfg
+toc[%.ini]:
+	$(ECHO_TARGET)
+	mk-toc $*.ini
 
 #
 # src: --Update definitions of CONF_SRC, CFG_SRC, INI_SRC.

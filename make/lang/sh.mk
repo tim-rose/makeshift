@@ -71,6 +71,9 @@ sh-src-defined:
 pre-build:
 build:	build-sh
 build-sh:	$(SHELL_TRG)
+build[%.sh]:	$*
+build[%.awk]:	$*
+build[%.sed]:	$*
 
 #
 # install-sh: --install shell scripts to bindir, libraries to shlibdir

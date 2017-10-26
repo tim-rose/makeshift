@@ -12,9 +12,11 @@ ifdef autosrc
     CRON_SRC ?= $(LOCAL_CRON_SRC)
 endif
 
-$(sysconfdir)/cron.d/%.cron:	%.cron;	$(INSTALL_DATA) $? $@
-
-$(system_confdir)/cron.d/%.cron:	%.cron;	$(INSTALL_DATA) $? $@
+#
+# rules to install to the system cron fragments location.
+#
+$(sysconfdir)/cron.d/%:			%;	$(INSTALL_DATA) $? $@
+$(system_confdir)/cron.d/%:		%;	$(INSTALL_DATA) $? $@
 
 #
 # rules to install to the system cron run-parts locations.

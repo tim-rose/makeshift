@@ -76,6 +76,15 @@ toc:	toc-css
 toc-css:	css-src-defined
 	$(ECHO_TARGET)
 	mk-toc $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC)
+toc[%.css]:
+	$(ECHO_TARGET)
+	mk-toc $*.css
+toc[%.scss]:
+	$(ECHO_TARGET)
+	mk-toc $*.sccs
+toc[%.less]:
+	$(ECHO_TARGET)
+	mk-toc $*.less
 
 #
 # todo: --Report "unfinished work" comments in CSS files.
