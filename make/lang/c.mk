@@ -253,10 +253,10 @@ toc[%.h]:
 src:	src-c
 src-c:
 	$(ECHO_TARGET)
-	@mk-filelist -qn C_SRC *.c
-	@mk-filelist -qn C_MAIN_SRC \
+	@mk-filelist -f $(MAKEFILE) -qn C_SRC *.c
+	@mk-filelist -f $(MAKEFILE) -qn C_MAIN_SRC \
             $$(grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
-	@mk-filelist -qn H_SRC *.h
+	@mk-filelist -f $(MAKEFILE) -qn H_SRC *.h
 
 #
 # tags: --Build vi, emacs tags files.

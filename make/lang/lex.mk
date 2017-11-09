@@ -59,7 +59,7 @@ clean-lex:
 src:	src-lex
 src-lex:
 	$(ECHO_TARGET)
-	@mk-filelist -qn LEX_SRC *.l
+	@mk-filelist -f $(MAKEFILE) -qn LEX_SRC *.l
 
 #
 # toc: --Update the table of contents in lex files.

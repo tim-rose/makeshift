@@ -98,7 +98,7 @@ clean-java:
 src:	src-java
 src-java:
 	$(ECHO_TARGET)
-	@mk-filelist -qn JAVA_SRC $$(find . -type f -name '*.java')
+	@mk-filelist -f $(MAKEFILE) -qn JAVA_SRC $$(find . -type f -name '*.java')
 #
 # tags: --Build vi, emacs tags files.
 #

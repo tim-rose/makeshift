@@ -73,7 +73,7 @@ uninstall-img:
 src:	src-img
 src-img:
 	$(ECHO_TARGET)
-	@mk-filelist -qn PNG_SRC *.png
-	@mk-filelist -qn GIF_SRC *.gif
-	@mk-filelist -qn JPG_SRC *.jpg
-	@mk-filelist -qn SVG_SRC *.svg
+	@mk-filelist -f $(MAKEFILE) -qn PNG_SRC *.png
+	@mk-filelist -f $(MAKEFILE) -qn GIF_SRC *.gif
+	@mk-filelist -f $(MAKEFILE) -qn JPG_SRC *.jpg
+	@mk-filelist -f $(MAKEFILE) -qn SVG_SRC *.svg

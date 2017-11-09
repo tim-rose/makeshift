@@ -106,9 +106,9 @@ toc[%.ini]:
 src:	src-conf
 src-conf:
 	$(ECHO_TARGET)
-	@mk-filelist -qn CONF_SRC *.conf
-	@mk-filelist -qn CFG_SRC *.cfg
-	@mk-filelist -qn INI_SRC *.ini
+	@mk-filelist -f $(MAKEFILE) -qn CONF_SRC *.conf
+	@mk-filelist -f $(MAKEFILE) -qn CFG_SRC *.cfg
+	@mk-filelist -f $(MAKEFILE) -qn INI_SRC *.ini
 
 #
 # todo: --Report "unfinished work" comments in config files.

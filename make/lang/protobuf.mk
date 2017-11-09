@@ -89,7 +89,7 @@ clean-protobuf:
 src:	src-protobuf
 src-protobuf:
 	$(ECHO_TARGET)
-	@mk-filelist -qn PROTOBUF_SRC *.proto
+	@mk-filelist -f $(MAKEFILE) -qn PROTOBUF_SRC *.proto
 
 #
 # todo: --Find "unfinished work" comments in protobuf files.

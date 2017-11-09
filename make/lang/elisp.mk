@@ -79,7 +79,7 @@ toc-elisp:	var-defined[ELISP_SRC]
 src:	src-elisp
 src-elisp:
 	$(ECHO_TARGET)
-	@mk-filelist -qn ELISP_SRC *.el
+	@mk-filelist -f $(MAKEFILE) -qn ELISP_SRC *.el
 
 #
 # todo: --Report "unfinished work" comments in elisp files.

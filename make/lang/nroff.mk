@@ -63,11 +63,11 @@ toc-nroff:
 src:	src-nroff
 src-nroff:
 	$(ECHO_TARGET)
-	@mk-filelist -qn MAN1_SRC *.1
-	@mk-filelist -qn MAN3_SRC *.3
-	@mk-filelist -qn MAN5_SRC *.5
-	@mk-filelist -qn MAN7_SRC *.7
-	@mk-filelist -qn MAN8_SRC *.8
+	@mk-filelist -f $(MAKEFILE) -qn MAN1_SRC *.1
+	@mk-filelist -f $(MAKEFILE) -qn MAN3_SRC *.3
+	@mk-filelist -f $(MAKEFILE) -qn MAN5_SRC *.5
+	@mk-filelist -f $(MAKEFILE) -qn MAN7_SRC *.7
+	@mk-filelist -f $(MAKEFILE) -qn MAN8_SRC *.8
 
 doc:	$(MAN1_SRC:%.1=%.1.pdf) $(MAN3_SRC:%.3=%.3.pdf) \
 	$(MAN5_SRC:%.5=%.5.pdf) $(MAN7_SRC:%.7=%.7.pdf) \

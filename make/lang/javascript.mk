@@ -43,7 +43,7 @@ toc-javascript:
 src:	src-javascript
 src-javascript:
 	$(ECHO_TARGET)
-	@mk-filelist -qn JS_SRC *.js
+	@mk-filelist -f $(MAKEFILE) -qn JS_SRC *.js
 
 #
 # todo: --Report "unfinished work" comments in JavaScript files.

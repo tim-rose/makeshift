@@ -46,7 +46,7 @@ toc-sql:
 src:	src-sql
 src-sql:
 	$(ECHO_TARGET)
-	@mk-filelist -qn SQL_SRC *.sql
+	@mk-filelist -f $(MAKEFILE) -qn SQL_SRC *.sql
 
 #
 # todo: --Report unfinished work in work SQL files.

@@ -49,7 +49,7 @@ toc-php:
 src:	src-php
 src-php:
 	$(ECHO_TARGET)
-	@mk-filelist -qn PHP_SRC *.php
+	@mk-filelist -f $(MAKEFILE) -qn PHP_SRC *.php
 
 #
 # todo: --Report unfinished work in PHP source code.

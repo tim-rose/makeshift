@@ -65,9 +65,9 @@ uninstall-css:
 src:	src-css
 src-css:
 	$(ECHO_TARGET)
-	@mk-filelist -qn CSS_SRC *.css
-	@mk-filelist -qn SCSS_SRC *.scss
-	@mk-filelist -qn LESS_SRC *.less
+	@mk-filelist -f $(MAKEFILE) -qn CSS_SRC *.css
+	@mk-filelist -f $(MAKEFILE) -qn SCSS_SRC *.scss
+	@mk-filelist -f $(MAKEFILE) -qn LESS_SRC *.less
 
 #
 # toc: --Build the table-of-contents for CSS files.

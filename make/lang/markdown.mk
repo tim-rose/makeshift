@@ -134,8 +134,8 @@ clean-markdown:
 src:	src-markdown
 src-markdown:
 	$(ECHO_TARGET)
-	@mk-filelist -qn TXT_SRC *.txt
-	@mk-filelist -qn MD_SRC *.md
+	@mk-filelist -f $(MAKEFILE) -qn TXT_SRC *.txt
+	@mk-filelist -f $(MAKEFILE) -qn MD_SRC *.md
 
 #
 # todo-markdown: --Report unfinished work in markdown files.

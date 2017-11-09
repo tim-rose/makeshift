@@ -113,10 +113,10 @@ toc-sh:
 src:	src-sh
 src-sh:
 	$(ECHO_TARGET)
-	@mk-filelist -qn SH_SRC *.sh
-	@mk-filelist -qn SHL_SRC *.shl
-	@mk-filelist -qn AWK_SRC *.awk
-	@mk-filelist -qn SED_SRC *.sed
+	@mk-filelist -f $(MAKEFILE) -qn SH_SRC *.sh
+	@mk-filelist -f $(MAKEFILE) -qn SHL_SRC *.shl
+	@mk-filelist -f $(MAKEFILE) -qn AWK_SRC *.awk
+	@mk-filelist -f $(MAKEFILE) -qn SED_SRC *.sed
 
 #
 # todo: --Report unfinished work in shell, awk, sed code.

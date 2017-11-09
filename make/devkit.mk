@@ -46,7 +46,7 @@
 # See Also:
 # http://www.gnu.org/software/make/manual/make.html#Variables-for-Specifying-Commands).
 #
-
+MAKEFILE := $(firstword $(MAKEFILE_LIST))
 #
 # DEVKIT_VERSION: --define the version of devkit that's running.
 #
@@ -92,7 +92,7 @@ TODO_PATTERN = $(TODO_KEYWORDS:%=-e %)
 # VERBOSE: --Control how (+how much, how colourful) echo's output is.
 #
 ifeq "$(VERBOSE)" "color"
-    ECHO = colour_echo() { printf '\033[36m++ $(CURDIR) $@: %s\033[m\n' "$$*"; }; colour_echo
+    ECHO = colour_echo() { printf '\033[36m++ $(CURDIR) $@: \033[33m%s\033[m\n' "$$*"; }; colour_echo
 else ifneq "$(VERBOSE)" ""
     ECHO = echo '++ $(CURDIR) $@: '
 else
@@ -170,7 +170,7 @@ package:; $(ECHO_TARGET)
 #
 # src: --Make sure the src target can write to the Makefile.
 #
-src:			| file-writable[Makefile]
+src:			| file-writable[$(MAKEFILE)]
 
 #
 # clean: --Devkit-specific customisations for the "clean" target.

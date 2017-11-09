@@ -90,9 +90,9 @@ toc-perl:
 src:	src-perl
 src-perl:
 	$(ECHO_TARGET)
-	@mk-filelist -qn PL_SRC *.pl
-	@mk-filelist -qn PM_SRC *.pm
-	@mk-filelist -qn T_SRC *.t
+	@mk-filelist -f $(MAKEFILE) -qn PL_SRC *.pl
+	@mk-filelist -f $(MAKEFILE) -qn PM_SRC *.pm
+	@mk-filelist -f $(MAKEFILE) -qn T_SRC *.t
 
 #
 # todo: --Report unfinished work (identified by keyword comments)

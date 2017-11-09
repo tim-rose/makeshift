@@ -37,4 +37,4 @@ $(system_confdir)/cron.monthly/%:	%;	$(INSTALL_SCRIPT) $? $@
 src:	src-cron
 src-cron:
 	$(ECHO_TARGET)
-	@mk-filelist -qn CRON_SRC *.cron
+	@mk-filelist -f $(MAKEFILE) -qn CRON_SRC *.cron
