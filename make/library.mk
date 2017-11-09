@@ -34,10 +34,6 @@
 # definitions. See c-library.mk for example.
 #
 
-# The suffix for code library files varies from system to system.
-.a ?= a
-.so ?= so
-
 LIB_PREFIX	?= lib
 LOCAL_LIB	:= $(subst lib,,$(notdir $(CURDIR)))
 LIB		?= $(LOCAL_LIB)
@@ -53,7 +49,7 @@ LIB_INCLUDEDIR = $(LIB_ROOT)/include/$(subdir)
 # Include custom rules for the type(s) of library to build
 #
 export library-type ?= static
-#include $(library-type:%=library/%.mk)
+include $(library-type:%=library/%.mk)
 
 #
 # Pattern rules for doing a staged install of the library's ".h" files.
@@ -71,39 +67,11 @@ $(LIB_ROOT)/include/%:		$(gendir)/%;	$(INSTALL_RDONLY) $? $@
 $(LIB_ROOT)/include/%:		%;		$(INSTALL_RDONLY) $* $@
 
 #
-# libdir/%.a: --Install a static (.a) library
-#
-# Remarks:
-# In the process of building, ".a" files are copied around a little,
-# depending on the final composition/breakdown of sub-libraries.
-#
-$(libdir)/%.$(.a):	$(archdir)/%.$(.a)
-	$(ECHO_TARGET)
-	$(INSTALL_DATA) $? $@
-	$(RANLIB) $@
-$(librootdir)/%.$(.a):	$(archdir)/%.$(.a)
-	$(ECHO_TARGET)
-	$(INSTALL_DATA) $? $@
-	$(RANLIB) $@
-../$(archdir)/%.$(.a):	$(archdir)/%.$(.a)
-	$(ECHO_TARGET)
-	$(INSTALL_DATA) $? $@
-	$(RANLIB) $@
-#
 # pre-build: --Stage the include files.
 #
 pre-build:	pre-build-lib
 pre-build-lib:;$(ECHO_TARGET)
 
-#
-# %/lib.a: --Build the sub-librar(ies) in its subdirectory.
-#
-%/$(archdir)/lib.$(.a):     build@%;     $(ECHO_TARGET)
-
-#
-# build: --Build this directory's library.
-#
-build: $(archdir)/$(LIB_NAME).$(.a)
 
 #
 # install-lib: --Install all the library components
@@ -117,18 +85,12 @@ build: $(archdir)/$(LIB_NAME).$(.a)
 #
 .PHONY: install-lib install-lib-lib install-lib-include install-lib-man
 install-lib:	install-lib-lib install-lib-include install-lib-man; $(ECHO_TARGET)
-install-lib-lib:	$(libdir)/$(LIB_NAME).$(.a); $(ECHO_TARGET)
 install-lib-include:; $(ECHO_TARGET)
 
 install-lib-man:	$(MAN3_SRC:%.3=$(man3dir)/%.3); $(ECHO_TARGET)
 
 .PHONY: uninstall-lib uninstall-lib-lib uninstall-lib-include uninstall-lib-man
 uninstall-lib: uninstall-lib-lib uninstall-lib-include uninstall-lib-man
-
-uninstall-lib-lib:	uninstall-lib-include
-	$(ECHO_TARGET)
-	$(RM) $(libdir)/$(LIB_NAME).$(.a)
-	$(RMDIR) -p $(libdir) 2>/dev/null || true
 
 uninstall-lib-include:
 	$(ECHO_TARGET)
@@ -140,56 +102,9 @@ uninstall-lib-man:
 	$(RMDIR) -p $(man3dir) 2>/dev/null || true
 
 #
-# archdir/%.a: --(re)build a library.
-#
-# Remarks:
-# The only dependants listed here are the sub-libraries (if any), but
-# the various <lang>-library.mk rules will add their language-specific
-# objects as dependants too.
-#
-$(archdir)/lib.$(.a): $(SUBLIB_SRC)
-	$(ECHO_TARGET)
-	mk-ar-merge $(ARFLAGS) $@ $^
-	$(RANLIB) $@
-
-$(archdir)/$(LIB_NAME).$(.a):	$(archdir)/lib.$(.a)
-	$(ECHO_TARGET)
-	cp $< $@
-	$(RANLIB) $@
-
-#
-# archdir/%.so: --(re)build a shared library.
-#
-$(archdir)/lib.so.a: $(SUBLIB_SRC)
-	$(ECHO_TARGET)
-	mk-ar-merge $(ARFLAGS) $@ $^
-
-#
-# clean: --Remove the library file.
-#
-clean:	clean-lib
-clean-lib:
-	$(ECHO_TARGET)
-	$(RM) $(archdir)/$(LIB_NAME).$(.a) $(archdir)/lib.$(.a)
-
-#
 # distclean: --Remove the include files installed at $LIB_ROOT/include.
 #
 distclean: clean-lib distclean-lib
 distclean-lib:
 	$(ECHO_TARGET)
 	$(RMDIR) -p $(LIB_INCLUDEDIR) 2>/dev/null || true
-
-#
-# src: --Get a list of sub-directories that are libraries.
-#
-# Remarks:
-# This target "guesses" the sub-libraries by looking for Makefiles
-# that include the "library.mk".
-#
-src:	src-lib
-src-lib:
-	$(ECHO_TARGET)
-	@mk-filelist -qpn SUBLIB_SRC $$( \
-	    grep -l '^include.* library.mk' */*[Mm]akefile* 2>/dev/null | \
-	    sed -e 's|/[^/]*[Mm]akefile.*|/$$(archdir)/lib.$(.a)|g' | sort -u)
