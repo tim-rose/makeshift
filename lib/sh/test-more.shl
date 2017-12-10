@@ -39,8 +39,8 @@
 #
 tap_report_diff()
 {
-    diag "%12s: '%s'" got "$1"
-    diag "%12s: '%s'" expected "$2"
+    diag "%12s: %s" got "$1"
+    diag "%12s: %s" expected "$2"
     return 1
 }
 
@@ -61,7 +61,7 @@ ok_eq()
     local expect="$1"; shift
 
     test "$have" = "$expect";
-    tap_test_msg $? "$@" || tap_report_diff "$have" "$expect"
+    tap_test_msg $? "$@" || tap_report_diff "'$have'" "'$expect'"
 }
 
 is() { local caller_level=2; ok_eq "$@"; }
@@ -75,7 +75,7 @@ ok_neq()
     local expect="$1"; shift
 
     test "$have" != "$expect";
-    tap_test_msg $? "$@" || tap_report_diff "$have" "(something else)"
+    tap_test_msg $? "$@" || tap_report_diff "'$have'" "(something else)"
 }
 
 isnt() { local caller_level=2; ok_neq "$@"; }
@@ -95,7 +95,7 @@ ok_match()
     *) status=1;;
     esac
     tap_test_msg $status "$@" ||
-	tap_report_diff "$have" "a glob matching \"$expect\""
+	tap_report_diff "'$have'" "a glob matching \"$expect\""
 }
 
 matches() { local caller_level=2; ok_match "$@"; }
@@ -113,7 +113,7 @@ nok_match()
     *) ;;
     esac
     tap_test_msg $status "$@" ||
-	tap_report_diff "$have" "a glob not matching \"$expect\""
+	tap_report_diff "'$have'" "a glob not matching \"$expect\""
 }
 
 #
@@ -127,7 +127,7 @@ ok_grep()
 
     echo "$have" | grep -q -- "$expect"
     tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a regex matching \"$expect\""
+	tap_report_diff "'$have'" "a regex matching \"$expect\""
 }
 
 like() { local caller_level=2; ok_grep "$@"; }
@@ -145,7 +145,7 @@ nok_grep()
     echo "$have" | grep -q -- "$expect"
     test $? -ne 0
     tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a regex not matching \"$expect\""
+	tap_report_diff "'$have'" "a regex not matching \"$expect\""
 }
 
 #
@@ -156,16 +156,31 @@ nok_grep()
 #
 ok_diff()
 {
-    local have="$1"; shift
-    local expect="$1"; shift
-    local tmp=${TMPDIR:-/tmp}/tap-$$
+    local have="$1" expect="$2"; shift 2
+    local tmp=${TMPDIR:-/tmp}/tap-$$ status=0
+    local file=
+
+    for file in "$have" "$expect"; do
+	if [ ! -r "$file" ]; then
+	    tap_test_msg 1 "$@"
+	    if [ ! -e "$file" ]; then
+		diag "ok_diff: file \"%s\" doesn't exist" "$file"
+	    else
+		diag 'ok_diff: cannot read file "%s"' "$file"
+	    fi
+	    return 1
+	fi
+    done
 
     diff "$have" "$expect" >"$tmp" 2>/dev/null
     if ! tap_test_msg $? "$@"; then
-        tap_report_diff "$have" "file contents matching \"$expect\""
+        tap_report_diff "contents of file \"$have\"" "contents matching file \"$expect\""
+	diag '%12s:' 'difference'
         diag < "$tmp"
+	status=1
     fi
     rm -f "$tmp"
+    return $status
 }
 
 #
@@ -178,7 +193,7 @@ ok_lt()
 
     test "$have" -lt "$expect";
     tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a number less than $expect"
+	tap_report_diff "'$have'" "a number less than $expect"
 }
 
 #
@@ -191,7 +206,7 @@ ok_le()
 
     test "$have" -le "$expect";
     tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a number less than or equal to $expect"
+	tap_report_diff "'$have'" "a number less than or equal to $expect"
 }
 
 #
@@ -204,7 +219,7 @@ ok_gt()
 
     test "$have" -gt "$expect";
     tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a number greater than $expect"
+	tap_report_diff "'$have'" "a number greater than $expect"
 }
 
 #
@@ -217,7 +232,7 @@ ok_ge()
 
     test "$have" -ge "$expect";
     tap_test_msg $? "$@" ||
-	tap_report_diff "$have" "a number greater than or equal to $expect"
+	tap_report_diff "'$have'" "a number greater than or equal to $expect"
 }
 
 ok_test()
