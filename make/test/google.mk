@@ -6,24 +6,16 @@
 # make reference to make variables defined in the lang/c++ module.
 #
 GTEST_LIBS = gtest_main gtest dl util
-TEST_XML = google-tests.xml
+TEST_XML ?= google-tests.xml
 TEST_EXE = $(archdir)/googletest
+
 ALL_GTEST_FLAGS = $(TARGET.GTEST_FLAGS) $(LOCAL.GTEST_FLAGS) \
     $(PROJECT.GTEST_FLAGS) $(ARCH.GTEST_FLAGS) $(OS.GTEST_FLAGS) \
     $(GTEST_FLAGS)
 
 build: $(TEST_EXE)
 
-#
-# REVISIT: shouldn't need a separate rule for building executables, just
-# use the existing C++ rule.
-#
-$(TEST_EXE):	$(TEST_OBJ) | $(archdir)
-	$(ECHO_TARGET)
-	@echo $(C++) -o $@ $(C++_ALL_FLAGS) $(ALL_LDFLAGS) \
-	    $^ $(ALL_LDLIBS) $(GTEST_LIBS:%=-l%)
-	@$(C++) -o $@ $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) $(ALL_LDFLAGS) \
-	    $^ $(ALL_LDLIBS) $(GTEST_LIBS:%=-l%)
+$(TEST_EXE):	$(TEST_OBJ) $(GTEST_LIBS:%=-l%)
 
 #
 # google-test: --Run googletest with arch defined in the environment.
@@ -31,6 +23,7 @@ $(TEST_EXE):	$(TEST_OBJ) | $(archdir)
 test:	test-google
 .PHONY:	test-google
 test-google:	$(TEST_EXE)
+	@$(ECHO_TARGET)
 	$(TEST_EXE) $(ALL_GTEST_FLAGS) --gtest_output=xml:$(TEST_XML)
 
 clean:	clean-googletest
