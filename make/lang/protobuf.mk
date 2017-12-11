@@ -37,7 +37,12 @@ PROTOBUF_TRG  = $(PROTOBUF_C++) $(PROTOBUF_H++) $(PROTOBUF_PY)
 
 .PRECIOUS: $(PROTOBUF_TRG)
 
-PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.o)
+ifdef .o
+PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(.o))
+endif
+ifdef .s.o
+PROTOBUF_OBJ += $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(.s.o))
+endif
 
 #
 # %.pb.cc: --build the C++ stubs from a ".proto" file.

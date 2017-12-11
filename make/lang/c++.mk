@@ -65,11 +65,11 @@ C++_CPPFLAGS = $(CPPFLAGS) \
     $(PROJECT.C++_CPPFLAGS) $(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
     -I. -I$(gendir) -I$(includedir)
 
-C++_ALL_FLAGS = $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
+C++_ALL_FLAGS = $(C++_WARN_FLAGS) $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
 C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
 C++_OBJ  = $(filter-out $(C++_MAIN_OBJ),$(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o))
-C++_MAIN = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%)
+
 .PRECIOUS: $(C++_MAIN_OBJ)
 
 #
@@ -87,16 +87,14 @@ c++-src-defined:
 #
 $(archdir)/%.o: %.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
-	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
+	$(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 
 #
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 #
 $(archdir)/%.o: $(gendir)/%.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	@echo $(C++) $(C++_ALL_FLAGS) -c -o $@ $<
-	@$(C++) $(C++_WARN_FLAGS) $(C++_ALL_FLAGS) -c -o $@ $<
+	$(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 #
 # build[%.c++]: --Build a C++ file's related object.
 #
@@ -198,7 +196,7 @@ C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
     $(PROJECT.C++_LINT_FLAGS) $(LOCAL.C++_LINT_FLAGS) $(TARGET.C++_LINT_FLAGS)
 
 lint:	lint-c++
-lint-c++:	c++-src-defined
+lint-c++:	| c++-src-defined
 	$(ECHO_TARGET)
 	$(C++_LINT) $(C++_LINT_FLAGS) $(H++_SRC) $(C++_SRC)
 lint[%.$(C++_SUFFIX)]:

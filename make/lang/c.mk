@@ -36,25 +36,31 @@
 C_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
 
 ifdef autosrc
-    LOCAL_C_MAIN_SRC := $(shell grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
     LOCAL_C_SRC := $(wildcard *.c)
     LOCAL_H_SRC := $(wildcard *.h)
+    LOCAL_C_MAIN_SRC := $(shell grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
 
     C_SRC ?= $(LOCAL_C_SRC)
-    C_MAIN_SRC ?= $(LOCAL_C_MAIN_SRC)
     H_SRC ?= $(LOCAL_H_SRC)
+    C_MAIN_SRC ?= $(LOCAL_C_MAIN_SRC)
+    C_LIB_SRC ?= $(LOCAL_C_LIB_SRC)
 endif
+
+C_LIB_SRC := $(filter-out $(C_MAIN_SRC),$(C_SRC))
 
 #
 # Include any dependency information that's available.
 #
 -include $(C_SRC:%.c=$(archdir)/%.d)
 
-C_MAIN_OBJ = $(C_MAIN_SRC:%.c=$(archdir)/%.o)
-C_OBJ	= $(filter-out $(C_MAIN_OBJ),$(C_SRC:%.c=$(archdir)/%.o))
-C_SHARED_OBJ	= $(filter-out $(C_MAIN_OBJ),$(C_SRC:%.c=$(archdir)/%.s.o))
-C_MAIN	= $(C_MAIN_SRC:%.c=$(archdir)/%)
-.PRECIOUS: $(C_MAIN_OBJ)
+C_MAIN_OBJ = $(C_MAIN_SRC:%.c=$(archdir)/%.$(o))
+C_LIB_OBJ = $(C_LIB_SRC:%.c=$(archdir)/%.$(o))
+C_OBJ	= $(C_MAIN_OBJ) $(C_LIB_OBJ)
+C_MAIN_PIC_OBJ = $(C_MAIN_SRC:%.c=$(archdir)/%.$(s.o))
+C_LIB_PIC_OBJ = $(C_LIB_SRC:%.c=$(archdir)/%.$(s.o))
+C_PIC_OBJ	= $(C_MAIN_PIC_OBJ) $(C_LIB_PIC_OBJ)
+
+.PRECIOUS: $(C_MAIN_OBJ) $(C_MAIN_PIC_OBJ)
 
 C_DEFS	= $(OS.C_DEFS) $(ARCH.C_DEFS)\
     $(PROJECT.C_DEFS) $(LOCAL.C_DEFS) $(TARGET.C_DEFS)
@@ -74,7 +80,7 @@ C_CPPFLAGS = $(CPPFLAGS) \
 C_SHARED_FLAGS = $(OS.C_SHARED_FLAGS) $(ARCH.C_SHARED_FLAGS) \
     $(PROJECT.C_SHARED_FLAGS) $(LOCAL.C_SHARED_FLAGS) $(TARGET.C_SHARED_FLAGS)
 
-C_ALL_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
+C_ALL_FLAGS = $(C_WARN_FLAGS) $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
 #
 # c-src-defined: --Test that the C SRC variable(s) are set.
@@ -95,17 +101,15 @@ c-src-defined:
 # dependencies, and the "-include" command allows the files to
 # be absent, so this setup will avoid premature compilation.
 #
-$(archdir)/%.o: %.c | $(archdir)
+$(archdir)/%.$(o): %.c | $(archdir)
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
-	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
+	$(CC) $(C_ALL_FLAGS) -c -o $@ $<
 #
 # archdir/%.o: --Compile a generated C file into the arch sub-directory.
 #
-$(archdir)/%.o: $(gendir)/%.c | $(archdir)
+$(archdir)/%.$(o): $(gendir)/%.c | $(archdir)
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS) -c -o $@ $<
-	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) -c -o $@ $<
+	$(CC) $(C_ALL_FLAGS) -c -o $@ $<
 
 #
 # %.s.o: --Compile a C file into Position Independent Code (PIC).
@@ -113,17 +117,15 @@ $(archdir)/%.o: $(gendir)/%.c | $(archdir)
 # Remarks:
 # This is a repeat of the static build rules, but for shared libraries.
 #
-$(archdir)/%.s.o: %.c | $(archdir)
+$(archdir)/%.$(s.o): %.c | $(archdir)
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS)  $(C_SHARED_FLAGS) -c -o $@ $<
-	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
+	$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
 #
 # archdir/%.s.o: --Compile a generated C file into PIC.
 #
-$(archdir)/%.s.o: $(gendir)/%.c | $(archdir)
+$(archdir)/%.$(s.o): $(gendir)/%.c
 	$(ECHO_TARGET)
-	@echo $(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
-	@$(CC) $(C_WARN_FLAGS) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
+	$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
 
 #
 # %.h: --Install a C header (.h) file.
@@ -161,16 +163,13 @@ $(includedir)/%.h:	$(gendir)/%.h
 # build: --Build the C objects and executables.
 #
 build:	build-c
-build-c:	$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN); $(ECHO_TARGET)
-$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN):	| build-subdirs
-
-build-shared: build-c-shared
-build-c-shared: $(C_SHARED_OBJ); $(ECHO_TARGET)
+build-c:	$(C_MAIN)
+	$(ECHO_TARGET)
 
 #
 # build[%]: --Build a C file's related object.
 #
-build[%.c]:   $(archdir)/%.o; $(ECHO_TARGET)
+build[%.c]:   $(archdir)/%.$(o); $(ECHO_TARGET)
 
 #
 # install: --Install "C" programs.
@@ -186,7 +185,7 @@ install-strip-c:	install-strip-file[$(C_MAIN:$(archdir)/%=$(bindir)/%)]
 #
 # uninstall: --Uninstall "C" programs.
 #
-uninstall-c:	src-var-defined[C_MAIN]
+uninstall-c:
 	$(ECHO_TARGET)
 	$(RM) $(C_MAIN:$(archdir)/%=$(bindir)/%)
 	$(RMDIR) -p $(bindir) 2>/dev/null || true
@@ -197,7 +196,7 @@ uninstall-c:	src-var-defined[C_MAIN]
 clean:	clean-c
 clean-c:
 	$(ECHO_TARGET)
-	$(RM) $(C_MAIN) $(C_MAIN_OBJ) $(C_MAIN_OBJ:%.o=%.d) $(C_MAIN_OBJ:%.o=%.map) $(C_OBJ) $(C_OBJ:%.o=%.d) $(C_SHARED_OBJ)  $(C_SHARED_OBJ:%.o=%.d)
+	$(RM) $(C_MAIN) $(C_MAIN:%=%.map) $(C_OBJ) $(C_PIC_OBJ) $(C_OBJ:%.$(o)=%.d)
 
 #
 # tidy: --Reformat C files consistently.

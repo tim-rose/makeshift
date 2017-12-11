@@ -8,7 +8,8 @@
 # install-lib-include-c++: --Install a library's include files.
 #
 
-$(archdir)/lib.a:	$(QT_OBJ)
+$(archdir)/lib.$(a):	$(QT_OBJ)
+$(archdir)/lib.$(sa):	$(QT_PIC_OBJ)
 
 #
 # pre-build-lib: --Nothing to do?

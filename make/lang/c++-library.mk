@@ -7,7 +7,8 @@
 # install-lib-include-c++: --Install a library's include files.
 #
 
-$(archdir)/lib.a:	$(C++_OBJ)
+$(archdir)/lib.$(a):	$(C++_OBJ)
+$(archdir)/lib.$(sa):	$(C++_PIC_OBJ)
 
 #
 # pre-build-lib: --Install headers into library root, via lib's pre-build.

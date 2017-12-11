@@ -11,7 +11,8 @@ ALL_XSD_H++ = $(XSD_H++) $(gendir)/$(XML_SCHEMA).$(H++_SUFFIX)
 
 LIB_INCLUDEDIR_XSD = $(ALL_XSD_H++:$(gendir)/%=$(LIB_INCLUDEDIR)/%)
 
-$(archdir)/lib.a:	$(XSD_OBJ)
+$(archdir)/lib.$(a):	$(XSD_OBJ)
+$(archdir)/lib.$(sa):	$(XSD_PIC_OBJ)
 
 #
 # pre-build-lib-xsd: --Install headers into library root, via lib's pre-build.

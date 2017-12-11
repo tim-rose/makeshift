@@ -32,7 +32,9 @@ XSD ?= xsd
 XML_SCHEMA ?= xml-schema
 xsddir = $(exec_prefix)/share/xsd
 
-XSD_OBJ	= $(XSD_SRC:%.xsd=$(archdir)/%.o)
+XSD_OBJ = $(XSD_SRC:%.xsd=$(archdir)/%.$(o))
+XSD_PIC_OBJ += $(XSD_SRC:%.xsd=$(archdir)/%.$(s.o))
+
 XSD_H++ = $(XSD_SRC:%.xsd=$(gendir)/%.$(H++_SUFFIX))
 XSD_C++ = $(XSD_SRC:%.xsd=$(gendir)/%.$(C++_SUFFIX))
 
@@ -54,7 +56,7 @@ $(gendir)/%.$(C++_SUFFIX) $(gendir)/%.$(H++_SUFFIX):	%.xsd | $(gendir)
 # build: --Build XSD objects via C++.
 #
 build:	build-xsd
-build-xsd:	$(XSD_OBJ); $(ECHO_TARGET)
+build-xsd:	$(XSD_OBJ) $(XSD_PIC_OBJ); $(ECHO_TARGET)
 
 #
 # install-xsd: --Install the XSD files into datadir.
@@ -83,7 +85,7 @@ $(gendir)/$(XML_SCHEMA).$(H++_SUFFIX): | $(gendir)
 clean:	clean-xsd
 distclean: clean-xsd
 clean-xsd:
-	$(RM) $(XSD_OBJ) $(XSD_H++) $(XSD_C++)
+	$(RM) $(XSD_OBJ) $(XSD_PIC_OBJ) $(XSD_H++) $(XSD_C++)
 
 #
 # src: --Update the XSD_SRC target.

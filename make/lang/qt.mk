@@ -62,15 +62,23 @@ QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(gendir)/%.moc.$(C++_SUFFIX))
 QUI_TRG = $(QUI_SRC:%.$(QUI_SUFFIX)=$(gendir)/%.$(QUI_SUFFIX).$(H++_SUFFIX))
 QT_TRG  = $(QTR_TRG) $(QTH_TRG) $(QUI_TRG)
 
-QTR_OBJ = $(QTR_TRG:$(gendir)/%.$(C++_SUFFIX)=$(archdir)/%.o)
-QTH_OBJ = $(QTH_TRG:$(gendir)/%.$(C++_SUFFIX)=$(archdir)/%.o)
+ifdef .o
+QTR_OBJ = $(QTR_TRG:$(gendir)/%.$(C++_SUFFIX)=$(archdir)/%.$(.o))
+QTH_OBJ = $(QTH_TRG:$(gendir)/%.$(C++_SUFFIX)=$(archdir)/%.$(.o))
+endif
+ifdef .s.o
+QTR_PIC_OBJ = $(QTR_TRG:$(gendir)/%.$(C++_SUFFIX)=$(archdir)/%.$(.s.o))
+QTH_PIC_OBJ = $(QTH_TRG:$(gendir)/%.$(C++_SUFFIX)=$(archdir)/%.$(.s.o))
+endif
+
 QT_OBJ  = $(QTR_OBJ) $(QTH_OBJ)
+QT_PIC_OBJ = $(QTR_PIC_OBJ) $(QTH_PIC_OBJ)
 
 .PRECIOUS:	$(QT_TRG)
 #
 # build: --Build the Qt files.
 #
-build:	$(QT_OBJ) $(QT_TRG)
+build:	$(QT_OBJ) $(QTR_PIC_OBJ) $(QT_TRG)
 
 $(gendir)/%.$(C++_SUFFIX):	%.qrc | $(gendir)
 	$(ECHO_TARGET)
@@ -90,7 +98,7 @@ $(gendir)/%.$(QUI_SUFFIX).$(H++_SUFFIX):	%.$(QUI_SUFFIX) | $(gendir)
 clean:	clean-qt
 clean-qt:
 	$(ECHO_TARGET)
-	$(RM) $(QT_TRG) $(QT_OBJ)
+	$(RM) $(QT_TRG) $(QT_OBJ) $(QT_PIC_OBJ)
 
 #
 # src: --Update the QTH_SRC, QTR_SRC macros.

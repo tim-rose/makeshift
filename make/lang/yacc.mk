@@ -22,7 +22,13 @@ ifdef autosrc
     YACC_SRC ?= $(LOCAL_YACC_SRC)
 endif
 
-YACC_OBJ = $(YACC_SRC:%.y=$(archdir)/%_y.o)
+ifdef o
+YACC_OBJ = $(YACC_SRC:%.y=$(archdir)/%_y.$(o))
+endif
+ifdef s.o
+YACC_PIC_OBJ = $(YACC_SRC:%.y=$(archdir)/%_y.$(s.o))
+endif
+
 YACC_H	= $(YACC_SRC:%.y=$(gendir)/%.h)
 YACC_C	= $(YACC_SRC:%.y=$(gendir)/%_y.c)
 
@@ -46,18 +52,18 @@ ALL_YFLAGS = $(OS.YFLAGS) $(ARCH.YFLAGS) \
 #
 $(gendir)/%.h $(gendir)/%_y.c:	%.y | $(gendir)
 	$(ECHO_TARGET)
-	$(MKDIR) tmp-$*
-	$(CP) $*.y tmp-$* && cd tmp-$* && $(YACC) -d $(ALL_YFLAGS) $<
+	$(MKDIR) $(tmpdir)
+	$(CP) $*.y $(tmpdir) && cd $(tmpdir) && $(YACC) -d $(ALL_YFLAGS) $<
 	base=$$(echo "$*"| tr a-z A-Z); \
-	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <tmp-$*/y.tab.h >$(gendir)/$*.h; \
-	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <tmp-$*/y.tab.c >$(gendir)/$*_y.c
-	$(RM) -r tmp-$*
+	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <$(tmpdir)/y.tab.h >$(gendir)/$*.h; \
+	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <$(tmpdir)/y.tab.c >$(gendir)/$*_y.c
+	$(RM) -r $(tmpdir)
 
 #
 # build: --Compile YACC_SRC to object code.
 #
 build:	build-yacc
-build-yacc: $(YACC_OBJ) $(YACC_H)
+build-yacc: $(YACC_OBJ) $(YACC_PIC_OBJ) $(YACC_H)
 
 #
 # clean: --Remove a yacc grammar's object file.
@@ -65,7 +71,7 @@ build-yacc: $(YACC_OBJ) $(YACC_H)
 clean:	clean-yacc
 clean-yacc:
 	$(ECHO_TARGET)
-	$(RM) $(YACC_H) $(YACC_C) $(YACC_OBJ) $(YACC_SRC:%.y=$(archdir)/%_y.d)
+	$(RM) $(YACC_H) $(YACC_C) $(YACC_OBJ) $(YACC_PIC_OBJ) $(YACC_SRC:%.y=$(archdir)/%_y.d)
 
 #
 # src: --Get a list of the yacc grammars in this directory.

@@ -20,7 +20,13 @@ ifdef autosrc
     LEX_SRC ?= $(LOCAL_LEX_SRC)
 endif
 
-LEX_OBJ	= $(LEX_SRC:%.l=$(archdir)/%_l.o)
+ifdef o
+LEX_OBJ = $(LEX_SRC:%.l=$(archdir)/%_l.$(o))
+endif
+ifdef s.o
+LEX_PIC_OBJ = $(LEX_SRC:%.l=$(archdir)/%_l.$(s.o))
+endif
+
 LEX_C	= $(LEX_SRC:%.l=$(gendir)/%_l.c)
 
 .PRECIOUS:	$(LEX_C)
@@ -43,7 +49,7 @@ $(gendir)/%_l.c:	%.l | $(gendir)
 #
 # build: --Compile LEX_SRC to object code.
 #
-build:	$(LEX_OBJ)
+build:	$(LEX_OBJ) $(LEX_PIC_OBJ)
 
 #
 # clean: --Remove the lex grammar's object files.
@@ -51,7 +57,7 @@ build:	$(LEX_OBJ)
 clean:	clean-lex
 clean-lex:
 	$(ECHO_TARGET)
-	$(RM) $(LEX_C) $(LEX_OBJ) $(LEX_SRC:%.l=$(archdir)/%_l.d)
+	$(RM) $(LEX_C) $(LEX_OBJ) $(LEX_PIC_OBJ) $(LEX_SRC:%.l=$(archdir)/%_l.d)
 
 #
 # src: --Update the LEX_SRC macro.
