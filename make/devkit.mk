@@ -55,7 +55,12 @@ DEVKIT_VERSION ?= local
 DEVKIT_RELEASE ?= latest
 -include version.mk
 
-SUBDIRS := $(sort $(dir $(wildcard */Makefile*)))
+SUBDIRS := $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
+
+#
+# define a target-specific tmpdir, for those targets that need it.
+#
+tmpdir = tmp-$(notdir $@)
 
 #
 # PWD: --Force reset of PWD
@@ -81,6 +86,7 @@ endif
 export ARCH
 
 PROJECT ?= default
+LOCAL	:= $(subst lib,,$(notdir $(PWD)))
 
 #
 # Patterns matched by the "todo" target
@@ -101,8 +107,6 @@ endif
 
 #
 # ECHO_TARGET: --Common macro for logging in devkit targets.
-#
-# Remarks:
 #
 #ECHO_TARGET = @+$(ECHO) "\$$?: $?"
 #ECHO_TARGET = @+$(ECHO) "\$$^: $^"

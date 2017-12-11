@@ -21,7 +21,7 @@
 # is not defined, or if there is no command *my-frobnicate*:
 #
 # ```
-# my-target: var-defined[INPUT_FILES] cmd-exists[frobnicate]
+# my-target: | var-defined[INPUT_FILES] cmd-exists[frobnicate]
 #         frobnicate $(INPUT_FILES) > $@
 # ```
 #
@@ -112,6 +112,7 @@ mkdir[%]:;@$(MKDIR) "$*"
 # sleep[%]: --Sleep for the specified time.
 #
 # Remarks:
-# Useful for debugging.
+# Useful for debugging, make this target an order-only dependant,
+# and it will delay execution of the target.
 #
 sleep[%]:;sleep "$*"

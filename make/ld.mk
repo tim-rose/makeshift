@@ -53,5 +53,5 @@ $(archdir)/%: $(archdir)/%.o
 # depends on it.  For other sub-directory dependants, an explicit
 # rule (similar to this) must be used.
 #
-%/$(archdir)/lib.$(LIB_SUFFIX): build@%
+%/$(archdir)/lib.$(.a): build@%
 	$(ECHO_TARGET)
