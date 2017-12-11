@@ -27,7 +27,7 @@ tap_todo_reason=
 tap_plan=
 tap_fail=0
 tap_version="${version}"
-TAP_COLORS=${TAP_COLORS:-"ok=:fail=31:todo=36:plan=1:diag=3"}
+TAP_COLORS=${TAP_COLORS:-"ok=:fail=31;1:todo=36:plan=1:diag=3"}
 
 #
 # tty_tint() --A filter to apply some colour to stdout.

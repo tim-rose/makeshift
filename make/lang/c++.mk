@@ -71,6 +71,7 @@ C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
 C++_OBJ  = $(filter-out $(C++_MAIN_OBJ),$(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o))
 
 .PRECIOUS: $(C++_MAIN_OBJ)
+C++_MAIN = $(C++_MAIN_OBJ:%.$(o)=%)
 
 #
 # c++-src-defined: --Test that the C++ SRC variable(s) are set.
