@@ -9,8 +9,11 @@
 # their own, or find a way to emulate these commands.
 #
 
-LIB_SUFFIX = a
-OBJ_SUFFIX = o
+o = o
+s.o = s.o
+a = a
+so = so
+s.a = s.a
 
 OS.C_SHARED_FLAGS = -fpic
 OS.C++_SHARED_FLAGS = -fpic
@@ -20,7 +23,7 @@ CP 	= cp
 FAKEROOT = fakeroot
 GREP	= grep
 INDENT	= gnuindent
-LN      = ln
+LN      = ln -f
 MV	= mv
 MKDIR   = mkdir -p
 PS2PDF	= pstopdf

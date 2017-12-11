@@ -12,6 +12,9 @@ include os/posix.mk
 
 .LIBPATTERNS = lib%.a lib%.dylib lib%.so
 
+so = dylib
+LD_SHARED_FLAGS = -Wl,-undefined,dynamic_lookup -Wl,-install_name,$(notdir $@) -dynamiclib
+
 OS.CFLAGS 	= -MMD
 OS.C_WARN_FLAGS = -Wno-gnu-zero-variadic-macro-arguments
 OS.C_CPPFLAGS   = -I/usr/local/include -I/opt/local/include
