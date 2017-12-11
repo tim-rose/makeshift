@@ -35,7 +35,7 @@
 #
 
 LIB_PREFIX	?= lib
-LOCAL_LIB	:= $(subst lib,,$(notdir $(CURDIR)))
+LOCAL_LIB	:= $(subst $(LIB_PREFIX),,$(notdir $(CURDIR)))
 LIB		?= $(LOCAL_LIB)
 
 LIB_NAME	= $(LIB_PREFIX)$(LIB)
@@ -48,8 +48,8 @@ LIB_INCLUDEDIR = $(LIB_ROOT)/include/$(subdir)
 #
 # Include custom rules for the type(s) of library to build
 #
-export library-type ?= static
-include $(library-type:%=library/%.mk)
+export LIB_TYPE ?= static
+include $(LIB_TYPE:%=library/%.mk)
 
 #
 # Pattern rules for doing a staged install of the library's ".h" files.
