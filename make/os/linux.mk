@@ -10,6 +10,9 @@
 #
 include os/posix.mk
 
+.LIBPATTERNS = lib%.a lib%.so
+LD_SHARED_FLAGS = -shared
+
 OS.CFLAGS 	= -MMD
 OS.C_DEFS	= -D__Linux__ -D_XOPEN_SOURCE -D_BSD_SOURCE
 
