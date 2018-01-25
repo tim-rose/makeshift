@@ -58,8 +58,30 @@ endif
 CSC ?= $(CS_BINDIR)csc.exe
 
 ALL_CS_FLAGS = $(VARIANT.CS_FLAGS) $(OS.CS_FLAGS) $(ARCH.CS_FLAGS) $(LOCAL.CS_FLAGS) \
-    $(TARGET.CS_FLAGS) $(CS_FLAGS)
+    $(TARGET.CS_FLAGS) $(PROJECT.CS_FLAGS) $(CS_FLAGS)
 
+# All assemblies that are references need to be passed to the compiler; for the moment
+# these rules assume references are given by full path! This because of the variety
+# of .Net Framework versions that exist and can be used in mixed fashion.
+# How to use:
+# similar to languages, specify dotnet_frameworks. The names for each framework can be
+# freely chosen. For example:
+# dotnet_frameworks = v2_0 v3_5 v4_5_1
+# then for each of the specified frameworks, you need to specify the directory where the
+# frameworks reside as <framework_name>.dir. This can easily be done in the project.mk
+# makefile as the locations would be static across the project. For the example above, the
+# project make could have:
+# v2_0.dir = /c/Windows/Framework/2.0.5057
+# v3_5.dir = /c/Program Files (x86)/Reference Assemblies/Microsoft/Framework/v3.5
+# and so forth.
+# then lastly, at the module level, one would define a variable <framework_name>.ref with
+# all references to use from that framework (without the extension). E.g.
+# v2_0.ref = mscorlib System System.Data
+# in addition, projects can add references to the LOCAL.CS_REFS flag
+TARGET.CS_REFS = $(foreach f,$(dotnet_frameworks),$($(f).ref:%=-reference:$($(f).dir)%.$(LIB_SUFFIX)))
+
+ALL_CS_REFS = $(VARIANT.CS_REFS) $(OS.CS_REFS) $(ARCH.CS_REFS) $(LOCAL.CS_REFS) \
+    $(TARGET.CS_REFS) $(PROJECT.CS_REFS) $(CS_REFS)
 
 #
 # build: --Build all the cs sources that have changed.
@@ -69,7 +91,7 @@ build-cs: $(archdir)/$(TARGET)
 
 $(archdir)/$(TARGET): $(CS_SRC) | $(archdir)
 	$(ECHO_TARGET)
-	$(CSC) $(ALL_CS_FLAGS) $^ "-out:$@"
+	$(CSC) $(ALL_CS_FLAGS) $(ALL_CS_REFS) $^ "-out:$@"
 
 #
 # TODO: install: --install cs binaries and libraries.
@@ -99,7 +121,7 @@ src:	src-cs
 src-cs:
 	$(ECHO_TARGET)
 	@mk-filelist -f $(MAKEFILE) -qn CS_SRC $$(find . -path ./obj -prune -o -type f -name '*.$(CS_SUFFIX)' -print)
-	@mk-filelist -f $(MAKEFILE) -qn CS_MAIN_SRC $$(grep -l $(CS_MAIN_RGX) ''*.$(CS_SUFFIX)'')
+	@mk-filelist -f $(MAKEFILE) -qn CS_MAIN_SRC $$(grep -l $(CS_MAIN_RGX) ''*.$(CS_SUFFIX)'' 2>/dev/null)
 
 #
 # todo: --Report "unfinished work" comments in Java files.
