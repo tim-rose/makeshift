@@ -21,18 +21,21 @@ LIB_SUFFIX ?= dll
 EXE_SUFFIX ?= exe
 # TODO: is this also supported by mono?
 RSX_SUFFIX ?= resx
+PROTO_SUFFIX ?= proto
 
 # this regex searches for the main-function in C#, which normally is:
 # static void Main
-CS_MAIN_RGX ?= '^[ \t]*static[ \t]*void[ \t]Main'
+CS_MAIN_RGX ?= '^[ \t]*static[ \t]*.*[ \t]Main[ ]*\('
 
 ifdef autosrc
     LOCAL_CS_SRC := $(shell find . -path ./obj -prune -o -type f -name '*.$(CS_SUFFIX)' -print)
     LOCAL_CS_MAIN := $(shell grep -l $(CS_MAIN_RGX) '*.$(CS_SUFFIX)')
     LOCAL_RSX_SRC := $(shell find . -path ./obj -prune -o -type f -name '*.$(RSX_SUFFIX)' -print)
+    LOCAL_PROTO_SRC := $(shell find . -path ./obj -prune -o -type f -name '*.$(PROTO_SUFFIX)' -print)
     CS_SRC ?= $(LOCAL_CS_SRC)
     CS_MAIN_SRC ?= $(LOCAL_CS_MAIN)
 		RSX_SRC ?= $(LOCAL_RSX_SRC)
+    PROTO_SRC ?= $(LOCAL_PROTO_SRC)
 endif
 
 # these rules assume that the C# code is organised as follows:
@@ -60,10 +63,17 @@ ifdef APP_CONFIG
 	TARGET.CONFIG = $(archdir)/$(TARGET).config
 endif
 
+# if an icon file was given, we include it in the binary
+ifdef ICON_FILE
+	TARGET.CS_FLAGS += -win32icon:$(ICON_FILE)
+endif
+
 # compiler
 CSC ?= $(CS_BINDIR)csc.exe
 # resources generator
 RESGEN ?= $(RESGEN_BINDIR)resgen.exe
+# protobuf generator
+PGEN ?= $(PGEN_BINDIR)protogen.exe
 
 # collect all compiler flags
 ALL_CS_FLAGS = $(VARIANT.CS_FLAGS) $(OS.CS_FLAGS) $(ARCH.CS_FLAGS) $(LOCAL.CS_FLAGS) \
@@ -121,6 +131,13 @@ endef
 ALL_CS_REFS = $(VARIANT.CS_REFS) $(OS.CS_REFS) $(ARCH.CS_REFS) $(LOCAL.CS_REFS) \
     $(TARGET.CS_REFS) $(PROJECT.CS_REFS) $(CS_REFS)
 RESOURCES = $(addprefix $(gendir)/,$(notdir $(RSX_SRC:%.$(RSX_SUFFIX)=%.resources)))
+
+# add all generated protobuf sources to CS_SRC
+CS_SRC += $(PROTO_SRC:%=%.cs)
+# pattern to generate a .proto.cs from a .proto file
+%.proto.cs: %.proto
+	$(PGEN) -i:$< -o:$@ -p:detectMissing
+
 #
 # build: --Build all the cs sources that have changed.
 #
@@ -151,6 +168,7 @@ $(foreach d, $(RSX_SRC), $(eval $(call make-deps-resx,$d)))
 %.resources :
 	$(ECHO_TARGET)
 	$(RESGEN) $(ALL_RSX_FLAGS) $(ALL_CS_REFS) /compile $<,$@
+
 #
 # TODO: install: --install cs binaries and libraries.
 #
@@ -167,8 +185,9 @@ distclean:	distclean-cs
 clean:	clean-cs
 clean-cs:
 	$(ECHO_TARGET)
-	$(RM) $(archdir)/*
-	$(RM) $(gendir)/*
+	$(RM) -r $(archdir)/*
+	$(RM) -r $(gendir)/*
+	$(RM) $(PROTO_SRC:%=%.cs)
 distclean-cs: clean-cs
 	$(ECHO_TARGET)
 	$(RM) -r bin obj
@@ -185,6 +204,7 @@ src-cs:
 	@mk-filelist -f $(MAKEFILE) -qn CS_SRC $$(find . -path ./obj -prune -o -type f -name '*.$(CS_SUFFIX)' -print)
 	@mk-filelist -f $(MAKEFILE) -qn CS_MAIN_SRC $$(grep -l $(CS_MAIN_RGX) ''*.$(CS_SUFFIX)'' 2>/dev/null)
 	@mk-filelist -f $(MAKEFILE) -qn RSX_SRC $$(find . -path ./obj -prune -o -type f -name '*.$(RSX_SUFFIX)' -print)
+	@mk-filelist -f $(MAKEFILE) -qn PROTO_SRC $$(find . -path ./obj -prune -o -type f -name '*.$(PROTO_SUFFIX)' -print)
 
 #
 # todo: --Report "unfinished work" comments in Java files.
