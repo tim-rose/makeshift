@@ -25,7 +25,7 @@ PROTO_SUFFIX ?= proto
 
 # this regex searches for the main-function in C#, which normally is:
 # static void Main
-CS_MAIN_RGX ?= '^[ \t]*static[ \t]*.*[ \t]Main[ ]*\('
+CS_MAIN_RGX ?= '^[ \t]*static[ \t]*.*[ \t]Main'
 
 ifdef autosrc
     LOCAL_CS_SRC := $(shell find . -path ./obj -prune -o -type f -name '*.$(CS_SUFFIX)' -print)
@@ -106,7 +106,8 @@ TARGET.CS_REFS = $(foreach f,$(dotnet_frameworks),$($(f).ref:%=-r:$($(f).dir)%.$
 # lastly, for local refs that do not need copying, a -r can be added to LOCAL.CS_FLAGS directly
 # TODO: filenames with spaces don't work with below expansion; work around: use the DOS name
 # NOTE: when adding references, use -r rather than -reference so RESGEN won't fail
-LOCAL.CS_REFS += $(local.ref:%=-r:%.$(LIB_SUFFIX))
+# NOTE: using sort to filter out duplicates if present.
+LOCAL.CS_REFS += $(sort $(local.ref:%=-r:%.$(LIB_SUFFIX)))
 
 # create build rules for local references
 define copy_local
@@ -130,7 +131,7 @@ endef
 
 ALL_CS_REFS = $(VARIANT.CS_REFS) $(OS.CS_REFS) $(ARCH.CS_REFS) $(LOCAL.CS_REFS) \
     $(TARGET.CS_REFS) $(PROJECT.CS_REFS) $(CS_REFS)
-RESOURCES = $(addprefix $(gendir)/,$(notdir $(RSX_SRC:%.$(RSX_SUFFIX)=%.resources)))
+RESOURCES = $(addprefix $(gendir)/$(MODULE_NAME).,$(subst /,.,$(RSX_SRC:%.$(RSX_SUFFIX)=%.resources)))
 
 # add all generated protobuf sources to CS_SRC
 CS_SRC += $(PROTO_SRC:%=%.cs)
@@ -138,15 +139,27 @@ CS_SRC += $(PROTO_SRC:%=%.cs)
 %.proto.cs: %.proto
 	$(PGEN) -i:$< -o:$@ -p:detectMissing
 
+# add target framework attribute file to CS_SRC if it was specified
+CS_SRC += $(TARGET_FRAMEWORK:%=$(gendir)/%.cs)
+
+# create the target framework attribute file if a target was specified
+$(gendir)/$(TARGET_FRAMEWORK).cs : | $(gendir)
+	$(ECHO_TARGET)
+	@echo 'using System;' > $@
+	@echo 'using System.Reflection;' >> $@
+	@echo -n '[assembly: global::System.Runtime.Versioning.TargetFrameworkAttribute(' >> $@
+	@echo -n '".NETFramework,Version=v$(@:$(gendir)/%.cs=%)",' >> $@
+	@echo ' FrameworkDisplayName = ".NET Framework $(@:$(gendir)/%.cs=%)")]' >> $@
+
 #
 # build: --Build all the cs sources that have changed.
 #
 build:		build-cs
 build-cs: $(archdir)/$(TARGET) $(TARGET.CONFIG) \
-	$(foreach ref,$(local.ref),$(archdir)/$(notdir $(ref).$(LIB_SUFFIX)))
+	$(foreach ref,$(sort $(local.ref)),$(archdir)/$(notdir $(ref).$(LIB_SUFFIX)))
 
 # for each of the local references, generate the build rules for copy-local behaviour
-$(foreach ref,$(local.ref),$(eval $(call copy_local,$(ref))))
+$(foreach ref,$(sort $(local.ref)),$(eval $(call copy_local,$(ref))))
 # somewhat ugly, but there is only a single invocation that needs to get all files
 $(archdir)/$(TARGET): $(CS_SRC) $(RESOURCES) $(MANIFEST_FILE) $(KEY_FILE) \
 		$(ICON_FILE) $(APP_CONFIG) | $(archdir)
