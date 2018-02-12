@@ -1,7 +1,7 @@
 #
 # Makefile --Build rules for the package directory of devkit.
 #
-MK_SRC = deb.mk recursive.mk rpm-repo.mk rpm.mk
+MK_SRC = aip.mk deb.mk recursive.mk rpm.mk rpm-repo.mk
 subdir	= package
 
 include devkit.mk

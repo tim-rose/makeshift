@@ -7,19 +7,19 @@
 MSBUILD ?= $(MSBUILD_BINDIR)msbuild.exe
 LOG_FILE ?= $(ARCH)_$(VARIANT)_build.log
 
-TARGET.BUILD_FLAGS = -fl -flp:logfile=$(archdir)$(LOG_FILE)
+TARGET.BUILD_FLAGS = -fl -flp:logfile=$(gendir)$(LOG_FILE)
 
 ALL_BUILD_FLAGS = $(VARIANT.BUILD_FLAGS) $(OS.BUILD_FLAGS) $(ARCH.BUILD_FLAGS) \
 	$(LOCAL.BUILD_FLAGS) $(TARGET.BUILD_FLAGS) $(PROJECT.BUILD_FLAGS)
 
 build: build-vsproj
-build-vsproj: $(VSPROJ_SRC)
+build-vsproj: $(VSPROJ_SRC) | $(archdir) $(gendir)
 	$(MSBUILD) $< $(ALL_BUILD_FLAGS) -t:Build
 
 clean: clean-vsproj
 clean-vsproj:
 	$(MSBUILD) $< $(ALL_BUILD_FLAGS) -t:Clean
-	$(RM) $(archdir)$(LOG_FILE)
+	$(RM) $(gendir)$(LOG_FILE)
 
 distclean: distclean-vs
 distclean-vs:
