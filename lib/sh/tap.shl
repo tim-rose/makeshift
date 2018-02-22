@@ -7,7 +7,7 @@
 # TODO: skip
 #
 # Contents:
-# tty_tint()     --Filter stdout suitably/conditionally for a tty.
+# tty_tint()     --A filter to apply some colour to stdout.
 # caller()       --Fallback implementation of bash's caller().
 # atexit()       --Add a command to be run when the process exits.
 # diag()         --Print diagnostic lines as TAP comments.

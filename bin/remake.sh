@@ -6,6 +6,7 @@
 # main()        --loop forever, checking for file changes.
 # duration()    --Format a duration in seconds to <x>m<y>s.
 # find_change() --Find a file that has changed since some timestamp.
+# $*            --the list of files to check
 #
 usage="Usage: remake [-c command] [-o options] [-t target] [-d delay] files..."
 

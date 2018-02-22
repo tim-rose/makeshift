@@ -2,19 +2,12 @@
 # LIBRARY.MK: rules to build and install a library composed of a set of objects.
 #
 # Contents:
-# libdir/%.a:          --Install a static (.a) library
 # pre-build:           --Stage the include files.
-# %/lib.a:             --Build the sub-librar(ies) in its subdirectory.
-# build:               --Build this directory's library.
 # install-lib:         --Install all the library components
 # install-lib-lib:     --Install the library ".a", ".so" files only.
 # install-lib-include: --Install the library include files only.
 # install-lib-man:     --Install manual pages for the library only.
-# archdir/%.a:         --(re)build a library.
-# archdir/%.so:        --(re)build a shared library.
-# clean:               --Remove the library file.
 # distclean:           --Remove the include files installed at $LIB_ROOT/include.
-# src:                 --Get a list of sub-directories that are libraries.
 #
 # Remarks:
 # The "library" module provides rules for managing a collection of
