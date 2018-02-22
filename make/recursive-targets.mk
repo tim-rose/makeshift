@@ -1,6 +1,12 @@
 #
 # RECURSIVE-TARGETS.MK --Define devkit's recursive targets.
 #
+# Contents:
+# std-targets:    --The GNU standard targets, as described in the GNU make manual.
+# devkit-targets: --Extra development/maintenance targets.
+# install-strip:  --install stuff, and strip binaries.
+# recursive_rule: --Define a set of targets that implement recursion.
+#
 # Remarks:
 # The recursive targets are invoked on all subdirectories that contain
 # a Makefile matching the following patterns in order:
@@ -14,9 +20,6 @@
 # sub-directories that are only processed for particular OS or ARCH,
 # or that have customised behaviour for OS, ARCH.
 #
-# The recursive targets and their meaning are documented in the GNU
-# make manual.
-#
 # For every recursive target, there are two special targets:
 # * pre-*target* --actions to perform *before* recursing into sub-directories
 # * post-*target* --actions to perform *after* recursing into sub-directories
@@ -26,8 +29,38 @@
 # See Also:
 # http://www.gnu.org/software/make/manual/make.html#Standard-Targets
 #
-std-targets = build install test uninstall \
-	clean distclean tags dist doc coverage
+# std-targets: --The GNU standard targets, as described in the GNU make manual.
+#
+# * clean --Delete files created by the build process.
+# * distclean --Delete all non-source files, directories (i.e. ready for "dist")
+# * build --Build all the things!
+# * test --Run all the tests!
+# * coverage --Build a coverage report based on the previous test run
+# * install --Install everything to the local machine
+# * uninstall --Remove everything that install created
+# * package --Create an installable package (e.g. .deb, .rpm, etc.)
+# * deploy --Install to a remote(?) machine, and restart etc. as needed
+# * tags --Create IDE/navigation assistance files
+# * dist --Create a distrubution package of the source files.
+# * doc --Create/format the documentation
+#
+std-targets = clean distclean build test coverage \
+    install uninstall \
+    package deploy \
+    tags dist doc
+#
+# devkit-targets: --Extra development/maintenance targets.
+#
+# Remarks:
+# These targets aren't part of GNU's preferred set, but (I) find
+# them useful:
+#
+# * src --Update the Makefile with "SRC" definitions for each language-type.
+# * toc --Update the table-of-contents of all source files.
+# * lint --Run a static analyser over all source files.
+# * tidy --Reformat all source files in a consistent style.
+# * todo --Find and print all "todo", "revisit" and "fixme" annotations.
+#
 devkit-targets = src toc lint tidy todo
 recursive-targets = $(std-targets) $(devkit-targets)
 

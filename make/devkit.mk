@@ -11,7 +11,6 @@
 # no-implicit-rules: --Disable the archaic Makefile rules.
 # build:             --The default target
 # install-all:       --Install all language-specific items.
-# package:           --By default, (successfully) do no packaging.
 # src:               --Make sure the src target can write to the Makefile.
 # clean:             --Devkit-specific customisations for the "clean" target.
 # distclean:         --Remove artefacts that devkit creates/updates.
@@ -161,17 +160,6 @@ include lang/mk.mk $(language:%=lang/%.mk) ld.mk
 #
 install-all: $(language:%=install-%)
 uninstall-all: $(language:%=uninstall-%)
-
-#
-# package: --By default, (successfully) do no packaging.
-#
-# Remarks:
-# This target exists so that the parent directory can do
-# "package" recursively, delegating to the children directories.
-# Unless overridden in the child makefile, it will execute
-# this target (thus stopping the recursion).
-#
-package:; $(ECHO_TARGET)
 
 #
 # src: --Make sure the src target can write to the Makefile.
