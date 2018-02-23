@@ -3,6 +3,7 @@
 #         for the Microsoft CSC.EXE compiler. Support for buiding on Linux or BSD with mono
 #         has not yet been implemented.
 #
+#
 # Contents:
 # build:   --Build all the c# sources that have changed.
 # install: --install c# binaries and libraries.
@@ -12,30 +13,35 @@
 #
 #
 .PHONY: $(recursive-targets:%=%-cs)
-
+################################################################################
+# Tools definition
+################################################################################
+# 1. C-Sharp compiler
+CSC ?= csc.exe
+# 2. Resource generator
+RESGEN ?= resgen.exe
+# 3. posix find
+FIND ?= find
+################################################################################
+# Suffixes
+################################################################################
 CS_SUFFIX ?= cs
-
-# TODO: these are essentially specific to the windows platform and should probably go to
-#       one of the os/*.mk
 LIB_SUFFIX ?= dll
 EXE_SUFFIX ?= exe
 # TODO: is this also supported by mono?
 RSX_SUFFIX ?= resx
-PROTO_SUFFIX ?= proto
 
 # this regex searches for the main-function in C#, which normally is:
-# static void Main
+# static void Main or static int Main
 CS_MAIN_RGX ?= '^[ \t]*static[ \t]*.*[ \t]Main'
 
 ifdef autosrc
     LOCAL_CS_SRC := $(shell find . -path ./obj -prune -o -type f -name '*.$(CS_SUFFIX)' -print)
     LOCAL_CS_MAIN := $(shell grep -l $(CS_MAIN_RGX) '*.$(CS_SUFFIX)')
     LOCAL_RSX_SRC := $(shell find . -path ./obj -prune -o -type f -name '*.$(RSX_SUFFIX)' -print)
-    LOCAL_PROTO_SRC := $(shell find . -path ./obj -prune -o -type f -name '*.$(PROTO_SUFFIX)' -print)
     CS_SRC ?= $(LOCAL_CS_SRC)
     CS_MAIN_SRC ?= $(LOCAL_CS_MAIN)
 		RSX_SRC ?= $(LOCAL_RSX_SRC)
-    PROTO_SRC ?= $(LOCAL_PROTO_SRC)
 endif
 
 # these rules assume that the C# code is organised as follows:
@@ -67,13 +73,6 @@ endif
 ifdef ICON_FILE
 	TARGET.CS_FLAGS += -win32icon:$(ICON_FILE)
 endif
-
-# compiler
-CSC ?= $(CS_BINDIR)csc.exe
-# resources generator
-RESGEN ?= $(RESGEN_BINDIR)resgen.exe
-# protobuf generator
-PGEN ?= $(PGEN_BINDIR)protogen.exe
 
 # collect all compiler flags
 ALL_CS_FLAGS = $(VARIANT.CS_FLAGS) $(OS.CS_FLAGS) $(ARCH.CS_FLAGS) $(LOCAL.CS_FLAGS) \
@@ -132,12 +131,6 @@ endef
 ALL_CS_REFS = $(VARIANT.CS_REFS) $(OS.CS_REFS) $(ARCH.CS_REFS) $(LOCAL.CS_REFS) \
     $(TARGET.CS_REFS) $(PROJECT.CS_REFS) $(CS_REFS)
 RESOURCES = $(addprefix $(gendir)/$(MODULE_NAME).,$(subst /,.,$(RSX_SRC:%.$(RSX_SUFFIX)=%.resources)))
-
-# add all generated protobuf sources to CS_SRC
-CS_SRC += $(PROTO_SRC:%=%.cs)
-# pattern to generate a .proto.cs from a .proto file
-%.proto.cs: %.proto
-	$(PGEN) -i:$< -o:$@ -p:detectMissing
 
 # add target framework attribute file to CS_SRC if it was specified
 CS_SRC += $(TARGET_FRAMEWORK:%=$(gendir)/%.cs)
@@ -214,10 +207,9 @@ distclean-cs: clean-cs
 src:	src-cs
 src-cs:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn CS_SRC $$(find . -path ./obj -prune -o -type f -name '*.$(CS_SUFFIX)' -print)
+	@mk-filelist -f $(MAKEFILE) -qn CS_SRC $$($(FIND) . -path ./obj -prune -o -type f -name '*.$(CS_SUFFIX)' -print)
 	@mk-filelist -f $(MAKEFILE) -qn CS_MAIN_SRC $$(grep -l $(CS_MAIN_RGX) ''*.$(CS_SUFFIX)'' 2>/dev/null)
-	@mk-filelist -f $(MAKEFILE) -qn RSX_SRC $$(find . -path ./obj -prune -o -type f -name '*.$(RSX_SUFFIX)' -print)
-	@mk-filelist -f $(MAKEFILE) -qn PROTO_SRC $$(find . -path ./obj -prune -o -type f -name '*.$(PROTO_SUFFIX)' -print)
+	@mk-filelist -f $(MAKEFILE) -qn RSX_SRC $$($(FIND) . -path ./obj -prune -o -type f -name '*.$(RSX_SUFFIX)' -print)
 
 #
 # todo: --Report "unfinished work" comments in Java files.

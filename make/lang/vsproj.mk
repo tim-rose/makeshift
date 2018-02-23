@@ -4,7 +4,7 @@
 .PHONY: $(recursive-targets:%=%-vsproj)
 
 # MSBUILD_DIR can be set in project specific make include
-MSBUILD ?= $(MSBUILD_BINDIR)msbuild.exe
+MSBUILD ?= msbuild.exe
 LOG_FILE ?= $(ARCH)_$(VARIANT)_build.log
 
 TARGET.BUILD_FLAGS = -fl -flp:logfile=$(gendir)$(LOG_FILE)

@@ -6,8 +6,8 @@
 # NOTE: as we are using msys on windows, add /NewProject;/Execute;/Build to the
 #       MSYS_ARG_CONV_EXCL list in the project makefile and/or environment.
 #
-# The builder expects a $(PACKAGE).aip file present which it will use to create a full
-# aip-file in $(gendir)
+# The builder expects a $(PACKAGE).aip.in file present which it will use to create a full
+# aip-file
 
 AIC ?= AdvancedInstaller.com
 
@@ -17,7 +17,7 @@ package: $(PACKAGE_DIR)/$(PACKAGE).exe
 # prerequisites. Currently, this is assumed a flat structure in APPDIR. In addition,
 # the first prerequisite must be the .aip file.
 # TODO: add support for directory structure.
-%.aip: %.aip.in
+%.aip: %.aip.in $(AIP_SRC)
 	$(ECHO_TARGET)
 	$(file > $@.args,;aic)
 	$(file >>$@.args,SetProperty ProductName=$(PRODUCT_NAME))

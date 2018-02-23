@@ -13,3 +13,13 @@ package: $(PACKAGE_DIR)/$(PACKAGE).zip
 	$(ZIP) -r $@ $^
 
 $(PACKAGE_DIR):		;	$(MKDIR) $@
+
+
+clean: clean-zip
+distclean: distclean-zip
+
+clean-zip:
+	$(RM) $(PACKAGE_DIR)/$(PACKAGE).zip
+
+distclean-zip:
+	$(RM) -r $(PACKAGE_DIR)
