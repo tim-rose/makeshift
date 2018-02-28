@@ -75,8 +75,8 @@ ifdef ICON_FILE
 endif
 
 # collect all compiler flags
-ALL_CS_FLAGS = $(VARIANT.CS_FLAGS) $(OS.CS_FLAGS) $(ARCH.CS_FLAGS) $(LOCAL.CS_FLAGS) \
-    $(TARGET.CS_FLAGS) $(PROJECT.CS_FLAGS) $(CS_FLAGS)
+ALL_CS_FLAGS = $(VARIANT.CS_FLAGS) $(OS.CS_FLAGS) $(ARCH.CS_FLAGS) \
+    $(TARGET.CS_FLAGS) $(PROJECT.CS_FLAGS) $(CS_FLAGS) $(LOCAL.CS_FLAGS)
 # collect all resources generator flags
 ALL_RSX_FLAGS = $(VARIANT.RSX_FLAGS) $(OS.RSX_FLAGS) $(ARCH.RSX_FLAGS) $(LOCAL.RSX_FLAGS) \
     $(TARGET.RSX_FLAGS) $(PROJECT.RSX_FLAGS) $(RSX_FLAGS)
@@ -125,7 +125,7 @@ endef
 
 # dependency generation for resources files
 define make-deps-resx
-$(gendir)/$(notdir $(1:%.$(RSX_SUFFIX)=%.resources)): $1 | $(gendir)
+$(gendir)/$(MODULE_NAME).$(subst /,.,$(1:%.$(RSX_SUFFIX)=%.resources)): $1 | $(gendir)
 endef
 
 ALL_CS_REFS = $(VARIANT.CS_REFS) $(OS.CS_REFS) $(ARCH.CS_REFS) $(LOCAL.CS_REFS) \
