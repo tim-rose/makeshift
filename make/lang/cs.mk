@@ -107,20 +107,21 @@ TARGET.CS_REFS = $(foreach f,$(dotnet_frameworks),$($(f).ref:%=-r:$($(f).dir)%.$
 # NOTE: when adding references, use -r rather than -reference so RESGEN won't fail
 # NOTE: using sort to filter out duplicates if present.
 LOCAL.CS_REFS += $(sort $(local.ref:%=-r:%.$(LIB_SUFFIX)))
+LOCAL.CS_REFS += $(sort $(local.exe:%=-r:%.$(EXE_SUFFIX)))
 
 # create build rules for local references
 define copy_local
-$(patsubst %, $(archdir)/%.$(LIB_SUFFIX), $(notdir $(1))): $(1).$(LIB_SUFFIX)
+$(patsubst %, $(archdir)/%.$(2), $(notdir $(1))): $(1).$(2)
 		$$(INSTALL_DATA) $$? $$@
 # if this reference has a .pdb file with debug symbols, also copy it
-		$$(if $$(wildcard $$(?:%.$(LIB_SUFFIX)=%.pdb)), \
-			$$(INSTALL_DATA) $$(?:%.$(LIB_SUFFIX)=%.pdb) $$(@:%.$(LIB_SUFFIX)=%.pdb))
+		$$(if $$(wildcard $$(?:%.$(2)=%.pdb)), \
+			$$(INSTALL_DATA) $$(?:%.$(2)=%.pdb) $$(@:%.$(2)=%.pdb))
 # if this reference has a .config app config file, also copy it
 		$$(if $$(wildcard $$(?:%=%.config)), \
 			$$(INSTALL_DATA) $$(?:%=%.config) $$(@:%=%.config))
 # if this reference has an associated xml file, also copy it
-		$$(if $$(wildcard $$(?:%.$(LIB_SUFFIX)=%.xml)), \
-			$$(INSTALL_DATA) $$(?:%.$(LIB_SUFFIX)=%.xml) $$(@:%.$(LIB_SUFFIX)=%.xml))
+		$$(if $$(wildcard $$(?:%.$(2)=%.xml)), \
+			$$(INSTALL_DATA) $$(?:%.$(2)=%.xml) $$(@:%.$(2)=%.xml))
 endef
 
 # dependency generation for resources files
@@ -149,10 +150,13 @@ $(gendir)/$(TARGET_FRAMEWORK).cs : | $(gendir)
 #
 build:		build-cs
 build-cs: $(archdir)/$(TARGET) $(TARGET.CONFIG) \
-	$(foreach ref,$(sort $(local.ref)),$(archdir)/$(notdir $(ref).$(LIB_SUFFIX)))
+	$(foreach ref,$(sort $(local.ref)),$(archdir)/$(notdir $(ref).$(LIB_SUFFIX))) \
+	$(foreach exe,$(sort $(local.exe)),$(archdir)/$(notdir $(exe).$(EXE_SUFFIX)))
 
 # for each of the local references, generate the build rules for copy-local behaviour
-$(foreach ref,$(sort $(local.ref)),$(eval $(call copy_local,$(ref))))
+$(foreach ref,$(sort $(local.ref)),$(eval $(call copy_local,$(ref),$(LIB_SUFFIX))))
+$(foreach exe,$(sort $(local.exe)),$(eval $(call copy_local,$(exe),$(EXE_SUFFIX))))
+
 # somewhat ugly, but there is only a single invocation that needs to get all files
 $(archdir)/$(TARGET): $(CS_SRC) $(RESOURCES) $(MANIFEST_FILE) $(KEY_FILE) \
 		$(ICON_FILE) $(APP_CONFIG) | $(archdir)
