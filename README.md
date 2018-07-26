@@ -1,18 +1,28 @@
 # Devkit --Recursive Make Considered Useful
 
-This project is a library of **make** rules and helper **shell** scripts
-for building software recursively.  Recursive **make** has got a lot of bad
-press over the years, and some of it's justified.  I'll leave that
-debate for the philosophers; I find that managing any large build
-system is challenging no matter which way you slice it.  The approach
-taken by **devkit** is to apply recursive make in a fairly disciplined
-way, and this seems to work as good as any other.
+*Devkit* is a library of **make** rules and helper **shell** scripts
+for building software recursively. It:
+
+ * implements almost all of the "standard" make targets documented
+   in the GNU make manual,
+ * implements several additional targets for handling
+   SDLC tasks (e.g. static analysis, code coverage, etc.)
+ * supports the common compiled and script languages (e.g. C, C++,
+   Python, Perl, Ruby, shell, awk, sed, etc), including both static
+   and shared libraries
+ * supports compile-step frameworks (e.g. lex, yacc, xsd, protobuf,
+   Qt, etc.)
+ * supports several test frameworks (googletest, pytest, tap, phptest)
+ * can package the project as a RPM or DEB installable package.
+ * can build in parallel!
 
 ## Installation
 Just want to get started? try this:
+
 ```bash
-sh install.sh
+$ sh install.sh
 ```
+
 It installs **devkit** into _/usr/local/_; that's where GNU **make**
 will look for these files by default.
 
@@ -20,16 +30,27 @@ Any arguments you pass to the install script are passed through to
 **make**, so if you would like to install **devkit** in a custom location:
 
 ```bash
-sh install.sh prefix=/my/location
+$ sh install.sh prefix=/my/location
 ```
 
 Within the prefix root (e.g. _/usr/local_), **devkit** will install into
 the following sub-directories:
 
- * _bin_ --helper **shell** scripts
- * _etc_ --development tool configuration files
- * _include_ --**make** rules and targets
- * _lib/sh_ --**shell** library code
+ * $prefix/_bin_ --helper **shell** scripts
+ * $prefix/_etc_ --development tool configuration files
+ * $prefix/_include_ --**make** rules and targets
+ * $prefix/_lib/sh_ --**shell** library code
+
+### Uninstallation
+
+*Devkit* supports the (GNU make documented) `uninstall` target.  To
+remove devkit from your system:
+
+```bash
+$ make uninstall
+```
+
+This target will remove all installed files, and any directories made empty.
 
 ## Usage
 
@@ -47,12 +68,65 @@ actions recursively.
 **Devkit** has a number of targets and features to help you (er, me)
 to see what's going on.
 
- * `make +help`
- * `make +vars`
- * `make +var[`_name_`]`
- * `make ECHO=echo`
+ * `make +help` --prints some help text based on the files you have included
+ * `make +vars` --prints all of the defined variables, and their values
+ * `make +var[`_name_`]` --prints a single variable value
+ * `make +stddirs` --prints the list of "standard" build and install directories
+ * `make VERBOSE=1` --prints the targets and their dependants when executing.
 
 ### Languages
+
+**Devkit** supports several languages, some more completely than
+others.  The languages I use a lot have better, more complete support,
+the others, less so.  To include the rules for developing in a
+particular language, declare them in the makefile.  You can declare
+more than one language.  For example, in a directory containing C,
+Python and some config files, start with something like:
+
+```makefile
+language = c python conf
+
+include devkit.mk
+```
+
+The language rules define *how* to build, but not *what* to build.
+**Make** needs a list of source files to build, and **devkit** has
+targets for building the lists, and updating the makefile. After
+running the following command:
+
+```bash
+$ make src
+```
+
+The makefile will self-update to something like:
+
+```makefile
+CONF_SRC = mung.conf
+PY_SRC = mung.py
+C_SRC = main.c calc.c fileops.c
+C_MAIN_SRC = main.c
+
+language = c python conf
+
+include devkit.mk
+```
+
+**Make** needs one more thing to build correctly; the `main` depends
+on, and must be linked with, `calc` and `fileops`.  **Devkit** defines
+some macros that make that easy:
+
+```makefile
+CONF_SRC = mung.conf
+PY_SRC = mung.py
+C_SRC = main.c calc.c fileops.c
+C_MAIN_SRC = main.c
+
+language = c python conf
+
+include devkit.mk
+
+$(C_MAIN): $(C_OBJ)
+```
 
 ## Contributing
 
