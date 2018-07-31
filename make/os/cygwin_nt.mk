@@ -9,9 +9,7 @@
 include os/posix.mk
 
 OS.CFLAGS 	= -MMD
-OS.C_DEFS	= -D__Cygwin_NT__
+OS.C_DEFS	= -D__CYGWIN_NT__ -D _DEFAULT_SOURCE -D _XOPEN_SOURCE
 
 OS.CXXFLAGS 	= -MMD
-OS.C++_DEFS	= -D__Cygwin_NT__
-
-DESTDIR		= /
+OS.C++_DEFS	= $(OS.C_DEFS)
