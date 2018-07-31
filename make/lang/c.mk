@@ -101,7 +101,7 @@ c-src-defined:
 # This target also builds dependency information as a side effect
 # of the build.  Note that it doesn't declare that it builds the
 # dependencies, and the "-include" command allows the files to
-# be absent, so this setup will avoid premature compilation.
+# be absent, to avoid premature compilation.
 #
 $(archdir)/%.$(o): %.c | $(archdir)
 	$(ECHO_TARGET)

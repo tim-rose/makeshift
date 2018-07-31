@@ -1,5 +1,5 @@
 #
-# SHELL.MK --Rules for building shell, awk scripts and libraries.
+# SH.MK --Rules for building shell, awk scripts and libraries.
 #
 # Contents:
 # %.sh:           --Rules for installing shell scripts, libraries
