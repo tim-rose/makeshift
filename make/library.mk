@@ -11,7 +11,7 @@
 #
 # Remarks:
 # The "library" module provides rules for managing a collection of
-# object files (i.e. ".o" files) as an object library (i.e. ".a").
+# object files (i.e. ".o" files) as an object library (i.e. ".a", ".so").
 # The library can be structured as a collection of "sub" libraries
 # built from code in sub-directories.  The top-level directory
 # delegates building of the sub-libraries to recursive make targets,
@@ -20,7 +20,8 @@
 # These rules are controlled by the following macros:
 #
 #  * LIB_ROOT --the root location of the main top-level library (default: ".")
-#  * LIB      --the name of the library to build (default: name of current dir)
+#  * LIB_NAME --the name of the library to build (default: name of current dir)
+#  * LIB_TYPE --either or both "static" "shared" (default: "static")
 #
 # The list of objects to add to the library are defined as the dependants
 # of the library target, and these are added to by language-specific
@@ -64,7 +65,6 @@ $(LIB_ROOT)/include/%:		%;		$(INSTALL_RDONLY) $* $@
 #
 pre-build:	pre-build-lib
 pre-build-lib:;$(ECHO_TARGET)
-
 
 #
 # install-lib: --Install all the library components
