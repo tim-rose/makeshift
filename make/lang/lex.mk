@@ -49,7 +49,7 @@ $(gendir)/%_l.c:	%.l | $(gendir)
 #
 # build: --Compile LEX_SRC to object code.
 #
-build:	$(LEX_OBJ) $(LEX_PIC_OBJ)
+build:	$(LEX_OBJ)
 
 #
 # clean: --Remove the lex grammar's object files.

@@ -54,7 +54,7 @@ $(gendir)/%.h $(gendir)/%_y.c:	%.y | $(gendir)
 	$(ECHO_TARGET)
 	$(MKDIR) $(tmpdir)
 	$(CP) $*.y $(tmpdir) && cd $(tmpdir) && $(YACC) -d $(ALL_YFLAGS) $<
-	base=$$(echo "$*"| tr a-z A-Z); \
+	base=$$(echo "$*"| tr -- -a-z _A-Z); \
 	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <$(tmpdir)/y.tab.h >$(gendir)/$*.h; \
 	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <$(tmpdir)/y.tab.c >$(gendir)/$*_y.c
 	$(RM) -r $(tmpdir)
@@ -63,7 +63,7 @@ $(gendir)/%.h $(gendir)/%_y.c:	%.y | $(gendir)
 # build: --Compile YACC_SRC to object code.
 #
 build:	build-yacc
-build-yacc: $(YACC_OBJ) $(YACC_PIC_OBJ) $(YACC_H)
+build-yacc: $(YACC_OBJ) $(YACC_H)
 
 #
 # clean: --Remove a yacc grammar's object file.
