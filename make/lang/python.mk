@@ -22,6 +22,9 @@ ifdef autosrc
     PY_SRC ?= $(LOCAL_PY_SRC)
 endif
 
+PY_LINT ?= pycodestyle
+PY_TIDY ?= autopep8
+
 #
 # %.py:		--Rules for installing python scripts
 #
@@ -103,19 +106,19 @@ todo-python:
 # REVISIT: make this more customisable...
 #
 lint:	lint-python
-lint-python:	| cmd-exists[pep8] var-defined[PY_SRC]
+lint-python:	| cmd-exists[$(PY_LINT)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	-pep8 --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
+	-$(PY_LINT) --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
 
-lint[%.py]:	| cmd-exists[pep8] var-defined[PY_SRC]
+lint[%.py]:	| cmd-exists[$(PY_LINT)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	-pep8 --max-line-length=110 --ignore=E402,E721 $*.py
+	-$(PY_LINT) --max-line-length=110 --ignore=E402,E721 $*.py
 
 tidy:	tidy-python
-tidy-python: 	| cmd-exists[autopep8] var-defined[PY_SRC]
+tidy-python: 	| cmd-exists[$(PY_TIDY)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	autopep8 --in-place --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
+	$(PY_TIDY) --in-place --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
 
-tidy[%.py]:	| cmd-exists[autopep8]
+tidy[%.py]:	| cmd-exists[$(PY_TIDY)]
 	$(ECHO_TARGET)
-	autopep8 --in-place --max-line-length=110 --ignore=E402,E721 $*.py
+	$(PY_TIDY) --in-place --max-line-length=110 --ignore=E402,E721 $*.py

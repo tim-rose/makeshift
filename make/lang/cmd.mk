@@ -2,17 +2,12 @@
 # CMD.MK --Rules for building Microsoft bat/cmd/btm files.
 #
 # Contents:
-# %.sh:           --Rules for installing shell scripts, libraries
-# sh-src-defined: --Test that the CMD_SRC variable(s) are set.
-# build-sh:       --Make scripts "executable".
-# install-sh:     --install shell scripts to bindir, libraries to shlibdir
-# uninstall-sh:   --uninstall files installed by "install-sh".
-# clean:          --Remove shell, awk, sed script executables.
-# toc:            --Build the table-of-contents for shell, awk, sed files.
-# src:            --Define CMD_SRC, SHL_SRC, AWK_SRC, SED_SRC.
-# todo:           --Report unfinished work in shell, awk, sed code.
-# lint:           --Check sh style.
-# install-shell:  --Compatibility targets
+# %.cmd:         --Rules for installing cmd/bat commands, libraries
+# install-cmd:   --install commands scripts to bindir, libraries to cmdlibdir
+# uninstall-cmd: --uninstall files installed by "install-cmd".
+# toc:           --Build the table-of-contents for cmd files
+# src:           --Define CMD_SRC, BAT_SRC, BTM_SRC.
+# todo:          --Report unfinished work in cmd code.
 #
 # Remarks:
 .PHONY: $(recursive-targets:%=%-cmd)
@@ -29,7 +24,7 @@ endif
 cmdlibdir	:= $(exec_prefix)/lib/cmd/$(subdir)
 
 #
-# %.cmd: --Rules for installing shell scripts, libraries
+# %.cmd: --Rules for installing cmd/bat commands, libraries
 #
 $(bindir)/%.cmd:	%.cmd;	$(INSTALL_SCRIPT) $*.cmd $@
 $(bindir)/%.bat:	%.bat;	$(INSTALL_SCRIPT) $*.bat $@
@@ -37,7 +32,7 @@ $(cmdlibdir)/%.btm:	%.btm;	$(INSTALL_DATA) $*.btm $@
 
 
 #
-# install-cmd: --install shell scripts to bindir, libraries to shlibdir
+# install-cmd: --install commands scripts to bindir, libraries to cmdlibdir
 #
 install:	install-cmd
 install-cmd:	$(CMD_SRC:%.cmd=$(bindir)/%.cmd) $(BAT_SRC:%.bat=$(bindir)/%.bat) \
@@ -56,7 +51,7 @@ uninstall-cmd:
 	$(RMDIR) -p $(bindir) $(cmdlibdir) 2>/dev/null || true
 
 #
-# toc: --Build the table-of-contents for shell, awk, sed files.
+# toc: --Build the table-of-contents for cmd files
 #
 # TODO: implement toc handling for batch files.
 # toc:	toc-cmd
@@ -75,7 +70,7 @@ src-cmd:
 	@mk-filelist -f $(MAKEFILE) -qn BTM_SRC *.btm
 
 #
-# todo: --Report unfinished work in shell, awk, sed code.
+# todo: --Report unfinished work in cmd code.
 #
 todo:	todo-cmd
 todo-cmd:
