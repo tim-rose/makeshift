@@ -54,7 +54,7 @@ MAKEFILE := $(firstword $(MAKEFILE_LIST))
 DEVKIT_HOME ?= /usr/local
 DEVKIT_VERSION ?= local
 DEVKIT_RELEASE ?= latest
--include version.mk
+-include devkit-version.mk
 
 SUBDIRS := $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
 

@@ -6,9 +6,9 @@
 # Remarks:
 # The "toc" target cannot be run until things have been installed in DEV_HOME.
 #
-MK_SRC = coverage.mk deploy.mk devkit.mk doxygen.mk ld.mk \
-    library.mk package.mk recursive-targets.mk repository.mk \
-    std-directories.mk valid.mk
+MK_SRC = coverage.mk deploy.mk devkit.mk doxygen.mk ld.mk library.mk \
+    msbuild.mk package.mk recursive-targets.mk repository.mk \
+    std-directories.mk valid.mk version.mk
 
 include devkit.mk
 
