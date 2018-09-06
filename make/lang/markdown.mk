@@ -14,8 +14,7 @@
 # Remarks:
 # The markdown module recognises both "multimarkdown" markdown files
 # (".md"), and simple markdown/text files (".txt"), defined by MD_SRC and
-# TXT_SRC respectively. The markdown files are assumed to create full
-# documents, and are created by `build`, using multimarkdown.
+# TXT_SRC respectively.
 #
 # @todo: support other formats (latex etc.)
 #
@@ -110,13 +109,12 @@ $(gendir)/README.md: README.md | $(gendir)
 #
 # build: --Create HTML documents from TXT_SRC, MD_SRC.
 #
-build:	build-markdown
-build-markdown:	$(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html)
+doc-html:	$(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html)
 
 #
 # doc-markdown: --Create PDF documents from TXT_SRC, MD_SRC.
 #
-doc:	doc-markdown
+doc-pdf doc:	doc-markdown
 doc-markdown:	$(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf)
 
 #
