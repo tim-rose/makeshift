@@ -61,27 +61,31 @@ include devkit.mk
 ```
 
 This will include **devkit**'s targets and pattern rules for doing common
-actions recursively.
+actions recursively.  In particular, the targets described/suggested
+in the GNU make manual are implemented.  Here's a brief list of some
+of them:
 
-### Help and Debugging
+* build --build all the things!
+* test --run tests
+* install, uninstall --install/remove artefacts to a standard location
+* clean, distclean --various cleanup tasks
+* dist --construct a versioned **tar** file of the current directory
+* doc --build documentation.
 
-**Devkit** has a number of targets and features to help you (er, me)
-to see what's going on.
-
- * `make +help` --prints some help text based on the files you have included
- * `make +vars` --prints all of the defined variables, and their values
- * `make +var[`_name_`]` --prints a single variable value
- * `make +stddirs` --prints the list of "standard" build and install directories
- * `make VERBOSE=1` --prints the targets and their dependants when executing.
+Note that the bare basic behaviour for these targets is to do nothing,
+but recurse.  Things get more interesting when you include various language
+definitions; each language defines extra "do something" targets that are
+attached to (made dependants of) the standard targets.
 
 ### Languages
 
 **Devkit** supports several languages, some more completely than
 others.  The languages I use a lot have better, more complete support,
-the others, less so.  To include the rules for developing in a
-particular language, declare them in the makefile.  You can declare
-more than one language.  For example, in a directory containing C,
-Python and some config files, start with something like:
+the others, less so.  Sorry, I only have so many fingers.  To include
+the rules for developing in a particular language, declare them in the
+makefile.  You can declare more than one language.  For example, in a
+directory containing C, Python and some config files, start with
+something like:
 
 ```makefile
 language = c python conf
@@ -128,12 +132,28 @@ include devkit.mk
 $(C_MAIN): $(C_OBJ)
 ```
 
+### Help and Debugging
+
+**Devkit** has a number of targets and features to help you (er, me)
+to see what's going on.
+
+ * `make +help` --prints some help text based on the files you have included
+ * `make +vars` --prints all of the defined variables, and their values
+ * `make +var[`_name_`]` --prints a single variable value
+ * `make +stddirs` --prints the list of "standard" build and install directories
+ * `make VERBOSE=1` --prints the targets and their dependants when executing.
+
 ## Contributing
 
- 1. fork it!
+I'd appreciate help adding and improving the language support,
+particularly for languages that I don't use yet.  You know the drill:
+
  1. create a feature branch: `git checkout -b my-idea`
  1. commit your changes: `git commit -am 'My new idea'`
  1. push to the branch: `git push origin my-idea`
  1. submit a pull request.
 
 ## Licence
+
+You are licensed to use devkit under the MIT licence.
+See the file `LICENCE` for details.
