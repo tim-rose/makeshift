@@ -2,7 +2,6 @@
 # devkit.mk --Recursive make considered useful.
 #
 # Contents:
-# DEVKIT_VERSION:    --define the version of devkit that's running.
 # PWD:               --Force reset of PWD
 # OS:                --Set OS macro by interpolating "uname -s".
 # ARCH:              --Set ARCH macro by interpolating "uname -m".
@@ -48,14 +47,11 @@
 nullstring :=
 space := $(nullstring) # end of the line
 MAKEFILE := $(firstword $(MAKEFILE_LIST))
-#
-# DEVKIT_VERSION: --define the version of devkit that's running.
-#
 DEVKIT_HOME ?= /usr/local
-DEVKIT_VERSION ?= local
-DEVKIT_RELEASE ?= latest
 -include devkit-version.mk
 
+VERSION ?= local
+BUILD ?= latest
 SUBDIRS := $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
 
 #

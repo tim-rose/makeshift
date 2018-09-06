@@ -1,3 +1,4 @@
+MD_SRC = README.md RELEASE.md
 #
 # Makefile --Build rules for devkit, the developer utilities kit.
 #
@@ -5,10 +6,13 @@
 # devkit.mk:         --Fail if devkit is not available.
 # devkit-version.mk: --Install a file recording the devkit version.
 #
-package-type = rpm deb
+language = markdown
 PACKAGE = devkit
+package-type = rpm deb
 
-include devkit.mk make/version.mk package.mk
+MK_SRC = _VERSION.mk devkit-version.mk
+
+include devkit.mk make/version.mk make/package.mk
 
 $(DESTDIR_ROOT):
 	$(ECHO_TARGET)
