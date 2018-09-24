@@ -9,20 +9,24 @@ log_message() { printf "$@"; printf "\n"; } >&2
 notice() { log_message "$@"; }
 info()   { if [ "$verbose" ]; then log_message "$@"; fi; }
 
+version=
+build=
+
 delay=
 signal=
 status=0
 verbose=
 usage="Usage:\necho+ [-d delay] [-e stderr-message] [-s signal] [-x status] message"
 
-while getopts "d:e:s:x:v" c; do
+while getopts "d:e:s:x:v?" c; do
     case $c in
     d)	delay=$OPTARG;;
     e)	echo $OPTARG >&2;;
     s)	signal=$OPTARG;;
     x)	status=$OPTARG;;
     v)	verbose=1;;
-    \?)	echo $usage >&2
+    \?)	echo "echo+ version: $version.$build" >&2
+	echo $usage >&2
 	exit 2;;
     esac
 done

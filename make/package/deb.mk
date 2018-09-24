@@ -18,9 +18,9 @@
 # just one more to add to the confusion.
 #
 DEB_ARCH ?= $(shell mk-deb-buildarch debian/control)
-P_V.R	= $(PACKAGE)$(VERSION:%=_%)$(RELEASE:%=.%)
-V.R_A	= $(VERSION).$(RELEASE)_$(ARCH)
-P_V.R_A	= $(PACKAGE)_$(VERSION).$(RELEASE)_$(ARCH)
+P_V.R	= $(PACKAGE)$(VERSION:%=_%)$(BUILD:%=.%)
+V.R_A	= $(VERSION).$(BUILD)_$(ARCH)
+P_V.R_A	= $(PACKAGE)_$(VERSION).$(BUILD)_$(ARCH)
 
 #
 # deb: --Build a debian package for the current version/release/arch.
@@ -93,7 +93,7 @@ debian/conffiles: $(DESTDIR_ROOT)
 control-ok:	debian/control
 	@grep >/dev/null '^Package: *$(PACKAGE)$$' debian/control ||\
 	    (echo "Error: Package is incorrect in debian/control"; false)
-	@grep >/dev/null '^Version: *$(VERSION).$(RELEASE)$$' debian/control ||\
+	@grep >/dev/null '^Version: *$(VERSION)$$' debian/control ||\
 	    (echo "Error: Version is incorrect in debian/control"; false)
 #	@size=$$(du -sk  $(DESTDIR_ROOT) | cut -d '	' -f1);\
 #	    grep >/dev/null '^Installed-Size: *$$size' debian/control ||\
@@ -102,7 +102,7 @@ control-ok:	debian/control
 #
 # deb-version-ok: --Compare debian/control's version with Makefile definitions.
 #
-release:	deb-version-ok[$(VERSION).$(RELEASE)]
+release:	deb-version-ok[$(VERSION)]
 deb-version-ok[%]:
 	$(ECHO_TARGET)
 	@fgrep -q 'Version: $*' debian/control

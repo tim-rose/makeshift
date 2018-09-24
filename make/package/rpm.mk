@@ -16,7 +16,7 @@
 # The build process is controlled by the following make macros:
 # * PACKAGE --the package to be built
 # * VERSION --the version of the package (hopefully, a "semantic" version)
-# * RELEASE --a release tag to distinguish otherwise identical packages
+# * BUILD --a release tag to distinguish otherwise identical packages
 #
 # The module expecs to find a file $(PACKAGE).spec, which it expands
 # into a "full" spec file in the SPECS sub-directory.  The rpmbuild
@@ -33,7 +33,7 @@ RPM_DEFAULT_ARCH := $(shell mk-rpm-buildarch)
 RPM_ARCH ?= $(RPM_DEFAULT_ARCH)
 
 RPMDIRS = BUILD BUILDROOT RPMS SOURCES SPECS SRPMS
-V-R.A	= $(VERSION)-$(RELEASE).$(RPM_ARCH)
+V-R.A	= $(VERSION)-$(BUILD).$(RPM_ARCH)
 
 RPMBUILD ?= rpmbuild
 RPM_FLAGS = --define "_topdir $(CURDIR)" \
@@ -56,7 +56,7 @@ package-rpm:	SPECS/$(PACKAGE).spec
 #
 # Remarks:
 # This rule uses the ./package.spec as a template; it inserts a bunch
-# of useful defines (especially: PACKAGE, VERSION, RELEASE), and
+# of useful defines (especially: PACKAGE, VERSION, BUILD), and
 # implementations for the RPM scriptlets: %build, %install, %clean.
 # Note that there is no scriptlet for %setup: the current directory is
 # assumed to be setup by its existence.
@@ -67,7 +67,7 @@ SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
 	$(MKDIR) SPECS
 	{ echo "%define name $(PACKAGE)"; \
 	echo "%define version $(VERSION)"; \
-	echo "%define release $(RELEASE)"; \
+	echo "%define release $(BUILD)"; \
 	echo "%define _rpmdir %{_topdir}/RPMS"; \
 	echo "%define _srcrpmdir %{_topdir}/SRPMS"; \
 	echo "%define _specdir %{_topdir}"; \

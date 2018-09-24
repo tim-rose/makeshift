@@ -21,15 +21,12 @@
 #
 # * PACKAGE --the name of the package
 # * VERSION --(ideally a three-number triple updated "semantically")
-# * RELEASE --additional identification tag.
 #
 # See Also:
 # https://semver.org
 #
 LOCAL_PACKAGE := $(notdir $(CURDIR))
 PACKAGE ?= $(LOCAL_PACKAGE)
-VERSION ?= local
-RELEASE ?= latest
 
 P-V	= $(PACKAGE)$(VERSION:%=-%)
 DESTDIR_ROOT = staging-$(PACKAGE)
@@ -57,7 +54,7 @@ staging-%:
 #
 # release: --Mark the current version of this package as "released".
 #
-release: vcs-tag[$(VERSION).$(RELEASE)]
+release: vcs-tag[$(VERSION)]
 
 #
 # dist:	--Create a tar.gz distribution file.
