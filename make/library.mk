@@ -95,6 +95,13 @@ uninstall-lib-man:
 	$(RMDIR) -p $(man3dir) 2>/dev/null || true
 
 #
+# clean: --Remove the include files installed at $LIB_ROOT/include.
+#
+clean: clean-lib
+clean-lib:
+	$(ECHO_TARGET)
+	$(RMDIR) -p $(LIB_INCLUDEDIR) 2>/dev/null || true
+#
 # distclean: --Remove the include files installed at $LIB_ROOT/include.
 #
 distclean: clean-lib distclean-lib

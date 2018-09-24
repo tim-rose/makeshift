@@ -140,6 +140,11 @@ build:	build-c++
 build-c++:	$(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN)
 	$(ECHO_TARGET)
 
+#
+# build any subdirectories before trying to compile stuff;
+# library subdirectories may install include files needed
+# for compilation.
+#
 $(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN):	| build-subdirs
 
 #

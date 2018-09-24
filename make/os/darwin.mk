@@ -10,7 +10,8 @@
 #
 include os/posix.mk
 
-.LIBPATTERNS = lib%.a lib%.dylib lib%.so
+#.LIBPATTERNS = lib%.a lib%.dylib lib%.so
+.LIBPATTERNS = lib%.dylib lib%.a
 
 so = dylib
 LD_SHARED_FLAGS = -Wl,-undefined,dynamic_lookup -Wl,-install_name,$(notdir $@) -dynamiclib

@@ -94,15 +94,18 @@ install-strip:
 #
 # Note that the target@dir rule will fail if the directory doesn't
 # exist, so (e.g.)  `make build@bogus` will return an error, not
-# silently do nothing.  This can easily occur through stale dependency
+# silently do nothing.  This can arise from stale dependency
 # declarations to directories that no longer exist.
 #
 define recursive_rule
 .PHONY:	$1 pre-$1 post-$1 $1-subdirs
-$1 $(SUBDIRS:%=$1@%) post-$1:	pre-$1
-$1:				$$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
-$1-subdirs: 			$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
-post-$1:			$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
+
+$1: 		$1-subdirs;     	$$(ECHO_TARGET)
+$1-subdirs: 	$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
+
+$1-subdirs:	pre-$1
+post-$1:	$1-subdirs;		$$(ECHO_TARGET)
+
 $1@%:
 	@$$(ECHO_TARGET)
 	@if [ -e $$*/Makefile-$(OS) ]; then \

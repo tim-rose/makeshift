@@ -1,6 +1,10 @@
 #
 # LIBRARY/SHARED.MK --Rules for building shared libraries.
 #
+# Remarks:
+# This is currently a bit deficient; some shared libraries
+# need to list their dependent libraries...
+#
 
 #
 # Define shared-library file extensions:
@@ -80,7 +84,7 @@ $(archdir)/$(LIB_NAME).$(so):	$(archdir)/lib.$(s.a)
 #
 # clean: --Remove the library file.
 #
-clean:	clean-lib
-clean-lib:
+clean:	clean-lib-shared
+clean-lib-shared:
 	$(ECHO_TARGET)
 	$(RM) $(archdir)/$(LIB_NAME).$(so) $(archdir)/lib.$(so)

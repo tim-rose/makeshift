@@ -46,6 +46,7 @@ ifdef autosrc
     C_LIB_SRC ?= $(LOCAL_C_LIB_SRC)
 endif
 
+# @todo: who/how is C_LIB_xxx defind and used?
 C_LIB_SRC := $(filter-out $(C_MAIN_SRC),$(C_SRC))
 
 #
@@ -167,6 +168,14 @@ $(includedir)/%.h:	$(gendir)/%.h
 build:	build-c
 build-c:	$(C_MAIN)
 	$(ECHO_TARGET)
+
+#
+# build any subdirectories before trying to compile stuff;
+# library subdirectories may install include files needed
+# for compilation.
+#
+$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN):	| build-subdirs
+$(C_PIC_OBJ) $(C_MAIN_PIC_OBJ):	| build-subdirs
 
 #
 # build[%]: --Build a C file's related object.

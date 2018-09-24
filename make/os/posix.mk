@@ -29,6 +29,7 @@ MKDIR   = mkdir -p
 PS2PDF	= pstopdf
 RANLIB	= ranlib
 RMDIR	= rmdir
+SED     = sed
 STRIP	= strip
 SYMLINK = ln -sf
 
