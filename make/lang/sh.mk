@@ -43,15 +43,18 @@ endif
 
 shlibdir	:= $(exec_prefix)/lib/sh/$(subdir)
 SHELL_TRG	:= $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
+
+SET_VERSION = $(SED) -e '/^ *version=/s/=.*/=$(VERSION)/' -e '/^ *build=/s/=.*/=$(BUILD)/'
+
 #
 # %.sh: --Rules for installing shell scripts, libraries
 #
-%:			%.sh;	$(CP) $*.sh $@ && $(CHMOD) +x $@
-%:			%.awk;	$(CP) $*.awk $@ && $(CHMOD) +x $@
-%:			%.sed;	$(CP) $*.sed $@ && $(CHMOD) +x $@
+%:			%.sh;	$(SET_VERSION) <$*.sh >$@ && $(CHMOD) +x $@
+%:			%.awk;	$(SET_VERSION) <$*.awk >$@ && $(CHMOD) +x $@
+%:			%.sed;	$(SET_VERSION) <$*.sed >$@ && $(CHMOD) +x $@
 $(bindir)/%:		%.sh;	$(INSTALL_SCRIPT) $*.sh $@
 $(bindir)/%:		%.sed;	$(INSTALL_SCRIPT) $*.sed $@
-$(bindir)/%:		%.awk;	$(INSTALL_SCRIPT) $*.swk $@
+$(bindir)/%:		%.awk;	$(INSTALL_SCRIPT) $*.awk $@
 $(shlibdir)/%.shl:	%.shl;	$(INSTALL_DATA) $*.shl $@
 $(shlibdir)/%.awk:	%.awk;	$(INSTALL_DATA) $*.awk $@
 $(shlibdir)/%.sed:	%.sed;	$(INSTALL_DATA) $*.sed $@
