@@ -46,7 +46,7 @@ ifdef autosrc
     C_LIB_SRC ?= $(LOCAL_C_LIB_SRC)
 endif
 
-# @todo: who/how is C_LIB_xxx defind and used?
+# C_LIB_SRC: all the "doesn't contain main()" files...
 C_LIB_SRC := $(filter-out $(C_MAIN_SRC),$(C_SRC))
 
 #

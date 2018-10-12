@@ -127,7 +127,7 @@ clean-markdown:
 	$(RM) $(TXT_SRC:%.txt=%.html) $(MD_SRC:%.md=%.html) \
             $(TXT_SRC:%.txt=%.pdf) $(MD_SRC:%.md=%.pdf) \
             $(TXT_SRC:%.txt=$(archdir)/%.d) $(MD_SRC:%.md=$(archdir)/%.d) \
-            $(TXT_SRC:%.txt=$(genhdir)/%.md) $(MD_SRC:%.md=$(gendir)/%.md)
+            $(TXT_SRC:%.txt=$(gendir)/%.md) $(MD_SRC:%.md=$(gendir)/%.md)
 
 #
 # src-markdown: --Update MD_SRC, TXT_SRC macros.
