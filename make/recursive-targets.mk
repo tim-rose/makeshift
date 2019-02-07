@@ -102,11 +102,9 @@ define recursive_rule
 
 $1: 		$1-subdirs;     	$$(ECHO_TARGET)
 $1-subdirs: 	$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
-
-$1-subdirs:	pre-$1
 post-$1:	$1-subdirs;		$$(ECHO_TARGET)
 
-$1@%:
+$1@%:	pre-$1
 	@$$(ECHO_TARGET)
 	@if [ -e $$*/Makefile-$(OS) ]; then \
             $$(ECHO) recursively building $$@ for $(OS); \
