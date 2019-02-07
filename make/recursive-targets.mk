@@ -100,7 +100,7 @@ install-strip:
 define recursive_rule
 .PHONY:	$1 pre-$1 post-$1 $1-subdirs
 
-$1: 		$1-subdirs;     	$$(ECHO_TARGET)
+$1: 		pre-$1 $1-subdirs;     	$$(ECHO_TARGET)
 $1-subdirs: 	$(SUBDIRS:%=$1@%);	$$(ECHO_TARGET)
 post-$1:	$1-subdirs;		$$(ECHO_TARGET)
 
