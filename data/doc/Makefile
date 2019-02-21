@@ -1,14 +1,15 @@
-#
-# Makefile --build rules for installing the support files for markdown.
-#
-language = css
-subdir = doc/css
-CSS_SRC = plain.css print.css
+subdir = doc
+TXT_SRC = cmark-epilogue.txt cmark-prologue.txt
+
 include devkit.mk
 
-install:	$(CSS_SRC:%=$(datadir)/%)
-uninstall:	uninstall-local
+install: $(TXT_SRC:%=$(datadir)/%)
+uninstall: uninstall-local
 uninstall-local:
-	$(ECHO_TARGET)
-	$(RM) $(CSS_SRC:%=$(datadir)/%)
+	$(RM) $(TXT_SRC:%=$(datadir)/%)
 	$(RMDIR) -p $(datadir) 2>/dev/null || true
+
+src: src-local
+src-local:
+	mk-filelist -n TXT_SRC *.txt
+
