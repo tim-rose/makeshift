@@ -13,7 +13,6 @@ html {
 h1, h2, h3, h4, h5, h6 {
     font-family: "Helvetica Neue", Calibri, "Helvetica", Arial, sans-serif;
     font-weight: normal;
-    color: #666;
     margin: 0.8em 0 0.2em 0;
     line-height: 1.2em;
 }
@@ -30,18 +29,16 @@ h6 { font-size: 1.1em; }
  */
 code {
     font-family: "Monaco", "Consolas", "Inconsolata", monospace, fixed;
-    font-size: 0.9em;
 }
 
 pre {
     border: 1px solid #ccc;
-    background: #f0f0f0;
+    background: #f0f0f0;	/* note: matches hightlightjs default */
     border-radius: 4px;
     padding: 0.2em 0.5em;
 }
 
 h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
-    font-size: 0.9em;
     border: none;
     background: inherit;
     padding: 0 0.2em;
@@ -52,6 +49,7 @@ pre code {
     border: none;
     padding: 0;
     margin: 0;
+    font-size: 0.9em;
 }
 
 figure img {
@@ -108,6 +106,10 @@ ul.toc a::after {
     content: leader('.') target-counter(attr(href), page);
 }
 
+ul {
+    padding-left: 1.5em;	/* some browsers */
+    margin-left: 1.5em;		/* prince XML */
+}
 ul { list-style-type: disc; }
 ul ul { list-style-type: square; }
 ul ul ul { list-style-type: disc; }
@@ -123,12 +125,10 @@ a:hover { color: #888; text-decoration: underline; }
 a:active { color: #aaa; text-decoration: underline; }
 
 /*
- * REVISIT: external link decoration...
- *
- * also, try: glyphicon's (halfling) "new window"
+ * @revisit: consider glyphicon's (halfling) "new window"
  */
-a.extern::after {
-    content: url(file:///usr/local/share/doc/img/external-link.svg);
+a.external::after {
+    content: url(/usr/local/share/doc/img/external-link.svg);
     margin-left: 0.2em;
 }
 
@@ -146,3 +146,8 @@ sub, sup { font-size: 0.6em; }
 a.table:after {
     content: "[["  target-counter(attr(href), table) "]]";
 }
+
+/*
+ * DFN: --used for defined terms, display as small-caps.
+ */
+dfn { font-style: normal; font-variant: small-caps; }
