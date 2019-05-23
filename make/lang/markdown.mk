@@ -5,18 +5,39 @@
 # %.html/%.md:    --build a HTML document from a markdown file.
 # %.pdf:          --Create a PDF document from a HTML file.
 # build:          --Create HTML documents from markdown.
-# doc-markdown:   --Create PDF documents from TXT_SRC, MD_SRC.
+# doc-markdown:   --Create PDF documents from MMD_SRC, MD_SRC.
 # clean-markdown: --Clean up markdown's derived files.
-# src-markdown:   --Update MD_SRC, TXT_SRC macros.
+# src-markdown:   --Update MD_SRC, MMD_SRC macros.
 # todo-markdown:  --Report unfinished work in markdown files.
 #
 # Remarks:
 # The markdown module recognises both "multimarkdown" markdown files
 # (".mmd"), and simple markdown files (".md"), defined by MMD_SRC and
-# MD_SRC respectively.
+# MD_SRC respectively.  Use `make src` to update these macros.
 #
-# @todo: use cmark for ".md", and multimarkdown for ".mmd"
-# @todo: create cmark prologue/epilogue for creating full documents
+# Simple markdown is assumed to be Github-flavoured, and uses the
+# `cmark-gfm` processor by default to generate the HTML. `cmark-gfm`
+# generates a HTML fragment only, so the build rule adds some
+# prologue, epilogue to form a complete HTML document.  The prologue
+# assumes that highlightjs is installed, and uses it for syntax
+# highlighting.
+#
+# For Multimarkdown (.mmd) files, the metadata is assumed to contain
+# appropriate CSS and JS to achieve the author's intent, and the
+# "--full" option is used to generate a complete HTML document.
+#
+# This module also defines rules for building PDF files from HTML using prince(1).
+# It defines the following targets:
+#
+# * `doc-html` --build all the HTML documents from markdown sources
+# * `doc-pdf`  --build all the PDF documents from markdown sources.
+#
+# The `doc` target depends on `doc-pdf`.
+#
+# The `src` target will update the makefile with the following macros:
+#
+# * MD_SRC --a list of the CommonMark/github-flavoured ".md" files
+# * MMD_SRC --a list of the MultiMarkdown ".mmd" files
 #
 # See Also:
 # http://alistapart.com/article/building-books-with-css3
@@ -28,8 +49,9 @@ MD ?= cmark-gfm
 ALL_MDFLAGS ?= --unsafe --smart --extension table --extension footnotes \
     $(OS.MDFLAGS) $(ARCH.MDFLAGS) $(PROJECT.MDFLAGS) \
     $(LOCAL.MDFLAGS) $(TARGET.MDFLAGS) $(MDFLAGS)
+
 MMD ?= multimarkdown
-ALL_MMDFLAGS ?= -f $(OS.MMDFLAGS) $(ARCH.MMDFLAGS) $(PROJECT.MMDFLAGS) \
+ALL_MMDFLAGS ?= --full $(OS.MMDFLAGS) $(ARCH.MMDFLAGS) $(PROJECT.MMDFLAGS) \
     $(LOCAL.MMDFLAGS) $(TARGET.MMDFLAGS) $(MMDFLAGS)
 
 HTML_PDF ?= prince
@@ -49,15 +71,18 @@ PDF_CSS ?= $(DEVKIT_HOME)/share/doc/css/print.css
 MD_PROLOGUE = $(DEVKIT_HOME)/share/doc/cmark-prologue.txt
 MD_EPILOGUE = $(DEVKIT_HOME)/share/doc/cmark-epilogue.txt
 
+#
+# Rules to install HTML files (@revisit: should go in html.mk?)
+#
 $(wwwdir)/%.html:	%.html;	$(INSTALL_DATA) $? $@
 $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 
 #
 # %.html/%.md: --build a HTML document from a markdown file.
 #
-%.html:	%.md | $(archdir)
+%.html:	%.md
 	$(ECHO_TARGET)
-	cat $(MD_PROLOGUE) >$@
+	sed -e 's|<title>.*|<title>$*</title>|' $(MD_PROLOGUE) >$@
 	$(MD) $(ALL_MDFLAGS) $*.md >> $@
 	cat $(MD_EPILOGUE) >> $@
 
@@ -65,17 +90,22 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 	$(ECHO_TARGET)
 	$(MMD) $(ALL_MMDFLAGS) $*.mmd > $@
 
-%.html:	$(gendir)/%.md | $(gendir)
+%.html:	$(gendir)/%.md
 	$(ECHO_TARGET)
-	$(MD) $(ALL_MDFLAGS) $(gendir)/$*.md > $@
+	sed -e 's|<title>.*|<title>$*</title>|' $(MD_PROLOGUE) >$@
+	$(MD) $(ALL_MDFLAGS) $(gendir)/$*.md >> $@
+	cat $(MD_EPILOGUE) >> $@
 
+%.html:	$(gendir)/%.mmd
+	$(ECHO_TARGET)
+	$(MMD) $(ALL_MMDFLAGS) $(gendir)/$*.mmd > $@
 
 #
 # %.pdf: --Create a PDF document from a HTML file.
-#
+# @todo: allow for alternate PDF engines
 %.pdf: %.html
 	$(ECHO_TARGET)
-	prince -s $(PDF_CSS) $*.html -o $@
+	$(HTML_PDF) --javascript -s $(PDF_CSS) $*.html -o $@
 
 #
 # build: --Create HTML documents from markdown.
@@ -83,7 +113,7 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 doc-html:	$(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html)
 
 #
-# doc-markdown: --Create PDF documents from TXT_SRC, MD_SRC.
+# doc-markdown: --Create PDF documents from MMD_SRC, MD_SRC.
 #
 doc-pdf doc:	doc-markdown
 doc-markdown:	$(MMD_SRC:%.mmd=%.pdf) $(MD_SRC:%.md=%.pdf)
@@ -100,7 +130,7 @@ clean-markdown:
             $(MMD_SRC:%.mmd=$(gendir)/%.md) $(MD_SRC:%.md=$(gendir)/%.md)
 
 #
-# src-markdown: --Update MD_SRC, TXT_SRC macros.
+# src-markdown: --Update MD_SRC, MMD_SRC macros.
 #
 src:	src-markdown
 src-markdown:
