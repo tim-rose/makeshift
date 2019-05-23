@@ -15,6 +15,7 @@
 # ok_eq()           --compare two strings for equality.
 # is()              --An alias for ok_eq().
 # ok_neq()          --compare two strings for inequality.
+# isnt()            --An alias for ok_neq().
 # ok_match()        --Compare a string to a glob-pattern.
 # matches()         --An alias for ok_match().
 # nok_match()       --Compare a string to a glob-pattern.
@@ -68,6 +69,7 @@ is() { local caller_level=2; ok_eq "$@"; }
 
 #
 # ok_neq() --compare two strings for inequality.
+# isnt() --An alias for ok_neq().
 #
 ok_neq()
 {

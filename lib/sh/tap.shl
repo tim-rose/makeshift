@@ -71,19 +71,37 @@ fi
 # atexit() --Add a command to be run when the process exits.
 #
 # Remarks:
-# This routine mimics the behaviour of atexit(3).
+# This routine mimics the behaviour of atexit(3). Note that although
+# the behaviour is defined by POSIX, dash doesn't support the use of
+# save_trap=$(trap) to save the current signal actions. Hence the
+# rather ugly machinations with the temporary file.
 #
 if ! type atexit >/dev/null 2>&1; then
     atexit()
     {
-	local exit_trap
-	exit_trap=$(
-	    trap -- |
-		sed -n -e "s/trap -- [']//" -e "s/['] EXIT\$//p")
-
-	trap "$*${exit_trap:+; $exit_trap}" 0
+        local exit_trap=
+        local tmpfile=$(mktemp) && {
+            rm -f -- "$tmpfile"
+            trap
+            exit_trap=$(sed -nre "s/^trap -- '(.*)' EXIT$/\1/p")
+        } > "$tmpfile" < "$tmpfile"
+        trap "$*${exit_trap:+; $exit_trap}" 0
     }
 fi
+
+#
+# When dash grows up, this simpler form of atexit() should work...
+#
+# if ! type atexit >/dev/null 2>&1; then
+#     atexit()
+#     {
+# 	local exit_trap
+#
+# 	exit_trap=$(trap -- | sed -n -e "s/^trap -- [']//;s/['] EXIT\$//p")
+#
+# 	trap "$*${exit_trap:+; $exit_trap}" 0
+#     }
+# fi
 
 #
 # diag() --Print diagnostic lines as TAP comments.
