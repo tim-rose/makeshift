@@ -21,9 +21,9 @@ log_cmd(){ debug "exec: $*"; "$@"; }
 mung_lib_name()
 {
     echo $* |
-        sed -e 's/lib//' -e 's/\.a//' -e 's/\//-/g' \
-	    -e "s/${OS:-^}/-/" -e "s/${ARCH:-^}/-/" \
-	    -e 's/--*/-/g' -e 's/-$//g'
+        sed -e 's/lib//;s/\.a//;s/\.s//;s/\//-/g' \
+	    -e "s/${OS:-^}/-/;s/${ARCH:-^}/-/" \
+	    -e 's/--*/-/g;s/-$//g'
 }
 
 #
