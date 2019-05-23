@@ -14,22 +14,23 @@ for building software recursively. It:
    Qt, etc.)
  * supports several test frameworks (googletest, pytest, tap, phptest)
  * can package the project as a RPM or DEB installable package.
- * can build in parallel!
+ * can build reliably in parallel!
 
 ## Installation
 Just want to get started? try this:
 
-```bash
+```shell
 $ sh install.sh
 ```
 
 It installs **devkit** into _/usr/local/_; that's where GNU **make**
 will look for these files by default.
 
-Any arguments you pass to the install script are passed through to
-**make**, so if you would like to install **devkit** in a custom location:
+Any arguments you pass to the install script are passed through to a
+**make** invocation to do the work, so if you would like to install
+**devkit** in a custom location:
 
-```bash
+```shell
 $ sh install.sh prefix=/my/location
 ```
 
@@ -43,14 +44,15 @@ the following sub-directories:
 
 ### Uninstallation
 
-*Devkit* supports the (GNU make documented) `uninstall` target.  To
+**Devkit** supports the (GNU **make** documented) `uninstall` target.  To
 remove devkit from your system:
 
-```bash
+```shell
 $ make uninstall
 ```
 
-This target will remove all installed files, and any directories made empty.
+This target will remove all installed files, and any directories made
+empty thereby.
 
 ## Usage
 
@@ -65,7 +67,7 @@ actions recursively.  In particular, the targets described/suggested
 in the GNU make manual are implemented.  Here's a brief list of some
 of them:
 
-* build --build all the things!
+* all, build --build all the things!
 * test --run tests
 * install, uninstall --install/remove artefacts to a standard location
 * clean, distclean --various cleanup tasks
@@ -83,8 +85,8 @@ attached to (made dependants of) the standard targets.
 others.  The languages I use a lot have better, more complete support,
 the others, less so.  Sorry, I only have so many fingers.  To include
 the rules for developing in a particular language, declare them in the
-makefile.  You can declare more than one language.  For example, in a
-directory containing C, Python and some config files, start with
+*makefile*.  You can declare more than one language.  For example, in a
+directory containing C, Python and some configuration files, start with
 something like:
 
 ```makefile
@@ -98,7 +100,7 @@ The language rules define *how* to build, but not *what* to build.
 targets for building the lists, and updating the makefile. After
 running the following command:
 
-```bash
+```shell
 $ make src
 ```
 
@@ -132,12 +134,20 @@ include devkit.mk
 $(C_MAIN): $(C_OBJ)
 ```
 
+To install (and uninstall) the built targets add these lines to the
+*Makefile*:
+
+```makefile
+install: install-all
+uninstall: uninstall-all
+```
+
 ### Help and Debugging
 
 **Devkit** has a number of targets and features to help you (er, me)
 to see what's going on.
 
- * `make +help` --prints some help text based on the files you have included
+ * `make +help` --prints some help text based on the makefiles you have included
  * `make +vars` --prints all of the defined variables, and their values
  * `make +var[`_name_`]` --prints a single variable value
  * `make +stddirs` --prints the list of "standard" build and install directories
