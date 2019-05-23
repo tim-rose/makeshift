@@ -44,20 +44,23 @@ endif
 shlibdir	:= $(exec_prefix)/lib/sh/$(subdir)
 SHELL_TRG	:= $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
 
-SET_VERSION = $(SED) -e '/^ *version=/s/=.*/=$(VERSION)/' -e '/^ *build=/s/=.*/=$(BUILD)/'
+SET_VERSION = $(SED) -e '/^ *version=/s/=.*/=$(VERSION)/;/^ *build=/s/=.*/=$(BUILD)/'
 
 #
 # %.sh: --Rules for installing shell scripts, libraries
 #
-%:			%.sh;	$(SET_VERSION) <$*.sh >$@ && $(CHMOD) +x $@
-%:			%.awk;	$(SET_VERSION) <$*.awk >$@ && $(CHMOD) +x $@
-%:			%.sed;	$(SET_VERSION) <$*.sed >$@ && $(CHMOD) +x $@
-$(bindir)/%:		%.sh;	$(INSTALL_SCRIPT) $*.sh $@
-$(bindir)/%:		%.sed;	$(INSTALL_SCRIPT) $*.sed $@
-$(bindir)/%:		%.awk;	$(INSTALL_SCRIPT) $*.awk $@
-$(shlibdir)/%.shl:	%.shl;	$(INSTALL_DATA) $*.shl $@
-$(shlibdir)/%.awk:	%.awk;	$(INSTALL_DATA) $*.awk $@
-$(shlibdir)/%.sed:	%.sed;	$(INSTALL_DATA) $*.sed $@
+# @revisit: make/build/install inconsistencies...
+#
+%:			%.sh;	$(SET_VERSION) < $? > $@ && $(CHMOD) +x $@
+%:			%.awk;	$(SET_VERSION) < $? >$@ && $(CHMOD) +x $@
+%:			%.sed;	$(SET_VERSION) < $? > $@ && $(CHMOD) +x $@
+
+$(bindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
+$(sbindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
+
+$(shlibdir)/%.shl:	%.shl;	$(INSTALL_DATA) $? $@
+$(shlibdir)/%.awk:	%.awk;	$(INSTALL_DATA) $? $@
+$(shlibdir)/%.sed:	%.sed;	$(INSTALL_DATA) $? $@
 
 #
 # sh-src-defined: --Test that the SH_SRC variable(s) are set.

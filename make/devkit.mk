@@ -202,6 +202,7 @@ distclean-devkit:
 +features:		;	@echo $(.FEATURES)
 +dirs:			;	@echo $(.INCLUDE_DIRS)
 +files:			;	@echo $(MAKEFILE_LIST)
++version:		;	@echo devkit version $(VERSION)-$(BUILD)
 
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.
@@ -216,9 +217,6 @@ distclean-devkit:
 $(archdir):		;	$(MKDIR) $@
 $(gendir):		;	$(MKDIR) $@
 
-$(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
 $(sysconfdir)/%:	%;	$(INSTALL_DATA) $? $@
 $(libdir)/%:		%;	$(INSTALL_DATA) $? $@
 $(datadir)/%:		%;	$(INSTALL_DATA) $? $@
@@ -229,6 +227,7 @@ $(wwwdir)/%:		%;	$(INSTALL_DATA) $? $@
 # bindir/archdir: --Rules for installing any executable from archdir.
 #
 $(bindir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
+$(sbindir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%:	$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 #$(libdir)/%:		$(archdir)/%;	$(INSTALL_DATA) $? $@
 
@@ -248,4 +247,4 @@ $(system_confdir)/%:	%;	$(INSTALL_DATA) $? $@
 #
 # %.pdf: --Convert a PostScript file to PDF.
 #
-%.pdf:	%.ps;	$(PS2PDF) $*.ps
+%.pdf:	%.ps;	$(PS2PDF) $?
