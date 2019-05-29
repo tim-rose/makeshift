@@ -48,8 +48,7 @@ clean-version:
 _VERSION:; echo "0.0.0" >_VERSION
 _BUILD:; echo "0" >_BUILD
 
-major-version:
-	test -f _VERSION || echo "0.0.0" >_VERSION
+major-version: _VERSION
 	major=$$(<_VERSION cut -d. -f1); \
 	minor=$$(<_VERSION cut -d. -f2); \
 	patch=$$(<_VERSION cut -d. -f3); \
@@ -62,8 +61,7 @@ major-version:
 # A minor version is used for feature development, or any
 # backward compatible changes.
 #
-minor-version:
-	test -f _VERSION || echo "0.0.0" >_VERSION
+minor-version: _VERSION
 	major=$$(<_VERSION cut -d. -f1); \
 	minor=$$(<_VERSION cut -d. -f2); \
 	patch=$$(<_VERSION cut -d. -f3); \
@@ -75,8 +73,7 @@ minor-version:
 # Remarks:
 # Patch versions are used for bug fixes.
 #
-patch-version:
-	test -f _VERSION || echo "0.0.0" >_VERSION
+patch-version: _VERSION
 	major=$$(<_VERSION cut -d. -f1); \
 	minor=$$(<_VERSION cut -d. -f2); \
 	patch=$$(<_VERSION cut -d. -f3); \
@@ -85,6 +82,5 @@ patch-version:
 #
 # build-number: --Increment the global build counter.
 #
-build-number:
-	test -f _BUILD || echo "0" >_BUILD
-	build=$$(cat _BUILD); echo $$((build+1))>_BUILD
+build-number: _BUILD
+	build=$$(cat _BUILD); echo $$((build+1)) >_BUILD
