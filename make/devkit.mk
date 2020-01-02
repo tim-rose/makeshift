@@ -46,13 +46,14 @@
 #
 nullstring :=
 space := $(nullstring) # end of the line
+comma := ,
 MAKEFILE := $(firstword $(MAKEFILE_LIST))
 DEVKIT_HOME ?= /usr/local
 -include devkit-version.mk
 
 VERSION ?= local
 BUILD ?= latest
-SUBDIRS := $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
+SUBDIRS ?= $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
 
 #
 # define a target-specific tmpdir, for those targets that need it.
@@ -130,8 +131,8 @@ ECHO_TARGET = @+$(ECHO) "\$$?: $?"; $(ECHO) "\$$^: $^"
 #
 all:	build
 
-include $(VARIANT:%=variant/%.mk) os/$(OS).mk arch/$(ARCH).mk
-include project/$(PROJECT).mk
+-include $(VARIANT:%=variant/%.mk)
+include os/$(OS).mk arch/$(ARCH).mk project/$(PROJECT).mk
 #include vcs/$(VCS).mk
 
 #
@@ -217,6 +218,9 @@ distclean-devkit:
 $(archdir):		;	$(MKDIR) $@
 $(gendir):		;	$(MKDIR) $@
 
+$(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
+$(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
+$(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
 $(sysconfdir)/%:	%;	$(INSTALL_DATA) $? $@
 $(libdir)/%:		%;	$(INSTALL_DATA) $? $@
 $(datadir)/%:		%;	$(INSTALL_DATA) $? $@
@@ -247,4 +251,4 @@ $(system_confdir)/%:	%;	$(INSTALL_DATA) $? $@
 #
 # %.pdf: --Convert a PostScript file to PDF.
 #
-%.pdf:	%.ps;	$(PS2PDF) $?
+%.pdf:	%.ps;	$(PS2PDF) $*.ps

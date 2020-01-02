@@ -26,7 +26,7 @@ system_root	= $(DESTDIR)
 # into "/etc" as well as the adjusted $sysconfdir.
 #
 system_confdir	= $(abspath $(system_root)/etc/$(subdir))
-export pkgver	= $(abspath $(PACKAGE)$(VERSION:%=-%))
+export pkgver	= $(PACKAGE)$(VERSION:%=-%)
 
 export archdir	= $(VARIANT:%=%-)$(OS:%=%-)$(ARCH)
 export gendir	= $(archdir)/gen

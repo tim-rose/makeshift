@@ -31,8 +31,8 @@ PY_TIDY ?= autopep8
 pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
 PY_TRG = $(PY_SRC:%.py=%)
 
-%:			%.py;	$(CP) $? $@ && $(CHMOD) +x $@
-$(bindir)/%:		%.py;	$(INSTALL_SCRIPT) $? $@
+%:			%.py;	$(CP) $*.py $@ && $(CHMOD) +x $@
+$(bindir)/%:		%.py;	$(INSTALL_SCRIPT) $*.py $@
 $(pythonlibdir)/%.py:	%.py;	$(INSTALL_DATA) $? $@
 $(pythonlibdir)/%.py:	$(gendir)/%.py;	$(INSTALL_DATA) $? $@
 
@@ -112,7 +112,7 @@ lint-python:	| cmd-exists[$(PY_LINT)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
 	-$(PY_LINT) --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
 
-lint[%.py]:	| cmd-exists[$(PY_LINT)]
+lint[%.py]:	| cmd-exists[$(PY_LINT)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
 	-$(PY_LINT) --max-line-length=110 --ignore=E402,E721 $*.py
 

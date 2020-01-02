@@ -79,7 +79,7 @@ $(archdir)/$(LIB_NAME).$(so):	$(archdir)/lib.$(s.a)
 	$(MKDIR) $(tmpdir)
 	$(LN) $< $(tmpdir)
 	cd $(tmpdir) && $(AR) x lib.$(s.a)
-	$(LD) $(LD_SHARED_FLAGS) -o $@ $(tmpdir)/*.o
+	$(LD) $(LD_SHARED_FLAGS) -o $@ $(tmpdir)/*.$(s.o)
 	$(RM) -r $(tmpdir)
 #
 # clean: --Remove the library file.

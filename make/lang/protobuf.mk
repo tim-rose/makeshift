@@ -13,7 +13,7 @@
 # The protobuf module adds support for building Protobuf-related software.
 # It defines some pattern rules for compiling ".proto" files into
 # C++, python (but not java, yet).
-# REVISIT: consider a flag for optionally building various language stubs (e.g. protobuf_lang = c++ python java)
+# REVISIT: consider a flag for optionally building various language stubs (e.g. protobuf-lang = c++ python java)
 #
 .PHONY: $(recursive-targets:%=%-protobuf)
 
@@ -37,11 +37,11 @@ PROTOBUF_TRG  = $(PROTOBUF_C++) $(PROTOBUF_H++) $(PROTOBUF_PY)
 
 .PRECIOUS: $(PROTOBUF_TRG)
 
-ifdef .o
-PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(.o))
+ifdef o
+PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(o))
 endif
-ifdef .s.o
-PROTOBUF_OBJ += $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(.s.o))
+ifdef s.o
+PROTOBUF_OBJ += $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(s.o))
 endif
 
 #
