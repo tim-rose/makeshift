@@ -19,6 +19,7 @@ directories=
 file=Makefile
 name=FILES
 wrap=60
+chdir=
 usage()
 {
     cat <<EOF
@@ -34,6 +35,7 @@ Options:
     -n <name>   modified the specified macro (default: $name)
     -p		just use the file names as given (don't expand via ls)
     -w <length>	wrap the macro definition at <length> (default: $wrap)
+    -C <dir>    change into  directory <dir> before doing anything
 
 EOF
 }
@@ -55,7 +57,7 @@ list_files()
     fi
 }
 
-while getopts "b:df:n:pw:vq_" c
+while getopts "b:df:n:pw:C:vq_" c
 do
     case $c in
     b)  backup="$OPTARG";;
@@ -64,6 +66,7 @@ do
     n)  name="$OPTARG";;
     p)  phony=1;;
     w)  wrap="$OPTARG";;
+    C)  chdir="$OPTARG";;
     v)  verbose=1 debug=;;
     q)  verbose=  debug=;;
     _)  verbose=1 debug=1;;
@@ -73,7 +76,7 @@ do
 done
 shift $(($OPTIND - 1))
 
-if grep "^${name}[ 	]*[:+?]*=[ 	]*\$(" $file >/dev/null; then
+if grep "^${name}[ 	]*[:+?]*=[ 	]*\$[{(]" $file >/dev/null; then
     info '%s: dynamic %s definition (skipped)' "$file" "$name"
     exit 0
 fi
@@ -90,6 +93,10 @@ fi
 
 if [ "$directories" ]; then
     ls_opts=-d
+fi
+
+if [ "$chdir" ]; then
+    cd "$chdir" || exit $?
 fi
 
 #
