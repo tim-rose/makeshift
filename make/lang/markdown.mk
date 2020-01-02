@@ -45,19 +45,6 @@
 #
 .PHONY: $(recursive-targets:%=%-markdown)
 
-MD ?= cmark-gfm
-ALL_MDFLAGS ?= --unsafe --smart --extension table --extension footnotes \
-    $(OS.MDFLAGS) $(ARCH.MDFLAGS) $(PROJECT.MDFLAGS) \
-    $(LOCAL.MDFLAGS) $(TARGET.MDFLAGS) $(MDFLAGS)
-
-MMD ?= multimarkdown
-ALL_MMDFLAGS ?= --full $(OS.MMDFLAGS) $(ARCH.MMDFLAGS) $(PROJECT.MMDFLAGS) \
-    $(LOCAL.MMDFLAGS) $(TARGET.MMDFLAGS) $(MMDFLAGS)
-
-HTML_PDF ?= prince
-ALL_HTML_PDFFLAGS ?= $(OS.HTML_PDFFLAGS) $(ARCH.HTML_PDFFLAGS) \
-    $(PROJECT.HTML_PDFFLAGS) $(LOCAL.HTML_PDFFLAGS) $(TARGET.HTML_PDFFLAGS) $(HTML_PDFFLAGS)
-
 ifdef autosrc
     LOCAL_MD_SRC := $(wildcard *.md)
     LOCAL_MMD_SRC := $(wildcard *.mmd)
@@ -66,10 +53,21 @@ ifdef autosrc
     MMD_SRC ?= $(LOCAL_MMD_SRC)
 endif
 
-MMD_CSS ?= $(DEVKIT_HOME)/share/doc/css/plain.css
-PDF_CSS ?= $(DEVKIT_HOME)/share/doc/css/print.css
+MD ?= cmark-gfm
+ALL_MDFLAGS ?= --unsafe --smart --extension table --extension footnotes \
+    $(OS.MDFLAGS) $(ARCH.MDFLAGS) $(PROJECT.MDFLAGS) \
+    $(LOCAL.MDFLAGS) $(TARGET.MDFLAGS) $(MDFLAGS)
+
 MD_PROLOGUE = $(DEVKIT_HOME)/share/doc/cmark-prologue.txt
 MD_EPILOGUE = $(DEVKIT_HOME)/share/doc/cmark-epilogue.txt
+
+MMD ?= multimarkdown
+ALL_MMDFLAGS ?= --full $(OS.MMDFLAGS) $(ARCH.MMDFLAGS) $(PROJECT.MMDFLAGS) \
+    $(LOCAL.MMDFLAGS) $(TARGET.MMDFLAGS) $(MMDFLAGS)
+
+HTML_PDF ?= prince
+ALL_HTML_PDFFLAGS ?= $(OS.HTML_PDFFLAGS) $(ARCH.HTML_PDFFLAGS) \
+    $(PROJECT.HTML_PDFFLAGS) $(LOCAL.HTML_PDFFLAGS) $(TARGET.HTML_PDFFLAGS) $(HTML_PDFFLAGS)
 
 #
 # Rules to install HTML files (@revisit: should go in html.mk?)
@@ -86,15 +84,15 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 	$(MD) $(ALL_MDFLAGS) $*.md >> $@
 	cat $(MD_EPILOGUE) >> $@
 
-%.html:	%.mmd
-	$(ECHO_TARGET)
-	$(MMD) $(ALL_MMDFLAGS) $*.mmd > $@
-
 %.html:	$(gendir)/%.md
 	$(ECHO_TARGET)
 	sed -e 's|<title>.*|<title>$*</title>|' $(MD_PROLOGUE) >$@
 	$(MD) $(ALL_MDFLAGS) $(gendir)/$*.md >> $@
 	cat $(MD_EPILOGUE) >> $@
+
+%.html:	%.mmd
+	$(ECHO_TARGET)
+	$(MMD) $(ALL_MMDFLAGS) $*.mmd > $@
 
 %.html:	$(gendir)/%.mmd
 	$(ECHO_TARGET)
@@ -105,7 +103,7 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 # @todo: allow for alternate PDF engines
 %.pdf: %.html
 	$(ECHO_TARGET)
-	$(HTML_PDF) --javascript -s $(PDF_CSS) $*.html -o $@
+	$(HTML_PDF) --javascript $*.html -o $@
 
 #
 # build: --Create HTML documents from markdown.
@@ -125,9 +123,7 @@ distclean:	clean-markdown
 clean:	clean-markdown
 clean-markdown:
 	$(ECHO_TARGET)
-	$(RM) $(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html) \
-            $(MMD_SRC:%.mmd=%.pdf) $(MD_SRC:%.md=%.pdf) \
-            $(MMD_SRC:%.mmd=$(gendir)/%.md) $(MD_SRC:%.md=$(gendir)/%.md)
+	$(RM) $(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html) $(MMD_SRC:%.mmd=%.pdf) $(MD_SRC:%.md=%.pdf) $(MMD_SRC:%.mmd=$(gendir)/%.mmd) $(MD_SRC:%.md=$(gendir)/%.md)
 
 #
 # src-markdown: --Update MD_SRC, MMD_SRC macros.
