@@ -203,7 +203,7 @@ distclean-devkit:
 +features:		;	@echo $(.FEATURES)
 +dirs:			;	@echo $(.INCLUDE_DIRS)
 +files:			;	@echo $(MAKEFILE_LIST)
-+version:		;	@echo devkit version $(VERSION)-$(BUILD)
++version:		;	@echo devkit version $(DEVKIT_VERSION)-$(DEVKIT_BUILD)
 
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.
