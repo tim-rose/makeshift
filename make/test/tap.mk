@@ -22,19 +22,12 @@ ALL_PROVE_FLAGS = $(TARGET.PROVE_FLAGS) $(LOCAL.PROVE_FLAGS) \
 # test: --Run all the tests, and summarise them.
 #
 test:	test-tap
-test-tap:	$(TAP_TESTS)
-	$(PROVE) $(ALL_PROVE_FLAGS) $(TAP_TESTS)
+test-tap:
+	$(ECHO_TARGET)
+	$(PROVE) $(ALL_PROVE_FLAGS) $^
 
 #
 # test[%]: --Run a particular test.
 #
 test[%]:	$(archdir)/%;      $(archdir)/$*
 test[%.sh]:	%;      ./$*
-
-#
-# clean: --Cleanup after TAP tests.
-#
-clean:	clean-tap
-distclean:	clean-tap
-.PHONY: clean-tap
-clean-tap:;	$(RM) $(TAP_TESTS:%=%.tap)

@@ -3,7 +3,7 @@
 #
 # Remarks:
 # The googletest rules assume that you're developing C++ code, and
-# make reference to make variables defined in the lang/c++ module.
+# make reference to `make` variables defined in the lang/c++ module.
 #
 GTEST_LIBS = gtest_main gtest dl util
 TEST_XML ?= google-tests.xml
