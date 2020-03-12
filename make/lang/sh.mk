@@ -42,7 +42,10 @@ ifdef autosrc
 endif
 
 shlibdir	:= $(exec_prefix)/lib/sh/$(subdir)
-SHELL_TRG	:= $(SH_SRC:%.sh=%) $(AWK_SRC:%.awk=%) $(SED_SRC:%.sed=%)
+SH_TRG	:= $(SH_SRC:%.sh=%)
+AWK_TRG	:= $(AWK_SRC:%.awk=%)
+SED_TRG	:= $(SED_SRC:%.sed=%)
+SHELL_TRG := $(SH_TRG) $(AWK_TRG) $(SED_TRG)
 
 SET_VERSION = $(SED) -e '/^ *version=/s/=.*/=$(VERSION)/;/^ *build=/s/=.*/=$(BUILD)/'
 
