@@ -22,7 +22,7 @@ ALL_PROVE_FLAGS = $(TARGET.PROVE_FLAGS) $(LOCAL.PROVE_FLAGS) \
 # test: --Run all the tests, and summarise them.
 #
 test:	test-tap
-test-tap:
+test-tap: | cmd-exists[$(PROVE)]
 	$(ECHO_TARGET)
 	$(PROVE) $(ALL_PROVE_FLAGS) $^
 
