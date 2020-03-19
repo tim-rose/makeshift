@@ -41,7 +41,7 @@ uninstall-lib-lib:	uninstall-lib-static-lib uninstall-lib-include
 uninstall-lib-static-lib:
 	$(ECHO_TARGET)
 	$(RM) $(libdir)/$(LIB_NAME).$(a)
-	$(RMDIR) -p $(libdir) 2>/dev/null || true
+	$(RMDIR) -p $(libdir) 2>/dev/null ||:
 
 #
 # archdir/%.a: --(re)build a library.

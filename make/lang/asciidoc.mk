@@ -84,7 +84,7 @@ install-asciidoc: $(TXT_SRC:%.txt=$(docdir)/%.pdf)
 uninstall-asciidoc:
 	$(ECHO_TARGET)
 	$(RM) $(TXT_SRC:%.txt=$(docdir)/%.pdf)
-	$(RMDIR) -p $(docdir) 2>/dev/null || true
+	$(RMDIR) -p $(docdir) 2>/dev/null ||:
 
 #
 # src: --Update the TXT_SRC macro with a list of asciidoc text files.
@@ -108,4 +108,4 @@ clean-asciidoc:
 todo:	todo-asciidoc
 todo-asciidoc:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(TXT_SRC)  /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(TXT_SRC)  /dev/null ||:

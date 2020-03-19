@@ -76,12 +76,12 @@ uninstall-conf:
 	$(ECHO_TARGET)
 	$(RM) $(CONF_SRC:%=$(sysconfdir)/%) \
             $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
-	$(RMDIR) -p $(sysconfdir) 2>/dev/null || true
+	$(RMDIR) -p $(sysconfdir) 2>/dev/null ||:
 uninstall-system_conf:
 	$(ECHO_TARGET)
 	$(RM) $(CONF_SRC:%=$(system_confdir)/%) \
             $(CFG_SRC:%=$(system_confdir)/%) $(INI_SRC:%=$(system_confdir)/%)
-	$(RMDIR) -p $(system_confdir) 2>/dev/null || true
+	$(RMDIR) -p $(system_confdir) 2>/dev/null ||:
 
 #
 # toc: --Build the table-of-contents for config files.
@@ -116,4 +116,4 @@ src-conf:
 todo:	todo-conf
 todo-conf:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(CONF_SRC) $(CFG_SRC) $(INI_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(CONF_SRC) $(CFG_SRC) $(INI_SRC) /dev/null ||:

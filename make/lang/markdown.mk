@@ -140,4 +140,4 @@ src-markdown:
 todo:	todo-markdown
 todo-markdown:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(MMD_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(MMD_SRC) /dev/null ||:

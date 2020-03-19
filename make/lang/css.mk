@@ -57,7 +57,7 @@ install-css:	$(CSS_SRC:%.css=$(wwwdir)/%.css) \
 uninstall-css:
 	$(ECHO_TARGET)
 	$(RM) $(CSS_SRC:%.css=$(wwwdir)/%.css) $(CSS_MAP_SRC:%.css.map=$(wwwdir)/%.css.map)
-	$(RMDIR) -p $(wwwdir) 2>/dev/null || true
+	$(RMDIR) -p $(wwwdir) 2>/dev/null ||:
 
 #
 # src: --Update the CSS_SRC, SCSS_SRC macros.
@@ -92,4 +92,4 @@ toc[%.less]:
 todo:	todo-css
 todo-css:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(CSS_SRC) $(SCSS_SRC) $(LESS_SRC) /dev/null ||:

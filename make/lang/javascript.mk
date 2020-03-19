@@ -28,7 +28,7 @@ install-javascript:	$(JS_SRC:%=$(wwwdir)/%);	$(ECHO_TARGET)
 #
 uninstall-javascript:
 	$(RM) $(JS_SRC:%=$(wwwdir)/%)
-	$(RMDIR) -p $(wwwdir) 2>/dev/null || true
+	$(RMDIR) -p $(wwwdir) 2>/dev/null ||:
 
 #
 # toc-javascript: --Build the table-of-contents for JavaScript files.
@@ -51,4 +51,4 @@ src-javascript:
 todo:	todo-javascript
 todo-javascript:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(JS_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(JS_SRC) /dev/null ||:

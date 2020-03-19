@@ -102,4 +102,4 @@ src-protobuf:
 todo:	todo-protobuf
 todo-protobuf:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(PROTOBUF_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(PROTOBUF_SRC) /dev/null ||:

@@ -25,6 +25,8 @@
 # See Also:
 # https://semver.org
 #
+# TODO: Add support for building Windows ".msi" packages.
+#
 LOCAL_PACKAGE := $(notdir $(CURDIR))
 PACKAGE ?= $(LOCAL_PACKAGE)
 

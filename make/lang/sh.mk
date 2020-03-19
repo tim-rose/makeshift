@@ -97,7 +97,7 @@ uninstall-sh:
 	$(ECHO_TARGET)
 	$(RM) $(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
             $(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
-	$(RMDIR) -p $(bindir) $(shlibdir) 2>/dev/null || true
+	$(RMDIR) -p $(bindir) $(shlibdir) 2>/dev/null ||:
 
 #
 # clean: --Remove shell, awk, sed script executables.
@@ -133,7 +133,7 @@ todo:	todo-sh
 todo-sh:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) \
-	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null || true
+	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null ||:
 
 #
 # lint: --Check sh style.

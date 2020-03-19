@@ -116,4 +116,4 @@ src-qt:
 todo:	todo-qt
 todo-qt:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(QTR_SRC) $(QUI_SRC) $(QTH_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(QTR_SRC) $(QUI_SRC) $(QTH_SRC) /dev/null ||:

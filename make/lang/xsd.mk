@@ -71,7 +71,7 @@ install-xsd: $(XSD_SRC:%=$(xsddir)/%)
 uninstall-xsd:	uninstall-xsd-xsd uninstall-xsd-include
 	$(ECHO_TARGET)
 	$(RM) $(XSD_SRC:%=$(xsddir)/%)
-	$(RMDIR) -p $(xsddir) 2>/dev/null || true
+	$(RMDIR) -p $(xsddir) 2>/dev/null ||:
 
 $(gendir)/$(XML_SCHEMA).$(H++_SUFFIX): | $(gendir)
 	$(ECHO_TARGET)

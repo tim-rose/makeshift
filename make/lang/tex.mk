@@ -55,4 +55,4 @@ todo:	todo-tex
 todo-tex:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) \
-	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null || true
+	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null ||:

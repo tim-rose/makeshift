@@ -54,7 +54,7 @@ install-elisp:	$(ELISP_OBJ:%.elc=$(elispdir)/%.elc)
 uninstall-elisp:
 	$(ECHO_TARGET)
 	$(RM) $(ELISP_OBJ:%.elc=$(elispdir)/%.elc)
-	$(RMDIR) -p $(elispdir) 2>/dev/null || true
+	$(RMDIR) -p $(elispdir) 2>/dev/null ||:
 
 #
 # clean: --Remove byte-compiled elisp.
@@ -87,4 +87,4 @@ src-elisp:
 todo:	todo-elisp
 todo-elisp:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(ELISP_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(ELISP_SRC) /dev/null ||:

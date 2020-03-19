@@ -73,7 +73,7 @@ install-java:	$(PL_SRC:%.pl=$(bindir)/%) $(PM_SRC:%.pm=$(javalibdir)/%.pm)
 uninstall-java:	$(PL_SRC:%.pl=$(bindir)/%) $(PM_SRC:%.pm=$(javalibdir)/%.pm)
 	$(ECHO_TARGET)
 	$(RM) $(PL_SRC:%.pl=$(bindir)/%) $(PM_SRC:%.pm=$(javalibdir)/%.pm)
-	$(RMDIR) -p $(bindir) $(javalibdir) 2>/dev/null || true
+	$(RMDIR) -p $(bindir) $(javalibdir) 2>/dev/null ||:
 
 #
 # clean: --Remove java class files.
@@ -114,4 +114,4 @@ tags-java:	src-var-defined[JAVA_SRC]
 todo:	todo-java
 todo-java:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(JAVA_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(JAVA_SRC) /dev/null ||:

@@ -48,7 +48,7 @@ uninstall-cmd:
 	$(RM) $(CMD_SRC:%.cmd=$(bindir)/%.cmd) $(BAT_SRC:%.bat=$(bindir)/%.bat) \
     $(BTM_SRC:%.btm=$(cmdlibdir)/%.btm)
 
-	$(RMDIR) -p $(bindir) $(cmdlibdir) 2>/dev/null || true
+	$(RMDIR) -p $(bindir) $(cmdlibdir) 2>/dev/null ||:
 
 #
 # toc: --Build the table-of-contents for cmd files
@@ -75,4 +75,4 @@ src-cmd:
 todo:	todo-cmd
 todo-cmd:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(ALL_CMD_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(ALL_CMD_SRC) /dev/null ||:

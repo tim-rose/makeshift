@@ -168,7 +168,7 @@ install-c++:	$(C++_MAIN:$(archdir)/%=$(bindir)/%)
 uninstall-c++: src-var-defined[C++_MAIN_SRC]
 	$(ECHO_TARGET)
 	$(RM) $(C++_MAIN:$(archdir)/%=$(bindir)/%)
-	$(RMDIR) -p $(bindir) 2>/dev/null || true
+	$(RMDIR) -p $(bindir) 2>/dev/null ||:
 
 #
 # clean: --Remove objects and executables created from C++ files.
@@ -251,4 +251,4 @@ tags-c++:	c++-src-defined
 todo:	todo-c++
 todo-c++:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(H++_SRC) $(C++_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(H++_SRC) $(C++_SRC) /dev/null ||:

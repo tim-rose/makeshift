@@ -75,4 +75,4 @@ src-plantuml:
 todo:	todo-plantuml
 todo-plantuml:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(PUML_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(PUML_SRC) /dev/null ||:

@@ -53,7 +53,7 @@ install-perl:	$(PL_SRC:%.pl=$(bindir)/%) $(PM_SRC:%.pm=$(perllibdir)/%.pm)
 uninstall-perl:	$(PL_SRC:%.pl=$(bindir)/%) $(PM_SRC:%.pm=$(perllibdir)/%.pm)
 	$(ECHO_TARGET)
 	$(RM) $(PL_SRC:%.pl=$(bindir)/%) $(PM_SRC:%.pm=$(perllibdir)/%.pm)
-	$(RMDIR) -p $(bindir) $(perllibdir) 2>/dev/null || true
+	$(RMDIR) -p $(bindir) $(perllibdir) 2>/dev/null ||:
 
 #
 # xgettext support
@@ -100,7 +100,7 @@ src-perl:
 todo:	todo-perl
 todo-perl:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(PERL_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(PERL_SRC) /dev/null ||:
 
 #
 # *.pot --extract strings for internationalisation.

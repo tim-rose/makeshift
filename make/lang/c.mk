@@ -189,7 +189,8 @@ build[%.c]:   $(archdir)/%.$(o); $(ECHO_TARGET)
 # The install (and uninstall) target is not invoked by default,
 # it must be added as a dependent of the "install" target.
 #
-install-c:	$(C_MAIN:$(archdir)/%=$(bindir)/%); $(ECHO_TARGET)
+install-c:	$(C_MAIN:$(archdir)/%=$(bindir)/%)
+	$(ECHO_TARGET)
 install-strip-c:	install-strip-file[$(C_MAIN:$(archdir)/%=$(bindir)/%)]
 	$(ECHO_TARGET)
 
@@ -199,7 +200,7 @@ install-strip-c:	install-strip-file[$(C_MAIN:$(archdir)/%=$(bindir)/%)]
 uninstall-c:
 	$(ECHO_TARGET)
 	$(RM) $(C_MAIN:$(archdir)/%=$(bindir)/%)
-	$(RMDIR) -p $(bindir) 2>/dev/null || true
+	$(RMDIR) -p $(bindir) 2>/dev/null ||:
 
 #
 # clean: --Remove objects and executables created from C files.
@@ -282,4 +283,4 @@ tags-c:	c-src-defined
 todo:	todo-c
 todo-c:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(H_SRC) $(C_SRC) /dev/null || true
+	@$(GREP) $(TODO_PATTERN) $(H_SRC) $(C_SRC) /dev/null ||:

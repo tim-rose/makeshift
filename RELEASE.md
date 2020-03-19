@@ -16,12 +16,12 @@ This document summarises the changes and features for each devkit release.
 * more, consistently named install helper targets (e.g. `install-c++`)
 * uninstall targets (e.g. `uninstall-c++`)
 * total rebuild of library handling:
-* * most configuration is optional (`LIB`, `LIB_ROOT`, etc.)
-* * `LIB_OBJ` no longer used
-* * *include* automatically cleaned
+  * most configuration is optional (`LIB`, `LIB_ROOT`, etc.)
+  * `LIB_OBJ` no longer used
+  * *include* automatically cleaned
 * much better *ld* handling:
-* * `LIB_PATH` sets include and *ld* path
-* * specify libraries as `-l<libname>`, get dependency tracking
+  * `LIB_PATH` sets include and *ld* path
+  * specify libraries as `-l<libname>`, get dependency tracking
 * markdown ships with some useful default CSS
 * more/better assertions in tap
 * added `install-strip`, used by RPM targets.

@@ -48,8 +48,8 @@ uninstall-lib-include:	uninstall-lib-include-protobuf
 
 uninstall-lib-include-protobuf:
 	$(RM) $(PROTOBUF_SRC:%.proto=$(includedir)/%.pb.$(H++_SUFFIX))
-	$(RMDIR) -p $(includedir) 2>/dev/null || true
+	$(RMDIR) -p $(includedir) 2>/dev/null ||:
 
 uninstall-lib-python-protobuf:
 	$(RM) $(PROTOBUF_SRC:%.proto=$(pythonlibdir)/%.py)
-	$(RMDIR) -p $(pythonlibdir) 2>/dev/null || true
+	$(RMDIR) -p $(pythonlibdir) 2>/dev/null ||:
