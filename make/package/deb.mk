@@ -19,8 +19,8 @@
 #
 DEB_ARCH ?= $(shell mk-deb-buildarch debian/control)
 P_V.R	= $(PACKAGE)$(VERSION:%=_%)$(BUILD:%=.%)
-V.R_A	= $(VERSION).$(BUILD)_$(ARCH)
-P_V.R_A	= $(PACKAGE)_$(VERSION).$(BUILD)_$(ARCH)
+V.R_A	= $(VERSION).$(BUILD)_$(DEB_ARCH)
+P_V.R_A	= $(PACKAGE)_$(VERSION).$(BUILD)_$(DEB_ARCH)
 
 #
 # deb: --Build a debian package for the current version/release/arch.
