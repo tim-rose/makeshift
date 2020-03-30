@@ -1,6 +1,6 @@
 # Devkit --Recursive Make Considered Useful
 
-*Devkit* is a library of **make** rules and helper **shell** scripts
+**Devkit** is a library of **make** rules and helper **shell** scripts
 for building software recursively. It:
 
  * implements almost all of the "standard" make targets documented
@@ -148,10 +148,15 @@ uninstall: uninstall-all
 to see what's going on.
 
  * `make +help` --prints some help text based on the makefiles you have included
- * `make +vars` --prints all of the defined variables, and their values
+ * `make +vars` --prints all of the defined variables, and their values (disabled on Windows)
  * `make +var[`_name_`]` --prints a single variable value
  * `make +stddirs` --prints the list of "standard" build and install directories
+ * `make +version` --prints the current **devkit** version
+ * `make +features` --prints the current **make** features
+ * `make +dirs` --prints the include directories used by **make**
+ * `make +files` --prints the additional files included by **make**
  * `make VERBOSE=1` --prints the targets and their dependants when executing.
+ * `make VERBOSE=color` --prints the targets+dependants with ANSI coloring.
 
 ## Contributing
 
@@ -163,7 +168,15 @@ particularly for languages that I don't use yet.  You know the drill:
  1. push to the branch: `git push origin my-idea`
  1. submit a pull request.
 
-## Licence
+## License
 
-You are licensed to use devkit under the MIT licence.
-See the file `LICENCE` for details.
+You are licensed to use devkit under the MIT license.
+See the file `LICENSE` for details.
+
+## TODO
+
+* create MSI packages using Wix
+* create automated tests
+* add support for "performance testing" targets
+* better support for embedded projects and cross-compilation
+* automatically install-on-demand **devkit** commands (and a project's libraries?).
