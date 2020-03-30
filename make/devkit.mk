@@ -218,9 +218,9 @@ distclean-devkit:
 $(archdir):		;	$(MKDIR) $@
 $(gendir):		;	$(MKDIR) $@
 
-$(bindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(sbindir)/%:		%;	$(INSTALL_PROGRAM) $? $@
-$(libexecdir)/%:	%;	$(INSTALL_PROGRAM) $? $@
+$(bindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
+$(sbindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
+$(libexecdir)/%:	%;	$(INSTALL_SCRIPT) $? $@
 $(sysconfdir)/%:	%;	$(INSTALL_DATA) $? $@
 $(libdir)/%:		%;	$(INSTALL_DATA) $? $@
 $(datadir)/%:		%;	$(INSTALL_DATA) $? $@
