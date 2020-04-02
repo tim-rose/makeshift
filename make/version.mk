@@ -53,6 +53,7 @@ major-version: _VERSION
 	minor=$$(<_VERSION cut -d. -f2); \
 	patch=$$(<_VERSION cut -d. -f3); \
 	echo "$$((major+1)).0.0" >_VERSION
+	echo 0 >_BUILD
 
 #
 # minor-version: --Increment the minor version number.
@@ -66,6 +67,7 @@ minor-version: _VERSION
 	minor=$$(<_VERSION cut -d. -f2); \
 	patch=$$(<_VERSION cut -d. -f3); \
 	echo "$$major.$$((minor+1)).0" >_VERSION
+	echo 0 >_BUILD
 
 #
 # patch-version: --Increment the patch version number.
@@ -78,9 +80,10 @@ patch-version: _VERSION
 	minor=$$(<_VERSION cut -d. -f2); \
 	patch=$$(<_VERSION cut -d. -f3); \
 	echo "$$major.$$minor.$$((patch+1))" >_VERSION
+	echo 0 >_BUILD
 
 #
 # build-number: --Increment the global build counter.
 #
 build-number: _BUILD
-	build=$$(cat _BUILD); echo $$((build+1)) >_BUILD
+	build=$$(cat _BUILD) && echo $$((build+1)) >_BUILD
