@@ -8,12 +8,11 @@
 #
 # Remarks:
 # These rules runs the tests in the current directory according to
-# phpunit's odd ideas for finding tests (you can't name the tests
-# explicitly, you name the directory containing them, and phpunit
+# *phpunit's* odd ideas for finding tests (you can't name the tests
+# explicitly, you name the directory containing them, and *phpunit*
 # "discovers" them according to some pattern).
 #
 
-PHP_TESTS ?= $(PHP_SRC)
 PHPUNIT ?= phpunit
 ALL_PHPUNIT_FLAGS = $(TARGET.PHPUNIT_FLAGS) $(LOCAL.PHPUNIT_FLAGS) \
     $(PROJECT.PHPUNIT_FLAGS) $(ARCH.PHPUNIT_FLAGS) $(OS.PHPUNIT_FLAGS) \

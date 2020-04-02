@@ -25,7 +25,7 @@ $(TEST_EXE):	$(C++_OBJ) $(GTEST_LIBS:%=-l%)
 test:	test-google
 .PHONY:	test-google
 test-google:	$(TEST_EXE)
-	@$(ECHO_TARGET)
+	$(ECHO_TARGET)
 	$(TEST_EXE) $(ALL_GTEST_FLAGS) --gtest_output=xml:$(TEST_XML)
 
 clean:	clean-googletest
