@@ -18,9 +18,9 @@
 # just one more to add to the confusion.
 #
 DEB_ARCH ?= $(shell mk-deb-buildarch debian/control)
-P_V.R	= $(PACKAGE)$(VERSION:%=_%)$(BUILD:%=.%)
-V.R_A	= $(VERSION).$(BUILD)_$(DEB_ARCH)
-P_V.R_A	= $(PACKAGE)_$(VERSION).$(BUILD)_$(DEB_ARCH)
+P_V.B	= $(PACKAGE)$(VERSION:%=_%)$(BUILD:%=.%)
+V.B_A	= $(VERSION).$(BUILD)_$(DEB_ARCH)
+P_V.B_A	= $(PACKAGE)_$(VERSION).$(BUILD)_$(DEB_ARCH)
 
 #
 # deb: --Build a debian package for the current version/release/arch.
@@ -30,9 +30,9 @@ P_V.R_A	= $(PACKAGE)_$(VERSION).$(BUILD)_$(DEB_ARCH)
 #
 .PHONY:		package-deb deb
 package-deb:	deb
-deb:	control-ok $(P_V.R_A).deb
+deb:	control-ok $(P_V.B_A).deb
 
-$(P_V.R_A).deb:	debian-binary control.tar.gz data.tar.gz
+$(P_V.B_A).deb:	debian-binary control.tar.gz data.tar.gz
 	$(ECHO_TARGET)
 	$(FAKEROOT) mk-ar debian-binary control.tar.gz data.tar.gz >$@
 
@@ -52,11 +52,6 @@ control.tar.gz:	debian/md5sums debian/conffiles
 
 #
 # data.tar.gz: --Create the installed binary tarball.
-#
-# Remarks:
-# This target creates the ".data" sub-directory as a side-effect,
-# which is also used by the md5sums target.  ".data" is removed
-# by the clean target.
 #
 data.tar.gz:	$(DESTDIR_ROOT)
 	$(ECHO_TARGET)
@@ -124,4 +119,4 @@ clean-deb:
 .PHONY: distclean-deb
 distclean-deb:
 	$(ECHO_TARGET)
-	$(RM) debian/conffiles debian/md5sums $(P_V.R_A).deb
+	$(RM) debian/conffiles debian/md5sums $(P_V.B_A).deb
