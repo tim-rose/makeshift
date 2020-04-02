@@ -67,7 +67,7 @@ HTML_XSL = /opt/local/etc/asciidoc/docbook-xsl/xhtml.xsl
 #
 # build: --Build PDF and HTML documents from asciidoc files.
 #
-build:	build-asciidoc-html build-asciidoc-pdf
+build:	build-asciidoc-html build-asciidoc-pdf | cmd-exists[asciidoc]
 
 build-asciidoc-html:	$(TXT_SRC:%.txt=%.html)
 build-asciidoc-pdf:	$(TXT_SRC:%.txt=%.pdf)
@@ -92,7 +92,7 @@ uninstall-asciidoc:
 src:	src-asciidoc
 src-asciidoc:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn TXT_SRC *.txt
+	$(Q)mk-filelist -f $(MAKEFILE) -qn TXT_SRC *.txt
 
 #
 # clean: --cleanup asciidoc intermediate files (.xml, .fo, .pdf).

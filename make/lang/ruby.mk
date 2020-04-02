@@ -68,7 +68,7 @@ toc-ruby:
 src:	src-ruby
 src-ruby:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn RB_SRC *.rb
+	$(Q)mk-filelist -f $(MAKEFILE) -qn RB_SRC *.rb
 #
 # todo: --Report unfinished work in ruby files.
 #

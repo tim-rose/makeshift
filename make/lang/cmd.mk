@@ -65,9 +65,9 @@ uninstall-cmd:
 src:	src-cmd
 src-cmd:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn CMD_SRC *.cmd
-	@mk-filelist -f $(MAKEFILE) -qn BAT_SRC *.bat
-	@mk-filelist -f $(MAKEFILE) -qn BTM_SRC *.btm
+	$(Q)mk-filelist -f $(MAKEFILE) -qn CMD_SRC *.cmd
+	$(Q)mk-filelist -f $(MAKEFILE) -qn BAT_SRC *.bat
+	$(Q)mk-filelist -f $(MAKEFILE) -qn BTM_SRC *.btm
 
 #
 # todo: --Report unfinished work in cmd code.

@@ -93,4 +93,4 @@ clean-xsd:
 src:	src-xsd
 src-xsd:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn XSD_SRC *.xsd
+	$(Q)mk-filelist -f $(MAKEFILE) -qn XSD_SRC *.xsd

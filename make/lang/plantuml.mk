@@ -67,7 +67,7 @@ clean-plantuml:
 src:	src-plantuml
 src-plantuml:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn PUML_SRC *.puml
+	$(Q)mk-filelist -f $(MAKEFILE) -qn PUML_SRC *.puml
 
 #
 # todo-plantuml: --Report unfinished work in plantuml files.

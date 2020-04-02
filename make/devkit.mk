@@ -97,10 +97,13 @@ TODO_PATTERN = $(TODO_KEYWORDS:%=-e %)
 #
 ifeq "$(VERBOSE)" "color"
     ECHO = colour_echo() { printf '\033[36m++ $(CURDIR) $@: \033[33m%s\033[m\n' "$$*"; }; colour_echo
+    Q =
 else ifneq "$(VERBOSE)" ""
     ECHO = echo '++ $(CURDIR) $@: '
+    Q =
 else
     ECHO = :
+    Q = @
 endif
 
 #

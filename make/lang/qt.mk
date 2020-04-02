@@ -106,9 +106,9 @@ clean-qt:
 src:	src-qt
 src-qt:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn QTR_SRC *.$(QRC_SUFFIX)
-	@mk-filelist -f $(MAKEFILE) -qn QUI_SRC *.$(QUI_SUFFIX)
-	@mk-filelist -f $(MAKEFILE) -qn QTH_SRC $$(grep -l Q_OBJECT *.$(H++_SUFFIX))
+	$(Q)mk-filelist -f $(MAKEFILE) -qn QTR_SRC *.$(QRC_SUFFIX)
+	$(Q)mk-filelist -f $(MAKEFILE) -qn QUI_SRC *.$(QUI_SUFFIX)
+	$(Q)mk-filelist -f $(MAKEFILE) -qn QTH_SRC $$(grep -l Q_OBJECT *.$(H++_SUFFIX))
 
 #
 # todo: --Find "unfinished work" comments in QT files.

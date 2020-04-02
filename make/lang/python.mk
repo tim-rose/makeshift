@@ -86,7 +86,7 @@ toc-python:	var-defined[PY_SRC]
 src:	src-python
 src-python:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn PY_SRC *.py
+	$(Q)mk-filelist -f $(MAKEFILE) -qn PY_SRC *.py
 #
 # todo: --Report unfinished work (identified by keyword comments)
 #

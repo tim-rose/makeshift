@@ -106,8 +106,7 @@ build[%.$(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
 #
 %.$(C++_SUFFIX).gcov:	$(archdir)/%.gcda
 	$(ECHO_TARGET)
-	@echo gcov -o $(archdir) $*.$(C++_SUFFIX)
-	@gcov -o $(archdir) $*.$(C++_SUFFIX) | \
+	gcov -o $(archdir) $*.$(C++_SUFFIX) | \
             sed -ne '/^Lines/s/.*:/gcov $*.$(C++_SUFFIX): /p'
 
 #
@@ -129,7 +128,7 @@ $(includedir)/%.$(H++_SUFFIX):	$(gendir)/%.$(H++_SUFFIX)
 # on your compiler...
 #
 +c++-defines:
-	@touch ..$(C++_SUFFFIX); \
+	$(Q)touch ..$(C++_SUFFFIX); \
             $(C++) -E -dM ..$(C++_SUFFIX); \
             $(RM) ..$(C++_SUFFIX)
 
@@ -138,7 +137,8 @@ $(includedir)/%.$(H++_SUFFIX):	$(gendir)/%.$(H++_SUFFIX)
 #
 build:	build-c++
 build-c++:	$(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN)
-	$(ECHO_TARGET)
+
+$(ECHO_TARGET)
 
 #
 # build any subdirectories before trying to compile stuff;
@@ -146,6 +146,7 @@ build-c++:	$(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN)
 # for compilation.
 #
 $(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN):	| build-subdirs
+$(C++_PIC_OBJ) $(C++_MAIN_PIC_OBJ):	| build-subdirs
 
 #
 # build[%]: --Build a C++ file's related object.
@@ -165,7 +166,7 @@ install-c++:	$(C++_MAIN:$(archdir)/%=$(bindir)/%)
 #
 # uninstall: --Uninstall "C++" programs.
 #
-uninstall-c++: src-var-defined[C++_MAIN_SRC]
+uninstall-c++:
 	$(ECHO_TARGET)
 	$(RM) $(C++_MAIN:$(archdir)/%=$(bindir)/%)
 	$(RMDIR) -p $(bindir) 2>/dev/null ||:
@@ -232,10 +233,10 @@ toc[%.$(H++_SUFFIX)]:
 src:	src-c++
 src-c++:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn C++_SRC *.$(C++_SUFFIX)
-	@mk-filelist -f $(MAKEFILE) -qn C++_MAIN_SRC \
+	$(Q)mk-filelist -f $(MAKEFILE) -qn C++_SRC *.$(C++_SUFFIX)
+	$(Q)mk-filelist -f $(MAKEFILE) -qn C++_MAIN_SRC \
             $$(grep -l $(C++_MAIN_RGX) *.$(C++_SUFFIX) 2>/dev/null)
-	@mk-filelist -f $(MAKEFILE) -qn H++_SRC *.$(H++_SUFFIX)
+	$(Q)mk-filelist -f $(MAKEFILE) -qn H++_SRC *.$(H++_SUFFIX)
 
 #
 # tags: --Build vi, emacs tags files for C++ files.

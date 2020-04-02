@@ -77,6 +77,6 @@ clean-lib-static:
 src:	src-lib-static
 src-lib-static:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qpn SUBLIB_SRC $$( \
+	$(Q)mk-filelist -f $(MAKEFILE) -qpn SUBLIB_SRC $$( \
 	    grep -l '^include.* library.mk' */*[Mm]akefile* 2>/dev/null | \
 	    sed -e 's|/[^/]*[Mm]akefile.*|/$$(archdir)/lib.$(a)|g' | sort -u)

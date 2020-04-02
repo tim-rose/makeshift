@@ -38,7 +38,7 @@ uninstall-mk:
 src:	src-mk
 src-mk:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn MK_SRC *.mk .mk
+	$(Q)mk-filelist -f $(MAKEFILE) -qn MK_SRC *.mk .mk
 
 #
 # toc: --Rebuild a Makefile's table-of-contents.
@@ -46,7 +46,7 @@ src-mk:
 toc:	toc-mk
 toc-mk:
 	$(ECHO_TARGET)
-	@mk-toc Makefile $(MK_SRC)
+	$(Q)mk-toc Makefile $(MK_SRC)
 
 #
 # todo: --Report unfinished work in Makefiles.

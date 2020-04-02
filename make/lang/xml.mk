@@ -33,7 +33,7 @@ install-xml: $(XML_SRC:%=$(datadir)/%)
 src:	src-xml
 src-xml:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn XML_SRC *.xml
+	$(Q)mk-filelist -f $(MAKEFILE) -qn XML_SRC *.xml
 
 #
 # todo: --Report unfinished work in XML files.

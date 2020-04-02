@@ -47,7 +47,7 @@ distclean-tex:
 src:	src-tex
 src-tex:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn TEX_SRC *.tex
+	$(Q)mk-filelist -f $(MAKEFILE) -qn TEX_SRC *.tex
 #
 # todo: --Report unfinished work in tex code.
 #

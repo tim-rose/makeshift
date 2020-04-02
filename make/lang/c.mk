@@ -149,8 +149,7 @@ $(includedir)/%.h:	$(gendir)/%.h
 # mostly filtered out.
 #
 %.c.gcov:	$(archdir)/%.gcda
-	@echo gcov -o $(archdir) $*.c
-	@gcov -o $(archdir) $*.c | sed -ne '/^Lines/s/.*:/gcov $*.c: /p'
+	gcov -o $(archdir) $*.c | sed -ne '/^Lines/s/.*:/gcov $*.c: /p'
 
 #
 # +c-defines: --Print a list of predefined macros for the "C" language.
@@ -160,7 +159,7 @@ $(includedir)/%.h:	$(gendir)/%.h
 # on your compiler...
 #
 +c-defines:
-	@touch ..c;  $(CC) -E -dM ..c; $(RM) ..c
+	$(Q)touch ..c;  $(CC) -E -dM ..c; $(RM) ..c
 
 #
 # build: --Build the C objects and executables.
@@ -174,8 +173,8 @@ build-c:	$(C_MAIN)
 # library subdirectories may install include files needed
 # for compilation.
 #
-$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN):	| build-subdirs
-$(C_PIC_OBJ) $(C_MAIN_PIC_OBJ):	| build-subdirs
+$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN):	| cmd-exists[$(CC)] build-subdirs
+$(C_PIC_OBJ) $(C_MAIN_PIC_OBJ):	| cmd-exists[$(CC)] build-subdirs
 
 #
 # build[%]: --Build a C file's related object.
@@ -264,10 +263,10 @@ toc[%.h]:
 src:	src-c
 src-c:
 	$(ECHO_TARGET)
-	@mk-filelist -f $(MAKEFILE) -qn C_SRC *.c
-	@mk-filelist -f $(MAKEFILE) -qn C_MAIN_SRC \
+	$(Q)mk-filelist -f $(MAKEFILE) -qn C_SRC *.c
+	$(Q)mk-filelist -f $(MAKEFILE) -qn C_MAIN_SRC \
             $$(grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
-	@mk-filelist -f $(MAKEFILE) -qn H_SRC *.h
+	$(Q)mk-filelist -f $(MAKEFILE) -qn H_SRC *.h
 
 #
 # tags: --Build vi, emacs tags files.
