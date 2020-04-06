@@ -30,8 +30,9 @@ P_V.B_A	= $(PACKAGE)$(VERSION:%=_%)$(BUILD:%=.%)_$(DEB_ARCH:%=_%)
 # "package-deb" and "deb" are aliases, for convenience.
 #
 .PHONY:		package-deb deb
-package-deb:	deb
-deb:	control-ok $(P_V.B_A).deb
+package:	package-deb
+deb:		package-deb
+package-deb:	control-ok $(P_V.B_A).deb
 
 $(P_V.B_A).deb:	debian-binary control.tar.gz data.tar.gz
 	$(ECHO_TARGET)

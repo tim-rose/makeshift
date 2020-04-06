@@ -43,9 +43,10 @@ RPM_FLAGS = --define "_topdir $(CURDIR)" \
 #
 # package-rpm: --build a package in this directory.
 #
-.PHONY:		package-rpm
+.PHONY:		package-rpm rpm
 package:	package-rpm
-rpm:	package-rpm
+rpm:		package-rpm
+
 package-rpm:	SPECS/$(PACKAGE).spec
 	$(ECHO_TARGET)
 	$(MKDIR) RPMS
