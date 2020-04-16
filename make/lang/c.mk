@@ -173,8 +173,8 @@ build-c:	$(C_MAIN)
 # library subdirectories may install include files needed
 # for compilation.
 #
-$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN):	| cmd-exists[$(CC)] build-subdirs
-$(C_PIC_OBJ) $(C_MAIN_PIC_OBJ):	| cmd-exists[$(CC)] build-subdirs
+$(C_OBJ) $(C_MAIN_OBJ) $(C_MAIN):	| build-subdirs
+$(C_PIC_OBJ) $(C_MAIN_PIC_OBJ):	| build-subdirs
 
 #
 # build[%]: --Build a C file's related object.

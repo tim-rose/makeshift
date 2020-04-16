@@ -12,9 +12,13 @@
 # Remarks:
 # The project version is stored as a dotted triplet of numbers in the
 # local file "VERSION".  The idea is to facilitate/encourage
-# "semantic" versioning.  In any case, these rules provide mechanism only, not policy.
+# "semantic" versioning.  In any case, these rules provide mechanism
+# only, not policy.
 #
-# In addition to the VERSION, a simple build count is stored in _BUILD.
+# In addition to the VERSION, a simple build identifier is stored in
+# _BUILD.
+#
+# REVISIT: use git-describe (svn-describe) to set _BUILD.
 #
 .PHONY: clean-version major-version minor-version patch-version build-number
 

@@ -69,7 +69,7 @@ main()
 }
 
 #
-# mung_lib_name() --convert "foo/bar/libxyzzy.a" to "foo-bar-xyzzy".
+# mung_lib_name() --Convert "foo/bar/libxyzzy.a" to "foo-bar-xyzzy".
 #
 # Remarks:
 # This routine uses sed to process the path:
