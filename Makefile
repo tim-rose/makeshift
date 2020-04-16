@@ -1,4 +1,3 @@
-MD_SRC = README.md RELEASE.md
 #
 # Makefile --Build rules for devkit, the developer utilities kit.
 #
@@ -9,6 +8,9 @@ MD_SRC = README.md RELEASE.md
 language = markdown
 PACKAGE = devkit
 package-type = rpm deb
+
+DEB_ARCH = all
+RPM_ARCH = noarch
 
 MK_SRC = _VERSION.mk devkit-version.mk
 

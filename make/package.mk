@@ -21,6 +21,7 @@
 #
 # * PACKAGE --the name of the package
 # * VERSION --(ideally a three-number triple updated "semantically")
+# * BUILD --build identifier (ideally derived from VCS).
 #
 # See Also:
 # https://semver.org
@@ -31,6 +32,8 @@ LOCAL_PACKAGE := $(notdir $(CURDIR))
 PACKAGE ?= $(LOCAL_PACKAGE)
 
 P-V	= $(PACKAGE)$(VERSION:%=-%)
+P_V.B	= $(PACKAGE)$(VERSION:%=_%)$(BUILD:%=.%)
+
 DESTDIR_ROOT = staging-$(PACKAGE)
 VCS_EXCLUDES = --exclude .git --exclude .svn
 

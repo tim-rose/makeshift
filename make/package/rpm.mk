@@ -29,11 +29,10 @@
 # See Also:
 # https://fedoraproject.org/wiki/How_to_create_an_RPM_package
 #
-RPM_DEFAULT_ARCH := $(shell mk-rpm-buildarch)
-RPM_ARCH ?= $(RPM_DEFAULT_ARCH)
+RPM_ARCH ?= $(shell mk-rpm-buildarch)
+RPM_ARCH := $(RPM_ARCH)
 
 RPMDIRS = BUILD BUILDROOT RPMS SOURCES SPECS SRPMS
-V-R.A	= $(VERSION)-$(BUILD).$(RPM_ARCH)
 
 RPMBUILD ?= rpmbuild
 RPM_FLAGS = --define "_topdir $(CURDIR)" \
