@@ -9,6 +9,7 @@
 # file-exists[%]:     --Test if a file exists.
 # dir-exists[%]:      --Test if a directory exists.
 # cmd-exists[%]:      --Test if a command exists.
+# cmd-version[%]      --Print a command's version information.
 # mkdir[%]:           --Create a directory.
 # sleep[%]:           --Sleep for the specified time.
 #
@@ -21,7 +22,7 @@
 # is not defined, or if there is no command *my-frobnicate*:
 #
 # ```
-# my-target: | var-defined[INPUT_FILES] cmd-exists[frobnicate]
+# my-target: | var-defined[INPUT_FILES] | cmd-exists[frobnicate]
 #         frobnicate $(INPUT_FILES) > $@
 # ```
 #
@@ -96,6 +97,24 @@ dir-exists[%]:
 cmd-exists[%]:
 	@if  ! type "$*" >/dev/null 2>&1; then \
 	    echo "Error: the command \"$*\" is not installed."; \
+	    false; \
+	fi
+
+#
+# cmd-version[%] --Print a command's version information.
+#
+# Remarks:
+# Commands have a variety of ways and formats for printing their
+# version.  This uses dirty delegation by expanding a macro named via
+# the pattern that matched to provide custom behaviour.
+#
+cmd-version[%]:
+	@printf '%s:\n\t' "$*"
+	@if cmd=$$(which "$*"); then \
+	    eval "$(PRINT_$*_VERSION)"; \
+	    printf '\t%s\n' "$$cmd"; \
+	else \
+	    printf '%s\n' "not installed"; \
 	    false; \
 	fi
 

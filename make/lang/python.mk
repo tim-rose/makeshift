@@ -16,6 +16,10 @@
 #
 .PHONY: $(recursive-targets:%=%-python)
 
+PRINT_python_VERSION = python --version
+PRINT_pycodestyle_VERSION = pycodestyle --version
+PRINT_autopep8_VERSION = autopep8 --version
+
 ifdef autosrc
     LOCAL_PY_SRC := $(wildcard *.py)
 
@@ -124,3 +128,9 @@ tidy-python: 	| cmd-exists[$(PY_TIDY)] var-defined[PY_SRC]
 tidy[%.py]:	| cmd-exists[$(PY_TIDY)]
 	$(ECHO_TARGET)
 	$(PY_TIDY) --in-place --max-line-length=110 --ignore=E402,E721 $*.py
+
+#
+# +version: --Report details of tools used by python.
+#
++version: cmd-version[python] \
+	cmd-version[$(PY_LINT)] cmd-version[$(PY_TIDY)]

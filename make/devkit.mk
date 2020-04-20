@@ -70,18 +70,15 @@ PWD := $(shell echo $$PWD)
 #
 # OS: --Set OS macro by interpolating "uname -s".
 #
-ifndef OS
-    OS := $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
-endif
+OS ?= $(shell uname -s | tr A-Z a-z | sed -e 's/-[.0-9]*//')
+OS := $(OS)
 export OS
 
 #
 # ARCH: --Set ARCH macro by interpolating "uname -m".
 #
-ifndef ARCH
-    ARCH := $(shell uname -m | tr A-Z a-z)
-endif
-export ARCH
+ARCH ?= $(shell uname -m | tr A-Z a-z)
+ARCH := $(ARCH)
 
 PROJECT ?= default
 LOCAL	:= $(subst lib,,$(notdir $(PWD)))
@@ -186,7 +183,7 @@ distclean-devkit:
 	$(RM) -r $(OS) $(ARCH) $(archdir)
 
 #
-# var[%]:	--Pattern rule to print a make "variable".
+# var[%]:	--Pattern rule to print a make variable.
 #
 #+vars:   $(.VARIABLES:%=+var[%])
 +var[%]:
@@ -202,11 +199,12 @@ distclean-devkit:
 #
 # +help: --Output some help text extracted from the included makefiles.
 #
+.PHONY: +help +features +dirs +files +version +env
 +help:			;	@mk-help $(MAKEFILE_LIST)
 +features:		;	@echo $(.FEATURES)
 +dirs:			;	@echo $(.INCLUDE_DIRS)
 +files:			;	@echo $(MAKEFILE_LIST)
-+version:		;	@echo devkit version $(DEVKIT_VERSION)-$(DEVKIT_BUILD)
++version:		;	@printf 'devkit:\n\tversion %s\n\t%s\n' "$(DEVKIT_VERSION)-$(DEVKIT_BUILD)" "$(DEVKIT_HOME)"
 
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.

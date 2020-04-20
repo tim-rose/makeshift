@@ -1,6 +1,12 @@
 #
 # COVERAGE.MK --Rules for building coverage reports with gcov, lcov.
 #
+# Contents:
+# trace.info:          --Collate the coverage data for this tree of files.
+# coverage/index.html: --Create the html-formatted coverage reports.
+# clean:               --Remove the coverage data and reports.
+# +version:            --Report details of tools used by coverage
+#
 # Remarks:
 # The coverage module provides the phony targets "coverage" "html-coverage".
 # These targets build textual and html coverage reports respectively.
@@ -19,6 +25,12 @@
 # by $(GCOV_FILES), which is automatically defined via $(C_SRC) and
 # $(C++_SRC).
 #
+# Note: this file uses an ifdef guard to prevent it being included twice.
+#
+ifndef coverage_mk
+coverage_mk :=
+
+PRINT_gcov_VERSION = gcov --version | head -n 1
 
 GCOV_FILES := $(C_SRC:%.c=%.c.gcov) $(C++_SRC:%=%.gcov)
 GCOV_GCDA_FILES := $(C_OBJ:%.o=%.gcda) $(C++_OBJ:%.o=%.gcda)
@@ -71,3 +83,9 @@ clean: clean-coverage
 clean-coverage:
 	$(ECHO_TARGET)
 	$(RM) -r $(GCOV_FILES) $(archdir)/trace.info $(archdir)/coverage
+
+#
+# +version: --Report details of tools used by coverage
+#
++version: cmd-version[gcov]
+endif

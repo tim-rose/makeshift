@@ -11,6 +11,9 @@
 #
 .PHONY: $(recursive-targets:%=%-nroff)
 
+PRINT_groff_VERSION = groff --version | head -n 1
+PRINT_ps2pdf_VERSION = echo "unknown version"
+
 ifdef autosrc
     LOCAL_MAN1_SRC := $(wildcard *.1)
     LOCAL_MAN3_SRC := $(wildcard *.3)
@@ -111,3 +114,8 @@ todo:	todo-nroff
 todo-nroff:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) $(MAN1_SRC) $(MAN3_SRC) $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC) /dev/null ||:
+
+#
+# +version: --Report details of tools used by nroff.
+#
++version: cmd-version[groff] cmd-version[ps2pdf]

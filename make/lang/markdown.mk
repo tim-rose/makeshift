@@ -9,6 +9,7 @@
 # clean-markdown: --Clean up markdown's derived files.
 # src-markdown:   --Update MD_SRC, MMD_SRC macros.
 # todo-markdown:  --Report unfinished work in markdown files.
+# +version:       --Report details of tools used by markdown.
 #
 # Remarks:
 # The markdown module recognises both "multimarkdown" markdown files
@@ -44,6 +45,10 @@
 # http://www.princexml.com/doc
 #
 .PHONY: $(recursive-targets:%=%-markdown)
+
+PRINT_multimarkdown_VERSION = multimarkdown --version | sed -ne2p
+PRINT_cmark-gfm_VERSION = cmark-gfm --version | sed -ne1p
+PRINT_prince_VERSION = prince --version | sed -ne1p
 
 ifdef autosrc
     LOCAL_MD_SRC := $(wildcard *.md)
@@ -141,3 +146,7 @@ todo:	todo-markdown
 todo-markdown:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(MMD_SRC) /dev/null ||:
+#
+# +version: --Report details of tools used by markdown.
+#
++version: cmd-version[$(MD)] cmd-version[$(MMD)] cmd-version[$(HTML_PDF)]

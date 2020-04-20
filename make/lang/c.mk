@@ -21,6 +21,7 @@
 # src:           --Update the C_SRC, H_SRC, C_MAIN_SRC macros.
 # tags:          --Build vi, emacs tags files.
 # todo:          --Report "unfinished work" comments in C files.
+# +version:      --Report details of tools used by C.
 #
 # Remarks:
 # The "lang/c" module provides support for the "C" programming language.
@@ -32,6 +33,11 @@
 #
 
 .PHONY: $(recursive-targets:%=%-c)
+
+PRINT_gcc_VERSION = gcc --version %s 2>/dev/null | head -n 1
+PRINT_indent_VERSION = indent --version
+PRINT_uncrustify_VERSION = uncrustify --version
+PRINT_cppcheck_VERSION = cppcheck --version
 
 C_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
 
@@ -212,33 +218,36 @@ clean-c:
 #
 # tidy: --Reformat C files consistently.
 #
-C_INDENT ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent
+C_INDENT_ENV ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro
+C_INDENT_CMD ?= indent
+#C_INDENT_CMD_FLAGS ?=
 C_INDENT_FLAGS = $(OS.C_INDENT_FLAGS) $(ARCH.C_INDENT_FLAGS) \
     $(PROJECT.C_INDENT_FLAGS) $(LOCAL.C_INDENT_FLAGS) $(TARGET.C_INDENT_FLAGS)
 tidy:	tidy-c
 tidy-c:	c-src-defined
 	$(ECHO_TARGET)
-	$(C_INDENT) $(C_INDENT_FLAGS) $(H_SRC) $(C_SRC)
+	$(C_INDENT_ENV) $(C_INDENT_CMD) $(C_INDENT_FLAGS) $(C_INDENT_FLAGS) $(H_SRC) $(C_SRC)
 tidy[%.c]:
 	$(ECHO_TARGET)
-	$(C_INDENT) $(C_INDENT_FLAGS) $*.c
+	$(C_INDENT_ENV) $(C_INDENT_CMD) $(C_INDENT_FLAGS) $(C_INDENT_FLAGS) $*.c
 tidy[%.h]:
 	$(ECHO_TARGET)
-	$(C_INDENT) $(C_INDENT_FLAGS) $*.h
+	$(C_INDENT_ENV) $(C_INDENT_CMD) $(C_INDENT_FLAGS) $(C_INDENT_FLAGS) $*.h
 
 #
 # lint: --Perform static analysis for C files.
 #
-C_LINT ?= cppcheck --quiet --std=c11 --template=gcc --enable=style,warning,performance,portability,information $(C_CPPFLAGS)
+C_LINT_CMD ?= cppcheck
+C_LINT_CMD_FLAGS ?= --quiet --std=c11 --template=gcc --enable=style,warning,performance,portability,information $(C_CPPFLAGS)
 C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
     $(PROJECT.C_LINT_FLAGS) $(LOCAL.C_LINT_FLAGS) $(TARGET.C_LINT_FLAGS)
 lint:	lint-c
 lint-c: c-src-defined
 	$(ECHO_TARGET)
-	$(C_LINT) $(C_LINT_FLAGS) $(H_SRC) $(C_SRC)
+	$(C_LINT_CMD) $(CLINT_CMD_FLAGS) $(C_LINT_FLAGS) $(H_SRC) $(C_SRC)
 lint[%.c]:
 	$(ECHO_TARGET)
-	$(C_LINT) $(C_LINT_FLAGS) $*.c
+	$(C_LINT_CMD) $(CLINT_CMD_FLAGS) $(C_LINT_FLAGS) $*.c
 lint[%.h]:
 	$(ECHO_TARGET)
 	$(C_LINT) $(C_LINT_FLAGS) $*.h
@@ -283,3 +292,9 @@ todo:	todo-c
 todo-c:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) $(H_SRC) $(C_SRC) /dev/null ||:
+
+#
+# +version: --Report details of tools used by C.
+#
++version: cmd-version[$(CC)] cmd-version[$(C_INDENT_CMD)] \
+    cmd-version[$(C_LINT_CMD)]

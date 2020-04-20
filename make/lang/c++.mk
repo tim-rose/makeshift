@@ -16,6 +16,7 @@
 # src:         --Update the C++_SRC, H++_SRC, C++_MAIN_SRC macros.
 # tags:        --Build vi, emacs tags files for C++ files.
 # todo:        --Find "unfinished work" comments in C++ files.
+# +version:    --Report details of tools used by C++.
 #
 # Remarks:
 # The C++ module provides rules and targets for building software
@@ -25,6 +26,11 @@
 # C++_SUFFIX and H++_SUFFIX macros.
 #
 .PHONY: $(recursive-targets:%=%-c++)
+
+PRINT_g++_VERSION = g++ --version %s 2>/dev/null | head -n 1
+PRINT_indent_VERSION = indent --version
+PRINT_uncrustify_VERSION = uncrustify --version
+PRINT_cppcheck_VERSION = cppcheck --version
 
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h
@@ -137,8 +143,7 @@ $(includedir)/%.$(H++_SUFFIX):	$(gendir)/%.$(H++_SUFFIX)
 #
 build:	build-c++
 build-c++:	$(C++_OBJ) $(C++_MAIN_OBJ) $(C++_MAIN)
-
-$(ECHO_TARGET)
+	$(ECHO_TARGET)
 
 #
 # build any subdirectories before trying to compile stuff;
@@ -253,3 +258,9 @@ todo:	todo-c++
 todo-c++:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) $(H++_SRC) $(C++_SRC) /dev/null ||:
+
+#
+# +version: --Report details of tools used by C++.
+#
++version: cmd-version[$(C++)] cmd-version[$(C++_INDENT_CMD)] \
+    cmd-version[$(C++_LINT_CMD)]
