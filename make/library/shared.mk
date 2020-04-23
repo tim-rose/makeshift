@@ -15,11 +15,6 @@ so ?= so
 s.a ?= s.a
 
 #
-# build: --Build this directory's shared library.
-#
-build: $(archdir)/$(LIB_NAME).$(so)
-
-#
 # %/lib.s.a: --Build the sub-librar(ies) in its subdirectory.
 #
 %/$(archdir)/lib.$(s.a): | build@%;     $(ECHO_TARGET)

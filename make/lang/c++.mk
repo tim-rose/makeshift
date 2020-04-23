@@ -71,10 +71,14 @@ C++_CPPFLAGS = $(CPPFLAGS) \
     $(PROJECT.C++_CPPFLAGS) $(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
     -I. -I$(gendir) -I$(includedir)
 
+C++_SHARED_FLAGS = $(OS.C++_SHARED_FLAGS) $(ARCH.C++_SHARED_FLAGS) \
+    $(PROJECT.C++_SHARED_FLAGS) $(LOCAL.C++_SHARED_FLAGS) \
+    $(TARGET.C++_SHARED_FLAGS)
+
 C++_ALL_FLAGS = $(C++_WARN_FLAGS) $(C++_CPPFLAGS) $(C++_DEFS) $(C++_FLAGS)
 
-C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o)
-C++_OBJ  = $(filter-out $(C++_MAIN_OBJ),$(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.o))
+C++_MAIN_OBJ = $(C++_MAIN_SRC:%.$(C++_SUFFIX)=$(archdir)/%.$(o))
+C++_OBJ  = $(filter-out $(C++_MAIN_OBJ),$(C++_SRC:%.$(C++_SUFFIX)=$(archdir)/%.$(o)))
 
 .PRECIOUS: $(C++_MAIN_OBJ)
 C++_MAIN = $(C++_MAIN_OBJ:%.$(o)=%)
@@ -92,20 +96,37 @@ c++-src-defined:
 #
 # %.o: --Compile a C++ file into an arch-specific sub-directory.
 #
-$(archdir)/%.o: %.$(C++_SUFFIX) | $(archdir)
+$(archdir)/%.$(o): %.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
 	$(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 
 #
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 #
-$(archdir)/%.o: $(gendir)/%.$(C++_SUFFIX) | $(archdir)
+$(archdir)/%.$(o): $(gendir)/%.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
 	$(C++) $(C++_ALL_FLAGS) -c -o $@ $<
 #
+# %.s.o: --Compile a C++ file into PIC code.
+#
+# Remarks:
+# This is a repeat of the static build rules, but for shared libraries.
+#
+$(archdir)/%.$(s.o): %.$(C++_SUFFIX) | $(archdir)
+	$(ECHO_TARGET)
+	$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $<
+
+#
+# archdir/%.o: --Compile a generated C++ file PIC.
+#
+$(archdir)/%.$(o): $(gendir)/%.$(C++_SUFFIX) | $(archdir)
+	$(ECHO_TARGET)
+	$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $<
+
+#
 # build[%.c++]: --Build a C++ file's related object.
 #
-build[%.$(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
+build[%.$(C++_SUFFIX)]:   $(archdir)/%.$(o); $(ECHO_TARGET)
 
 #
 # %.gcov: --Build a text-format coverage report.
@@ -156,7 +177,7 @@ $(C++_PIC_OBJ) $(C++_MAIN_PIC_OBJ):	| build-subdirs
 #
 # build[%]: --Build a C++ file's related object.
 #
-build[%.%(C++_SUFFIX)]:   $(archdir)/%.o; $(ECHO_TARGET)
+build[%.$(C++_SUFFIX)]:   $(archdir)/%.$(o); $(ECHO_TARGET)
 
 #
 # install: --Install "C++" programs.
@@ -182,7 +203,7 @@ uninstall-c++:
 clean:	clean-c++
 clean-c++:
 	$(ECHO_TARGET)
-	$(RM) $(C++_MAIN) $(C++_MAIN_OBJ) $(C++_MAIN_OBJ:%.o=%.d) $(C++_MAIN_OBJ:%.o=%.map) $(C++_OBJ) $(C++_OBJ:%.o=%.d)
+	$(RM) $(C++_MAIN) $(C++_MAIN_OBJ) $(C++_MAIN_OBJ:%.$(o)=%.d) $(C++_MAIN_OBJ:%.$(o)=%.map) $(C++_OBJ) $(C++_OBJ:%.$(o)=%.d)
 
 #
 # tidy: --Reformat C++ files consistently.

@@ -116,7 +116,7 @@ cmd-version[%]:
 	else \
 	    printf '%s\n' "not installed"; \
 	    false; \
-	fi
+	fi 2>/dev/null
 
 #
 # mkdir[%]: --Create a directory.

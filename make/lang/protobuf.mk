@@ -1,5 +1,5 @@
 #
-# PROTOBUF.MK --Rules for building compiling protobuf protocols.
+# PROTOBUF.MK --Rules for building protobuf protocols.
 #
 # Contents:
 # %.pb.cc: --build the C++ stubs from a ".proto" file.
@@ -41,7 +41,7 @@ ifdef o
 PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(o))
 endif
 ifdef s.o
-PROTOBUF_OBJ += $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(s.o))
+PROTOBUF_PIC_OBJ += $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(s.o))
 endif
 
 #
