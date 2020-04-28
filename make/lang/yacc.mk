@@ -2,11 +2,12 @@
 # YACC.MK --Rules for working with YACC objects.
 #
 # Contents:
-# %.y:   --Compile the yacc grammar into ".h" and ".c" files.
-# build: --Compile YACC_SRC to object code.
-# clean: --Remove a yacc grammar's object file.
-# src:   --Get a list of the yacc grammars in this directory.
-# toc:   --Update the YACC_SRC macro with a list of yacc grammars.
+# %.y:      --Compile the yacc grammar into ".h" and ".c" files.
+# build:    --Compile YACC_SRC to object code.
+# clean:    --Remove a yacc grammar's object file.
+# src:      --Get a list of the yacc grammars in this directory.
+# toc:      --Update the YACC_SRC macro with a list of yacc grammars.
+# +version: --Report details of tools used by yacc.
 #
 # Remarks:
 # YACC files are compiled into "C" files which are then handled
@@ -16,6 +17,9 @@
 # separately.
 #
 .PHONY: $(recursive-targets:%=%-yacc)
+
+PRINT_yacc_VERSION = yacc --version
+PRINT_bison_VERSION = bison --version
 
 ifdef autosrc
     LOCAL_YACC_SRC := $(wildcard *.y)
@@ -88,3 +92,8 @@ toc:	toc-yacc
 toc-yacc:
 	$(ECHO_TARGET)
 	mk-toc $(YACC_SRC)
+
+#
+# +version: --Report details of tools used by yacc.
+#
++version: cmd-version[$(YACC)]

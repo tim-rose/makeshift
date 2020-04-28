@@ -34,7 +34,7 @@
 
 .PHONY: $(recursive-targets:%=%-c)
 
-PRINT_gcc_VERSION = gcc --version %s 2>/dev/null | head -n 1
+PRINT_gcc_VERSION = gcc --version
 PRINT_indent_VERSION = indent --version
 PRINT_uncrustify_VERSION = uncrustify --version
 PRINT_cppcheck_VERSION = cppcheck --version

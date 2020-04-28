@@ -8,10 +8,11 @@
 # uninstall-man: --uninstall manual pages from their usual places.
 # clean-nroff:   --Cleanup nroff files.
 # todo:          --Report unfinished work (identified by keyword comments)
+# +version:      --Report details of tools used by nroff.
 #
 .PHONY: $(recursive-targets:%=%-nroff)
 
-PRINT_groff_VERSION = groff --version | head -n 1
+PRINT_groff_VERSION = groff --version
 PRINT_ps2pdf_VERSION = echo "unknown version"
 
 ifdef autosrc

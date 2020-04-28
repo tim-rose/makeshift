@@ -105,13 +105,15 @@ cmd-exists[%]:
 #
 # Remarks:
 # Commands have a variety of ways and formats for printing their
-# version.  This uses dirty delegation by expanding a macro named via
-# the pattern that matched to provide custom behaviour.
+# version.  This uses dirty delegation(!?) by expanding a macro named
+# via the pattern that matched to provide custom behaviour.  The macro
+# outputs the version information to stdout; only the first line is
+# printed, any other output to stdout, stderr is filtered out.
 #
 cmd-version[%]:
 	@printf '%s:\n\t' "$*"
 	@if cmd=$$(which "$*"); then \
-	    eval "$(PRINT_$*_VERSION)"; \
+	    eval "$(PRINT_$*_VERSION)" | head -n1; \
 	    printf '\t%s\n' "$$cmd"; \
 	else \
 	    printf '%s\n' "not installed"; \

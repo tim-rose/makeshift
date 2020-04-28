@@ -30,7 +30,7 @@
 ifndef coverage_mk
 coverage_mk :=
 
-PRINT_gcov_VERSION = gcov --version | head -n 1
+PRINT_gcov_VERSION = gcov --version
 
 GCOV_FILES := $(C_SRC:%.c=%.c.gcov) $(C++_SRC:%=%.gcov)
 GCOV_GCDA_FILES := $(C_OBJ:%.o=%.gcda) $(C++_OBJ:%.o=%.gcda)

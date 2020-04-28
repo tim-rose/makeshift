@@ -12,6 +12,7 @@
 # src:       --Update the TXT_SRC macro with a list of asciidoc text files.
 # clean:     --cleanup asciidoc intermediate files (.xml, .fo, .pdf).
 # todo:      --Report unfinished work in asciidoc files.
+# +version:  --Report details of tools used by asciidoc.
 #
 # Remarks:
 # The asciidoc module manages a list of simple asciidoc documents with
@@ -21,6 +22,11 @@
 # will attempt to build both PDF and HTML.
 #
 .PHONY: $(recursive-targets:%=%-asciidoc)
+
+PRINT_asciidoc_VERSION = asciidoc --version
+PRINT_fop_VERSION = fop -version
+PRINT_xmllint_VERSION = xmllint --version
+PRINT_xsltproc_VERSION = xsltproc --version
 
 ifdef autosrc
     LOCAL_TXT_SRC := $(wildcard *.txt)
@@ -109,3 +115,9 @@ todo:	todo-asciidoc
 todo-asciidoc:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) $(TXT_SRC)  /dev/null ||:
+
+#
+# +version: --Report details of tools used by asciidoc.
+#
++version: cmd-version[asciidoc] cmd-version[fop] \
+    cmd-version[xsltproc] cmd-version[xmllint]

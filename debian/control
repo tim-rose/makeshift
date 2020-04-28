@@ -4,8 +4,7 @@ Priority: extra
 Maintainer: Tim Rose <tim.rose@acm.org>
 Architecture: all
 Version: 0.4.11
-Description: 
-A build system using recursive make.
+Description: A build system using recursive make.
 
 Devkit is a build system implemented as GNU make files.  It provides
 default implementations of the "standard" high-level targets used for

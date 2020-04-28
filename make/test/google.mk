@@ -1,5 +1,5 @@
 #
-# GOOGLETEST.MK --Rules for building and running tests with googletest.
+# GOOGLE.MK --Rules for building and running tests with googletest.
 #
 # Remarks:
 # The googletest rules assume that you're developing C++ code, and

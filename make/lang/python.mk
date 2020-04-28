@@ -9,6 +9,7 @@
 # src:                --define the PY_SRC variable.
 # todo:               --Report unfinished work (identified by keyword comments)
 # lint:               --Run a static analyser over the PY_SRC.
+# +version:           --Report details of tools used by python.
 #
 # See Also:
 # Exercises in Programming Style, Cristina Videira Lopes

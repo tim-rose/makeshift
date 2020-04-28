@@ -8,18 +8,18 @@
 # clean-plantuml: --Clean up plantuml's derived files.
 # src-plantuml:   --Update PUML_SRC macro.
 # todo-plantuml:  --Report unfinished work in plantuml files.
+# +version:       --Report details of tools used by plantuml.
 #
 # Remarks:
-#
-# The `src` target will update the makefile with the following macro:
-#
-# * PUML_SRC --a list of the PlantUML ".puml" files
+# TBD.
 #
 # See Also:
 # http://alistapart.com/article/building-books-with-css3
 # http://www.princexml.com/doc
 #
 .PHONY: $(recursive-targets:%=%-plantuml)
+
+PRINT_plantuml_VERSION = plantuml -version
 
 ALL_PUMLFLAGS ?= $(OS.PUMLFLAGS) $(ARCH.PUMLFLAGS) $(PROJECT.PUMLFLAGS) \
     $(LOCAL.PUMLFLAGS) $(TARGET.PUMLFLAGS) $(PUMLFLAGS)
@@ -76,3 +76,8 @@ todo:	todo-plantuml
 todo-plantuml:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) $(PUML_SRC) /dev/null ||:
+
+#
+# +version: --Report details of tools used by plantuml.
+#
++version: cmd-version[plantuml]

@@ -4,6 +4,8 @@
 # Contents:
 # %.o:         --Compile a C++ file into an arch-specific sub-directory.
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
+# %.s.o:       --Compile a C++ file into PIC code.
+# archdir/%.o: --Compile a generated C++ file PIC.
 # %.gcov:      --Build a text-format coverage report.
 # build:       --Compile the C++ files, and link any complete programs.
 # build[%]:    --Build a C++ file's related object.
@@ -27,7 +29,7 @@
 #
 .PHONY: $(recursive-targets:%=%-c++)
 
-PRINT_g++_VERSION = g++ --version %s 2>/dev/null | head -n 1
+PRINT_g++_VERSION = g++ --version
 PRINT_indent_VERSION = indent --version
 PRINT_uncrustify_VERSION = uncrustify --version
 PRINT_cppcheck_VERSION = cppcheck --version

@@ -2,11 +2,12 @@
 # LEX.MK --Rules for working with LEX files.
 #
 # Contents:
-# %.l:   --Compile the lex grammar into a ".c" file
-# build: --Compile LEX_SRC to object code.
-# clean: --Remove the lex grammar's object files.
-# src:   --Update the LEX_SRC macro.
-# toc:   --Update the table of contents in lex files.
+# %.l:      --Compile the lex grammar into a ".c" file
+# build:    --Compile LEX_SRC to object code.
+# clean:    --Remove the lex grammar's object files.
+# src:      --Update the LEX_SRC macro.
+# toc:      --Update the table of contents in lex files.
+# +version: --Report details of tools used by lex.
 #
 # Remarks:
 # LEX files are pre-processed into "C" files which are then handled
@@ -14,6 +15,9 @@
 # contains patterns to define the pre-processing transformation only.
 #
 .PHONY: $(recursive-targets:%=%-lex)
+
+PRINT_lex_VERSION = lex --version
+PRINT_flex_VERSION = flex --version
 
 ifdef autosrc
     LOCAL_LEX_SRC := $(wildcard *.c)
@@ -74,3 +78,7 @@ toc:	toc-lex
 toc-lex:
 	$(ECHO_TARGET)
 	mk-toc $(LEX_SRC)
+#
+# +version: --Report details of tools used by lex.
+#
++version: cmd-version[$(LEX)]

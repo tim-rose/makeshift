@@ -8,6 +8,7 @@
 # %-rpm-files.txt:    --Build a manifest file for the RPM's "file" section.
 # clean:              --Remove the RPM manifest file.
 # distclean:          --Remove the RPM file.
+# +version:           --Report details of tools used by RPM packaging
 #
 # Remarks:
 # The package/rpm module provides support for building an RPM package
@@ -31,6 +32,8 @@
 #
 RPM_ARCH ?= $(shell mk-rpm-buildarch)
 RPM_ARCH := $(RPM_ARCH)
+
+PRINT_rpmbuild_VERSION = rpmbuild --version
 
 RPMDIRS = BUILD BUILDROOT RPMS SOURCES SPECS SRPMS
 
@@ -135,3 +138,8 @@ clean-rpm:
 .PHONY:	distclean-rpm
 distclean-rpm:
 	$(RM) -r -- $(RPMDIRS) $(P-V).tar.gz
+
+#
+# +version: --Report details of tools used by RPM packaging
+#
++version: cmd-version[$(RPMBUILD)]

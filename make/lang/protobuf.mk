@@ -2,12 +2,13 @@
 # PROTOBUF.MK --Rules for building protobuf protocols.
 #
 # Contents:
-# %.pb.cc: --build the C++ stubs from a ".proto" file.
-# %.py:    --Build the python stubs from a ".proto" file.
-# build:   --Build the protobuf files.
-# clean:   --Remove objects and intermediates created from protobuf files.
-# src:     --Update the PROTOBUF_SRC macro.
-# todo:    --Find "unfinished work" comments in protobuf files.
+# %.pb.cc:  --build the C++ stubs from a ".proto" file.
+# %.py:     --Build the python stubs from a ".proto" file.
+# build:    --Build the protobuf files.
+# clean:    --Remove objects and intermediates created from protobuf files.
+# src:      --Update the PROTOBUF_SRC macro.
+# todo:     --Find "unfinished work" comments in protobuf files.
+# +version: --Report details of tools used by protobuf
 #
 # Remarks:
 # The protobuf module adds support for building Protobuf-related software.
@@ -16,6 +17,8 @@
 # REVISIT: consider a flag for optionally building various language stubs (e.g. protobuf-lang = c++ python java)
 #
 .PHONY: $(recursive-targets:%=%-protobuf)
+
+PRINT_protoc_VERSION = protoc --version
 
 ifdef autosrc
     LOCAL_PROTOBUF_SRC := $(wildcard *.proto)
@@ -103,3 +106,8 @@ todo:	todo-protobuf
 todo-protobuf:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) $(PROTOBUF_SRC) /dev/null ||:
+
+#
+# +version: --Report details of tools used by protobuf
+#
++version: cmd-version[$(PROTOC)]
