@@ -14,9 +14,11 @@
 # Then we can do a full self-hosted install.
 #
 mk_args="OS=unknown ARCH=all $*"
+PATH=$PWD/bin:$PATH
 
-install_self() ( cd make && make build -I$PWD $mk_args )
-install_all() { make -I$PWD/make build install $mk_args; }
+build_bin() { make -I$PWD/make -C bin build $mk_args; }
+build_self() { make -I$PWD/make build $mk_args; }
+install_all() { make -I$PWD/make install $mk_args; }
 
 os_warning()
 {
@@ -61,7 +63,7 @@ define the DEVKIT_HOME variable, e.g.:
 EOF
 }
 
-if install_self && install_all; then
+if build_bin && build_self && install_all; then
     eval $(make -I$PWD/make +var[prefix] $mk_args)
     cat <<EOF
 
