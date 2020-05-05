@@ -127,9 +127,10 @@ ECHO_TARGET = @+$(ECHO) "\$$?: $?"; $(ECHO) "\$$^: $^"
 .SUFFIXES:
 
 #
-# build: --The default target
+# build: --The default target.
 #
 all:	build
+check:	test
 
 -include $(VARIANT:%=variant/%.mk)
 include os/$(OS).mk arch/$(ARCH).mk project/$(PROJECT).mk
