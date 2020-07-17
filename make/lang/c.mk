@@ -218,7 +218,7 @@ clean-c:
 #
 # tidy: --Reformat C files consistently.
 #
-C_INDENT_ENV ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro
+C_INDENT_ENV ?= INDENT_PROFILE=$(MAKESHIFT_HOME)/etc/.indent.pro
 C_INDENT_CMD ?= indent
 #C_INDENT_CMD_FLAGS ?=
 C_INDENT_FLAGS = $(OS.C_INDENT_FLAGS) $(ARCH.C_INDENT_FLAGS) \

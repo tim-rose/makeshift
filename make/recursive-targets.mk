@@ -1,9 +1,9 @@
 #
-# RECURSIVE-TARGETS.MK --Define devkit's recursive targets.
+# RECURSIVE-TARGETS.MK --Define makeshift's recursive targets.
 #
 # Contents:
 # std-targets:    --The GNU standard targets, as described in the GNU make manual.
-# devkit-targets: --Extra development/maintenance targets.
+# makeshift-targets: --Extra development/maintenance targets.
 # install-strip:  --install stuff, and strip binaries.
 # recursive_rule: --Define a set of targets that implement recursion.
 #
@@ -49,7 +49,7 @@ std-targets = clean distclean build test coverage \
     package deploy \
     tags dist doc
 #
-# devkit-targets: --Extra development/maintenance targets.
+# makeshift-targets: --Extra development/maintenance targets.
 #
 # Remarks:
 # These targets aren't part of GNU's preferred set, but (I) find
@@ -61,8 +61,8 @@ std-targets = clean distclean build test coverage \
 # * tidy --Reformat all source files in a consistent style.
 # * todo --Find and print all "todo", "revisit" and "fixme" annotations.
 #
-devkit-targets = src toc lint tidy todo
-recursive-targets = $(std-targets) $(devkit-targets)
+makeshift-targets = src toc lint tidy todo
+recursive-targets = $(std-targets) $(makeshift-targets)
 
 #
 # install-strip: --install stuff, and strip binaries.

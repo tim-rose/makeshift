@@ -1,5 +1,5 @@
 #
-# DEPLOY.MK --devkit/deploy targets.
+# DEPLOY.MK --makeshift/deploy targets.
 #
 # Contents:
 # deploy:    --Install stuff, and perform actions to re-start/re-init.

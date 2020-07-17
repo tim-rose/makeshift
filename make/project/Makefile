@@ -1,5 +1,5 @@
 #
-# Makefile --Build rules for the project directory of devkit.
+# Makefile --Build rules for the project directory of makeshift.
 #
 # Remarks:
 # This just installs a default project file, it's up to
@@ -8,7 +8,7 @@
 MK_SRC = default.mk
 subdir = project
 
-include devkit.mk
+include makeshift.mk
 
 install:	install-mk
 uninstall:	uninstall-mk

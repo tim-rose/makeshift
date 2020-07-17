@@ -1,5 +1,5 @@
 #
-# VALID.MK --devkit/file-state validation targets.
+# VALID.MK --makeshift/file-state validation targets.
 #
 # Contents:
 # var-defined[%]:     --Test that a variable is defined.
@@ -15,7 +15,7 @@
 #
 # Remarks:
 # The "valid" module is a library of validation tests in the form of
-# make targets.  These are used by various pattern rules in the devkit
+# make targets.  These are used by various pattern rules in the makeshift
 # build system.
 #
 # Example: the following definition will fail if the macro $(INPUT_FILES)

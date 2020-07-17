@@ -1,5 +1,5 @@
 #
-# rpm-repo.mk --Definitions for integrating an RPM repo into devkit.
+# rpm-repo.mk --Definitions for integrating an RPM repo into makeshift.
 #
 # Contents:
 # package-rpm-repo:    --Build all the packages.

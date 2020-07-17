@@ -2,7 +2,7 @@
 # POSIX.MK	--Common command definitions for POSIX systems.
 #
 # Remarks:
-# This file contains macros for the commands that devkit uses,
+# This file contains macros for the commands that makeshift uses,
 # corresponding to their usual values for a POSIX (i.e. Unix-like)
 # systems.  Most of the other specific OSes (e.g. linux, darwin,
 # freebsd etc.) will use these definitions, others may need to define

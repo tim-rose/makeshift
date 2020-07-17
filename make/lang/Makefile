@@ -1,5 +1,5 @@
 #
-# Makefile --Build rules for the lang directory of devkit.
+# Makefile --Build rules for the lang directory of makeshift.
 #
 MK_SRC = asciidoc.mk c++-library.mk c++.mk c-library.mk c.mk \
     cmd.mk conf.mk cron.mk css.mk elisp.mk img.mk java.mk \
@@ -10,7 +10,7 @@ MK_SRC = asciidoc.mk c++-library.mk c++.mk c-library.mk c.mk \
     yacc-library.mk yacc.mk
 subdir	= lang
 
-include devkit.mk
+include makeshift.mk
 
 install:		install-mk
 uninstall:		uninstall-mk

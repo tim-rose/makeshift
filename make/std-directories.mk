@@ -14,8 +14,8 @@
 # as needed by some of the packaging targets), and prefix should be
 # set to either "/usr/local" or $HOME (or a subdirectory).  Note that
 # GNU make will search for include files in /usr/local/include, so
-# installing devkit itself into /usr/local is a win.  However if you
-# install devkit into (e.g., $HOME), you must use/alias make as
+# installing makeshift itself into /usr/local is a win.  However if you
+# install makeshift into (e.g., $HOME), you must use/alias make as
 # "make -I$HOME/include".
 #
 system_root	= $(DESTDIR)

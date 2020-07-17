@@ -24,7 +24,7 @@
 # The C++ module provides rules and targets for building software
 # using the C++ language. C++ is a little unusual in that there isn't
 # a standard file extension for the source and header files; the
-# (devkit) default is ".cc", ".h", but it can be set via the
+# (makeshift) default is ".cc", ".h", but it can be set via the
 # C++_SUFFIX and H++_SUFFIX macros.
 #
 .PHONY: $(recursive-targets:%=%-c++)
@@ -210,7 +210,7 @@ clean-c++:
 #
 # tidy: --Reformat C++ files consistently.
 #
-C++_INDENT ?= INDENT_PROFILE=$(DEVKIT_HOME)/etc/.indent.pro indent
+C++_INDENT ?= INDENT_PROFILE=$(MAKESHIFT_HOME)/etc/.indent.pro indent
 C++_INDENT_FLAGS = $(OS.C++_INDENT_FLAGS) $(ARCH.C++_INDENT_FLAGS) \
     $(PROJECT.C++_INDENT_FLAGS) $(LOCAL.C++_INDENT_FLAGS) $(TARGET.C++_INDENT_FLAGS)
 tidy:	tidy-c++

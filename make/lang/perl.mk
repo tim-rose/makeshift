@@ -74,7 +74,7 @@ clean-perl:
 tidy:	tidy-perl
 tidy-perl:
 	$(ECHO_TARGET)
-	perltidy --profile=$(DEVKIT_HOME)/etc/.perltidyrc $(PERL_SRC)
+	perltidy --profile=$(MAKESHIFT_HOME)/etc/.perltidyrc $(PERL_SRC)
 
 #
 # toc: --Build the table-of-contents for perl files.

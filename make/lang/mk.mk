@@ -1,5 +1,5 @@
 #
-# MK.MK --devkit rules for manipulating ".mk" files.
+# MK.MK --makeshift rules for manipulating ".mk" files.
 #
 # Contents:
 # install-mk:   --Install ".mk" files to their usual places.

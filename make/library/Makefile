@@ -4,7 +4,7 @@
 subdir = library
 MK_SRC = shared.mk static.mk
 
-include devkit.mk
+include makeshift.mk
 
 install:        install-mk
 uninstall:      uninstall-mk

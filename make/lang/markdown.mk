@@ -63,8 +63,8 @@ ALL_MDFLAGS ?= --unsafe --smart --extension table --extension footnotes \
     $(OS.MDFLAGS) $(ARCH.MDFLAGS) $(PROJECT.MDFLAGS) \
     $(LOCAL.MDFLAGS) $(TARGET.MDFLAGS) $(MDFLAGS)
 
-MD_PROLOGUE = $(DEVKIT_HOME)/share/doc/cmark-prologue.txt
-MD_EPILOGUE = $(DEVKIT_HOME)/share/doc/cmark-epilogue.txt
+MD_PROLOGUE = $(MAKESHIFT_HOME)/share/doc/cmark-prologue.txt
+MD_EPILOGUE = $(MAKESHIFT_HOME)/share/doc/cmark-epilogue.txt
 
 MMD ?= multimarkdown
 ALL_MMDFLAGS ?= --full $(OS.MMDFLAGS) $(ARCH.MMDFLAGS) $(PROJECT.MMDFLAGS) \

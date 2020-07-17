@@ -20,9 +20,9 @@
 # http://stackoverflow.com/questions/5088460/flags-to-enable-thorough-and-verbose-g-warnings/9862800#9862800
 #
 PROJECT.CFLAGS = -std=c17 -O -DVERSION='"$(VERSION)"' -DBUILD='"$(BUILD)"'
-PROJECT.C_WARN_FLAGS = @$(DEVKIT_HOME)/etc/gcc.conf
+PROJECT.C_WARN_FLAGS = @$(MAKESHIFT_HOME)/etc/gcc.conf
 PROJECT.C_DEFS =
 
 PROJECT.CXXFLAGS = -std=c++14 -O -DVERSION='"$(VERSION)"' -DBUILD="'$(BUILD)'"
-PROJECT.C++_WARN_FLAGS =  @$(DEVKIT_HOME)/etc/g++.conf
+PROJECT.C++_WARN_FLAGS =  @$(MAKESHIFT_HOME)/etc/g++.conf
 PROJECT.C++_DEFS =

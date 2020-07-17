@@ -52,7 +52,7 @@ endif
 #
 # Remarks:
 # This is a little more involved than a simple tool invocation,
-# because devkit supports custom C++ file extensions, and so this
+# because makeshift supports custom C++ file extensions, and so this
 # rule adapts protoc's output accordingly.
 #
 $(gendir)/%.pb.$(C++_SUFFIX) $(gendir)/%.pb.$(H++_SUFFIX):	%.proto | $(gendir)

@@ -67,7 +67,7 @@ release: vcs-tag[$(VERSION)]
 # Remarks:
 # This target execs another make to do a distclean before building the tar.gz.
 # REVISIT: make sure symlink is cleaned up always!
-# TODO: this is a std target, migrate it to devkit.mk
+# TODO: this is a std target, migrate it to makeshift.mk
 #
 dist:	$(P-V).tar.gz
 $(P-V).tar.gz:
