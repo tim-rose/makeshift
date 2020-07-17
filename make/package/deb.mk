@@ -32,7 +32,7 @@ P_V.B_A	= $(PACKAGE)$(VERSION:%=_%)$(BUILD:%=.%)$(DEB_ARCH:%=_%)
 .PHONY:		package-deb deb
 package:	package-deb
 deb:		package-deb
-package-deb:	control-ok $(P_V.B_A).deb
+package-deb:	 $(P_V.B_A).deb | control-ok
 
 $(P_V.B_A).deb:	debian-binary control.tar.gz data.tar.gz
 	$(ECHO_TARGET)
@@ -88,6 +88,7 @@ debian/conffiles: $(DESTDIR_ROOT)
 #
 .PHONY:	control-ok
 control-ok:	debian/control
+	$(ECHO_TARGET)
 	@grep >/dev/null '^Package: *$(PACKAGE)$$' debian/control ||\
 	    (echo "Error: Package is incorrect in debian/control"; false)
 	@grep >/dev/null '^Version: *$(VERSION)$$' debian/control ||\

@@ -30,7 +30,7 @@ ALL_BUILD_PATH = . $(LIB_ROOT) $(BUILD_PATH)
 export LD_LIBRARY_PATH += $(subst $(space),:,$(ALL_BUILD_PATH:%=%/$(archdir)))
 export DYLD_LIBRARY_PATH += $(subst $(space),:,$(ALL_BUILD_PATH:%=%/$(archdir)))
 
-VPATH = $(ALL_BUILD_PATH:%=%/$(archdir)) $(libdir)
+VPATH += $(ALL_BUILD_PATH:%=%/$(archdir)) $(libdir)
 
 ALL_LDFLAGS = $(LDFLAGS) $(LANG.LDFLAGS) \
     $(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) \

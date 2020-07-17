@@ -25,7 +25,9 @@ OS.C++_CPPFLAGS = -I/usr/local/include -I/opt/local/include
 OS.C++_DEFS     = -D__Darwin__
 OS.CXXFLAGS 	= -MMD
 
-OS.LDFLAGS	= -Wl,-map,$(archdir)/$*.map
+OS.LDFLAGS	= -L/opt/local/lib -Wl,-map,$(archdir)/$*.map
+# REVISIT: need a cleaner way to add include+lib
+VPATH += /opt/local/lib
 
 OS.PYTEST_FLAGS = --junit-xml pytest-tests.xml
 
