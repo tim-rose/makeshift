@@ -1,11 +1,11 @@
 #
-# Makefile --Build rules the make directory of devkit.
+# Makefile --Build rules the make directory of makeshift.
 #
 language = conf
 CONF_SRC = g++.conf gcc.conf subversion.conf tidy.conf
 ETC_SRC = _astylerc _cvsignore _cvsrc _indent.pro _perltidyrc
 
-include devkit.mk
+include makeshift.mk
 
 $(sysconfdir)/%:	%;	$(INSTALL_DATA) $< $@
 $(sysconfdir)/.%:	_%;	$(INSTALL_DATA) $< $@

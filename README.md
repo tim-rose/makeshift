@@ -1,6 +1,6 @@
-# Devkit --Recursive Make Considered Useful
+# Makeshift --Recursive Make Considered Useful
 
-**Devkit** is a library of **make** rules and helper **shell** scripts
+**Makeshift** is a library of **make** rules and helper **shell** scripts
 for building software recursively. It:
 
  * implements almost all of the "standard" make targets documented
@@ -23,18 +23,18 @@ Just want to get started? try this:
 $ sh install.sh
 ```
 
-It installs **devkit** into _/usr/local/_; that's where GNU **make**
+It installs **makeshift** into _/usr/local/_; that's where GNU **make**
 will look for these files by default.
 
 Any arguments you pass to the install script are passed through to a
 **make** invocation to do the work, so if you would like to install
-**devkit** in a custom location:
+**makeshift** in a custom location:
 
 ```shell
 $ sh install.sh prefix=/my/location
 ```
 
-Within the prefix root (e.g. _/usr/local_), **devkit** will install into
+Within the prefix root (e.g. _/usr/local_), **makeshift** will install into
 the following sub-directories:
 
  * $prefix/_bin_ --helper **shell** scripts
@@ -44,8 +44,8 @@ the following sub-directories:
 
 ### Uninstallation
 
-**Devkit** supports the (GNU **make** documented) `uninstall` target.  To
-remove devkit from your system:
+**Makeshift** supports the (GNU **make** documented) `uninstall` target.  To
+remove makeshift from your system:
 
 ```shell
 $ make uninstall
@@ -56,13 +56,13 @@ empty thereby.
 
 ## Usage
 
-To use **devkit**, add the following to your _Makefile_:
+To use **makeshift**, add the following to your _Makefile_:
 
 ```makefile
-include devkit.mk
+include makeshift.mk
 ```
 
-This will include **devkit**'s targets and pattern rules for doing common
+This will include **makeshift**'s targets and pattern rules for doing common
 actions recursively.  In particular, the targets described/suggested
 in the GNU make manual are implemented.  Here's a brief list of some
 of them:
@@ -81,7 +81,7 @@ attached to (made dependants of) the standard targets.
 
 ### Languages
 
-**Devkit** supports several languages, some more completely than
+**Makeshift** supports several languages, some more completely than
 others.  The languages I use a lot have better, more complete support,
 the others, less so.  Sorry, I only have so many fingers.  To include
 the rules for developing in a particular language, declare them in the
@@ -92,11 +92,11 @@ something like:
 ```makefile
 language = c python conf
 
-include devkit.mk
+include makeshift.mk
 ```
 
 The language rules define *how* to build, but not *what* to build.
-**Make** needs a list of source files to build, and **devkit** has
+**Make** needs a list of source files to build, and **makeshift** has
 targets for building the lists, and updating the makefile. After
 running the following command:
 
@@ -114,11 +114,11 @@ C_MAIN_SRC = main.c
 
 language = c python conf
 
-include devkit.mk
+include makeshift.mk
 ```
 
 **Make** needs one more thing to build correctly; the `main` depends
-on, and must be linked with, `calc` and `fileops`.  **Devkit** defines
+on, and must be linked with, `calc` and `fileops`.  **Makeshift** defines
 some macros that make that easy:
 
 ```makefile
@@ -129,7 +129,7 @@ C_MAIN_SRC = main.c
 
 language = c python conf
 
-include devkit.mk
+include makeshift.mk
 
 $(C_MAIN): $(C_OBJ)
 ```
@@ -144,14 +144,14 @@ uninstall: uninstall-all
 
 ### Help and Debugging
 
-**Devkit** has a number of targets and features to help you (er, me)
+**Makeshift** has a number of targets and features to help you (er, me)
 to see what's going on.
 
  * `make +help` --prints some help text based on the makefiles you have included
  * `make +vars` --prints all of the defined variables, and their values (disabled on Windows)
  * `make +var[`_name_`]` --prints a single variable value
  * `make +stddirs` --prints the list of "standard" build and install directories
- * `make +version` --prints the current **devkit** version
+ * `make +version` --prints the current **makeshift** version
  * `make +features` --prints the current **make** features
  * `make +dirs` --prints the include directories used by **make**
  * `make +files` --prints the additional files included by **make**
@@ -170,7 +170,7 @@ particularly for languages that I don't use yet.  You know the drill:
 
 ## License
 
-You are licensed to use devkit under the MIT license.
+You are licensed to use makeshift under the MIT license.
 See the file `LICENSE` for details.
 
 ## TODO
@@ -179,4 +179,4 @@ See the file `LICENSE` for details.
 * create automated tests
 * add support for "performance testing" targets
 * better support for embedded projects and cross-compilation
-* automatically install-on-demand **devkit** commands (and a project's libraries?).
+* automatically install-on-demand **makeshift** commands (and a project's libraries?).

@@ -1,1 +1,1 @@
-include devkit.mk
+include makeshift.mk

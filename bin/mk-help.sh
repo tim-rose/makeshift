@@ -27,7 +27,7 @@ shift $(($OPTIND - 1))
 trap "rm -rf $tmpdir" 0 		# cleanup
 mkdir -p $tmpdir
 
-echo "# devkit help"
+echo "# makeshift help"
 for file; do
     tmpfile=$tmpdir/help.txt
     sed -e '1,/# Remarks:/d' -e '/^[^#]/,$d' -e '/^$$/,$d' \

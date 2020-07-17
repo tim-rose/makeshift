@@ -4,7 +4,7 @@
 language = css
 subdir = doc/css
 CSS_SRC = plain.css print.css
-include devkit.mk
+include makeshift.mk
 
 install:	$(CSS_SRC:%=$(datadir)/%)
 uninstall:	uninstall-local

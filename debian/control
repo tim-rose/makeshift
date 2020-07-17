@@ -1,11 +1,11 @@
-Package: devkit
+Package: makeshift
 Section: misc
 Priority: extra
 Maintainer: Tim Rose <tim.rose@acm.org>
 Architecture: all
 Version: 0.4.11
 Description: A build system using recursive make.
- Devkit is a build system implemented as GNU make files.  It provides
+ Makeshift is a build system implemented as GNU make files.  It provides
  default implementations of the "standard" high-level targets used for
  common software and documentation tasks, as described in the GNU make
  manual (i.e. "build", "clean", "distclean", "install" etc.).

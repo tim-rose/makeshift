@@ -1,6 +1,6 @@
-# Devkit Releases
+# Makeshift Releases
 
-This document summarises the changes and features for each devkit release.
+This document summarises the changes and features for each makeshift release.
 
 ## Release 0.4.3
 

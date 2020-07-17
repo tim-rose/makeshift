@@ -1,4 +1,4 @@
 #
-# Makefile --Build rules for devkit's debian-packaging directory.
+# Makefile --Build rules for makeshift's debian-packaging directory.
 #
-include devkit.mk
+include makeshift.mk

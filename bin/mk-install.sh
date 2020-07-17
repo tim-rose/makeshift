@@ -4,9 +4,9 @@
 #
 # Remarks:
 # This build system tries to be as portable as possible, within
-# the constraint of being GNU-make based.  In any case, devkit doesn't
+# the constraint of being GNU-make based.  In any case, makeshift doesn't
 # need all of install's bells and whistles, so this script implements
-# only those bits devkit actually uses.
+# only those bits makeshift actually uses.
 #
 #
 usage="Usage: mk-install [options] files..."

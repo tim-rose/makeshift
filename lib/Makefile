@@ -1,4 +1,4 @@
 #
-# Makefile --Build rules for devkit/lib.
+# Makefile --Build rules for makeshift/lib.
 #
-include devkit.mk
+include makeshift.mk

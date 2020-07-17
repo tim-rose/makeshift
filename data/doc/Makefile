@@ -1,7 +1,7 @@
 subdir = doc
 TXT_SRC = cmark-epilogue.txt cmark-prologue.txt
 
-include devkit.mk
+include makeshift.mk
 
 install: $(TXT_SRC:%=$(datadir)/%)
 uninstall: uninstall-local
