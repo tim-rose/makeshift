@@ -26,8 +26,8 @@
 -include $(QTR_SRC:%.qrc=$(archdir)/%.d) $(UI_SRC:%.qrc=$(archdir)/%.d)
 
 RCC	?= rcc
-MOC	?= moc-qt4
-UIC	?= uic-qt4
+MOC	?= moc
+UIC	?= uic
 QT	?= Core Gui
 
 C++_SUFFIX ?= cc
@@ -58,8 +58,8 @@ ALL_UIC_FLAGS = $(OS.UIC_FLAGS) $(ARCH.UIC_FLAGS) \
     $(PROJECT.UIC_FLAGS) $(LOCAL.UIC_FLAGS) $(TARGET.UIC_FLAGS) $(UIC_FLAGS)
 
 QTR_TRG = $(QTR_SRC:%.$(QRC_SUFFIX)=$(gendir)/%.$(C++_SUFFIX))
-QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(gendir)/%.moc.$(C++_SUFFIX))
-QUI_TRG = $(QUI_SRC:%.$(QUI_SUFFIX)=$(gendir)/%.$(QUI_SUFFIX).$(H++_SUFFIX))
+QTH_TRG = $(QTH_SRC:%.$(H++_SUFFIX)=$(gendir)/%_moc.$(C++_SUFFIX))
+QUI_TRG = $(QUI_SRC:%.$(QUI_SUFFIX)=$(gendir)/%_$(QUI_SUFFIX).$(H++_SUFFIX))
 QT_TRG  = $(QTR_TRG) $(QTH_TRG) $(QUI_TRG)
 
 ifdef o
@@ -84,11 +84,11 @@ $(gendir)/%.$(C++_SUFFIX):	%.qrc | $(gendir)
 	$(ECHO_TARGET)
 	$(RCC) $(ALL_RCC_FLAGS) $< >$@
 
-$(gendir)/%.moc.$(C++_SUFFIX):	%.$(H++_SUFFIX) | $(gendir)
+$(gendir)/%_moc.$(C++_SUFFIX):	%.$(H++_SUFFIX) | $(gendir)
 	$(ECHO_TARGET)
 	$(MOC) $(ALL_MOC_FLAGS) -o $@ $<
 
-$(gendir)/%.$(QUI_SUFFIX).$(H++_SUFFIX):	%.$(QUI_SUFFIX) | $(gendir)
+$(gendir)/%_$(QUI_SUFFIX).$(H++_SUFFIX):	%.$(QUI_SUFFIX) | $(gendir)
 	$(ECHO_TARGET)
 	$(UIC) $(ALL_UIC_FLAGS) -o $@ $<
 
