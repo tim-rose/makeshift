@@ -185,7 +185,7 @@ clean:	clean-devkit
 .PHONY:	clean-devkit
 clean-devkit:
 	$(ECHO_TARGET)
-	$(RM) core *~ *.bak *.tmp *.out $(OS.AUTO_CLEAN) $(ARCH.AUTO_CLEAN)  $(PROJECT.AUTO_CLEAN)
+	$(RM) *~ *.bak *.tmp *.out $(OS.AUTO_CLEAN) $(ARCH.AUTO_CLEAN)  $(PROJECT.AUTO_CLEAN)
 
 #
 # distclean: --Remove artefacts that devkit creates/updates.
