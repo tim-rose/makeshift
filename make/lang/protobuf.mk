@@ -42,12 +42,13 @@ PROTOBUF_TRG  = $(PROTOBUF_C++) $(PROTOBUF_H++) $(PROTOBUF_PY) \
 
 .PRECIOUS: $(PROTOBUF_TRG)
 
-ifdef o
-PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(o))
-endif
-ifdef s.o
-PROTOBUF_PIC_OBJ += $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(s.o))
-endif
+## this should move to c.mk or c++.k; it breaks non-C builds
+#ifdef o
+#PROTOBUF_OBJ = $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(o))
+#endif
+#ifdef s.o
+#PROTOBUF_PIC_OBJ += $(PROTOBUF_SRC:%.proto=$(archdir)/%.pb.$(s.o))
+#endif
 
 #
 # %.pb.cc: --build the C++ stubs from a ".proto" file.
