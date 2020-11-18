@@ -5,7 +5,7 @@
 # The googletest rules assume that you're developing C++ code, and
 # make reference to `make` variables defined in the lang/c++ module.
 #
-GTEST_LIBS = gtest_main gtest dl util
+GTEST_LIBS = gtest_main gtest
 TEST_XML ?= google-tests.xml
 TEST_EXE = $(archdir)/googletest
 
