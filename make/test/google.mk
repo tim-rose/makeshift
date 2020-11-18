@@ -15,9 +15,9 @@ ALL_GTEST_FLAGS = $(TARGET.GTEST_FLAGS) $(LOCAL.GTEST_FLAGS) \
 
 build: $(TEST_EXE)
 
-$(TEST_EXE):	$(C++_OBJ) $(GTEST_LIBS:%=-l%)
+$(TEST_EXE):	$(C++_OBJ) 
 	$(ECHO_TARGET)
-	$(LD) $(ALL_LDFLAGS) -o $@ $^ $(ALL_LDLIBS)
+	$(LD) $(ALL_LDFLAGS) -o $@ $^ $(ALL_LDLIBS) $(GTEST_LIBS:%=-l%)
 
 #
 # google-test: --Run googletest with arch defined in the environment.
