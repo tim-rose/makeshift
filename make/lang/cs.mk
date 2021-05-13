@@ -207,9 +207,9 @@ distclean-cs: clean-cs
 src:	src-cs
 src-cs:
 	$(ECHO_TARGET)
-	@$(MK-FILELIST) -f $(MAKEFILE) -qn CS_SRC $$($(FIND) . -path ./obj -prune -o -type f -name '*.$(CS_SUFFIX)' -print)
-	@$(MK-FILELIST) -f $(MAKEFILE) -qn CS_MAIN_SRC $$(grep -l $(CS_MAIN_RGX) ''*.$(CS_SUFFIX)'' 2>/dev/null)
-	@$(MK-FILELIST) -f $(MAKEFILE) -qn RSX_SRC $$($(FIND) . -path ./obj -prune -o -type f -name '*.$(RSX_SUFFIX)' -print)
+	@mk-filelist -f $(MAKEFILE) -qn CS_SRC $$($(FIND) . -path ./obj -prune -o -type f -name '*.$(CS_SUFFIX)' -print)
+	@mk-filelist -f $(MAKEFILE) -qn CS_MAIN_SRC $$(grep -l $(CS_MAIN_RGX) ''*.$(CS_SUFFIX)'' 2>/dev/null)
+	@mk-filelist -f $(MAKEFILE) -qn RSX_SRC $$($(FIND) . -path ./obj -prune -o -type f -name '*.$(RSX_SUFFIX)' -print)
 
 #
 # todo: --Report "unfinished work" comments in Java files.

@@ -28,4 +28,4 @@ distclean-vs:
 src: src-vsproj
 src-vsproj:
 	$(ECHO_TARGET)
-	@$(MK-FILELIST) -f $(MAKEFILE) -qn VSPROJ_SRC *.csproj *.vcxproj
+	@mk-filelist -f $(MAKEFILE) -qn VSPROJ_SRC *.csproj *.vcxproj
