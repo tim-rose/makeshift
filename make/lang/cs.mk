@@ -30,6 +30,7 @@ LIB_SUFFIX ?= dll
 EXE_SUFFIX ?= exe
 # TODO: is this also supported by mono?
 RSX_SUFFIX ?= resx
+CONFIGURATION ?= Debug
 
 # this regex searches for the main-function in C#, which normally is:
 # static void Main or static int Main
@@ -69,6 +70,8 @@ ifdef APP_CONFIG
 	TARGET.CONFIG = $(archdir)/$(TARGET).config
 endif
 
+# Build configuration (default to Debug)
+TARGET.CS_FLAGS += -p:Configuration=$(CONFIGURATION)
 
 # collect all compiler flags
 ALL_CS_FLAGS = $(VARIANT.CS_FLAGS) $(OS.CS_FLAGS) $(ARCH.CS_FLAGS) \
