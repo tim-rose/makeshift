@@ -19,7 +19,7 @@ build-vsproj: $(VSPROJ_SRC) | $(archdir) $(gendir)
 
 clean: clean-vsproj
 clean-vsproj:
-	$(MSBUILD) $< $(ALL_BUILD_FLAGS) -t:Clean
+	$(MSBUILD) $< $(ALL_BUILD_FLAGS) -t:Clean $(VSPROJ_SRC)
 	$(RM) $(gendir)$(LOG_FILE)
 
 distclean: distclean-vs
