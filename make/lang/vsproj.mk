@@ -6,8 +6,9 @@
 # MSBUILD_DIR can be set in project specific make include
 MSBUILD ?= msbuild.exe
 LOG_FILE ?= $(ARCH)_$(VARIANT)_build.log
+CONFIGURATION ?= Debug
 
-TARGET.BUILD_FLAGS = -fl -flp:logfile=$(gendir)$(LOG_FILE)
+TARGET.BUILD_FLAGS = -fl -flp:logfile=$(gendir)$(LOG_FILE) -p:Configuration=$(CONFIGURATION)
 
 ALL_BUILD_FLAGS = $(VARIANT.BUILD_FLAGS) $(OS.BUILD_FLAGS) $(ARCH.BUILD_FLAGS) \
 	$(LOCAL.BUILD_FLAGS) $(TARGET.BUILD_FLAGS) $(PROJECT.BUILD_FLAGS)
@@ -18,7 +19,7 @@ build-vsproj: $(VSPROJ_SRC) | $(archdir) $(gendir)
 
 clean: clean-vsproj
 clean-vsproj:
-	$(MSBUILD) $< $(ALL_BUILD_FLAGS) -t:Clean
+	$(MSBUILD) $< $(ALL_BUILD_FLAGS) -t:Clean $(VSPROJ_SRC)
 	$(RM) $(gendir)$(LOG_FILE)
 
 distclean: distclean-vs

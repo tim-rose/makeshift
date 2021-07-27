@@ -73,7 +73,6 @@ endif
 ifdef ICON_FILE
 	TARGET.CS_FLAGS += -win32icon:$(ICON_FILE)
 endif
-
 # collect all compiler flags
 ALL_CS_FLAGS = $(VARIANT.CS_FLAGS) $(OS.CS_FLAGS) $(ARCH.CS_FLAGS) \
     $(TARGET.CS_FLAGS) $(PROJECT.CS_FLAGS) $(CS_FLAGS) $(LOCAL.CS_FLAGS)
