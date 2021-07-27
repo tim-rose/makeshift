@@ -244,10 +244,10 @@ C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
 lint:	lint-c
 lint-c: c-src-defined
 	$(ECHO_TARGET)
-	$(C_LINT_CMD) $(CLINT_CMD_FLAGS) $(C_LINT_FLAGS) $(H_SRC) $(C_SRC)
+	$(C_LINT_CMD) $(C_LINT_CMD_FLAGS) $(C_LINT_FLAGS) $(H_SRC) $(C_SRC)
 lint[%.c]:
 	$(ECHO_TARGET)
-	$(C_LINT_CMD) $(CLINT_CMD_FLAGS) $(C_LINT_FLAGS) $*.c
+	$(C_LINT_CMD) $(C_LINT_CMD_FLAGS) $(C_LINT_FLAGS) $*.c
 lint[%.h]:
 	$(ECHO_TARGET)
 	$(C_LINT) $(C_LINT_FLAGS) $*.h
