@@ -238,7 +238,7 @@ tidy[%.h]:
 # lint: --Perform static analysis for C files.
 #
 C_LINT_CMD ?= cppcheck
-C_LINT_CMD_FLAGS ?= --quiet --std=c11 --template=gcc --enable=style,warning,performance,portability,information $(C_CPPFLAGS)
+C_LINT_CMD_FLAGS ?= --quiet --std=c11 --template=gcc --enable=style,warning,performance,portability,information --suppress=missingIncludeSystem $(C_CPPFLAGS)
 C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
     $(PROJECT.C_LINT_FLAGS) $(LOCAL.C_LINT_FLAGS) $(TARGET.C_LINT_FLAGS)
 lint:	lint-c
