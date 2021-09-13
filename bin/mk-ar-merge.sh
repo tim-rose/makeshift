@@ -19,6 +19,8 @@ ar=${AR:-ar}
 ar_flags=
 status=0
 archdir=${archdir:-${OS}-${ARCH}} # hopefully already defined...
+o=o     # object file extension
+a=a     # library file extension
 
 log_message() { printf "$@"; printf "\n"; } >&2
 warning() { log_message "$@"; status=1; }
@@ -32,9 +34,11 @@ log_cmd(){ debug "exec: $*"; "$@"; }
 #
 main()
 {
-    while getopts "x:vq_" c
+    while getopts "a:o:x:vq_" c
     do
 	case $c in
+	    a)  a="$OPTARG";;
+	    o)  o="$OPTARG";;
 	    x)  ar="$OPTARG";;
 	    v)  verbose=1;;
 	    q)  quiet=1;;
@@ -56,16 +60,15 @@ main()
 	    continue
 	fi
 	case "$file" in
-	    *.o|*.obj) cp "$file" "$tmpdir";;
-	    *.a|*.lib) expand_ar "$file";;
+	    *.$o) cp "$file" "$tmpdir";;
+	    *.$a) expand_ar "$file";;
 	    *) notice 'unrecognised file: "%s"' "$file";;
 	esac
     done
 
     mkdir -p $(dirname "$library")
-    if log_cmd $ar $ar_flags "$library" $tmpdir/*.o; then
-	exit $status		# signal any failures
-    fi
+    log_cmd $ar $ar_flags "$library" $tmpdir/*.o 2>/dev/null
+    true                # discard failures
 }
 
 #
@@ -99,7 +102,7 @@ expand_ar()
     debug 'building library in "%s"' "$PWD"
     log_cmd $ar -x lib.a	# REVISIT: handle .lib too
 
-    for file in *.o; do		# REVISIT: handle .obj too
+    for file in *.$o; do		# REVISIT: handle .obj too
 	if [ -e "$file" ]; then
 	    mv "$file" "../${prefix}-$file"
 	else
