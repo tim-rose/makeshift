@@ -138,19 +138,19 @@ todo-sh:
 #
 # lint: --Check sh style.
 #
-SH_LINT ?= :
+SH_LINT ?= shellcheck -x -s dash
 SH_LINT_FLAGS = $(OS.SH_LINT_FLAGS) $(ARCH.SH_LINT_FLAGS) \
     $(PROJECT.SH_LINT_FLAGS) $(LOCAL.SH_LINT_FLAGS) $(TARGET.SH_LINT_FLAGS)
 lint:	lint-sh
 lint-sh:	sh-src-defined
 	$(ECHO_TARGET)
-	$(SH_LINT) $(SH_LINT_FLAGS) $(SH_SRC) $(SHL_SRC)
+	-$(SH_LINT) $(SH_LINT_FLAGS) $(SH_SRC) $(SHL_SRC)
 lint[%.sh]:
 	$(ECHO_TARGET)
-	$(SH_LINT) $(SH_LINT_FLAGS) $*.sh
+	-$(SH_LINT) $(SH_LINT_FLAGS) $*.sh
 lint[%.shl]:
 	$(ECHO_TARGET)
-	$(SH_LINT) $(SH_LINT_FLAGS) $*.shl
+	-$(SH_LINT) $(SH_LINT_FLAGS) $*.shl
 
 #
 # install-shell: --Compatibility targets
