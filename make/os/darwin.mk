@@ -10,7 +10,7 @@
 #
 include os/posix.mk
 
-#.LIBPATTERNS = lib%.a lib%.dylib lib%.so
+CC ?= cc
 .LIBPATTERNS = lib%.dylib lib%.a
 
 so = dylib

@@ -31,6 +31,8 @@
 #  * C_SRC	--C source files
 #  * C_MAIN_SRC	--C source files that define a main() function.
 #
+# TODO: cleanup cppcheck dump files!
+#
 
 .PHONY: $(recursive-targets:%=%-c)
 
