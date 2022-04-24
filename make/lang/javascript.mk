@@ -16,19 +16,21 @@ ifdef autosrc
     JS_SRC ?= $(LOCAL_JS_SRC)
 endif
 
-$(wwwdir)/%.js:	%.js;	$(INSTALL_DATA) $? $@
+$(libdir)/%.js:	%.js;	$(INSTALL_DATA) $? $@
+$(bindir)/%:	%.js;	$(INSTALL_SCRIPT) $? $@
+$(libexecdir)/%:	%.js;	$(INSTALL_SCRIPT) $? $@
 
 #
-# install-javascript: --Install JavaScript files to wwwdir(?).
+# install-javascript: --Install JavaScript files to libdir.
 #
-install-javascript:	$(JS_SRC:%=$(wwwdir)/%);	$(ECHO_TARGET)
+install-javascript:	$(JS_SRC:%=$(libdir)/%);	$(ECHO_TARGET)
 
 #
 # uninstall-javascript: --Uninstall the default JavaScript files.
 #
 uninstall-javascript:
-	$(RM) $(JS_SRC:%=$(wwwdir)/%)
-	$(RMDIR) -p $(wwwdir) 2>/dev/null ||:
+	$(RM) $(JS_SRC:%=$(libdir)/%)
+	$(RMDIR) -p $(libdir) 2>/dev/null ||:
 
 #
 # toc-javascript: --Build the table-of-contents for JavaScript files.
