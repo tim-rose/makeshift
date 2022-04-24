@@ -223,11 +223,14 @@ $(gendir):		;	$(MKDIR) $@
 $(bindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
 $(sbindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
 $(libexecdir)/%:	%;	$(INSTALL_SCRIPT) $? $@
+$(srvdir)/%:		%;	$(INSTALL_SCRIPT) $? $@
+
 $(sysconfdir)/%:	%;	$(INSTALL_DATA) $? $@
 $(libdir)/%:		%;	$(INSTALL_DATA) $? $@
 $(datadir)/%:		%;	$(INSTALL_DATA) $? $@
 $(sharedstatedir)/%:	%;	$(INSTALL_DATA) $? $@
 $(localstatedir)/%:	%;	$(INSTALL_DATA) $? $@
+$(localedir)/%:		%;	$(INSTALL_DATA) $? $@
 $(wwwdir)/%:		%;	$(INSTALL_DATA) $? $@
 #
 # bindir/archdir: --Rules for installing any executable from archdir.
@@ -235,6 +238,8 @@ $(wwwdir)/%:		%;	$(INSTALL_DATA) $? $@
 $(bindir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 $(sbindir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 $(libexecdir)/%:	$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
+$(srvdir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
+$(wwwdir)/%:		$(archdir)/%;	$(INSTALL_PROGRAM) $? $@
 #$(libdir)/%:		$(archdir)/%;	$(INSTALL_DATA) $? $@
 
 #
