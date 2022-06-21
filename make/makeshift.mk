@@ -61,6 +61,10 @@ SUBDIRS ?= $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
 tmpdir = tmp-$(notdir $@)
 
 #
+# WILDCARD: --Match everything except starting with "_".
+#
+WILDCARD = [^_]*
+#
 # PWD: --Force reset of PWD
 #
 # REVISIT: needed for indirect makes invoked by packages
@@ -196,7 +200,7 @@ distclean-makeshift:
 	@echo "ECHO_TARGET=(unprintable)"
 
 +var[.VARIABLES]:;@: # avoid listing a list of all the variables
-
++val[%]:;@echo "$($*)"
 #
 # +help: --Output some help text extracted from the included makefiles.
 #
