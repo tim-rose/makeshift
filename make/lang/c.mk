@@ -114,13 +114,13 @@ c-src-defined:
 #
 $(archdir)/%.$(o): %.c | $(archdir)
 	$(ECHO_TARGET)
-	$(CC) $(C_ALL_FLAGS) -c -o $(abspath $@) $(abspath $<)
+	$(TOOLCHAIN:%=%-)$(CC) $(C_ALL_FLAGS) -c -o $@ $(abspath $<)
 #
 # archdir/%.o: --Compile a generated C file into the arch sub-directory.
 #
 $(archdir)/%.$(o): $(gendir)/%.c | $(archdir)
 	$(ECHO_TARGET)
-	$(CC) $(C_ALL_FLAGS) -c -o $(abspath $@) $(abspath $<)
+	$(TOOLCHAIN:%=%-)$(CC) $(C_ALL_FLAGS) -c -o $@ $(abspath $<)
 
 #
 # %.s.o: --Compile a C file into Position Independent Code (PIC).
@@ -130,13 +130,13 @@ $(archdir)/%.$(o): $(gendir)/%.c | $(archdir)
 #
 $(archdir)/%.$(s.o): %.c | $(archdir)
 	$(ECHO_TARGET)
-	$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $(abspath $@) $(abspath $<)
+	$(TOOLCHAIN:%=%-)$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $(abspath $<)
 #
 # archdir/%.s.o: --Compile a generated C file into PIC.
 #
 $(archdir)/%.$(s.o): $(gendir)/%.c
 	$(ECHO_TARGET)
-	$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $(abspath $@) $(abspath $<)
+	$(TOOLCHAIN:%=%-)$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $(abspath $<)
 
 #
 # %.h: --Install a C header (.h) file.

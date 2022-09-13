@@ -136,6 +136,7 @@ ECHO_TARGET = @+$(ECHO) "\$$?: $?"; $(ECHO) "\$$^: $^"
 all:	build
 check:	test
 
+VARIANT ?= $(TOOLCHAIN)
 -include $(VARIANT:%=variant/%.mk)
 include os/$(OS).mk arch/$(ARCH).mk project/$(PROJECT).mk
 #include vcs/$(VCS).mk
