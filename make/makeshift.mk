@@ -210,7 +210,7 @@ distclean-makeshift:
 +dirs:			;	@echo $(.INCLUDE_DIRS)
 +files:			;	@echo $(MAKEFILE_LIST)
 +version:		;	@printf 'makeshift:\n\tversion %s\n\t%s\n' "$(MAKESHIFT_VERSION)-$(MAKESHIFT_BUILD)" "$(MAKESHIFT_HOME)"
-
++which[%]:;@which -a $*
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.
 #
