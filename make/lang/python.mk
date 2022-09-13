@@ -18,7 +18,7 @@
 .PHONY: $(recursive-targets:%=%-python)
 
 PRINT_python_VERSION = python --version
-PRINT_pycodestyle_VERSION = pycodestyle --version
+PRINT_pylint_VERSION = pylint --version
 PRINT_autopep8_VERSION = autopep8 --version
 
 ifdef autosrc
@@ -27,7 +27,7 @@ ifdef autosrc
     PY_SRC ?= $(LOCAL_PY_SRC)
 endif
 
-PY_LINT ?= pycodestyle
+PY_LINT ?= pylint
 PY_TIDY ?= autopep8
 
 #
