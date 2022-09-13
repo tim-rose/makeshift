@@ -176,7 +176,7 @@ $(foreach d, $(RSX_SRC), $(eval $(call make-deps-resx,$d)))
 # /compile. This can be done in the project mk-file.
 %.resources :
 	$(ECHO_TARGET)
-	$(RESGEN) $(ALL_RSX_FLAGS) $(ALL_CS_REFS) /compile $<,$@
+	$(RESGEN) $(ALL_RSX_FLAGS) $(ALL_CS_REFS) /compile $(abspath $<),$@
 
 #
 # TODO: install: --install cs binaries and libraries.

@@ -114,13 +114,13 @@ c-src-defined:
 #
 $(archdir)/%.$(o): %.c | $(archdir)
 	$(ECHO_TARGET)
-	$(CC) $(C_ALL_FLAGS) -c -o $@ $<
+	$(CC) $(C_ALL_FLAGS) -c -o $(abspath $@) $(abspath $<)
 #
 # archdir/%.o: --Compile a generated C file into the arch sub-directory.
 #
 $(archdir)/%.$(o): $(gendir)/%.c | $(archdir)
 	$(ECHO_TARGET)
-	$(CC) $(C_ALL_FLAGS) -c -o $@ $<
+	$(CC) $(C_ALL_FLAGS) -c -o $(abspath $@) $(abspath $<)
 
 #
 # %.s.o: --Compile a C file into Position Independent Code (PIC).
@@ -130,13 +130,13 @@ $(archdir)/%.$(o): $(gendir)/%.c | $(archdir)
 #
 $(archdir)/%.$(s.o): %.c | $(archdir)
 	$(ECHO_TARGET)
-	$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
+	$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $(abspath $@) $(abspath $<)
 #
 # archdir/%.s.o: --Compile a generated C file into PIC.
 #
 $(archdir)/%.$(s.o): $(gendir)/%.c
 	$(ECHO_TARGET)
-	$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $@ $<
+	$(CC) $(C_ALL_FLAGS) $(C_SHARED_FLAGS) -c -o $(abspath $@) $(abspath $<)
 
 #
 # %.h: --Install a C header (.h) file.
@@ -246,13 +246,13 @@ C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
 lint:	lint-c
 lint-c: c-src-defined
 	$(ECHO_TARGET)
-	$(C_LINT_CMD) $(C_LINT_CMD_FLAGS) $(C_LINT_FLAGS) $(H_SRC) $(C_SRC)
+	$(C_LINT_CMD) $(C_LINT_CMD_FLAGS) $(C_LINT_FLAGS) $(abspath $(H_SRC)) $(abspath $(C_SRC))
 lint[%.c]:
 	$(ECHO_TARGET)
-	$(C_LINT_CMD) $(C_LINT_CMD_FLAGS) $(C_LINT_FLAGS) $*.c
+	$(C_LINT_CMD) $(C_LINT_CMD_FLAGS) $(C_LINT_FLAGS) $(abspath $*.c)
 lint[%.h]:
 	$(ECHO_TARGET)
-	$(C_LINT) $(C_LINT_FLAGS) $*.h
+	$(C_LINT) $(C_LINT_FLAGS) $(abspath $*.h)
 
 #
 # toc: --Build the table-of-contents for C files.
@@ -274,10 +274,10 @@ toc[%.h]:
 src:	src-c
 src-c:
 	$(ECHO_TARGET)
-	$(Q)mk-filelist -f $(MAKEFILE) -qn C_SRC *.c
+	$(Q)mk-filelist -f $(MAKEFILE) -qn C_SRC $(WILDCARD).c
 	$(Q)mk-filelist -f $(MAKEFILE) -qn C_MAIN_SRC \
-            $$(grep -l $(C_MAIN_RGX) *.c 2>/dev/null)
-	$(Q)mk-filelist -f $(MAKEFILE) -qn H_SRC *.h
+            $$(grep -l $(C_MAIN_RGX) $(WILDCARD).c 2>/dev/null)
+	$(Q)mk-filelist -f $(MAKEFILE) -qn H_SRC $(WILDCARD).h
 
 #
 # tags: --Build vi, emacs tags files.

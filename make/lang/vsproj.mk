@@ -15,11 +15,11 @@ ALL_BUILD_FLAGS = $(VARIANT.BUILD_FLAGS) $(OS.BUILD_FLAGS) $(ARCH.BUILD_FLAGS) \
 
 build: build-vsproj
 build-vsproj: $(VSPROJ_SRC) | $(archdir) $(gendir)
-	$(MSBUILD) $< $(ALL_BUILD_FLAGS) -t:Build
+	$(MSBUILD) $(abspath $<) $(ALL_BUILD_FLAGS) -t:Build
 
 clean: clean-vsproj
 clean-vsproj:
-	$(MSBUILD) $< $(ALL_BUILD_FLAGS) -t:Clean $(VSPROJ_SRC)
+	$(MSBUILD) $(abspath $<) $(ALL_BUILD_FLAGS) -t:Clean $(VSPROJ_SRC)
 	$(RM) $(gendir)$(LOG_FILE)
 
 distclean: distclean-vs

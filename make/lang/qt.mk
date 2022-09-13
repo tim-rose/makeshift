@@ -82,15 +82,15 @@ build:	$(QT_OBJ) $(QTR_PIC_OBJ) $(QT_TRG)
 
 $(gendir)/%.$(C++_SUFFIX):	%.qrc | $(gendir)
 	$(ECHO_TARGET)
-	$(RCC) $(ALL_RCC_FLAGS) $< >$@
+	$(RCC) $(ALL_RCC_FLAGS) $(abspath $<) >$@
 
 $(gendir)/%_moc.$(C++_SUFFIX):	%.$(H++_SUFFIX) | $(gendir)
 	$(ECHO_TARGET)
-	$(MOC) $(ALL_MOC_FLAGS) -o $@ $<
+	$(MOC) $(ALL_MOC_FLAGS) -o $@ $(abspath $<)
 
 $(gendir)/%_$(QUI_SUFFIX).$(H++_SUFFIX):	%.$(QUI_SUFFIX) | $(gendir)
 	$(ECHO_TARGET)
-	$(UIC) $(ALL_UIC_FLAGS) -o $@ $<
+	$(UIC) $(ALL_UIC_FLAGS) -o $@ $(abspath $<)
 
 #
 # clean: --Remove objects and intermediates created from Qt files.

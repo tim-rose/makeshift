@@ -100,14 +100,14 @@ c++-src-defined:
 #
 $(archdir)/%.$(o): %.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(C++) $(C++_ALL_FLAGS) -c -o $@ $<
+	$(C++) $(C++_ALL_FLAGS) -c -o $@ $(abspath $<)
 
 #
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 #
 $(archdir)/%.$(o): $(gendir)/%.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(C++) $(C++_ALL_FLAGS) -c -o $@ $<
+	$(C++) $(C++_ALL_FLAGS) -c -o $@ $(abspath $<)
 #
 # %.s.o: --Compile a C++ file into PIC code.
 #
@@ -116,14 +116,14 @@ $(archdir)/%.$(o): $(gendir)/%.$(C++_SUFFIX) | $(archdir)
 #
 $(archdir)/%.$(s.o): %.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $<
+	$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $(abspath $<)
 
 #
 # archdir/%.o: --Compile a generated C++ file PIC.
 #
 $(archdir)/%.$(o): $(gendir)/%.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $<
+	$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $(abspath $<)
 
 #
 # build[%.c++]: --Build a C++ file's related object.
@@ -205,7 +205,9 @@ uninstall-c++:
 clean:	clean-c++
 clean-c++:
 	$(ECHO_TARGET)
-	$(RM) $(C++_MAIN) $(C++_MAIN_OBJ) $(C++_MAIN_OBJ:%.$(o)=%.d) $(C++_MAIN_OBJ:%.$(o)=%.map) $(C++_OBJ) $(C++_OBJ:%.$(o)=%.d)
+	$(RM) $(C++_MAIN) $(C++_MAIN_OBJ)
+	$(RM) $(C++_MAIN_OBJ:%.$(o)=%.d) $(C++_MAIN_OBJ:%.$(o)=%.map)
+	$(RM) $(C++_OBJ) $(C++_OBJ:%.$(o)=%.d)
 
 #
 # tidy: --Reformat C++ files consistently.
@@ -233,13 +235,13 @@ C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
 lint:	lint-c++
 lint-c++:	| c++-src-defined
 	$(ECHO_TARGET)
-	$(C++_LINT) $(C++_LINT_FLAGS) $(H++_SRC) $(C++_SRC)
+	$(C++_LINT) $(C++_LINT_FLAGS) $(abspath $(H++_SRC)) $(abspath $(C++_SRC))
 lint[%.$(C++_SUFFIX)]:
 	$(ECHO_TARGET)
-	$(C++_LINT) $(C++_LINT_FLAGS) $*.$(C++_SUFFIX)
+	$(C++_LINT) $(C++_LINT_FLAGS) $(abspath $*.$(C++_SUFFIX))
 lint[%.$(H++_SUFFIX)]:
 	$(ECHO_TARGET)
-	$(C++_LINT) $(C++_LINT_FLAGS) $*.$(H++_SUFFIX)
+	$(C++_LINT) $(C++_LINT_FLAGS) $(abspath $*.$(H++_SUFFIX))
 
 #
 # toc: --Build the table-of-contents for C++ files.

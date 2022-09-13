@@ -57,7 +57,7 @@ ALL_YFLAGS = $(OS.YFLAGS) $(ARCH.YFLAGS) \
 $(gendir)/%.h $(gendir)/%_y.c:	%.y | $(gendir)
 	$(ECHO_TARGET)
 	$(MKDIR) $(tmpdir)
-	$(CP) $*.y $(tmpdir) && cd $(tmpdir) && $(YACC) -d $(ALL_YFLAGS) $<
+	$(CP) $*.y $(tmpdir) && cd $(tmpdir) && $(YACC) -d $(ALL_YFLAGS) $(abspath $<)
 	base=$$(echo "$*"| tr -- -a-z _A-Z); \
 	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <$(tmpdir)/y.tab.h >$(gendir)/$*.h; \
 	sed -e "s/yy/$*_/g" -e "s/YY/$${base}_/g" <$(tmpdir)/y.tab.c >$(gendir)/$*_y.c

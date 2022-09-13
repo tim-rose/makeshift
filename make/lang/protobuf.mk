@@ -60,7 +60,7 @@ PROTOBUF_TRG  = $(PROTOBUF_C++) $(PROTOBUF_H++) $(PROTOBUF_PY) \
 #
 $(gendir)/%.pb.$(C++_SUFFIX) $(gendir)/%.pb.$(H++_SUFFIX):	%.proto | $(gendir)
 	$(ECHO_TARGET)
-	$(PROTOC) $(PROTOBUF_FLAGS) --cpp_out=$(gendir) $<
+	$(PROTOC) $(PROTOBUF_FLAGS) --cpp_out=$(gendir) $(abspath $<)
 	cd $(gendir) ; \
 	if [ "$(H++_SUFFIX)" != "h" ]; then \
 	    $(MV) $*.pb.h $*.pb.$(H++_SUFFIX); \
@@ -78,7 +78,7 @@ $(gendir)/%.pb.$(C++_SUFFIX) $(gendir)/%.pb.$(H++_SUFFIX):	%.proto | $(gendir)
 #
 $(gendir)/%.py:	%.proto | $(gendir)
 	$(ECHO_TARGET)
-	$(PROTOC) $(PROTOBUF_FLAGS) --python_out=$(gendir) $<
+	$(PROTOC) $(PROTOBUF_FLAGS) --python_out=$(gendir) $(abspath $<)
 	cd $(gendir); $(MV) $*_pb2.py $*.py
 
 #
@@ -87,7 +87,7 @@ $(gendir)/%.py:	%.proto | $(gendir)
 # TODO: these should go in $(gendir), but i'm not sure how to
 # reference them in Visual Studio.
 %.proto.cs: %.proto
-	$(PROTOC) -i:$< -o:$@ $(PROTOBUF_FLAGS)
+	$(PROTOC) -i:$(abspath $<) -o:$@ $(PROTOBUF_FLAGS)
 
 #
 # build: --Build the protobuf files.
