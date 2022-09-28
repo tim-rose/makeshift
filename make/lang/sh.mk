@@ -47,7 +47,7 @@ AWK_TRG	:= $(AWK_SRC:%.awk=%)
 SED_TRG	:= $(SED_SRC:%.sed=%)
 SHELL_TRG := $(SH_TRG) $(AWK_TRG) $(SED_TRG)
 
-SET_VERSION = $(SED) -e '/^ *version=/s/=.*/=$(VERSION)/;/^ *build=/s/=.*/=$(BUILD)/'
+SET_VERSION = $(SED) -e '/^ *version=/s/=.*/=$(VERSION)/'
 
 #
 # %.sh: --Rules for installing shell scripts, libraries
@@ -58,6 +58,8 @@ SET_VERSION = $(SED) -e '/^ *version=/s/=.*/=$(VERSION)/;/^ *build=/s/=.*/=$(BUI
 
 $(bindir)/%:		%;	$(INSTALL_SCRIPT) $* $@
 $(sbindir)/%:		%;	$(INSTALL_SCRIPT) $* $@
+
+$(sysconfdir)/%:	%;	$(INSTALL_DATA) $* $@ # bash completions
 
 $(shlibdir)/%.shl:	%.shl;	$(INSTALL_DATA) $*.shl $@
 $(shlibdir)/%.awk:	%.awk;	$(INSTALL_DATA) $*.awk $@
