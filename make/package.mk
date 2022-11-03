@@ -2,10 +2,9 @@
 # PACKAGE.MK--Build rules for packaging.
 #
 # Contents:
-# package: --Build a package for the current module.
-# destdir: --Install the package in a staged root directory.
-# release: --Mark the current version of this package as "released".
-# clean:   --Remove the tarball created by "dist", and the destdir root.
+# package:   --Build a package for the current module.
+# staging-%: --Install the package in a staged root directory.
+# clean:     --Remove the tarball created by "dist", and the destdir root.
 #
 # Remarks:
 # The package module sets up some common definitions and then passes
@@ -21,7 +20,7 @@
 #
 # * PACKAGE --the name of the package
 # * VERSION --(ideally a three-number triple updated "semantically")
-# * BUILD --build identifier (ideally derived from VCS).
+# * BUILD --build identifier (derived from environment?).
 #
 # See Also:
 # https://semver.org
@@ -45,7 +44,7 @@ include $(package-type:%=package/%.mk)
 package: $(package:%=package-%)
 
 #
-# destdir: --Install the package in a staged root directory.
+# staging-%: --Install the package in a staged root directory.
 #
 # Remarks:
 # This target is constructed as a pattern rule so that packages
@@ -55,11 +54,6 @@ package: $(package:%=package-%)
 staging-%:
 	$(ECHO_TARGET)
 	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=$(prefix) usr=$(usr) opt=$(opt)
-
-#
-# release: --Mark the current version of this package as "released".
-#
-release: vcs-tag[$(VERSION)]
 
 #
 # dist:	--Create a tar.gz distribution file.
