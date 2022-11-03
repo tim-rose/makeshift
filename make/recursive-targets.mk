@@ -2,10 +2,10 @@
 # RECURSIVE-TARGETS.MK --Define makeshift's recursive targets.
 #
 # Contents:
-# std-targets:    --The GNU standard targets, as described in the GNU make manual.
+# std-targets:       --The GNU standard targets, as described in the GNU make manual.
 # makeshift-targets: --Extra development/maintenance targets.
-# install-strip:  --install stuff, and strip binaries.
-# recursive_rule: --Define a set of targets that implement recursion.
+# install-strip:     --install stuff, and strip binaries.
+# recursive_rule:    --Define a set of targets that implement recursion.
 #
 # Remarks:
 # The recursive targets are invoked on all subdirectories that contain
@@ -44,7 +44,7 @@
 # * dist --Create a distrubution package of the source files.
 # * doc --Create/format the documentation
 #
-std-targets = clean distclean build test coverage \
+std-targets = clean distclean build test test-xml coverage \
     install uninstall \
     package deploy \
     tags dist doc

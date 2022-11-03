@@ -2,13 +2,14 @@
 # makeshift.mk --Recursive make considered useful.
 #
 # Contents:
+# WILDCARD:          --Match everything except starting with "_".
 # PWD:               --Force reset of PWD
 # OS:                --Set OS macro by interpolating "uname -s".
 # ARCH:              --Set ARCH macro by interpolating "uname -m".
 # VERBOSE:           --Control how (+how much, how colourful) echo's output is.
 # ECHO_TARGET:       --Common macro for logging in makeshift targets.
 # no-implicit-rules: --Disable the archaic Makefile rules.
-# build:             --The default target
+# build:             --The default target.
 # install-all:       --Install all language-specific items.
 # src:               --Make sure the src target can write to the Makefile.
 # clean:             --Makeshift-specific customisations for the "clean" target.
@@ -210,7 +211,7 @@ distclean-makeshift:
 +features:		;	@echo $(.FEATURES)
 +dirs:			;	@echo $(.INCLUDE_DIRS)
 +files:			;	@echo $(MAKEFILE_LIST)
-+version:		;	@printf 'makeshift:\n\tversion %s\n\t%s\n' "$(MAKESHIFT_VERSION)-$(MAKESHIFT_BUILD)" "$(MAKESHIFT_HOME)"
++version:		;	@printf 'makeshift:\n\tversion %s\n\t%s\n' "$(MAKESHIFT_VERSION)" "$(MAKESHIFT_HOME)"
 +which[%]:;@which -a $*
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.

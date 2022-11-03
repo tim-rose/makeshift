@@ -5,11 +5,10 @@
 #
 #
 # Contents:
-# build:   --Build all the c# sources that have changed.
-# install: --install c# binaries and libraries.
-# clean:   --Remove c# class files.
-# src:     --Update the CS_SRC macro.
-# todo:    --Report "unfinished work" comments in CSC files.
+# build: --Build all the cs sources that have changed.
+# clean: --Remove build outputs
+# src:   --Update the CS_SRC macro.
+# todo:  --Report "unfinished work" comments in Java files.
 #
 #
 .PHONY: $(recursive-targets:%=%-cs)
