@@ -52,8 +52,7 @@ MAKEFILE := $(firstword $(MAKEFILE_LIST))
 MAKESHIFT_HOME ?= /usr/local
 -include makeshift-version.mk
 
-VERSION ?= local
-BUILD ?= latest
+VERSION ?= unknown
 SUBDIRS ?= $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
 
 #
