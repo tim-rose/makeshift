@@ -15,7 +15,7 @@ RPM_ARCH = noarch
 
 MD_SRC = README.md RELEASE.md
 MK_SRC = makeshift-version.mk
-VERSION_CMD = git describe --dirty 2>/dev/null || echo unknown
+VERSION_CMD = git describe --always --first-parent --dirty 2>/dev/null || echo unknown
 export VERSION = $(shell $(VERSION_CMD))
 
 include makeshift.mk make/version.mk make/package.mk
