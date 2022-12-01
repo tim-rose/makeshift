@@ -12,12 +12,10 @@
 # "semantic" versioning.  In any case, these rules provide mechanism
 # only, not policy.
 #
-# In addition to the VERSION, a simple build identifier is stored in
-# _BUILD.
-#
-# REVISIT: use git-describe (svn-describe) to set _BUILD.
-#
 .PHONY: clean-version major-version minor-version patch-version build-number
+
+VERSION_CMD = git describe --always --first-parent --dirty 2>/dev/null || echo unknown
+export VERSION = $(shell $(VERSION_CMD))
 
 #
 # major-version: --Increment the major version number.
