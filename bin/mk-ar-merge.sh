@@ -34,11 +34,12 @@ log_cmd(){ debug "exec: $*"; "$@"; }
 #
 main()
 {
-    while getopts "a:o:x:vq_" c
+    while getopts "a:o:r:x:vq_" c
     do
 	case $c in
 	    a)  a="$OPTARG";;
 	    o)  o="$OPTARG";;
+	    r)  ar_flags="-r";;
 	    x)  ar="$OPTARG";;
 	    v)  verbose=1;;
 	    q)  quiet=1;;
@@ -52,7 +53,7 @@ main()
     trap "rm -rf $tmpdir" 0 		# cleanup
     mkdir -p "$tmpdir"
 
-    ar_flags="$1"; shift
+#    ar_flags="$1"; shift
     library="$1"; shift
 
     for file; do
