@@ -1,5 +1,4 @@
 subdir = doc
-TXT_SRC = cmark-epilogue.txt cmark-prologue.txt
 
 include makeshift.mk
 
