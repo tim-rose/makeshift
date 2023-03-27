@@ -2,33 +2,19 @@
 # MARKDOWN.MK --Rules for dealing with markdown files.
 #
 # Contents:
-# %.html/%.md:    --build a HTML document from a markdown file.
-# %.pdf:          --Create a PDF document from a HTML file.
-# build:          --Create HTML documents from markdown.
-# doc-markdown:   --Create PDF documents from MMD_SRC, MD_SRC.
-# clean-markdown: --Clean up markdown's derived files.
-# src-markdown:   --Update MD_SRC, MMD_SRC macros.
-# todo-markdown:  --Report unfinished work in markdown files.
-# +version:       --Report details of tools used by markdown.
+# README.html/README.md: --build a HTML document from a README file.
+# %.html/%.md:         --build a HTML document from a markdown file.
+# %.pdf:               --Create a PDF document from a HTML file.
+# build:               --Create HTML documents from markdown.
+# doc-markdown:        --Create PDF documents from MD_SRC.
+# clean-markdown:      --Clean up markdown's derived files.
+# src-markdown:        --Update MD_SRC, macros.
+# todo-markdown:       --Report unfinished work in markdown files.
+# +version:            --Report details of tools used by markdown.
 #
 # Remarks:
-# The markdown module recognises both "multimarkdown" markdown files
-# (".mmd"), and simple markdown files (".md"), defined by MMD_SRC and
-# MD_SRC respectively.  Use `make src` to update these macros.
-#
-# Simple markdown is assumed to be Github-flavoured, and uses the
-# `cmark-gfm` processor by default to generate the HTML. `cmark-gfm`
-# generates a HTML fragment only, so the build rule adds some
-# prologue, epilogue to form a complete HTML document.  The prologue
-# assumes that highlightjs is installed, and uses it for syntax
-# highlighting.
-#
-# For Multimarkdown (.mmd) files, the metadata is assumed to contain
-# appropriate CSS and JS to achieve the author's intent, and the
-# "--full" option is used to generate a complete HTML document.
-#
-# This module also defines rules for building PDF files from HTML using prince(1).
-# It defines the following targets:
+# This module also defines rules for building PDF files from HTML
+# using prince(1).  It defines the following targets:
 #
 # * `doc-html` --build all the HTML documents from markdown sources
 # * `doc-pdf`  --build all the PDF documents from markdown sources.
@@ -52,23 +38,15 @@ PRINT_prince_VERSION = prince --version
 
 ifdef autosrc
     LOCAL_MD_SRC := $(wildcard *.md)
-    LOCAL_MMD_SRC := $(wildcard *.mmd)
 
     MD_SRC ?= $(LOCAL_MD_SRC)
-    MMD_SRC ?= $(LOCAL_MMD_SRC)
 endif
 
-MD ?= cmark-gfm
-ALL_MDFLAGS ?= --unsafe --smart --extension table --extension footnotes \
+MD ?= pandoc
+ALL_MDFLAGS ?= --to=html -f markdown-smart --standalone \
+    --css=$(MAKESHIFT_HOME)/share/doc/css/plain.css \
     $(OS.MDFLAGS) $(ARCH.MDFLAGS) $(PROJECT.MDFLAGS) \
     $(LOCAL.MDFLAGS) $(TARGET.MDFLAGS) $(MDFLAGS)
-
-MD_PROLOGUE = $(MAKESHIFT_HOME)/share/doc/cmark-prologue.txt
-MD_EPILOGUE = $(MAKESHIFT_HOME)/share/doc/cmark-epilogue.txt
-
-MMD ?= multimarkdown
-ALL_MMDFLAGS ?= --full $(OS.MMDFLAGS) $(ARCH.MMDFLAGS) $(PROJECT.MMDFLAGS) \
-    $(LOCAL.MMDFLAGS) $(TARGET.MMDFLAGS) $(MMDFLAGS)
 
 HTML_PDF ?= prince
 ALL_HTML_PDFFLAGS ?= $(OS.HTML_PDFFLAGS) $(ARCH.HTML_PDFFLAGS) \
@@ -81,45 +59,41 @@ $(wwwdir)/%.html:	%.html;	$(INSTALL_DATA) $? $@
 $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 
 #
+# README.html/README.md: --build a HTML document from a README file.
+#
+# Remarks:
+# README files are processed as github-flavoured markdown.
+#
+README.html:	README.md
+	$(ECHO_TARGET)
+	$(MD) --from gfm $(ALL_MDFLAGS) README.md > $@
+#
+
+#
 # %.html/%.md: --build a HTML document from a markdown file.
 #
-%.html:	%.md
+%.html:	%.md | $(gendir)
 	$(ECHO_TARGET)
-	sed -e 's|<title>.*|<title>$*</title>|' $(MD_PROLOGUE) >$@
-	$(MD) $(ALL_MDFLAGS) $*.md >> $@
-	cat $(MD_EPILOGUE) >> $@
-
-%.html:	$(gendir)/%.md
-	$(ECHO_TARGET)
-	sed -e 's|<title>.*|<title>$*</title>|' $(MD_PROLOGUE) >$@
-	$(MD) $(ALL_MDFLAGS) $(gendir)/$*.md >> $@
-	cat $(MD_EPILOGUE) >> $@
-
-%.html:	%.mmd
-	$(ECHO_TARGET)
-	$(MMD) $(ALL_MMDFLAGS) $*.mmd > $@
-
-%.html:	$(gendir)/%.mmd
-	$(ECHO_TARGET)
-	$(MMD) $(ALL_MMDFLAGS) $(gendir)/$*.mmd > $@
-
+	printf "version: "$(VERSION)"\n" > $(gendir)/version.yaml
+	$(MD) --metadata-file $(gendir)/version.yaml $(ALL_MDFLAGS) $*.md > $@
+	$(RM) $(gendir)/version.yaml
 #
 # %.pdf: --Create a PDF document from a HTML file.
 # @todo: allow for alternate PDF engines
 %.pdf: %.html
 	$(ECHO_TARGET)
-	$(HTML_PDF) --javascript $*.html -o $@
+	$(HTML_PDF) -s $(MAKESHIFT_HOME)/share/doc/css/print.css --javascript $*.html -o $@
 
 #
 # build: --Create HTML documents from markdown.
 #
-doc-html:	$(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html)
+doc-html:	$(MD_SRC:%.md=%.html)
 
 #
-# doc-markdown: --Create PDF documents from MMD_SRC, MD_SRC.
+# doc-markdown: --Create PDF documents from MD_SRC.
 #
 doc-pdf doc:	doc-markdown
-doc-markdown:	$(MMD_SRC:%.mmd=%.pdf) $(MD_SRC:%.md=%.pdf)
+doc-markdown:	$(MD_SRC:%.md=%.pdf)
 
 #
 # clean-markdown: --Clean up markdown's derived files.
@@ -128,15 +102,14 @@ distclean:	clean-markdown
 clean:	clean-markdown
 clean-markdown:
 	$(ECHO_TARGET)
-	$(RM) $(MMD_SRC:%.mmd=%.html) $(MD_SRC:%.md=%.html) $(MMD_SRC:%.mmd=%.pdf) $(MD_SRC:%.md=%.pdf) $(MMD_SRC:%.mmd=$(gendir)/%.mmd) $(MD_SRC:%.md=$(gendir)/%.md)
+	$(RM) $(MD_SRC:%.md=%.html) $(MD_SRC:%.md=%.pdf) $(MD_SRC:%.md=$(gendir)/%.md)
 
 #
-# src-markdown: --Update MD_SRC, MMD_SRC macros.
+# src-markdown: --Update MD_SRC, macros.
 #
 src:	src-markdown
 src-markdown:
 	$(ECHO_TARGET)
-	$(Q)mk-filelist -f $(MAKEFILE) -qn MMD_SRC *.mmd
 	$(Q)mk-filelist -f $(MAKEFILE) -qn MD_SRC *.md
 
 #
@@ -145,8 +118,8 @@ src-markdown:
 todo:	todo-markdown
 todo-markdown:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(MMD_SRC) /dev/null ||:
+	@$(GREP) $(TODO_PATTERN) $(MD_SRC) /dev/null ||:
 #
 # +version: --Report details of tools used by markdown.
 #
-+version: cmd-version[$(MD)] cmd-version[$(MMD)] cmd-version[$(HTML_PDF)]
++version: cmd-version[$(MD)] cmd-version[$(HTML_PDF)]
