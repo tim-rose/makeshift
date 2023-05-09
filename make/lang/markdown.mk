@@ -26,6 +26,11 @@
 # * MD_SRC --a list of the CommonMark/github-flavoured ".md" files
 # * MMD_SRC --a list of the MultiMarkdown ".mmd" files
 #
+# The pandoc processing can be customised with the following variables:
+# 
+# * MD_STYLE --a list of HTML stylesheets
+# * MD_FILTER --a list of pandoc filters
+#
 # See Also:
 # http://alistapart.com/article/building-books-with-css3
 # http://www.princexml.com/doc
@@ -43,8 +48,10 @@ ifdef autosrc
 endif
 
 MD ?= pandoc
+MD_STYLE ?= $(MAKESHIFT_HOME)/share/doc/css/plain.css
+
 ALL_MDFLAGS ?= --to=html -f markdown-smart --standalone \
-    --css=$(MAKESHIFT_HOME)/share/doc/css/plain.css \
+    $(MD_STYLE:%=--css=%) $(MD_FILTER:%=--filter=%)\
     $(OS.MDFLAGS) $(ARCH.MDFLAGS) $(PROJECT.MDFLAGS) \
     $(LOCAL.MDFLAGS) $(TARGET.MDFLAGS) $(MDFLAGS)
 
