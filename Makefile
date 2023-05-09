@@ -6,6 +6,9 @@
 # makeshift-version.mk: --Install a file recording the makeshift version.
 # distclean:           --Remove makeshift-version.mk.
 #
+# SPDX-FileCopyrightText: 2023 Tim Rose <tim.rose@acm.org>
+# SPDX-License-Identifier: MIT
+#
 language = markdown
 PACKAGE = makeshift
 package-type = rpm deb
