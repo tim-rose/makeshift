@@ -49,7 +49,7 @@ endif
 MD ?= pandoc
 MD_STYLE ?= $(MAKESHIFT_HOME)/share/doc/css/plain.css
 
-ALL_MDFLAGS ?= -f markdown-smart --standalone \
+ALL_MDFLAGS ?= -f markdown-smart \
     $(MD_STYLE:%=--css=%) $(MD_FILTER:%=--filter=%)\
     $(OS.MDFLAGS) $(ARCH.MDFLAGS) $(PROJECT.MDFLAGS) \
     $(LOCAL.MDFLAGS) $(TARGET.MDFLAGS) $(MDFLAGS)
@@ -72,7 +72,7 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 #
 README.html:	README.md
 	$(ECHO_TARGET)
-	$(MD) --from gfm --to=html $(ALL_MDFLAGS) README.md > $@
+	$(MD) --from gfm --to=html $(ALL_MDFLAGS) README.md > $@ || $(RM) $@
 #
 
 #
@@ -86,7 +86,8 @@ README.html:	README.md
 %.html:	%.md | $(gendir)
 	$(ECHO_TARGET)
 	printf "version: "$(VERSION)"\n" > $(gendir)/version.yaml
-	$(MD) --metadata-file $(gendir)/version.yaml --to=html $(ALL_MDFLAGS) $*.md > $@
+	$(MD) --metadata-file $(gendir)/version.yaml --to=html --standalone \
+	    $(ALL_MDFLAGS) $*.md > $@ || $(RM) $@
 	$(RM) $(gendir)/version.yaml
 #
 # %.pdf: --Create a PDF document from a HTML file.
