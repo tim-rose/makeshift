@@ -24,10 +24,9 @@
 # The `src` target will update the makefile with the following macros:
 #
 # * MD_SRC --a list of the CommonMark/github-flavoured ".md" files
-# * MMD_SRC --a list of the MultiMarkdown ".mmd" files
 #
 # The pandoc processing can be customised with the following variables:
-# 
+#
 # * MD_STYLE --a list of HTML stylesheets
 # * MD_FILTER --a list of pandoc filters
 #
@@ -50,7 +49,7 @@ endif
 MD ?= pandoc
 MD_STYLE ?= $(MAKESHIFT_HOME)/share/doc/css/plain.css
 
-ALL_MDFLAGS ?= --to=html -f markdown-smart --standalone \
+ALL_MDFLAGS ?= -f markdown-smart --standalone \
     $(MD_STYLE:%=--css=%) $(MD_FILTER:%=--filter=%)\
     $(OS.MDFLAGS) $(ARCH.MDFLAGS) $(PROJECT.MDFLAGS) \
     $(LOCAL.MDFLAGS) $(TARGET.MDFLAGS) $(MDFLAGS)
@@ -73,16 +72,21 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 #
 README.html:	README.md
 	$(ECHO_TARGET)
-	$(MD) --from gfm $(ALL_MDFLAGS) README.md > $@
+	$(MD) --from gfm --to=html $(ALL_MDFLAGS) README.md > $@
 #
 
 #
 # %.html/%.md: --build a HTML document from a markdown file.
 #
+# Remarks:
+# Note that we build the metadata file each time, rather than make it
+# at the start and remove it at the end.  If we did that, it would
+# force a rebuild every time.  Hmmmm.
+#
 %.html:	%.md | $(gendir)
 	$(ECHO_TARGET)
 	printf "version: "$(VERSION)"\n" > $(gendir)/version.yaml
-	$(MD) --metadata-file $(gendir)/version.yaml $(ALL_MDFLAGS) $*.md > $@
+	$(MD) --metadata-file $(gendir)/version.yaml --to=html $(ALL_MDFLAGS) $*.md > $@
 	$(RM) $(gendir)/version.yaml
 #
 # %.pdf: --Create a PDF document from a HTML file.
