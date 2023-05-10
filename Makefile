@@ -6,7 +6,7 @@
 # makeshift-version.mk: --Install a file recording the makeshift version.
 # distclean:           --Remove makeshift-version.mk.
 #
-# SPDX-FileCopyrightText: 2023 Tim Rose <tim.rose@acm.org>
+# SPDX-FileCopyrightText: 2006-2023 Tim Rose <tim.rose@acm.org>
 # SPDX-License-Identifier: MIT
 #
 language = markdown
@@ -60,6 +60,7 @@ uninstall-local:
 #
 # distclean: --Remove makeshift-version.mk.
 #
+clean:	clean-local
 distclean:	clean-local
 clean-local:
 	$(RM) makeshift-version.mk
