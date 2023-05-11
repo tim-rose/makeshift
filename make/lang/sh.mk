@@ -32,11 +32,13 @@
 ifdef autosrc
     LOCAL_SH_SRC  := $(wildcard *.sh)
     LOCAL_SHL_SRC := $(wildcard *.shl)
+    LOCAL_RC_SRC := $(wildcard _*)
     LOCAL_AWK_SRC := $(wildcard *.awk)
     LOCAL_SED_SRC := $(wildcard *.sed)
 
     SH_SRC	?= $(LOCAL_SH_SRC)
     SHL_SRC	?= $(LOCAL_SHL_SRC)
+    RC_SRC	?= $(LOCAL_RC_SRC)
     AWK_SRC	?= $(LOCAL_AWK_SRC)
     SED_SRC	?= $(LOCAL_SED_SRC)
 endif
@@ -60,20 +62,11 @@ $(bindir)/%:		%;	$(INSTALL_SCRIPT) $* $@
 $(sbindir)/%:		%;	$(INSTALL_SCRIPT) $* $@
 
 $(sysconfdir)/%:	%;	$(INSTALL_DATA) $* $@ # bash completions
+$(sysconfdir)/.%:	_%;	$(INSTALL_DATA) _$* $@ # rc files
 
 $(shlibdir)/%.shl:	%.shl;	$(INSTALL_DATA) $*.shl $@
 $(shlibdir)/%.awk:	%.awk;	$(INSTALL_DATA) $*.awk $@
 $(shlibdir)/%.sed:	%.sed;	$(INSTALL_DATA) $*.sed $@
-
-#
-# sh-src-defined: --Test that the SH_SRC variable(s) are set.
-#
-sh-src-defined:
-	@if [ ! '$(SH_SRC)$(SHL_SRC)' ]; then \
-	    printf $(VAR_UNDEF) "SH_SRC or SHL_SRC"; \
-	    echo 'run "make src" to define it'; \
-	    false; \
-	fi >&2
 
 #
 # build-sh: --Make scripts "executable".
@@ -116,7 +109,7 @@ distclean:	clean-sh
 toc:	toc-sh
 toc-sh:
 	$(ECHO_TARGET)
-	mk-toc $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC)
+	mk-toc -t .sh $(SH_SRC) $(SHL_SRC) $(RC_SRC) $(AWK_SRC) $(SED_SRC)
 #
 # src: --Define SH_SRC, SHL_SRC, AWK_SRC, SED_SRC.
 #
@@ -125,6 +118,7 @@ src-sh:
 	$(ECHO_TARGET)
 	$(Q)mk-filelist -f $(MAKEFILE) -qn SH_SRC *.sh
 	$(Q)mk-filelist -f $(MAKEFILE) -qn SHL_SRC *.shl
+	$(Q)mk-filelist -f $(MAKEFILE) -qn RC_SRC _*
 	$(Q)mk-filelist -f $(MAKEFILE) -qn AWK_SRC *.awk
 	$(Q)mk-filelist -f $(MAKEFILE) -qn SED_SRC *.sed
 
@@ -135,7 +129,7 @@ todo:	todo-sh
 todo-sh:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) \
-	    $(SH_SRC) $(SHL_SRC) $(AWK_SRC) $(SED_SRC) /dev/null ||:
+	    $(SH_SRC) $(SHL_SRC) $(RC_SRC) $(AWK_SRC) $(SED_SRC) /dev/null ||:
 
 #
 # lint: --Check sh style.
