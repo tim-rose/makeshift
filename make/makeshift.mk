@@ -52,7 +52,13 @@ MAKEFILE := $(firstword $(MAKEFILE_LIST))
 MAKESHIFT_HOME ?= /usr/local
 -include makeshift-version.mk
 
-VERSION ?= unknown
+#
+# VERSION: --Extract version from VCS.
+#
+VERSION_CMD = \
+    git describe --always --first-parent --dirty 2>/dev/null || echo unknown
+export VERSION = $(shell $(VERSION_CMD))
+
 SUBDIRS ?= $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
 
 #
