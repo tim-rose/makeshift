@@ -45,6 +45,7 @@
 # See Also:
 # http://www.gnu.org/software/make/manual/make.html#Variables-for-Specifying-Commands).
 #
+
 nullstring :=
 space := $(nullstring) # end of the line
 comma := ,
