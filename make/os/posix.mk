@@ -32,7 +32,7 @@ RMDIR	= rmdir
 SED     = sed
 STRIP	= strip
 SYMLINK = ln -sf
-
+ARFLAGS = -rv
 #
 # INSTALL_*: --Specialised install commands.
 #
