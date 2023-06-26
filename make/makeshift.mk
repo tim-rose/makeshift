@@ -2,6 +2,7 @@
 # makeshift.mk --Recursive make considered useful.
 #
 # Contents:
+# VERSION:           --Extract version from VCS.
 # WILDCARD:          --Match everything except starting with "_".
 # PWD:               --Force reset of PWD
 # OS:                --Set OS macro by interpolating "uname -s".
