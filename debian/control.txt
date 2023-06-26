@@ -1,9 +1,9 @@
-Package: makeshift
+Package: PACKAGE
 Section: misc
 Priority: extra
 Maintainer: Tim Rose <tim.rose@acm.org>
 Architecture: all
-Version: 0.4.11
+Version: VERSION
 Description: A build system using recursive make.
  Makeshift is a build system implemented as GNU make files.  It provides
  default implementations of the "standard" high-level targets used for
