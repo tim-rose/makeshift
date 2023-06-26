@@ -8,8 +8,7 @@
 # data.tar.gz:    --Create the installed binary tarball.
 # md5sums:        --Calculate the md5sums for all the installed files.
 # conffiles:      --Make "conffiles" as required.
-# control-ok:     --Test that the control file has the correct information.
-# deb-version-ok: --Compare debian/control's version with Makefile definitions.
+# control:        --Make "control" from control.txt.
 # clean:          --Remove derived files created as a side-effect of packaging.
 # distclean:      --Remove the package.
 #
@@ -32,7 +31,7 @@ P_V.B_A	= $(PACKAGE)$(VERSION:%=_%)$(BUILD:%=.%)$(DEB_ARCH:%=_%)
 .PHONY:		package-deb deb
 package:	package-deb
 deb:		package-deb
-package-deb:	 $(P_V.B_A).deb | control-ok
+package-deb:	 $(P_V.B_A).deb
 
 $(P_V.B_A).deb:	debian-binary control.tar.gz data.tar.gz
 	$(ECHO_TARGET)
@@ -46,7 +45,7 @@ debian-binary:	;	echo "2.0" > $@
 #
 # control.tar.gz: --Create the control tarball from the debian subdirectory.
 #
-control.tar.gz:	debian/md5sums debian/conffiles
+control.tar.gz:	debian/control debian/md5sums debian/conffiles
 	$(ECHO_TARGET)
 	(cd debian; \
 	    test -f Makefile && $(MAKE) $(MFLAGS) all; \
@@ -84,26 +83,11 @@ debian/conffiles: $(DESTDIR_ROOT)
 	fi
 
 #
-# control-ok: --Test that the control file has the correct information.
+# control: --Make "control" from control.txt.
 #
-.PHONY:	control-ok
-control-ok:	debian/control
+debian/control: debian/control.txt
 	$(ECHO_TARGET)
-	@grep >/dev/null '^Package: *$(PACKAGE)$$' debian/control ||\
-	    (echo "Error: Package is incorrect in debian/control"; false)
-	@grep >/dev/null '^Version: *$(VERSION)$$' debian/control ||\
-	    (echo "Error: Version is incorrect in debian/control"; false)
-#	@size=$$(du -sk  $(DESTDIR_ROOT) | cut -d '	' -f1);\
-#	    grep >/dev/null '^Installed-Size: *$$size' debian/control ||\
-#	    (echo "Error: Installed size is incorrect in debian/control"; false)
-
-#
-# deb-version-ok: --Compare debian/control's version with Makefile definitions.
-#
-release:	deb-version-ok[$(VERSION)]
-deb-version-ok[%]:
-	$(ECHO_TARGET)
-	@fgrep -q 'Version: $*' debian/control
+	sed -e 's/PACKAGE/$(PACKAGE)/;s/VERSION/$(VERSION)/' $< >$@
 
 #
 # clean: --Remove derived files created as a side-effect of packaging.
@@ -114,12 +98,12 @@ distclean:	clean-deb distclean-deb
 .PHONY: clean-deb
 clean-deb:
 	$(ECHO_TARGET)
-	$(RM) debian-binary control.tar.gz data.tar.gz
+	$(RM) debian/control debian-binary control.tar.gz data.tar.gz
 
 #
 # distclean: --Remove the package.
 #
 .PHONY: distclean-deb
-distclean-deb:
+distclean-deb: clean-deb
 	$(ECHO_TARGET)
 	$(RM) debian/conffiles debian/md5sums $(P_V.B_A).deb
