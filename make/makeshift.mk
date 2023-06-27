@@ -59,7 +59,8 @@ MAKESHIFT_HOME ?= /usr/local
 #
 VERSION_CMD = \
     git describe --always --first-parent --dirty 2>/dev/null || echo unknown
-export VERSION = $(shell $(VERSION_CMD))
+VCS_VERSION = $(shell $(VERSION_CMD))
+export VERSION = $(VCS_VERSION:v%=%)
 
 SUBDIRS ?= $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
 
