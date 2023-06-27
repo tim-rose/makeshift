@@ -28,7 +28,8 @@
 # TODO: Add support for building Windows ".msi" packages.
 #
 LOCAL_PACKAGE := $(notdir $(CURDIR))
-PACKAGE ?= $(LOCAL_PACKAGE)
+export PACKAGE ?= $(LOCAL_PACKAGE)
+export DATE = $(shell date '+%d %B %Y')
 
 P-V	= $(PACKAGE)$(VERSION:%=-%)
 P_V.B	= $(PACKAGE)$(VERSION:%=_%)$(BUILD:%=.%)
