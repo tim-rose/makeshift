@@ -87,7 +87,9 @@ debian/conffiles: $(DESTDIR_ROOT)
 #
 debian/control: debian/control.txt
 	$(ECHO_TARGET)
-	sed -e 's/PACKAGE/$(PACKAGE)/;s/VERSION/$(VERSION)/' $< >$@
+	sed -e 's/PACKAGE/$(PACKAGE)/' $< >$@
+	sed -i -e 's/VERSION/$(VERSION)/' $@
+	sed -i -e 's/ARCH/$(DEB_ARCH)/' $@
 
 #
 # clean: --Remove derived files created as a side-effect of packaging.
