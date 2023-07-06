@@ -220,21 +220,21 @@ clean-c:
 #
 # tidy: --Reformat C files consistently.
 #
-C_INDENT_ENV ?= INDENT_PROFILE=$(MAKESHIFT_HOME)/etc/.indent.pro
-C_INDENT_CMD ?= indent
-#C_INDENT_CMD_FLAGS ?=
-C_INDENT_FLAGS = $(OS.C_INDENT_FLAGS) $(ARCH.C_INDENT_FLAGS) \
-    $(PROJECT.C_INDENT_FLAGS) $(LOCAL.C_INDENT_FLAGS) $(TARGET.C_INDENT_FLAGS)
+C_TIDY_ENV ?= INDENT_PROFILE=$(MAKESHIFT_HOME)/etc/.indent.pro
+C_TIDY_CMD ?= indent
+#C_TIDY_CMD_FLAGS ?=
+C_TIDY_FLAGS = $(OS.C_TIDY_FLAGS) $(ARCH.C_TIDY_FLAGS) \
+    $(PROJECT.C_TIDY_FLAGS) $(LOCAL.C_TIDY_FLAGS) $(TARGET.C_TIDY_FLAGS)
 tidy:	tidy-c
 tidy-c:	c-src-defined
 	$(ECHO_TARGET)
-	$(C_INDENT_ENV) $(C_INDENT_CMD) $(C_INDENT_FLAGS) $(C_INDENT_FLAGS) $(H_SRC) $(C_SRC)
+	$(C_TIDY_ENV) $(C_TIDY_CMD) $(C_TIDY_CMD_FLAGS) $(C_TIDY_FLAGS) $(H_SRC) $(C_SRC)
 tidy[%.c]:
 	$(ECHO_TARGET)
-	$(C_INDENT_ENV) $(C_INDENT_CMD) $(C_INDENT_FLAGS) $(C_INDENT_FLAGS) $*.c
+	$(C_TIDY_ENV) $(C_TIDY_CMD) $(C_TIDY_CMD_FLAGS) $(C_TIDY_FLAGS) $*.c
 tidy[%.h]:
 	$(ECHO_TARGET)
-	$(C_INDENT_ENV) $(C_INDENT_CMD) $(C_INDENT_FLAGS) $(C_INDENT_FLAGS) $*.h
+	$(C_TIDY_ENV) $(C_TIDY_CMD) $(C_TIDY_CMD_FLAGS) $(C_TIDY_FLAGS) $*.h
 
 #
 # lint: --Perform static analysis for C files.
@@ -298,5 +298,5 @@ todo-c:
 #
 # +version: --Report details of tools used by C.
 #
-+version: cmd-version[$(CC)] cmd-version[$(C_INDENT_CMD)] \
++version: cmd-version[$(CC)] cmd-version[$(C_TIDY_CMD)] \
     cmd-version[$(C_LINT_CMD)]
