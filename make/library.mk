@@ -88,12 +88,12 @@ uninstall-lib: uninstall-lib-lib uninstall-lib-include uninstall-lib-man
 
 uninstall-lib-include:
 	$(ECHO_TARGET)
-	$(RMDIR) -p $(includedir) 2>/dev/null ||:
+	$(RMDIR) $(includedir)
 
 uninstall-lib-man:
 	$(ECHO_TARGET)
 	$(RM) $(MAN3_SRC:%.3=$(man3dir)/%.3)
-	$(RMDIR) -p $(man3dir) 2>/dev/null ||:
+	$(RMDIR) $(man3dir)
 
 #
 # clean: --Remove the include files installed at $LIB_ROOT/include.
@@ -101,11 +101,11 @@ uninstall-lib-man:
 clean: clean-lib
 clean-lib:
 	$(ECHO_TARGET)
-	$(RMDIR) -p $(LIB_INCLUDEDIR) 2>/dev/null ||:
+	$(RMDIR) $(LIB_INCLUDEDIR)
 #
 # distclean: --Remove the include files installed at $LIB_ROOT/include.
 #
 distclean: clean-lib distclean-lib
 distclean-lib:
 	$(ECHO_TARGET)
-	$(RMDIR) -p $(LIB_INCLUDEDIR) 2>/dev/null ||:
+	$(RMDIR) $(LIB_INCLUDEDIR)
