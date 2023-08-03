@@ -25,7 +25,7 @@ include makeshift.mk make/package.mk
 
 $(DESTDIR_ROOT):
 	$(ECHO_TARGET)
-	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=$(prefix) usr=$(usr) opt=$(opt)
+	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix= usr=usr opt=$(opt)
 
 SPECS/makeshift.spec: Makefile
 
