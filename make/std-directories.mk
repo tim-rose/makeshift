@@ -66,7 +66,7 @@ dvidir		?= $(abspath $(docdir))
 psdir		?= $(abspath $(docdir))
 pdfdir		?= $(abspath $(docdir))
 
-mandir		?= $(abspath $(datadir)/man)
+mandir		?= $(abspath $(exec_prefix)/share/man)
 man1dir		?= $(abspath $(mandir)/man1)
 man2dir		?= $(abspath $(mandir)/man2)
 man3dir		?= $(abspath $(mandir)/man3)

@@ -30,26 +30,40 @@ ifdef autosrc
     MAN8_SRC ?= $(LOCAL_MAN8_SRC)
 endif
 
-NROFF_ADJUST = sed -i -e '/^[.]TH/s/PACKAGE/$(PACKAGE)/;/^[.]TH/s/VERSION/$(VERSION)/;/^[.]TH/s/DATE/$(DATE)/'
+NROFF_ADJUST = sed -e '/^[.]TH/s/PACKAGE/$(PACKAGE)/;/^[.]TH/s/VERSION/$(VERSION)/;/^[.]TH/s/DATE/$(DATE)/'
 #
 # %.[1-9]:	--Rules for installing manual pages
 #
-# TODO: finish implementing patterns for all sections
 
-$(man1dir)/%.1:	%.1;	$(INSTALL_DATA) $? $@ && $(NROFF_ADJUST) $@
-$(man2dir)/%.2:	%.2;	$(INSTALL_DATA) $? $@ && $(NROFF_ADJUST) $@
-$(man3dir)/%.3:	%.3;	$(INSTALL_DATA) $? $@ && $(NROFF_ADJUST) $@
-$(man4dir)/%.4:	%.4;	$(INSTALL_DATA) $? $@ && $(NROFF_ADJUST) $@
-$(man5dir)/%.5:	%.5;	$(INSTALL_DATA) $? $@ && $(NROFF_ADJUST) $@
-$(man6dir)/%.6:	%.6;	$(INSTALL_DATA) $? $@ && $(NROFF_ADJUST) $@
-$(man7dir)/%.7:	%.7;	$(INSTALL_DATA) $? $@ && $(NROFF_ADJUST) $@
-$(man8dir)/%.8:	%.8;	$(INSTALL_DATA) $? $@ && $(NROFF_ADJUST) $@
+$(man1dir)/%.1:	$(archdir)/%.1;	$(INSTALL_DATA) $? $@
+$(man3dir)/%.3:	$(archdir)/%.3;	$(INSTALL_DATA) $? $@
+$(man4dir)/%.4:	$(archdir)/%.4;	$(INSTALL_DATA) $? $@
+$(man5dir)/%.5:	$(archdir)/%.5;	$(INSTALL_DATA) $? $@
+$(man6dir)/%.6:	$(archdir)/%.6;	$(INSTALL_DATA) $? $@
+$(man7dir)/%.7:	$(archdir)/%.7;	$(INSTALL_DATA) $? $@
+$(man8dir)/%.8:	$(archdir)/%.8;	$(INSTALL_DATA) $? $@
 
-%.1.pdf:	%.1;	man -t ./$*.1 | ps2pdf - - > $@
-%.3.pdf:	%.3;	man -t ./$*.3 | ps2pdf - - > $@
-%.5.pdf:	%.5;	man -t ./$*.5 | ps2pdf - - > $@
-%.7.pdf:	%.7;	man -t ./$*.7 | ps2pdf - - > $@
-%.8.pdf:	%.8;	man -t ./$*.8 | ps2pdf - - > $@
+%.1.pdf:	$(archdir)/%.1;	man -t $? | ps2pdf - - > $@
+%.3.pdf:	$(archdir)/%.3;	man -t $? | ps2pdf - - > $@
+%.4.pdf:	$(archdir)/%.3;	man -t $? | ps2pdf - - > $@
+%.5.pdf:	$(archdir)/%.5;	man -t $? | ps2pdf - - > $@
+%.6.pdf:	$(archdir)/%.6;	man -t $? | ps2pdf - - > $@
+%.7.pdf:	$(archdir)/%.7;	man -t $? | ps2pdf - - > $@
+%.8.pdf:	$(archdir)/%.8;	man -t $? | ps2pdf - - > $@
+
+$(archdir)/%.1: %.1 | $(archdir); $(NROFF_ADJUST) <$? >$@
+$(archdir)/%.3: %.3 | $(archdir); $(NROFF_ADJUST) <$? >$@
+$(archdir)/%.4: %.4 | $(archdir); $(NROFF_ADJUST) <$? >$@
+$(archdir)/%.5: %.5 | $(archdir); $(NROFF_ADJUST) <$? >$@
+$(archdir)/%.6: %.6 | $(archdir); $(NROFF_ADJUST) <$? >$@
+$(archdir)/%.7: %.7 | $(archdir); $(NROFF_ADJUST) <$? >$@
+$(archdir)/%.8: %.8 | $(archdir); $(NROFF_ADJUST) <$? >$@
+
+build:	build-nroff
+
+build-nroff: $(MAN1_SRC:%=$(archdir)/%) $(MAN3_SRC:%=$(archdir)/%) \
+	$(MAN4_SRC:%=$(archdir)/%) $(MAN5_SRC:%=$(archdir)/%) \
+	$(MAN7_SRC:%=$(archdir)/%) $(MAN8_SRC:%=$(archdir)/%) | $(archdir)
 
 #
 # toc-nroff: --Build the table-of-contents for nroff files.
@@ -57,7 +71,8 @@ $(man8dir)/%.8:	%.8;	$(INSTALL_DATA) $? $@ && $(NROFF_ADJUST) $@
 toc:	toc-nroff
 toc-nroff:
 	$(ECHO_TARGET)
-	mk-toc $(MAN1_SRC) $(MAN3_SRC) $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC)
+	mk-toc $(MAN1_SRC) $(MAN3_SRC) $(MAN4_SRC) \
+	    $(MAN5_SRC) $(MAN7_SRC) $(MAN8_SRC)
 
 #
 # src-nroff: --specific-nroff customisations for the "src" target.
