@@ -34,7 +34,7 @@ install-ruby: $(RB_SRC:%.rb=$(bindir)/%); $(ECHO_TARGET)
 uninstall-ruby:
 	$(ECHO_TARGET)
 	$(RM) $(RB_SRC:%.rb=$(bindir)/%)
-	$(RMDIR) -p $(bindir) 2>/dev/null ||:
+	$(RMDIR) $(bindir)
 
 #
 # install-ruby-lib: --Install ruby as library modules.
@@ -44,7 +44,7 @@ install-ruby-lib: $(RB_SRC:%.rb=$(rubylibdir)/%.rb); $(ECHO_TARGET)
 uninstall-ruby-lib:
 	$(ECHO_TARGET)
 	$(RM) $(RB_SRC:%.rb=$(rubylibdir)/%)
-	$(RMDIR) -p $(rubylibdir) 2>/dev/null ||:
+	$(RMDIR) $(rubylibdir)
 
 
 #

@@ -57,7 +57,7 @@ install-css:	$(CSS_SRC:%.css=$(wwwdir)/%.css) \
 uninstall-css:
 	$(ECHO_TARGET)
 	$(RM) $(CSS_SRC:%.css=$(wwwdir)/%.css) $(CSS_MAP_SRC:%.css.map=$(wwwdir)/%.css.map)
-	$(RMDIR) -p $(wwwdir) 2>/dev/null ||:
+	$(RMDIR) $(wwwdir)
 
 #
 # src: --Update the CSS_SRC, SCSS_SRC macros.

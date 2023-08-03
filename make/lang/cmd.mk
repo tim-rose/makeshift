@@ -48,7 +48,7 @@ uninstall-cmd:
 	$(RM) $(CMD_SRC:%.cmd=$(bindir)/%.cmd) $(BAT_SRC:%.bat=$(bindir)/%.bat) \
     $(BTM_SRC:%.btm=$(cmdlibdir)/%.btm)
 
-	$(RMDIR) -p $(bindir) $(cmdlibdir) 2>/dev/null ||:
+	$(RMDIR) $(bindir) $(cmdlibdir)
 
 #
 # toc: --Build the table-of-contents for cmd files

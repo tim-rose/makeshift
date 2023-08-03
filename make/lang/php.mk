@@ -29,11 +29,11 @@ install-www-php:	$(PHP_SRC:%.php=$(wwwdir)/%.php)
 
 uninstall-lib-php:
 	$(RM) $(PHP_SRC:%.php=$(phplibdir)/%.php)
-	$(RMDIR) -p $(phplibdir) 2>/dev/null ||:
+	$(RMDIR) $(phplibdir)
 
 uninstall-www-php:
 	$(RM) $(PHP_SRC:%.php=$(wwwdir)/%.php)
-	$(RMDIR) -p $(wwwdir) 2>/dev/null ||:
+	$(RMDIR) $(wwwdir)
 
 #
 # toc: --Build the table-of-contents for PHP-ish files.

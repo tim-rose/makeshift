@@ -30,7 +30,7 @@ install-javascript:	$(JS_SRC:%=$(libdir)/%);	$(ECHO_TARGET)
 #
 uninstall-javascript:
 	$(RM) $(JS_SRC:%=$(libdir)/%)
-	$(RMDIR) -p $(libdir) 2>/dev/null ||:
+	$(RMDIR) $(libdir)
 
 #
 # toc-javascript: --Build the table-of-contents for JavaScript files.

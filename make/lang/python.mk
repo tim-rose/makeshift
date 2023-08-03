@@ -53,7 +53,7 @@ uninstall-python:
 	$(ECHO_TARGET)
 	$(RM) $(PY_SRC:%.py=$(bindir)/%)
 	$(RM) $(PY_SRC:%.py=$(bindir)/__pycache__/%.pyc)
-	$(RMDIR) -p $(bindir)/__pycache__ $(bindir) 2>/dev/null ||:
+	$(RMDIR) $(bindir)/__pycache__ $(bindir)
 
 #
 # install-python-lib: --Install python as library modules.
@@ -66,7 +66,7 @@ uninstall-python-lib:
 	$(ECHO_TARGET)
 	$(RM) $(PY_SRC:%.py=$(pythonlibdir)/%.py)
 	$(RM) $(PY_SRC:%.py=$(pythonlibdir)/__pycache__/%.pyc)
-	$(RMDIR) -p $(pythonlibdir)/__pycache__ $(pythonlibdir) 2>/dev/null ||:
+	$(RMDIR) $(pythonlibdir)/__pycache__ $(pythonlibdir)
 
 #
 # clean: --Remove python executables.

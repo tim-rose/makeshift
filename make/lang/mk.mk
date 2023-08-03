@@ -33,7 +33,7 @@ install-mk:     $(MK_SRC:%.mk=$(includedir)/%.mk)
 uninstall-mk:
 	$(ECHO_TARGET)
 	$(RM) $(MK_SRC:%.mk=$(includedir)/%.mk)
-	$(RMDIR) -p $(includedir) 2>/dev/null ||:
+	$(RMDIR) $(includedir)
 
 #
 # src: --Update MK_SRC with the list of ".mk" files.

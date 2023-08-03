@@ -19,4 +19,4 @@ GREP		= grep
 INDENT          = gnuindent
 MV		= mv
 RANLIB = : $(AR) -s
-RMDIR		= rmdir
+RMDIR	= rm_dir() { rmdir -p "$$@" 2>/dev/null ||:; }; rm_dir

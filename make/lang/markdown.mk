@@ -89,6 +89,10 @@ README.html:	README.md
 	$(MD) --metadata-file $(gendir)/version.yaml --to=html --standalone \
 	    $(ALL_MDFLAGS) $*.md > $@ || $(RM) $@
 	$(RM) $(gendir)/version.yaml
+%.html:	%.rst | $(gendir)
+	$(ECHO_TARGET)
+	$(MD) --from=rst --to=html --standalone \
+	    $(ALL_MDFLAGS) $*.rst > $@ || $(RM) $@
 #
 # %.pdf: --Create a PDF document from a HTML file.
 # @todo: allow for alternate PDF engines
@@ -99,13 +103,14 @@ README.html:	README.md
 #
 # build: --Create HTML documents from markdown.
 #
-doc-html:	$(MD_SRC:%.md=%.html)
+doc-html:	$(MD_SRC:%.md=%.html) $(RST_SRC:%.rst=%.html)
 
 #
 # doc-markdown: --Create PDF documents from MD_SRC.
 #
-doc-pdf doc:	doc-markdown
+doc-pdf doc:	doc-markdown doc-rst
 doc-markdown:	$(MD_SRC:%.md=%.pdf)
+doc-rst:	$(RST_SRC:%.md=%.pdf)
 
 #
 # clean-markdown: --Clean up markdown's derived files.
@@ -123,6 +128,7 @@ src:	src-markdown
 src-markdown:
 	$(ECHO_TARGET)
 	$(Q)mk-filelist -f $(MAKEFILE) -qn MD_SRC *.md
+	$(Q)mk-filelist -f $(MAKEFILE) -qn RST_SRC *.rst
 
 #
 # todo-markdown: --Report unfinished work in markdown files.
@@ -130,7 +136,7 @@ src-markdown:
 todo:	todo-markdown
 todo-markdown:
 	$(ECHO_TARGET)
-	@$(GREP) $(TODO_PATTERN) $(MD_SRC) /dev/null ||:
+	@$(GREP) $(TODO_PATTERN) $(MD_SRC) $(RST_SRC) /dev/null ||:
 #
 # +version: --Report details of tools used by markdown.
 #

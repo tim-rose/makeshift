@@ -54,7 +54,7 @@ install-elisp:	$(ELISP_OBJ:%.elc=$(elispdir)/%.elc)
 uninstall-elisp:
 	$(ECHO_TARGET)
 	$(RM) $(ELISP_OBJ:%.elc=$(elispdir)/%.elc)
-	$(RMDIR) -p $(elispdir) 2>/dev/null ||:
+	$(RMDIR) $(elispdir)
 
 #
 # clean: --Remove byte-compiled elisp.

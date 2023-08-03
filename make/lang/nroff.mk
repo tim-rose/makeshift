@@ -100,7 +100,7 @@ install-man:    $(MAN1_SRC:%=$(man1dir)/%) $(MAN3_SRC:%=$(man3dir)/%) \
 .PHONY: uninstall-man
 uninstall-man:
 	$(RM) $(MAN1_SRC:%=$(man1dir)/%) $(MAN3_SRC:%=$(man3dir)/%) $(MAN5_SRC:%=$(man5dir)/%) $(MAN7_SRC:%=$(man7dir)/%) $(MAN8_SRC:%=$(man8dir)/%)
-	$(RMDIR) -p $(man1dir) $(man3dir) $(man5dir) $(man7dir) $(man8dir) 2>/dev/null ||:
+	$(RMDIR) $(man1dir) $(man3dir) $(man5dir) $(man7dir) $(man8dir)
 
 #
 # clean-nroff: --Cleanup nroff files.

@@ -30,7 +30,7 @@ install-sql:    $(SQL_SRC:%=$(sqllibdir)/%); $(ECHO_TARGET)
 uninstall-sql:
 	$(ECHO_TARGET)
 	$(RM) $(SQL_SRC:%=$(sqllibdir)/%)
-	$(RMDIR) -p $(sqllibdir) 2>/dev/null ||:
+	$(RMDIR) $(sqllibdir)
 
 #
 # toc: --Build the table-of-contents for SQL files.

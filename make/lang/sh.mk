@@ -91,7 +91,7 @@ uninstall-sh:
 	$(ECHO_TARGET)
 	$(RM) $(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
             $(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
-	$(RMDIR) -p $(bindir) $(shlibdir) 2>/dev/null ||:
+	$(RMDIR) $(bindir) $(shlibdir)
 
 #
 # clean: --Remove shell, awk, sed script executables.

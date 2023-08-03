@@ -197,7 +197,7 @@ install-c++:	$(C++_MAIN:$(archdir)/%=$(bindir)/%)
 uninstall-c++:
 	$(ECHO_TARGET)
 	$(RM) $(C++_MAIN:$(archdir)/%=$(bindir)/%)
-	$(RMDIR) -p $(bindir) 2>/dev/null ||:
+	$(RMDIR) $(bindir)
 
 #
 # clean: --Remove objects and executables created from C++ files.

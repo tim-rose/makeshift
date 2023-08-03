@@ -76,12 +76,12 @@ uninstall-conf:
 	$(ECHO_TARGET)
 	$(RM) $(CONF_SRC:%=$(sysconfdir)/%) \
             $(CFG_SRC:%=$(sysconfdir)/%) $(INI_SRC:%=$(sysconfdir)/%)
-	$(RMDIR) -p $(sysconfdir) 2>/dev/null ||:
+	$(RMDIR) $(sysconfdir)
 uninstall-system_conf:
 	$(ECHO_TARGET)
 	$(RM) $(CONF_SRC:%=$(system_confdir)/%) \
             $(CFG_SRC:%=$(system_confdir)/%) $(INI_SRC:%=$(system_confdir)/%)
-	$(RMDIR) -p $(system_confdir) 2>/dev/null ||:
+	$(RMDIR) $(system_confdir)
 
 #
 # toc: --Build the table-of-contents for config files.

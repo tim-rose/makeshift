@@ -34,7 +34,7 @@ install-xsl:	$(XSL_SRC:%=$(xsllibdir)/%)
 uninstall-xsl:
 	$(ECHO_TARGET)
 	$(RM) $(XSL_SRC:%=$(xsllibdir)/%)
-	$(RMDIR) -p $(xsllibdir) 2>/dev/null ||:
+	$(RMDIR) $(xsllibdir)
 
 #
 # src-xsl: --Update the XSL_SRC macro.

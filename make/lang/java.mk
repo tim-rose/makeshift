@@ -73,7 +73,7 @@ install-java:	$(PL_SRC:%.pl=$(bindir)/%) $(PM_SRC:%.pm=$(javalibdir)/%.pm)
 uninstall-java:	$(PL_SRC:%.pl=$(bindir)/%) $(PM_SRC:%.pm=$(javalibdir)/%.pm)
 	$(ECHO_TARGET)
 	$(RM) $(PL_SRC:%.pl=$(bindir)/%) $(PM_SRC:%.pm=$(javalibdir)/%.pm)
-	$(RMDIR) -p $(bindir) $(javalibdir) 2>/dev/null ||:
+	$(RMDIR) $(bindir) $(javalibdir)
 
 #
 # clean: --Remove java class files.
