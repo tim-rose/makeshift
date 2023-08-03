@@ -51,7 +51,7 @@ install-lib-lib:	$(libdir)/$(LIB_NAME).$(so); $(ECHO_TARGET)
 uninstall-lib-lib:	uninstall-lib-include
 	$(ECHO_TARGET)
 	$(RM) $(libdir)/$(LIB_NAME).$(so)
-	$(RMDIR) -p $(libdir) 2>/dev/null ||:
+	$(RMDIR) $(libdir)
 
 #
 # archdir/%.so: --(re)build a library.
