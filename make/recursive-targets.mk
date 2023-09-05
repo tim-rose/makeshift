@@ -38,7 +38,6 @@
 # * coverage --Build a coverage report based on the previous test run
 # * install --Install everything to the local machine
 # * uninstall --Remove everything that install created
-# * package --Create an installable package (e.g. .deb, .rpm, etc.)
 # * deploy --Install to a remote(?) machine, and restart etc. as needed
 # * tags --Create IDE/navigation assistance files
 # * dist --Create a distrubution package of the source files.
@@ -46,8 +45,7 @@
 #
 std-targets = clean distclean build test test-xml coverage \
     install uninstall \
-    package deploy \
-    tags dist doc
+    deploy tags dist doc
 #
 # makeshift-targets: --Extra development/maintenance targets.
 #
