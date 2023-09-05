@@ -110,15 +110,12 @@ cmd-exists[%]:
 # outputs the version information to stdout; only the first line is
 # printed, any other output to stdout, stderr is filtered out.
 #
-cmd-version[%]:
-	@printf '%s:\n\t' "$*"
-	@if cmd=$$(which "$*"); then \
-	    eval "$(PRINT_$*_VERSION)" | head -n1; \
-	    printf '\t%s\n' "$$cmd"; \
-	else \
-	    printf '%s\n' "not installed"; \
-	    false; \
-	fi 2>/dev/null
+cmd-path[%]:
+	@printf '%s: %s' "$*"
+	@which "$*" 2>/dev/null || { printf '%s\n' "not installed"; false; }
+
+cmd-version[%]: cmd-path[%]
+	@$* --version | head -n1
 
 #
 # mkdir[%]: --Create a directory.
