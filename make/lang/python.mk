@@ -2,6 +2,7 @@
 # PYTHON.MK --Rules for building PYTHON objects and programs.
 #
 # Contents:
+# build-python:       --Build the python source code as individual executables.
 # install-python:     --Install python as executables.
 # install-python-lib: --Install python as library modules.
 # clean:              --Remove python executables.
@@ -34,13 +35,21 @@ PY_TIDY ?= autopep8
 # %.py:		--Rules for installing python scripts
 #
 pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
-PY_TRG = $(PY_SRC:%.py=%)
+PY_TRG = $(archdir)/$(PY_SRC:%.py=%)
+SET_VERSION = $(SED) -e '/^ [A-Z_]*VERSION=/s/=.*/=$(VERSION)/'
 
-%:			%.py;	$(CP) $*.py $@ && $(CHMOD) +x $@
-$(bindir)/%:		%.py;	$(INSTALL_SCRIPT) $*.py $@
+$(archdir)/%:		%.py | $(archdir)
+	$(SET_VERSION) $? >$@
+	$(CHMOD) +x $@
+
 $(pythonlibdir)/%.py:	%.py;	$(INSTALL_DATA) $? $@
 $(pythonlibdir)/%.py:	$(gendir)/%.py;	$(INSTALL_DATA) $? $@
 
+#
+# build-python: --Build the python source code as individual executables.
+#
+# Remarks:
+# This isn't built by default because it may be a directory of library code.
 build-python:	$(PY_TRG)
 
 #
