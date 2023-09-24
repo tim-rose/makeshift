@@ -153,8 +153,8 @@ include os/$(OS).mk arch/$(ARCH).mk project/$(PROJECT).mk
 # Define DESTDIR, prefix if that hasn't happened already.
 #
 DESTDIR ?= /
-PREFIX  ?= /usr/local
-prefix  ?= $(PREFIX)
+#PREFIX  ?= /usr/local
+#prefix  ?= $(PREFIX)
 
 include std-directories.mk
 include recursive-targets.mk valid.mk
