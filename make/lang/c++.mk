@@ -212,7 +212,7 @@ clean-c++:
 #
 # tidy: --Reformat C++ files consistently.
 #
-C++_INDENT ?= INDENT_PROFILE=$(MAKESHIFT_HOME)/etc/.indent.pro indent
+C++_INDENT ?= INDENT_PROFILE=$(sysconfbasedir)/.indent.pro indent
 C++_INDENT_FLAGS = $(OS.C++_INDENT_FLAGS) $(ARCH.C++_INDENT_FLAGS) \
     $(PROJECT.C++_INDENT_FLAGS) $(LOCAL.C++_INDENT_FLAGS) $(TARGET.C++_INDENT_FLAGS)
 tidy:	tidy-c++

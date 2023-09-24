@@ -53,14 +53,6 @@ To use the makeshift you just installed you will need to invoke make as:
     make -I$prefix
 EOF
     fi
-    cat <<EOF
-
-Some of the tool-related targets will reference configuration
-files in "$prefix/etc".  For these targets to work, you will need to
-define the MAKESHIFT_HOME variable, e.g.:
-
-    export MAKESHIFT_HOME=$prefix
-EOF
 }
 
 if build_bin && build_self && install_all; then

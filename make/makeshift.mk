@@ -51,7 +51,6 @@ nullstring :=
 space := $(nullstring) # end of the line
 comma := ,
 MAKEFILE := $(firstword $(MAKEFILE_LIST))
-MAKESHIFT_HOME ?= /usr/local
 -include makeshift-version.mk
 
 #
@@ -220,8 +219,7 @@ distclean-makeshift:
 +dirs:			;	@echo $(.INCLUDE_DIRS)
 +files:			;	@echo $(MAKEFILE_LIST)
 +version:		
-	@printf 'makeshift: %s/makeshift.mk\nmakeshift %s\n' \
-            "$(MAKESHIFT_HOME)" "$(MAKESHIFT_VERSION)" 
+	@printf 'makeshift: makeshift %s\n' "$(MAKESHIFT_VERSION)" 
 +which[%]:;@which -a $*
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.

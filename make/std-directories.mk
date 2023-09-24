@@ -46,6 +46,7 @@ datarootdir     ?= $(abspath $(exec_prefix)/share/$(subdir))
 datadir		?= $(abspath $(datarootdir))
 
 sysconfdir	?= $(abspath $(rootdir)/etc/$(optdir)/$(subdir))
+sysconfbasedir	?= $(abspath $(rootdir)/etc/$(optdir))
 
 divertdir	?= $(abspath $(rootdir)/var/lib/divert/$(subdir))
 sharedstatedir	?= $(abspath $(rootdir_opt)/com/$(subdir))

@@ -220,7 +220,7 @@ clean-c:
 #
 # tidy: --Reformat C files consistently.
 #
-C_TIDY_ENV ?= INDENT_PROFILE=$(MAKESHIFT_HOME)/etc/.indent.pro
+C_TIDY_ENV ?= INDENT_PROFILE=$(sysconfbasedir)/.indent.pro
 C_TIDY_CMD ?= indent
 #C_TIDY_CMD_FLAGS ?=
 C_TIDY_FLAGS = $(OS.C_TIDY_FLAGS) $(ARCH.C_TIDY_FLAGS) \
