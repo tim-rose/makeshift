@@ -43,22 +43,19 @@ ifdef autosrc
 endif
 
 shlibdir	:= $(exec_prefix)/lib/sh/$(subdir)
-SH_TRG	:= $(SH_SRC:%.sh=%)
-AWK_TRG	:= $(AWK_SRC:%.awk=%)
-SED_TRG	:= $(SED_SRC:%.sed=%)
+SH_TRG	:= $(SH_SRC:%.sh=$(archdir)/%)
+AWK_TRG	:= $(AWK_SRC:%.awk=$(archdir)/%)
+SED_TRG	:= $(SED_SRC:%.sed=$(archdir)/%)
 SHELL_TRG := $(SH_TRG) $(AWK_TRG) $(SED_TRG)
 
-SET_VERSION = $(SED) -e '/^ *version=/s/=.*/=$(VERSION)/'
+SET_VERSION = $(SED) -e '/^ [A-Z_]*VERSION=/s/=.*/=$(VERSION)/'
 
 #
 # %.sh: --Rules for installing shell scripts, libraries
 #
-%:			%.sh;	$(SET_VERSION) < $*.sh > $@ && $(CHMOD) +x $@
-%:			%.awk;	$(SET_VERSION) < $*.awk >$@ && $(CHMOD) +x $@
-%:			%.sed;	$(SET_VERSION) < $*.sed > $@ && $(CHMOD) +x $@
-
-$(bindir)/%:		%;	$(INSTALL_SCRIPT) $* $@
-$(sbindir)/%:		%;	$(INSTALL_SCRIPT) $* $@
+$(archdir)/%:		%.sh;	$(SET_VERSION) < $*.sh > $@ && $(CHMOD) +x $@
+$(archdir)/%:		%.awk;	$(SET_VERSION) < $*.awk >$@ && $(CHMOD) +x $@
+$(archdir)/%:		%.sed;	$(SET_VERSION) < $*.sed > $@ && $(CHMOD) +x $@
 
 $(sysconfdir)/%:	%;	$(INSTALL_DATA) $* $@ # bash completions
 $(sysconfdir)/.%:	_%;	$(INSTALL_DATA) _$* $@ # rc files
@@ -67,21 +64,21 @@ $(shlibdir)/%.shl:	%.shl;	$(INSTALL_DATA) $*.shl $@
 $(shlibdir)/%.awk:	%.awk;	$(INSTALL_DATA) $*.awk $@
 $(shlibdir)/%.sed:	%.sed;	$(INSTALL_DATA) $*.sed $@
 
+$(SHELL_TRG): | $(archdir)
 #
 # build-sh: --Make scripts "executable".
 #
 pre-build:
 build:	build-sh
 build-sh:	$(SHELL_TRG)
-build[%.sh]:	$*
-build[%.awk]:	$*
-build[%.sed]:	$*
+build[%.sh]:	$(archdir)/$*
+build[%.awk]:	$(archdir)/$*
+build[%.sed]:	$(archdir)/$*
 
 #
 # install-sh: --install shell scripts to bindir, libraries to shlibdir
 #
-install-sh:	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
-    $(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
+install-sh:	$(SHELL_TRG:$(archdir)/%=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%)
 	$(ECHO_TARGET)
 
 #
@@ -89,8 +86,7 @@ install-sh:	$(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
 #
 uninstall-sh:
 	$(ECHO_TARGET)
-	$(RM) $(SH_SRC:%.sh=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%) \
-            $(SED_SRC:%.sed=$(bindir)/%) $(AWK_SRC:%.awk=$(bindir)/%)
+	$(RM) $(SHELL_TRG:$(archdir)/%=$(bindir)/%) $(SHL_SRC:%=$(shlibdir)/%)
 	$(RMDIR) $(bindir) $(shlibdir)
 
 #
@@ -137,7 +133,7 @@ SH_LINT ?= shellcheck -x -s dash
 SH_LINT_FLAGS = $(OS.SH_LINT_FLAGS) $(ARCH.SH_LINT_FLAGS) \
     $(PROJECT.SH_LINT_FLAGS) $(LOCAL.SH_LINT_FLAGS) $(TARGET.SH_LINT_FLAGS)
 lint:	lint-sh
-lint-sh:	sh-src-defined
+lint-sh:
 	$(ECHO_TARGET)
 	-$(SH_LINT) $(SH_LINT_FLAGS) $(SH_SRC) $(SHL_SRC)
 lint[%.sh]:
