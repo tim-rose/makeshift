@@ -100,14 +100,14 @@ c++-src-defined:
 #
 $(archdir)/%.$(o): %.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(TOOLCHAIN:%=%-)$(C++) $(C++_ALL_FLAGS) -c -o $@ $(abspath $<)
+	$(CROSS_COMPILE)$(C++) $(C++_ALL_FLAGS) -c -o $@ $(abspath $<)
 
 #
 # archdir/%.o: --Compile a generated C++ file into the arch sub-directory.
 #
 $(archdir)/%.$(o): $(gendir)/%.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(TOOLCHAIN:%=%-)$(C++) $(C++_ALL_FLAGS) -c -o $@ $(abspath $<)
+	$(CROSS_COMPILE)$(C++) $(C++_ALL_FLAGS) -c -o $@ $(abspath $<)
 #
 # %.s.o: --Compile a C++ file into PIC code.
 #
@@ -116,14 +116,14 @@ $(archdir)/%.$(o): $(gendir)/%.$(C++_SUFFIX) | $(archdir)
 #
 $(archdir)/%.$(s.o): %.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(TOOLCHAIN:%=%-)$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $(abspath $<)
+	$(CROSS_COMPILE)$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $(abspath $<)
 
 #
 # archdir/%.o: --Compile a generated C++ file PIC.
 #
 $(archdir)/%.$(o): $(gendir)/%.$(C++_SUFFIX) | $(archdir)
 	$(ECHO_TARGET)
-	$(TOOLCHAIN:%=%-)$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $(abspath $<)
+	$(CROSS_COMPILE)$(C++) $(C++_ALL_FLAGS) $(C++_SHARED_FLAGS) -c -o $@ $(abspath $<)
 
 #
 # build[%.c++]: --Build a C++ file's related object.
@@ -158,7 +158,7 @@ $(includedir)/%.$(H++_SUFFIX):	$(gendir)/%.$(H++_SUFFIX)
 #
 +c++-defines:
 	$(Q)touch ..$(C++_SUFFFIX); \
-            $(TOOLCHAIN:%=%-)$(C++) -E -dM ..$(C++_SUFFIX); \
+            $(CROSS_COMPILE)$(C++) -E -dM ..$(C++_SUFFIX); \
             $(RM) ..$(C++_SUFFIX)
 
 #
@@ -287,5 +287,5 @@ todo-c++:
 #
 # +version: --Report details of tools used by C++.
 #
-+version: cmd-version[$(TOOLCHAIN:%=%-)$(C++)] cmd-version[$(C++_INDENT_CMD)] \
++version: cmd-version[$(CROSS_COMPILE)$(C++)] cmd-version[$(C++_INDENT_CMD)] \
     cmd-version[$(C++_LINT_CMD)]
