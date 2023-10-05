@@ -9,8 +9,7 @@ log_message() { printf "$@"; printf "\n"; } >&2
 notice() { log_message "$@"; }
 info()   { if [ "$verbose" ]; then log_message "$@"; fi; }
 
-version=
-build=
+VERSION=
 
 delay=
 signal=
@@ -25,7 +24,7 @@ while getopts "d:e:s:x:v?" c; do
     s)	signal=$OPTARG;;
     x)	status=$OPTARG;;
     v)	verbose=1;;
-    \?)	echo "echo+ version: $version.$build" >&2
+    \?)	echo "echo+ version: $VERSION" >&2
 	echo $usage >&2
 	exit 2;;
     esac

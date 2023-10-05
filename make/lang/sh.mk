@@ -48,7 +48,7 @@ AWK_TRG	:= $(AWK_SRC:%.awk=$(archdir)/%)
 SED_TRG	:= $(SED_SRC:%.sed=$(archdir)/%)
 SHELL_TRG := $(SH_TRG) $(AWK_TRG) $(SED_TRG)
 
-SET_VERSION = $(SED) -e '/^ [A-Z_]*VERSION=/s/=.*/=$(VERSION)/'
+SET_VERSION = $(SED) -e '/^ *[A-Z_]*VERSION=/s/=.*/=$(VERSION)/'
 
 #
 # %.sh: --Rules for installing shell scripts, libraries
