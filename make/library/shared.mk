@@ -63,7 +63,7 @@ uninstall-lib-lib:	uninstall-lib-include
 #
 $(archdir)/lib.$(s.a): $(SUBLIB_SRC:%.$(a)=%.$(s.a))
 	$(ECHO_TARGET)
-	mk-ar-merge $(ARFLAGS) $@ $^
+	mk-ar-merge -x $(CROSS_COMPILE)$(AR) $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 
 #
@@ -73,7 +73,7 @@ $(archdir)/$(LIB_NAME).$(so):	$(archdir)/lib.$(s.a)
 	$(ECHO_TARGET)
 	$(MKDIR) $(tmpdir)
 	$(LN) $< $(tmpdir)
-	cd $(tmpdir) && $(AR) x lib.$(s.a)
+	cd $(tmpdir) && $(CROSS_COMPILE)$(AR) x lib.$(s.a)
 	$(LD) $(LD_SHARED_FLAGS) -o $@ $(tmpdir)/*.$(s.o)
 	$(RM) -r $(tmpdir)
 #

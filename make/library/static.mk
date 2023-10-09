@@ -53,7 +53,7 @@ uninstall-lib-static-lib:
 #
 $(archdir)/lib.$(a): $(SUBLIB_SRC)
 	$(ECHO_TARGET)
-	mk-ar-merge $(ARFLAGS) $@ $^
+	mk-ar-merge -x $(CROSS_COMPILE)$(AR) $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 
 $(archdir)/$(LIB_NAME).$(a):	$(archdir)/lib.$(a)
