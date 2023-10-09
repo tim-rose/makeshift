@@ -87,8 +87,9 @@ OS := $(OS)
 export OS
 
 #
-# ARCH: --Set ARCH macro by interpolating "uname -m".
+# ARCH: --Set ARCH macro by interpolating CROSS_COMPILE, "uname -m".
 #
+ARCH ?= $(CROSS_COMPILE:%-=%)
 ARCH ?= $(shell uname -m | tr A-Z a-z)
 ARCH := $(ARCH)
 
