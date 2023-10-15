@@ -21,6 +21,7 @@ status=0
 archdir=${archdir:-${OS}-${ARCH}} # hopefully already defined...
 o=o     # object file extension
 a=a     # library file extension
+VERSION=
 
 log_message() { printf "$@"; printf "\n"; } >&2
 warning() { log_message "$@"; status=1; }
@@ -53,6 +54,7 @@ main()
     trap "rm -rf $tmpdir" 0 		# cleanup
     mkdir -p "$tmpdir"
 
+    info "mk-ar-merge version %s" "$VERSION"
 #    ar_flags="$1"; shift
     library="$1"; shift
 
@@ -67,8 +69,9 @@ main()
 	esac
     done
 
-    mkdir -p $(dirname "$library")
-    log_cmd $ar $ar_flags "$library" $tmpdir/*.o 2>/dev/null
+    log_cmd mkdir -p $(dirname "$library")
+    log_cmd $ar $ar_flags "$library" $tmpdir/*.o 
+    #2>/dev/null
     true                # discard failures
 }
 
