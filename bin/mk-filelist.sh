@@ -13,6 +13,7 @@
 #
 #
 PATH=$PATH:/usr/libexec:/usr/local/libexec
+export LC_COLLATE=C
 tmp=${TMPDIR:-/tmp}/$$
 backup=.bak
 directories=
