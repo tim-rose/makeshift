@@ -23,15 +23,15 @@ build: $(archdir)/$(LIB_NAME).$(a)
 $(libdir)/%.$(a):	$(archdir)/%.$(a)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
-	$(RANLIB) $@
+	$(CROSS_COMPILE)$(RANLIB) $@
 $(librootdir)/%.$(a):	$(archdir)/%.$(a)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
-	$(RANLIB) $@
+	$(CROSS_COMPILE)$(RANLIB) $@
 ../$(archdir)/%.$(a):	$(archdir)/%.$(a)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
-	$(RANLIB) $@
+	$(CROSS_COMPILE)$(RANLIB) $@
 
 # install-lib-lib: --Install the library ".a" files only.
 install-lib-lib:	install-lib-static-lib
@@ -54,12 +54,12 @@ uninstall-lib-static-lib:
 $(archdir)/lib.$(a): $(SUBLIB_SRC)
 	$(ECHO_TARGET)
 	mk-ar-merge -x $(CROSS_COMPILE)$(AR) $(ARFLAGS) $@ $^
-	$(RANLIB) $@
+	$(CROSS_COMPILE)$(RANLIB) $@
 
 $(archdir)/$(LIB_NAME).$(a):	$(archdir)/lib.$(a)
 	$(ECHO_TARGET)
 	cp $< $@
-	$(RANLIB) $@
+	$(CROSS_COMPILE)$(RANLIB) $@
 #
 # clean: --Remove the library file.
 #

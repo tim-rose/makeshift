@@ -35,15 +35,15 @@ build: $(archdir)/$(LIB_NAME).$(so)
 $(libdir)/%.$(s.a):	$(archdir)/%.$(s.a)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
-	$(RANLIB) $@
+	$(CROSS_COMPILE)$(RANLIB) $@
 $(librootdir)/%.$(s.a):	$(archdir)/%.$(s.a)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
-	$(RANLIB) $@
+	$(CROSS_COMPILE)$(RANLIB) $@
 ../$(archdir)/%.$(s.a):	$(archdir)/%.$(s.a)
 	$(ECHO_TARGET)
 	$(INSTALL_DATA) $? $@
-	$(RANLIB) $@
+	$(CROSS_COMPILE)$(RANLIB) $@
 
 # install-lib-lib: --Install the library ".so" files only.
 install-lib-lib:	$(libdir)/$(LIB_NAME).$(so); $(ECHO_TARGET)
@@ -64,7 +64,7 @@ uninstall-lib-lib:	uninstall-lib-include
 $(archdir)/lib.$(s.a): $(SUBLIB_SRC:%.$(a)=%.$(s.a))
 	$(ECHO_TARGET)
 	mk-ar-merge -x $(CROSS_COMPILE)$(AR) $(ARFLAGS) $@ $^
-	$(RANLIB) $@
+	$(CROSS_COMPILE)$(RANLIB) $@
 
 #
 # REVISIT: ld -install_name? -rpath? c.f: install_name_tool
