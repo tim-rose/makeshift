@@ -26,11 +26,11 @@ ifdef autosrc
     LOCAL_AS_SRC := $(wildcard *.s)
 
     AS_SRC ?= $(LOCAL_AS_SRC)
-    AS_LIB_SRC ?= $(LOCAL_AS_LIB_SRC)
+    AS_LIB_SRC ?= $(LOCAL_AS_SRC)
 endif
 
-AS_LIB_OBJ = $(AS_LIB_SRC:%.c=$(archdir)/%.$(o))
-AS_OBJ	= $(AS_MAIN_OBJ) $(AS_LIB_OBJ)
+AS_OBJ	= $(AS_SRC:%.s=$(archdir)/%.$(o))
+AS_LIB_OBJ = $(AS_OBJ)
 
 AS_DEFS	= $(OS.AS_DEFS) $(ARCH.AS_DEFS)\
     $(PROJECT.AS_DEFS) $(LOCAL.AS_DEFS) $(TARGET.AS_DEFS)
@@ -55,7 +55,7 @@ AS_ALL_FLAGS = $(AS_CPPFLAGS) $(AS_DEFS) $(AS_FLAGS)
 # dependencies, and the "-include" command allows the files to
 # be absent, to avoid premature compilation.
 #
-$(archdir)/%.$(o): %.c | $(archdir)
+$(archdir)/%.$(o): %.s | $(archdir)
 	$(ECHO_TARGET)
 	$(CROSS_COMPILE)$(AS) $(AS_ALL_FLAGS) -c -o $@ $(abspath $<)
 #
@@ -66,14 +66,14 @@ $(archdir)/%.$(o): $(gendir)/%.s | $(archdir)
 	$(CROSS_COMPILE)$(AS) $(AS_ALL_FLAGS) -c -o $@ $(abspath $<)
 
 build:	build-as
-build-as:; $(ECHO_TARGET)
+build-as: $(AS_OBJ); $(ECHO_TARGET)
 
 #
 # build any subdirectories before trying to compile stuff;
 # library subdirectories may install include files needed
 # for compilation.
 #
-$(AS_OBJ) 	| build-subdirs
+$(AS_OBJ): 	| build-subdirs
 
 #
 # build[%]: --Build a assembler file's related object.
