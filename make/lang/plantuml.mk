@@ -3,7 +3,7 @@
 #
 # Contents:
 # %.svg/%.puml:   --Create a PNG file from a PlantUML definition.
-# %.png/%.puml:   --Create a SVG file from a PlantUML definition.
+# %.png/%.puml:   --Create a PNG file from a PlantUML definition.
 # %.eps/%.puml:   --Create an EPS file from a PlantUML definition.
 # clean-plantuml: --Clean up plantuml's derived files.
 # src-plantuml:   --Update PUML_SRC macro.

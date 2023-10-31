@@ -9,7 +9,7 @@
 # clean:       --Remove objects and executables created from assembler files.
 # src:         --Update the AS_SRC macro.
 # todo:        --Report "unfinished work" comments in assembler files.
-# +version:    --Report details of tools used by C.
+# +version:    --Report details of tools used by assembler.
 #
 # Remarks:
 # The "lang/assembler" module provides support for the assembler language.

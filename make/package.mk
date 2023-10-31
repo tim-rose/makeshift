@@ -2,7 +2,7 @@
 # PACKAGE.MK--Build rules for packaging.
 #
 # Contents:
-# package:   --Build a package for the current project.
+# package:   --Build a package for the current module.
 # staging-%: --Install the package in a staged root directory.
 # clean:     --Remove the tarball created by "dist", and the destdir root.
 #
