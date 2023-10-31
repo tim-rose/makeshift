@@ -57,12 +57,10 @@ pre code {
 figure img {
     display: block;
     margin: 0.5em auto;
-    width: 100%;
 }
 
 figure figcaption {
     text-align: center;
-    font-size: 0.8em;
 }
 
 /*
