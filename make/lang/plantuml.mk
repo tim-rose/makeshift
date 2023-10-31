@@ -38,7 +38,7 @@ endif
 	plantuml $(ALL_PUMLFLAGS) -tsvg $*.puml
 
 #
-# %.png/%.puml: --Create a SVG file from a PlantUML definition.
+# %.png/%.puml: --Create a PNG file from a PlantUML definition.
 #
 %.png:	%.puml
 	$(ECHO_TARGET)
@@ -46,7 +46,7 @@ endif
 #
 # %.eps/%.puml: --Create an EPS file from a PlantUML definition.
 #
-%.png:	%.puml
+%.eps:	%.puml
 	$(ECHO_TARGET)
 	plantuml $(ALL_PUMLFLAGS) -teps $*.puml
 
