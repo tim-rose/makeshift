@@ -88,6 +88,7 @@ export OS
 
 #
 # ARCH: --Set ARCH macro by interpolating CROSS_COMPILE, "uname -m".
+# REVISIT: a better way a to align cross-compile with arch?
 #
 ARCH ?= $(CROSS_COMPILE:%-=%)
 ifeq (,$(ARCH))

@@ -33,6 +33,9 @@ export gendir	?= $(archdir)/gen
 
 rootdir	 	?= $(abspath $(DESTDIR)/$(prefix))
 optdir	 	?= $(opt:%=opt/%)
+ifeq ($(prefix)/$(optdir),/)
+usr		:= usr
+endif
 rootdir_opt 	?= $(abspath $(DESTDIR)/$(prefix)/$(optdir))
 #exec_prefix ?= $(abspath $(rootdir)/$(archdir)	# (GNU std))
 exec_prefix	?= $(abspath $(rootdir_opt)/$(usr))
