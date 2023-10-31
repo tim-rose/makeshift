@@ -20,6 +20,9 @@ ALL_PROVE_FLAGS = $(VERBOSE:%=--verbose) \
     $(PROVE_FLAGS)
 
 %.tap:	%;	./$* > $@
+#
+# REVISIT: perl handling should change to use archdir?
+#
 %.tap:	%.t;	perl $*.t > $@
 
 #
@@ -34,4 +37,3 @@ test-tap: | cmd-exists[$(PROVE)]
 # test[%]: --Run a particular test.
 #
 test[%]:	$(archdir)/%;      $(archdir)/$*
-test[%.sh]:	%;      ./$*
