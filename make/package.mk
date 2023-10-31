@@ -54,7 +54,7 @@ package: $(package:%=package-%)
 .SECONDARY: $(DESTDIR_ROOT)
 staging-%:
 	$(ECHO_TARGET)
-	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=$(prefix) usr=$(usr) opt=$(opt)
+	$(MAKE) install DESTDIR=$$(pwd)/$@ prefix=$(prefix) opt=$(opt)
 
 #
 # dist:	--Create a tar.gz distribution file.

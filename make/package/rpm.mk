@@ -80,9 +80,9 @@ SPECS/$(PACKAGE).spec:	$(PACKAGE).spec $(PACKAGE)-rpm-files.txt
 	echo "BuildRoot: %{_tmppath}/BUILD"; \
 	cat $<; \
 	echo "%build"; \
-	echo "make $(RPM_MAKEFLAGS) build prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
+	echo "make $(RPM_MAKEFLAGS) build prefix=$(prefix) opt=$(opt)"; \
 	echo "%install"; \
-	echo "make $(RPM_MAKEFLAGS) install-strip DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) usr=$(usr) opt=$(opt)"; \
+	echo "make $(RPM_MAKEFLAGS) install-strip DESTDIR=\$$RPM_BUILD_ROOT prefix=$(prefix) opt=$(opt)"; \
 	echo "%clean"; \
 	echo "%{__rm} -rf \$$RPM_BUILD_ROOT"; \
         echo "%files"; \
