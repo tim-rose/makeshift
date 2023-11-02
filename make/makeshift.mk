@@ -70,9 +70,9 @@ SUBDIRS ?= $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
 tmpdir = tmp-$(notdir $@)
 makeshift_confdir = $(MAKESHIFT_HOME)/etc
 ifeq ($(MAKESHIFT_HOME),)
-    makeshift_datadir = /usr/share/data
+    makeshift_sharedir = /usr/share
 else
-    makeshift_datadir = $(MAKESHIFT_HOME)/share/data
+    makeshift_sharedir = $(MAKESHIFT_HOME)/share
 endif
 #
 # WILDCARD: --Match everything except starting with "_".

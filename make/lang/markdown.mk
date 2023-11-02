@@ -47,7 +47,7 @@ ifdef autosrc
 endif
 
 MD ?= pandoc
-MD_STYLE ?= $(makeshift_datadir)/doc/css/plain.css
+MD_STYLE ?= $(makeshift_sharedir)/doc/css/plain.css
 
 ALL_MDFLAGS ?= -f markdown-smart \
     $(MD_STYLE:%=--css=%) $(MD_FILTER:%=--filter=%)\
@@ -98,7 +98,7 @@ README.html:	README.md
 # @todo: allow for alternate PDF engines
 %.pdf: %.html
 	$(ECHO_TARGET)
-	$(HTML_PDF) -s $(makeshift_datadir)/doc/css/print.css --javascript $*.html -o $@
+	$(HTML_PDF) -s $(makeshift_sharedir)/doc/css/print.css --javascript $*.html -o $@
 
 #
 # build: --Create HTML documents from markdown.

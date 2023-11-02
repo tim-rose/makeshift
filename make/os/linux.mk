@@ -13,7 +13,7 @@ OS.C_DEFS	= -D__Linux__ -D_DEFAULT_SOURCE
 
 OS.C++_DEFS	= -D__Linux__ -D_DEFAULT_SOURCE
 OS.CXXFLAGS 	= -MMD
-OS.LDFLAGS	= -Wl,-Map,$@.map
+OS.LDFLAGS	= -Wl,-Map=$@.map
 
 OS.PYTEST_FLAGS = --junitxml pytest-tests.xml
 OS.C++_LINT_FLAGS = --std=posix
