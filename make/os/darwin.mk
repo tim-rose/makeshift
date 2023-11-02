@@ -27,7 +27,7 @@ OS.CXXFLAGS 	= -MMD
 
 OS.LDFLAGS	= -L/usr/local/lib -L/opt/local/lib -Wl,-map,$(archdir)/$*.map
 # REVISIT: need a cleaner way to add include+lib
-VPATH += /opt/local/lib
+VPATH += /usr/local/lib /opt/local/lib
 
 OS.PYTEST_FLAGS = --junit-xml pytest-tests.xml
 
