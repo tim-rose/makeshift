@@ -225,10 +225,10 @@ tidy-c:	c-src-defined
 	$(C_TIDY_CMD) $(C_TIDY_FLAGS) $(H_SRC) $(C_SRC)
 tidy[%.c]:
 	$(ECHO_TARGET)
-	$(C_TIDY_CMD) $(C_TIDY_FLAGS) $(H_SRC) $*.c
+	$(C_TIDY_CMD) $(C_TIDY_FLAGS) $*.c
 tidy[%.h]:
 	$(ECHO_TARGET)
-	$(C_TIDY_CMD) $(C_TIDY_FLAGS) $(H_SRC) $*.h
+	$(C_TIDY_CMD) $(C_TIDY_FLAGS) $*.h
 
 #
 # lint: --Perform static analysis for C files.
