@@ -71,7 +71,7 @@ C++_CPPFLAGS = $(CPPFLAGS) \
     $(TARGET.C++_CPPFLAGS) $(LOCAL.C++_CPPFLAGS) \
     $(BUILD_PATH:%=-I%/include) $(LIB_ROOT:%=-I%/include) \
     $(PROJECT.C++_CPPFLAGS) $(ARCH.C++_CPPFLAGS) $(OS.C++_CPPFLAGS) \
-    -I. -I$(gendir) -I$(includedir)
+    -I. -I$(gendir)
 
 C++_SHARED_FLAGS = $(OS.C++_SHARED_FLAGS) $(ARCH.C++_SHARED_FLAGS) \
     $(PROJECT.C++_SHARED_FLAGS) $(LOCAL.C++_SHARED_FLAGS) \
