@@ -232,8 +232,7 @@ distclean-makeshift:
 # makeshift-version: --Print the makeshift version.
 #
 makeshift-version:
-	@printf 'makeshift: $(MAKESHIFT_HOME)\n'
-	@printf 'makeshift %s\n' "$(MAKESHIFT_VERSION)" 
+	@printf 'makeshift: %s: %s\n' "$(MAKESHIFT_HOME)" "$(MAKESHIFT_VERSION)" 
 #
 # stddir/% --Common pattern rules for installing stuff into the "standard" places.
 #

@@ -18,7 +18,6 @@
 #
 .PHONY: $(recursive-targets:%=%-protobuf)
 
-PRINT_protoc_VERSION = protoc --version
 
 ifdef autosrc
     LOCAL_PROTOBUF_SRC := $(wildcard *.proto)

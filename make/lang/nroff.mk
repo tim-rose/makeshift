@@ -13,8 +13,6 @@
 .PHONY: $(recursive-targets:%=%-nroff)
 
 export DATE ?= $(shell date '+%d %B %Y')
-PRINT_groff_VERSION = groff --version
-PRINT_ps2pdf_VERSION = echo "unknown version"
 
 ifdef autosrc
     LOCAL_MAN1_SRC := $(wildcard *.1)

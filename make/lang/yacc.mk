@@ -18,8 +18,6 @@
 #
 .PHONY: $(recursive-targets:%=%-yacc)
 
-PRINT_yacc_VERSION = yacc --version
-PRINT_bison_VERSION = bison --version
 
 ifdef autosrc
     LOCAL_YACC_SRC := $(wildcard *.y)

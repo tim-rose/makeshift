@@ -29,10 +29,6 @@
 #
 .PHONY: $(recursive-targets:%=%-c++)
 
-PRINT_g++_VERSION = g++ --version
-PRINT_indent_VERSION = indent --version
-PRINT_uncrustify_VERSION = uncrustify --version
-PRINT_cppcheck_VERSION = cppcheck --version
 
 C++_SUFFIX ?= cc
 H++_SUFFIX ?= h

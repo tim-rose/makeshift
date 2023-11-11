@@ -19,7 +19,6 @@
 #
 .PHONY: $(recursive-targets:%=%-plantuml)
 
-PRINT_plantuml_VERSION = plantuml -version
 
 ALL_PUMLFLAGS ?= $(OS.PUMLFLAGS) $(ARCH.PUMLFLAGS) $(PROJECT.PUMLFLAGS) \
     $(LOCAL.PUMLFLAGS) $(TARGET.PUMLFLAGS) $(PUMLFLAGS)

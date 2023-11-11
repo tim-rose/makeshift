@@ -36,9 +36,6 @@
 #
 .PHONY: $(recursive-targets:%=%-markdown)
 
-PRINT_multimarkdown_VERSION = multimarkdown --version | sed -ne2p
-PRINT_cmark-gfm_VERSION = cmark-gfm --version
-PRINT_prince_VERSION = prince --version
 
 ifdef autosrc
     LOCAL_MD_SRC := $(wildcard *.md)

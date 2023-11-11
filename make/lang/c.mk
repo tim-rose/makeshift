@@ -36,11 +36,6 @@
 
 .PHONY: $(recursive-targets:%=%-c)
 
-PRINT_gcc_VERSION = gcc --version
-PRINT_indent_VERSION = indent --version
-PRINT_uncrustify_VERSION = uncrustify --version
-PRINT_cppcheck_VERSION = cppcheck --version
-
 C_MAIN_RGX = '^[ \t]*int[ \t][ \t]*main[ \t]*('
 
 ifdef autosrc
@@ -167,7 +162,7 @@ $(includedir)/%.h:	$(gendir)/%.h
 # on your compiler...
 #
 +c-defines:
-	$(Q)touch ..c;  $(CC) -E -dM ..c; $(RM) ..c
+	$(Q)touch ..c;  $(CROSS_COMPILE)$(CC) -E -dM ..c; $(RM) ..c
 
 #
 # build: --Build the C objects and executables.
@@ -298,5 +293,5 @@ todo-c:
 #
 # +version: --Report details of tools used by C.
 #
-+version: cmd-version[$(CC)] cmd-version[$(C_TIDY_CMD)] \
++version: cmd-version[$(CROSS_COMPILE)$(CC)] cmd-version[$(C_TIDY_CMD)] \
     cmd-version[$(C_LINT_CMD)]

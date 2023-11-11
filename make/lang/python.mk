@@ -18,9 +18,6 @@
 #
 .PHONY: $(recursive-targets:%=%-python)
 
-PRINT_python_VERSION = python --version
-PRINT_pylint_VERSION = pylint --version
-PRINT_autopep8_VERSION = autopep8 --version
 
 ifdef autosrc
     LOCAL_PY_SRC := $(wildcard *.py)

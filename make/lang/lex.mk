@@ -16,8 +16,6 @@
 #
 .PHONY: $(recursive-targets:%=%-lex)
 
-PRINT_lex_VERSION = lex --version
-PRINT_flex_VERSION = flex --version
 
 ifdef autosrc
     LOCAL_LEX_SRC := $(wildcard *.c)

@@ -23,10 +23,6 @@
 #
 .PHONY: $(recursive-targets:%=%-asciidoc)
 
-PRINT_asciidoc_VERSION = asciidoc --version
-PRINT_fop_VERSION = fop -version
-PRINT_xmllint_VERSION = xmllint --version
-PRINT_xsltproc_VERSION = xsltproc --version
 
 ifdef autosrc
     LOCAL_TXT_SRC := $(wildcard *.txt)

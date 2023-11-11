@@ -12,7 +12,6 @@
 #
 .PHONY: $(recursive-targets:%=%-mk)
 
-PRINT_make_VERSION = make --version
 
 ifdef autosrc
     LOCAL_MK_SRC := $(wildcard *.mk)

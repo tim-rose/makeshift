@@ -23,7 +23,6 @@
 
 #-include $(XSD_SRC:%.xsd=$(archdir)/%-depend.mk)
 
-PRINT_xsd_VERSION = xsd version
 
 ifdef autosrc
     LOCAL_XSD_SRC := $(wildcard *.xsd)
