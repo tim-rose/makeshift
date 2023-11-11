@@ -208,36 +208,41 @@ clean-c++:
 #
 # tidy: --Reformat C++ files consistently.
 #
-C++_INDENT ?= INDENT_PROFILE=$(sysconfbasedir)/.indent.pro indent
-C++_INDENT_FLAGS = $(OS.C++_INDENT_FLAGS) $(ARCH.C++_INDENT_FLAGS) \
-    $(PROJECT.C++_INDENT_FLAGS) $(LOCAL.C++_INDENT_FLAGS) $(TARGET.C++_INDENT_FLAGS)
+C++_TIDY_CMD ?= clang-format
+C++_TIDY_CMD_FLAGS ?= -i --style=file
+C++_TIDY_FLAGS = $(C++_TIDY_CMD_FLAGS) $(OS.C++_TIDY_FLAGS) \
+    $(ARCH.C++_TIDY_FLAGS) \
+    $(PROJECT.C++_TIDY_FLAGS) $(LOCAL.C++_TIDY_FLAGS) $(TARGET.C++_TIDY_FLAGS)
 tidy:	tidy-c++
 tidy-c++:	c++-src-defined
 	$(ECHO_TARGET)
-	$(C++_INDENT) $(C++_INDENT_FLAGS) $(H++_SRC) $(C++_SRC)
+	$(C++_TIDY) $(C++_TIDY_FLAGS) $(H++_SRC) $(C++_SRC)
 tidy[%.$(C++_SUFFIX)]:
 	$(ECHO_TARGET)
-	$(C++_INDENT) $(C++_INDENT_FLAGS) $*.$(C++_SUFFIX)
+	$(C++_TIDY) $(C++_TIDY_FLAGS) $*.$(C++_SUFFIX)
 tidy[%.$(H++_SUFFIX)]:
 	$(ECHO_TARGET)
-	$(C++_INDENT) $(C++_INDENT_FLAGS) $*.$(H++_SUFFIX)
+	$(C++_TIDY) $(C++_TIDY_FLAGS) $*.$(H++_SUFFIX)
 #
 # lint: --Perform static analysis for C++ files.
 #
-C++_LINT ?= cppcheck --quiet --std=c++11 --template=gcc --enable=style,warning,performance,portability,information $(C++_CPPFLAGS)
-C++_LINT_FLAGS = $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
+C++_LINT_CMD ?= cppcheck 
+C++_LINT_CMD_FLAGS ?= --quiet --std=c++11 --template=gcc \
+    --enable=style,warning,performance,portability,information \
+    $(C++_CPPFLAGS)
+C++_LINT_FLAGS = $(C++LINT_CMD_FLAGS) $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS) \
     $(PROJECT.C++_LINT_FLAGS) $(LOCAL.C++_LINT_FLAGS) $(TARGET.C++_LINT_FLAGS)
 
 lint:	lint-c++
 lint-c++:	| c++-src-defined
 	$(ECHO_TARGET)
-	$(C++_LINT) $(C++_LINT_FLAGS) $(abspath $(H++_SRC)) $(abspath $(C++_SRC))
+	$(C++_LINT_CMD) $(C++_LINT_FLAGS) $(abspath $(H++_SRC)) $(abspath $(C++_SRC))
 lint[%.$(C++_SUFFIX)]:
 	$(ECHO_TARGET)
-	$(C++_LINT) $(C++_LINT_FLAGS) $(abspath $*.$(C++_SUFFIX))
+	$(C++_LINT_CMD) $(C++_LINT_FLAGS) $(abspath $*.$(C++_SUFFIX))
 lint[%.$(H++_SUFFIX)]:
 	$(ECHO_TARGET)
-	$(C++_LINT) $(C++_LINT_FLAGS) $(abspath $*.$(H++_SUFFIX))
+	$(C++_LINT_CMD) $(C++_LINT_FLAGS) $(abspath $*.$(H++_SUFFIX))
 
 #
 # toc: --Build the table-of-contents for C++ files.
@@ -283,5 +288,5 @@ todo-c++:
 #
 # +version: --Report details of tools used by C++.
 #
-+version: cmd-version[$(CROSS_COMPILE)$(C++)] cmd-version[$(C++_INDENT_CMD)] \
++version: cmd-version[$(CROSS_COMPILE)$(C++)] cmd-version[$(C++_TIDY_CMD)] \
     cmd-version[$(C++_LINT_CMD)]

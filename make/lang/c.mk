@@ -215,39 +215,39 @@ clean-c:
 #
 # tidy: --Reformat C files consistently.
 #
-C_TIDY_ENV ?= INDENT_PROFILE=$(sysconfbasedir)/.indent.pro
-C_TIDY_CMD ?= indent
-#C_TIDY_CMD_FLAGS ?=
-C_TIDY_FLAGS = $(OS.C_TIDY_FLAGS) $(ARCH.C_TIDY_FLAGS) \
+C_TIDY_CMD ?= clang-format
+C_TIDY_CMD_FLAGS ?= -i --style=file
+C_TIDY_FLAGS = $(C_TIDY_CMD_FLAGS) $(OS.C_TIDY_FLAGS) $(ARCH.C_TIDY_FLAGS) \
     $(PROJECT.C_TIDY_FLAGS) $(LOCAL.C_TIDY_FLAGS) $(TARGET.C_TIDY_FLAGS)
 tidy:	tidy-c
 tidy-c:	c-src-defined
 	$(ECHO_TARGET)
-	$(C_TIDY_ENV) $(C_TIDY_CMD) $(C_TIDY_CMD_FLAGS) $(C_TIDY_FLAGS) $(H_SRC) $(C_SRC)
+	$(C_TIDY_CMD) $(C_TIDY_FLAGS) $(H_SRC) $(C_SRC)
 tidy[%.c]:
 	$(ECHO_TARGET)
-	$(C_TIDY_ENV) $(C_TIDY_CMD) $(C_TIDY_CMD_FLAGS) $(C_TIDY_FLAGS) $*.c
+	$(C_TIDY_CMD) $(C_TIDY_FLAGS) $(H_SRC) $*.c
 tidy[%.h]:
 	$(ECHO_TARGET)
-	$(C_TIDY_ENV) $(C_TIDY_CMD) $(C_TIDY_CMD_FLAGS) $(C_TIDY_FLAGS) $*.h
+	$(C_TIDY_CMD) $(C_TIDY_FLAGS) $(H_SRC) $*.h
 
 #
 # lint: --Perform static analysis for C files.
 #
 C_LINT_CMD ?= cppcheck
-C_LINT_CMD_FLAGS ?= --quiet --std=c11 --template=gcc --enable=style,warning,performance,portability,information --suppress=missingIncludeSystem $(C_CPPFLAGS)
-C_LINT_FLAGS = $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
+C_LINT_CMD_FLAGS ?= --quiet --std=c11 --template=gcc \
+    --enable=style,warning,performance,portability,information --suppress=missingIncludeSystem $(C_CPPFLAGS)
+C_LINT_FLAGS = $(C_LINT_CMD_FLAGS) $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
     $(PROJECT.C_LINT_FLAGS) $(LOCAL.C_LINT_FLAGS) $(TARGET.C_LINT_FLAGS)
 lint:	lint-c
 lint-c: c-src-defined
 	$(ECHO_TARGET)
-	$(C_LINT_CMD) $(C_LINT_CMD_FLAGS) $(C_LINT_FLAGS) $(abspath $(H_SRC)) $(abspath $(C_SRC))
+	$(C_LINT_CMD) $(C_LINT_FLAGS) $(abspath $(H_SRC)) $(abspath $(C_SRC))
 lint[%.c]:
 	$(ECHO_TARGET)
-	$(C_LINT_CMD) $(C_LINT_CMD_FLAGS) $(C_LINT_FLAGS) $(abspath $*.c)
+	$(C_LINT_CMD) $(C_LINT_FLAGS) $(abspath $*.c)
 lint[%.h]:
 	$(ECHO_TARGET)
-	$(C_LINT) $(C_LINT_FLAGS) $(abspath $*.h)
+	$(C_LINT_CMD) $(C_LINT_FLAGS) $(abspath $*.h)
 
 #
 # toc: --Build the table-of-contents for C files.
