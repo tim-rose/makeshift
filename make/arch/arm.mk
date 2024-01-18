@@ -3,7 +3,7 @@
 #
 ADDR2LINE ?= addr2line
 AR	?= ar
-AS	?= as
+AS = $(CC) -x assembler-with-cpp
 C++	?= c++
 C++FILT	?= c++filt
 CPP	?= cpp
@@ -28,3 +28,4 @@ RANLIB	?= ranlib
 # size
 # strings
 # strip
+ARCH.ASFLAGS = $(ARCH.CFLAGS)

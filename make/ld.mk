@@ -30,12 +30,12 @@ ALL_BUILD_PATH = . $(LIB_ROOT) $(BUILD_PATH)
 export LD_LIBRARY_PATH += $(subst $(space),:,$(ALL_BUILD_PATH:%=%/$(archdir)))
 export DYLD_LIBRARY_PATH += $(subst $(space),:,$(ALL_BUILD_PATH:%=%/$(archdir)))
 
-VPATH += $(ALL_BUILD_PATH:%=%/$(archdir)) $(libdir)
+VPATH := $(ALL_BUILD_PATH:%=%/$(archdir)) $(VPATH)
 
 ALL_LDFLAGS = $(LDFLAGS) $(LANG.LDFLAGS) \
     $(TARGET.LDFLAGS) $(LOCAL.LDFLAGS) \
-    $(VPATH:%=-L%) -L$(libdir) \
     $(PROJECT.LDFLAGS) $(ARCH.LDFLAGS) $(OS.LDFLAGS) \
+    $(VPATH:%=-L%) \
 
 ALL_LDLIBS = $(TARGET.LDLIBS) $(LOCAL.LDLIBS) $(PROJECT.LDLIBS) \
     $(ARCH.LDLIBS) $(OS.LDLIBS) $(LDLIBS) $(LOADLIBES)
