@@ -246,10 +246,10 @@ makeshift-version:
 $(archdir):		;	$(MKDIR) $@
 $(gendir):		;	$(MKDIR) $@
 
-$(bindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
-$(sbindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
-$(libexecdir)/%:	%;	$(INSTALL_SCRIPT) $? $@
-$(srvdir)/%:		%;	$(INSTALL_SCRIPT) $? $@
+# $(bindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
+# $(sbindir)/%:		%;	$(INSTALL_SCRIPT) $? $@
+# $(libexecdir)/%:	%;	$(INSTALL_SCRIPT) $? $@
+# $(srvdir)/%:		%;	$(INSTALL_SCRIPT) $? $@
 
 $(sysconfdir)/%:	%;	$(INSTALL_DATA) $? $@
 $(libdir)/%:		%;	$(INSTALL_DATA) $? $@

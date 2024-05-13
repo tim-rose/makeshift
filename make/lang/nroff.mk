@@ -28,7 +28,7 @@ ifdef autosrc
     MAN8_SRC ?= $(LOCAL_MAN8_SRC)
 endif
 
-NROFF_ADJUST = sed -e '/^[.]TH/s/PACKAGE/$(PACKAGE)/;/^[.]TH/s/VERSION/$(VERSION)/;/^[.]TH/s/DATE/$(DATE)/'
+NROFF_SET_VERSION = sed -e '/^[.]TH/s/\<PACKAGE>/$(PACKAGE)/;/^[.]TH/s/\<VERSION\>/$(VERSION)/;/^[.]TH/s/\<DATE\>/$(DATE)/'
 #
 # %.[1-9]:	--Rules for installing manual pages
 #
@@ -49,13 +49,13 @@ $(man8dir)/%.8:	$(archdir)/%.8;	$(INSTALL_DATA) $? $@
 %.7.pdf:	$(archdir)/%.7;	man -t $? | ps2pdf - - > $@
 %.8.pdf:	$(archdir)/%.8;	man -t $? | ps2pdf - - > $@
 
-$(archdir)/%.1: %.1 | $(archdir); $(NROFF_ADJUST) <$? >$@
-$(archdir)/%.3: %.3 | $(archdir); $(NROFF_ADJUST) <$? >$@
-$(archdir)/%.4: %.4 | $(archdir); $(NROFF_ADJUST) <$? >$@
-$(archdir)/%.5: %.5 | $(archdir); $(NROFF_ADJUST) <$? >$@
-$(archdir)/%.6: %.6 | $(archdir); $(NROFF_ADJUST) <$? >$@
-$(archdir)/%.7: %.7 | $(archdir); $(NROFF_ADJUST) <$? >$@
-$(archdir)/%.8: %.8 | $(archdir); $(NROFF_ADJUST) <$? >$@
+$(archdir)/%.1: %.1 | $(archdir); $(NROFF_SET_VERSION) <$? >$@
+$(archdir)/%.3: %.3 | $(archdir); $(NROFF_SET_VERSION) <$? >$@
+$(archdir)/%.4: %.4 | $(archdir); $(NROFF_SET_VERSION) <$? >$@
+$(archdir)/%.5: %.5 | $(archdir); $(NROFF_SET_VERSION) <$? >$@
+$(archdir)/%.6: %.6 | $(archdir); $(NROFF_SET_VERSION) <$? >$@
+$(archdir)/%.7: %.7 | $(archdir); $(NROFF_SET_VERSION) <$? >$@
+$(archdir)/%.8: %.8 | $(archdir); $(NROFF_SET_VERSION) <$? >$@
 
 build:	build-nroff
 

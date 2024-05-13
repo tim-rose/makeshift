@@ -33,7 +33,7 @@ PY_TIDY ?= autopep8
 #
 pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
 PY_TRG = $(archdir)/$(PY_SRC:%.py=%)
-SET_VERSION = $(SED) -e '/^ *[A-Z_]*VERSION=/s/=.*/=$(VERSION)/'
+SET_VERSION = $(SED) -e 's/\<VERSION\>/$(VERSION)/'
 
 $(archdir)/%:		%.py | $(archdir)
 	$(SET_VERSION) $? >$@
