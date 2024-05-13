@@ -13,6 +13,7 @@
 #
 # TODO: add support for the MS toolchain.
 #
+version="VERSION"
 usage="Usage: mk-ar-merge [options] [ar-flags] archive object+archive-files..."
 tmpdir="${TMPDIR:-/tmp}/mk-ar$$"
 ar=${AR:-ar}
@@ -21,7 +22,6 @@ status=0
 archdir=${archdir:-${OS}-${ARCH}} # hopefully already defined...
 o=o     # object file extension
 a=a     # library file extension
-VERSION=
 
 log_message() { printf "$@"; printf "\n"; } >&2
 warning() { log_message "$@"; status=1; }
@@ -54,7 +54,7 @@ main()
     trap "rm -rf $tmpdir" 0 		# cleanup
     mkdir -p "$tmpdir"
 
-    info "mk-ar-merge version %s" "$VERSION"
+    info "mk-ar-merge version %s" "$version"
 #    ar_flags="$1"; shift
     library="$1"; shift
 

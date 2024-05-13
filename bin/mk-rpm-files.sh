@@ -2,6 +2,7 @@
 #
 # MK-RPM-FILES --Mung a list of files for use as a RPM "files" section.
 #
+version="VERSION"
 while read file; do
     case "$file" in
 #    (*man[0-9]*) echo "%doc $file.gz";;

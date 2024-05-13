@@ -12,6 +12,7 @@
 # makefile.bak.
 #
 #
+version="VERSION"
 PATH=$PATH:/usr/libexec:/usr/local/libexec
 export LC_COLLATE=C
 tmp=${TMPDIR:-/tmp}/$$

@@ -7,6 +7,7 @@
 # arch, but this script sniffs the control file to see if it's been
 # overridden (e.g. for "all" packages).
 #
+version="VERSION"
 if [ "$1" -a -f "$1" ]; then
     if grep ^Architecture: "$1" >/dev/null 2>&1; then
 	sed -ne 's/^Architecture: *//p' "$1"

@@ -8,6 +8,7 @@
 #
 # TODO: "//" comments don't work!
 #
+version="VERSION"
 usage="Usage: mk-toc [options] file..."
 
 log_message() { printf "mk-toc: "; printf "$@"; printf "\n"; } >&2

@@ -7,6 +7,7 @@
 # arch, but this script sniffs the ".spec" file to see if it's been
 # overridden (e.g. for "noarch" packages).
 #
+version="VERSION"
 rpm_arch()
 {
     local file=$1

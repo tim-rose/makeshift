@@ -9,6 +9,7 @@
 # only those bits makeshift actually uses.
 #
 #
+version="VERSION"
 usage="Usage: mk-install [options] files..."
 permission=755
 

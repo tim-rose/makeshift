@@ -6,6 +6,7 @@
 # main()    --Parse options and process arguments
 # vcs_get() --Get a single component specified by the config.
 #
+version="VERSION"
 usage="Usage: mk-vcs-get [-f config] [-v] [-q] file..."
 component_file=components.conf
 

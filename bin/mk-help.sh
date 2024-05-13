@@ -3,6 +3,7 @@
 # MK-HELP --Extract/construct some help text from a list of makefiles.
 #
 #
+version="VERSION"
 usage="Usage: mk-help [options] makefiles..."
 tmpdir=${TMPDIR:-/tmp}/mk-help$$
 

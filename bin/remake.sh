@@ -17,6 +17,7 @@ debug()       { if [ "$debug" ]; then log_message "$@"; fi; }
 log_quit()    { notice "$@"; exit 1; }
 log_cmd()     { debug "exec: $*"; "$@"; }
 
+version="VERSION"
 command="make"
 target=build
 delay=10

@@ -9,12 +9,11 @@ log_message() { printf "$@"; printf "\n"; } >&2
 notice() { log_message "$@"; }
 info()   { if [ "$verbose" ]; then log_message "$@"; fi; }
 
-VERSION=
-
 delay=
 signal=
 status=0
 verbose=
+version="VERSION"
 usage="Usage:\necho+ [-d delay] [-e stderr-message] [-s signal] [-x status] message"
 
 while getopts "d:e:s:x:v?" c; do
@@ -24,7 +23,7 @@ while getopts "d:e:s:x:v?" c; do
     s)	signal=$OPTARG;;
     x)	status=$OPTARG;;
     v)	verbose=1;;
-    \?)	echo "echo+ version: $VERSION" >&2
+    \?)	echo "echo+ version: $version" >&2
 	echo $usage >&2
 	exit 2;;
     esac

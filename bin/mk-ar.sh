@@ -9,6 +9,7 @@
 # them OK.  Mysteriously, Debian doesn't provide a standalone
 # command for this.
 #
+version="VERSION"
 usage="Usage: mk-archive file..."
 
 log_message() { printf "$@"; printf "\n"; } >&2
