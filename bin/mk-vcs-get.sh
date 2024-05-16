@@ -3,8 +3,12 @@
 # MK-VCS-GET --Get some components stored in a VCS.
 #
 # Contents:
-# main()    --Parse options and process arguments
-# vcs_get() --Get a single component specified by the config.
+# main()         --Parse options and process arguments
+# git_download() --Download a single component specified by the config.
+# git_info()     --Print some useful information about a repo.
+#
+# Remarks:
+# Only handles git.
 #
 version="VERSION"
 usage="Usage: mk-vcs-get [-f config] [-v] [-q] file..."
@@ -34,29 +38,51 @@ main()
     shift $(($OPTIND - 1))
 
     for target in "$@"; do
-        vcs_get "$target"
+        git_download "$target"
     done
 }
 
 #
-# vcs_get() --Get a single component specified by the config.
+# git_download() --Download a single component specified by the config.
 #
-vcs_get()
+git_download()
 {
-    local match= component= url=
+    local match= dir= url= tag=
 
     if match=$(grep "^$1:" "$component_file"); then 
-        component=${match%%:*} 
+        dir=${match%%:*} 
         url=${match#*:}
-        if [ ! -d "$component" ]; then 
-            info '%s: download from %s' "$component" "$url"
-            git clone "$url" "$component"
-        else 
-            info '%s: already installed' "$component"
+        tag=${url#*,}
+        url=${url%%,*}
+
+        if [ ! -d "$dir" ]; then 
+            info '%s: download from %s' "$dir" "$url"
+            git clone "$url" "$dir"
+            if [ "$url" != "$tag" ]; then
+                info '%s: checkout %s' "$dir" "$tag"
+                ( cd "$dir" && git checkout "$tag"; )
+            fi
         fi 
+        git_info "$dir"
     else 
         notice '%s: unknown component' "$1"
     fi
 }
+
+#
+# git_info() --Print some useful information about a repo.
+#
+git_info()
+(
+    local dir="$1"
+    cd "$dir" || exit
+    local url=$(git config --list | 
+        sed -ne '/^remote.origin.url/s/.*=//p')
+    local info=$(
+        git describe --always --first-parent --dirty 2>/dev/null || 
+        echo unknown)
+
+    info "%s: %s %s" "$dir" "$url" "$info"
+)
 
 main "$@"
