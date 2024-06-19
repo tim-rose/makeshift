@@ -1,0 +1,80 @@
+/*
+ * NUMBERED.CSS --Stylesheet for HTML with numbered headings.
+ */
+body { counter-reset:	h1 h2 h3 h4 h5 h6; }
+h1 { counter-reset:	   h2 h3 h4 h5 h6 table figure; }
+h2 { counter-reset:	      h3 h4 h5 h6; }
+h3 { counter-reset:	         h4 h5 h6; }
+h4 { counter-reset:		    h5 h6; }
+h5 { counter-reset:		       h6; }
+
+h1:before {
+    counter-increment: h1;
+    content: counter(h1) "." "\2002"; /* &nbsp; */
+}
+
+h2:before {
+    counter-increment: h2;
+    content: counter(h1) "." counter(h2) "." "\2002"; /* &nbsp; */
+}
+
+h3:before {
+    counter-increment: h3;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." "\2002";
+}
+
+h4:before {
+    counter-increment: h4;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." "\2002";
+}
+
+h5:before {
+    counter-increment: h5;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." "\2002";
+}
+
+h6:before {
+    counter-increment: h6;
+    content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) "." "\2002";
+}
+
+/*
+ * Numbered table captions
+ */
+table caption:before {
+    counter-increment: table;
+    content: "Table " counter(h1) "-" counter(table) ".\2002";
+}
+
+/*
+ * Numbered figure captions
+ */
+figcaption:before {
+    counter-increment: figure;
+    content: "Figure " counter(h1) "-" counter(figure) ".\2002";
+}
+
+/*
+ * Disable auto-numbering in the front-matter, so headings can be used
+ * without interfering with the document section numbers.
+ */
+header h1:before,
+header h2:before,
+header h3:before,
+header h4:before,
+header h5:before,
+header h6:before,
+header table caption:before,
+header figcaption:before,
+nav h1:before,
+nav h2:before,
+nav h3:before,
+nav h4:before,
+nav h5:before,
+nav h6:before,
+nav table caption:before,
+nav figcaption:before
+{
+    counter-increment: none;
+    content: none;
+}
