@@ -3,7 +3,7 @@
 #
 language = css
 subdir = doc/css
-CSS_SRC = plain.css print.css
+CSS_SRC = numbered.css plain.css print.css
 include makeshift.mk
 
 install:	$(CSS_SRC:%=$(datadir)/%)
