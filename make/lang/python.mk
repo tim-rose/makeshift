@@ -81,7 +81,7 @@ clean:	clean-python
 distclean:	clean-python
 
 clean-python:
-	$(RM) -r __pycache__ $(PY_SRC:%.py=%.py[co]) $(PY_SRC:%.py=%)
+	$(RM) -r __pycache__ $(PY_SRC:%.py=%.py[co]) $(PY_TRG)
 
 #
 # toc: --Build the table-of-contents for python files.
@@ -121,20 +121,20 @@ todo-python:
 lint:	lint-python
 lint-python:	| cmd-exists[$(PY_LINT)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	-$(PY_LINT) --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
+	-$(PY_LINT) --max-line-length=100 --ignore=E402,E721 $(PY_SRC)
 
 lint[%.py]:	| cmd-exists[$(PY_LINT)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	-$(PY_LINT) --max-line-length=110 --ignore=E402,E721 $*.py
+	-$(PY_LINT) --max-line-length=100 --ignore=E402,E721 $*.py
 
 tidy:	tidy-python
 tidy-python: 	| cmd-exists[$(PY_TIDY)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	$(PY_TIDY) --in-place --max-line-length=110 --ignore=E402,E721 $(PY_SRC)
+	$(PY_TIDY) --in-place --max-line-length=100 --ignore=E402,E721 $(PY_SRC)
 
 tidy[%.py]:	| cmd-exists[$(PY_TIDY)]
 	$(ECHO_TARGET)
-	$(PY_TIDY) --in-place --max-line-length=110 --ignore=E402,E721 $*.py
+	$(PY_TIDY) --in-place --max-line-length=100 --ignore=E402,E721 $*.py
 
 #
 # +version: --Report details of tools used by python.
