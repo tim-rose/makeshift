@@ -31,8 +31,6 @@ OS.LDFLAGS	= -Wl,-Map=$@.map -Wl,--gc-sections
 VPATH += /usr/local/lib
 
 OS.PYTEST_FLAGS = --junitxml pytest-tests.xml
-OS.C++_LINT_FLAGS = --std=posix
-OS.C_LINT_FLAGS = --std=posix
 
 PKG_TYPE	= deb
 
