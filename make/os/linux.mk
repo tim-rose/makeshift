@@ -2,6 +2,16 @@
 # LINUX.MK	--Macros and definitions for Linux.
 #
 # Remarks:
+# Assembler options used in CFLAGS are (see as(1) for details)
+#   -ac omit false conditionals
+#   -ad omit debugging directives
+#   -ag include general information, like as version and options passed
+#   -ah include high-level source
+#   -al include assembly
+#   -am include macro expansions
+#   -an omit forms processing
+#   -as include symbols
+#   =file set the name of the listing file
 #
 include os/posix.mk
 
