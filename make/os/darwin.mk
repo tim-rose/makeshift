@@ -16,14 +16,14 @@ CC ?= cc
 so = dylib
 LD_SHARED_FLAGS = -Wl,-undefined,dynamic_lookup -Wl,-install_name,$(notdir $@) -dynamiclib
 
-OS.CFLAGS 	= -MMD
+OS.CFLAGS 	= -MMD -ffunction-sections -fdata-sections -Wa,-adglmsn=$(@:%.o=%.s)
 OS.C_WARN_FLAGS = -Wno-gnu-zero-variadic-macro-arguments
 OS.C_CPPFLAGS   = -I/usr/local/include -I/opt/local/include
 OS.C_DEFS       = -D__Darwin__
 
 OS.C++_CPPFLAGS = -I/usr/local/include -I/opt/local/include
 OS.C++_DEFS     = -D__Darwin__
-OS.CXXFLAGS 	= -MMD
+OS.CXXFLAGS 	= $(OS.CFLAGS)
 
 OS.LDFLAGS	= -Wl,-map,$(archdir)/$*.map
 # REVISIT: need a cleaner way to add include+lib
