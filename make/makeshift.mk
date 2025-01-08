@@ -77,7 +77,7 @@ endif
 #
 # WILDCARD: --Match everything except starting with "_".
 #
-WILDCARD = [^_]*
+WILDCARD = [!_]*
 #
 # PWD: --Force reset of PWD
 #
