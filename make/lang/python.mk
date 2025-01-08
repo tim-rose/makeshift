@@ -3,7 +3,7 @@
 #
 # Contents:
 # build-python:       --Build the python source code as individual executables.
-# install-python:     --Install python as executables.
+# install-python-bin: --Install python as executables.
 # install-python-lib: --Install python as library modules.
 # clean:              --Remove python executables.
 # toc:                --Build the table-of-contents for python files.
@@ -18,12 +18,16 @@
 #
 .PHONY: $(recursive-targets:%=%-python)
 
+PY_MAIN_RGX = '^.! */usr/bin/env python'
 
 ifdef autosrc
     LOCAL_PY_SRC := $(wildcard *.py)
+    LOCAL_PY_MAIN_SRC := $(shell grep -l $(PY_MAIN_RGX) *.py 2>/dev/null)
 
     PY_SRC ?= $(LOCAL_PY_SRC)
+    PY_MAIN_SRC ?= $(LOCAL_PY_MAIN_SRC)
 endif
+PY_LIB_SRC ?= $(filter-out $(PY_MAIN_SRC),$(PY_SRC))
 
 PY_LINT ?= pylint
 PY_TIDY ?= autopep8
@@ -32,15 +36,18 @@ PY_TIDY ?= autopep8
 # %.py:		--Rules for installing python scripts
 #
 pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
-PY_TRG = $(archdir)/$(PY_SRC:%.py=%)
+PY_TRG = $(PY_SRC:%.py=$(archdir)/%)
 SET_VERSION = $(SED) -e 's/\<VERSION\>/$(VERSION)/'
 
 $(archdir)/%:		%.py | $(archdir)
 	$(SET_VERSION) $? >$@
 	$(CHMOD) +x $@
 
-$(pythonlibdir)/%.py:	%.py;	$(INSTALL_DATA) $? $@
-$(pythonlibdir)/%.py:	$(gendir)/%.py;	$(INSTALL_DATA) $? $@
+$(archdir)/%:		$(gendir)/%.py | $(archdir)
+	$(SET_VERSION) $? >$@
+	$(CHMOD) +x $@
+
+$(pythonlibdir)/%.py:	$(archdir)/%;	$(INSTALL_DATA) $? $@
 
 #
 # build-python: --Build the python source code as individual executables.
@@ -49,29 +56,33 @@ $(pythonlibdir)/%.py:	$(gendir)/%.py;	$(INSTALL_DATA) $? $@
 # This isn't built by default because it may be a directory of library code.
 build-python:	$(PY_TRG)
 
+install-python: install-python-bin install-python-lib
+uninstall-python: uninstall-python-bin uninstall-python-lib
+
 #
-# install-python: --Install python as executables.
+# install-python-bin: --Install python as executables.
 #
-install-python: $(PY_SRC:%.py=$(bindir)/%)
+.PHONY: install-python-bin uninstall-python-bin
+install-python-bin: $(PY_MAIN_SRC:%.py=$(bindir)/%)
 	 $(ECHO_TARGET)
 
-uninstall-python:
+uninstall-python-bin:
 	$(ECHO_TARGET)
-	$(RM) $(PY_SRC:%.py=$(bindir)/%)
-	$(RM) $(PY_SRC:%.py=$(bindir)/__pycache__/%.pyc)
+	$(RM) $(PY_MAIN_SRC:%.py=$(bindir)/%)
+	$(RM) $(PY_MAIN_SRC:%.py=$(bindir)/__pycache__/%.pyc)
 	$(RMDIR) $(bindir)/__pycache__ $(bindir)
 
 #
 # install-python-lib: --Install python as library modules.
 #
 .PHONY: install-python-lib uninstall-python-lib
-install-python-lib: $(PY_SRC:%.py=$(pythonlibdir)/%.py)
+install-python-lib: $(PY_LIB_SRC:%=$(pythonlibdir)/%)
 	$(ECHO_TARGET)
 
 uninstall-python-lib:
 	$(ECHO_TARGET)
-	$(RM) $(PY_SRC:%.py=$(pythonlibdir)/%.py)
-	$(RM) $(PY_SRC:%.py=$(pythonlibdir)/__pycache__/%.pyc)
+	$(RM) $(PY_LIB_SRC:%.py=$(pythonlibdir)/%.py)
+	$(RM) $(PY_LIB_SRC:%.py=$(pythonlibdir)/__pycache__/%.pyc)
 	$(RMDIR) $(pythonlibdir)/__pycache__ $(pythonlibdir)
 
 #
@@ -98,6 +109,8 @@ src:	src-python
 src-python:
 	$(ECHO_TARGET)
 	$(Q)mk-filelist -f $(MAKEFILE) -qn PY_SRC *.py
+	$(Q)mk-filelist -f $(MAKEFILE) -qn PY_MAIN_SRC \
+            $$(grep -l $(PY_MAIN_RGX) *.py 2>/dev/null)
 #
 # todo: --Report unfinished work (identified by keyword comments)
 #
