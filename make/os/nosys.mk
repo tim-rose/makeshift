@@ -13,7 +13,7 @@ LD_SHARED_FLAGS = -shared
 
 OS.CFLAGS 	= -MMD
 OS.C_DEFS	= -D__NOSYS__ -D_DEFAULT_SOURCE
-OS.LD_LIBS      = -lnosys
+OS.LDLIBS      = -lnosys
 
 OS.C++_DEFS	= -D__NOSYS__ -D_DEFAULT_SOURCE
 OS.CXXFLAGS 	= -MMD
