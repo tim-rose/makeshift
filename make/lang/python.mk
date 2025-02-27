@@ -31,6 +31,10 @@ PY_LIB_SRC ?= $(filter-out $(PY_MAIN_SRC),$(PY_SRC))
 
 PY_LINT ?= pylint
 PY_TIDY ?= autopep8
+PY_LINT_ALL_FLAGS = $(PY_LINT_FLAGS) $(OS.PY_LINT_FLAGS) $(ARCH.PY_LINT_FLAGS) \
+    $(PROJECT.PY_LINT_FLAGS) $(LOCAL.PY_LINT_FLAGS) $(TARGET.PY_LINT_FLAGS)
+PY_TIDY_ALL_FLAGS = $(PY_TIDY_FLAGS) $(OS.PY_TIDY_FLAGS) $(ARCH.PY_TIDY_FLAGS) \
+    $(PROJECT.PY_TIDY_FLAGS) $(LOCAL.PY_TIDY_FLAGS) $(TARGET.PY_TIDY_FLAGS)
 
 #
 # %.py:		--Rules for installing python scripts
@@ -134,20 +138,20 @@ todo-python:
 lint:	lint-python
 lint-python:	| cmd-exists[$(PY_LINT)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	-$(PY_LINT) --max-line-length=100 --ignore=E402,E721 $(PY_SRC)
+	-$(PY_LINT) $(PY_LINT_ALL_FLAGS) $(PY_SRC)
 
 lint[%.py]:	| cmd-exists[$(PY_LINT)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	-$(PY_LINT) --max-line-length=100 --ignore=E402,E721 $*.py
+	-$(PY_LINT) $(PY_LINT_ALL_FLAGS) $*.py
 
 tidy:	tidy-python
 tidy-python: 	| cmd-exists[$(PY_TIDY)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	$(PY_TIDY) --in-place --max-line-length=100 --ignore=E402,E721 $(PY_SRC)
+	$(PY_TIDY) $(PY_LINT_ALL_FLAGS) --in-place $(PY_SRC)
 
 tidy[%.py]:	| cmd-exists[$(PY_TIDY)]
 	$(ECHO_TARGET)
-	$(PY_TIDY) --in-place --max-line-length=100 --ignore=E402,E721 $*.py
+	$(PY_TIDY) $(PY_LINT_ALL_FLAGS) --in-place $*.py
 
 #
 # +version: --Report details of tools used by python.
