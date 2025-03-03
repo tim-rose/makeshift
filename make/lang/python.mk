@@ -147,11 +147,11 @@ lint[%.py]:	| cmd-exists[$(PY_LINT)] var-defined[PY_SRC]
 tidy:	tidy-python
 tidy-python: 	| cmd-exists[$(PY_TIDY)] var-defined[PY_SRC]
 	$(ECHO_TARGET)
-	$(PY_TIDY) $(PY_LINT_ALL_FLAGS) --in-place $(PY_SRC)
+	$(PY_TIDY) $(PY_TIDY_ALL_FLAGS) --in-place $(PY_SRC)
 
 tidy[%.py]:	| cmd-exists[$(PY_TIDY)]
 	$(ECHO_TARGET)
-	$(PY_TIDY) $(PY_LINT_ALL_FLAGS) --in-place $*.py
+	$(PY_TIDY) $(PY_TIDY_ALL_FLAGS) --in-place $*.py
 
 #
 # +version: --Report details of tools used by python.
