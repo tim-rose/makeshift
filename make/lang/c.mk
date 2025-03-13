@@ -81,7 +81,7 @@ C_CPPFLAGS = $(CPPFLAGS) \
     $(TARGET.C_CPPFLAGS) $(LOCAL.C_CPPFLAGS) \
     $(BUILD_PATH:%=-I%/include) $(LIB_ROOT:%=-I%/include) \
     $(PROJECT.C_CPPFLAGS) $(ARCH.C_CPPFLAGS) $(OS.C_CPPFLAGS) \
-    -I. -I$(gendir) 
+    -I. -I$(gendir)
 
 C_SHARED_FLAGS = $(OS.C_SHARED_FLAGS) $(ARCH.C_SHARED_FLAGS) \
     $(PROJECT.C_SHARED_FLAGS) $(LOCAL.C_SHARED_FLAGS) $(TARGET.C_SHARED_FLAGS)
@@ -233,21 +233,38 @@ tidy[%.h]:
 #
 # lint: --Perform static analysis for C files.
 #
-C_LINT_CMD ?= cppcheck
-C_LINT_CMD_FLAGS ?= --quiet --std=c11 --template=gcc \
-    --enable=style,warning,performance,portability,information --suppress=missingIncludeSystem $(C_CPPFLAGS)
-C_LINT_FLAGS = $(C_LINT_CMD_FLAGS) $(OS.C_LINT_FLAGS) $(ARCH.C_LINT_FLAGS) \
-    $(PROJECT.C_LINT_FLAGS) $(LOCAL.C_LINT_FLAGS) $(TARGET.C_LINT_FLAGS)
-lint:	lint-c
-lint-c: c-src-defined
+# Remarks:
+# Hmmm, this is starting to get a bit messy.  I want to be able to
+# run several different linters independently.
+#
+C_LINT_CMD ?= clang-tidy
+CPPCHECK_FLAGS ?= --quiet --std=c11 --template=gcc \
+    --enable=style,warning,performance,portability,information \
+    --suppress=missingIncludeSystem $(C_CPPFLAGS)
+
+lint:	$(C_LINT_CMD:%=lint-c-%)
+lint-c-cppcheck: c-src-defined
 	$(ECHO_TARGET)
-	$(C_LINT_CMD) $(C_LINT_FLAGS) $(abspath $(H_SRC)) $(abspath $(C_SRC))
-lint[%.c]:
+	cppcheck $(CPPCHECK_FLAGS) $(abspath $(C_SRC))
+lint-cppcheck[%.c]:
 	$(ECHO_TARGET)
-	$(C_LINT_CMD) $(C_LINT_FLAGS) $(abspath $*.c)
-lint[%.h]:
+	cppcheck $(CPPCHECK_FLAGS) $(abspath $*.c)
+lint-cppcheck[%.h]:
 	$(ECHO_TARGET)
-	$(C_LINT_CMD) $(C_LINT_FLAGS) $(abspath $*.h)
+	cppcheck $(CPPCHECK_FLAGS) $(abspath $*.h)
+
+CLANG_TIDY_FLAGS ?= -fix
+CLANG_EXTRA_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
+
+lint-c-clang-tidy: c-src-defined
+	$(ECHO_TARGET)
+	clang-tidy $(CLANG_TIDY_FLAGS) $(CLANG_EXTRA_FLAGS:%=-extra-arg=%) $(abspath $(C_SRC))
+lint-clang-tidy[%.c]:
+	$(ECHO_TARGET)
+	clang-tidy $(CLANG_TIDY_FLAGS) $(CLANG_EXTRA_FLAGS:%=-extra-arg=%) $(abspath $*.c)
+lint-clang-tidy[%.h]:
+	$(ECHO_TARGET)
+	clang-tidy $(CLANG_TIDY_FLAGS) $(CLANG_EXTRA_FLAGS:%=-extra-arg=%) $(abspath $*.h)
 
 #
 # toc: --Build the table-of-contents for C files.
