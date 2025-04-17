@@ -45,7 +45,7 @@
 #
 std-targets = clean distclean build test test-xml coverage \
     install uninstall \
-    deploy tags dist doc
+    deploy tags dist doc-html doc-pdf
 #
 # makeshift-targets: --Extra development/maintenance targets.
 #

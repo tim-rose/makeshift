@@ -88,7 +88,7 @@ src-nroff:
 	$(Q)mk-filelist -f $(MAKEFILE) -qn MAN7_SRC *.7
 	$(Q)mk-filelist -f $(MAKEFILE) -qn MAN8_SRC *.8
 
-doc:	$(MAN1_SRC:%.1=%.1.pdf) $(MAN3_SRC:%.3=%.3.pdf) \
+doc-pdf:	$(MAN1_SRC:%.1=%.1.pdf) $(MAN3_SRC:%.3=%.3.pdf) \
 	$(MAN5_SRC:%.5=%.5.pdf) $(MAN7_SRC:%.7=%.7.pdf) \
 	$(MAN8_SRC:%.8=%.8.pdf)
 

@@ -92,20 +92,20 @@ README.html:	README.md
 	    $(ALL_MDFLAGS) $*.rst > $@ || $(RM) $@
 #
 # %.pdf: --Create a PDF document from a HTML file.
-# @todo: allow for alternate PDF engines
+# TODO: allow for alternate PDF engines
 %.pdf: %.html
 	$(ECHO_TARGET)
 	$(HTML_PDF) -s $(makeshift_sharedir)/doc/css/print.css --javascript $*.html -o $@
 
 #
-# build: --Create HTML documents from markdown.
+# doc-html: --Create HTML documents from markdown.
 #
 doc-html:	$(MD_SRC:%.md=%.html) $(RST_SRC:%.rst=%.html)
 
 #
 # doc-markdown: --Create PDF documents from MD_SRC.
 #
-doc-pdf doc:	doc-markdown doc-rst
+doc-pdf:	doc-markdown doc-rst
 doc-markdown:	$(MD_SRC:%.md=%.pdf)
 doc-rst:	$(RST_SRC:%.md=%.pdf)
 

@@ -5,14 +5,14 @@
 #
 # Remarks:
 # The detailed behaviour of doxygen depends on its config file,
-# assumed to be "doxygen_config", and in particular it is assumed that
+# assumed to be "doxygen.con", and in particular it is assumed that
 # this config (until I can muster a better solution) dumps its output
-# into the "doxygen_output" directory.
+# into the "dox" sub-directory.
 #
-DOX_CONFIG = doxygen_config
-DOX_OUTPUT = doxygen_output
+DOX_CONFIG ?= doxygen.conf
+DOX_OUTPUT ?= dox
 
-doc:	doc-dox
+doc-html:	doc-dox
 doc-dox:
 	$(ECHO_TARGET)
 	doxygen $(DOX_CONFIG)
