@@ -202,8 +202,8 @@ clean:	clean-c++
 clean-c++:
 	$(ECHO_TARGET)
 	$(RM) $(C++_MAIN) $(C++_MAIN_OBJ)
-	$(RM) $(C++_MAIN_OBJ:%.$(o)=%.d) $(C++_MAIN_OBJ:%.$(o)=%.map)
-	$(RM) $(C++_OBJ) $(C++_OBJ:%.$(o)=%.d)
+	$(RM) $(C++_MAIN_OBJ:%.$(o)=%.[ds]) $(C++_MAIN_OBJ:%.$(o)=%.map)
+	$(RM) $(C++_OBJ) $(C++_OBJ:%.$(o)=%.[ds])
 
 #
 # tidy: --Reformat C++ files consistently.
@@ -236,7 +236,7 @@ C++_LINT_FLAGS = $(C++LINT_CMD_FLAGS) $(OS.C++_LINT_FLAGS) $(ARCH.C++_LINT_FLAGS
 lint:	lint-c++
 lint-c++:	| c++-src-defined
 	$(ECHO_TARGET)
-	$(C++_LINT_CMD) $(C++_LINT_FLAGS) $(abspath $(H++_SRC)) $(abspath $(C++_SRC))
+	$(C++_LINT_CMD) $(C++_LINT_FLAGS) $(abspath $(C++_SRC))
 lint[%.$(C++_SUFFIX)]:
 	$(ECHO_TARGET)
 	$(C++_LINT_CMD) $(C++_LINT_FLAGS) $(abspath $*.$(C++_SUFFIX))

@@ -210,7 +210,7 @@ uninstall-c:
 clean:	clean-c
 clean-c:
 	$(ECHO_TARGET)
-	$(RM) $(C_MAIN) $(C_MAIN:%=%.map) $(C_OBJ) $(C_PIC_OBJ) $(C_OBJ:%.$(o)=%.d)
+	$(RM) $(C_MAIN) $(C_MAIN:%=%.map) $(C_OBJ) $(C_OBJ:%.$(o)=%.[sd]) $(C_PIC_OBJ)
 
 #
 # tidy: --Reformat C files consistently.
