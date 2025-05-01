@@ -7,6 +7,7 @@
 # toc-javascript:      --Build the table-of-contents for JavaScript files.
 # src-javascript:      --Update the JS_SRC macro.
 # todo:                --Report "unfinished work" comments in JavaScript files.
+# %.json:              --Use cpp(1) and jq(1) to strip comments and blank lines.
 #
 .PHONY: $(recursive-targets:%=%-javascript)
 
@@ -54,3 +55,11 @@ todo:	todo-javascript
 todo-javascript:
 	$(ECHO_TARGET)
 	@$(GREP) $(TODO_PATTERN) $(JS_SRC) /dev/null ||:
+
+
+#
+# %.json: --Use cpp(1) and jq(1) to strip comments and blank lines.
+#
+%.json: %.js
+        $(ECHO_TARGET)
+        $(Q)cpp -P -DVERSION='"$(VERSION)"' $*.js | jq . > $@
