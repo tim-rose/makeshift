@@ -3,6 +3,7 @@
 #
 # Contents:
 # VERSION:           --Extract version from VCS.
+# VCS_DATE:          --Get the source code last commit date.
 # WILDCARD:          --Match everything except starting with "_".
 # PWD:               --Force reset of PWD
 # OS:                --Set OS macro by interpolating "uname -s".
@@ -61,6 +62,14 @@ VERSION_CMD = \
     git describe --always --first-parent --dirty 2>/dev/null || echo unknown
 VCS_VERSION = $(shell $(VERSION_CMD))
 export VERSION = $(VCS_VERSION:v%=%)
+#
+# VCS_DATE: --Get the source code last commit date.
+#
+# See Also: https://reproducible-builds.org/docs/source-date-epoch
+#
+VCS_DATE := $(shell git log --max-count=1 --pretty=format:%ci 2>/dev/null || echo unknown)
+VCS_DATE_EPOCH := $(shell git log --max-count=1 --pretty=format:%ct 2>/dev/null || echo 0)
+
 
 SUBDIRS ?= $(subst /,,$(sort $(dir $(wildcard */*[mM]akefile*))))
 
@@ -160,7 +169,7 @@ include os/$(OS).mk arch/$(ARCH).mk project/$(PROJECT).mk
 #
 # Define DESTDIR, prefix if that hasn't happened already.
 #
-DESTDIR ?= /
+#DESTDIR ?= /
 #PREFIX  ?= /usr/local
 #prefix  ?= $(PREFIX)
 
