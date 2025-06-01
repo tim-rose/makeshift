@@ -5,7 +5,7 @@
 # README.html/README.md: --build a HTML document from a README file.
 # %.html/%.md:         --build a HTML document from a markdown file.
 # %.pdf:               --Create a PDF document from a HTML file.
-# build:               --Create HTML documents from markdown.
+# doc-html:            --Create HTML documents from markdown.
 # doc-markdown:        --Create PDF documents from MD_SRC.
 # clean-markdown:      --Clean up markdown's derived files.
 # src-markdown:        --Update MD_SRC, macros.

@@ -129,7 +129,7 @@ todo-sh:
 #
 # lint: --Check sh style.
 #
-SH_LINT ?= shellcheck -x -s dash
+SH_LINT ?= shellcheck --enable=check-unassigned-uppercase,add-default-case
 SH_LINT_FLAGS = $(OS.SH_LINT_FLAGS) $(ARCH.SH_LINT_FLAGS) \
     $(PROJECT.SH_LINT_FLAGS) $(LOCAL.SH_LINT_FLAGS) $(TARGET.SH_LINT_FLAGS)
 lint:	lint-sh

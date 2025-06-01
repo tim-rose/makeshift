@@ -61,5 +61,5 @@ todo-javascript:
 # %.json: --Use cpp(1) and jq(1) to strip comments and blank lines.
 #
 %.json: %.js
-        $(ECHO_TARGET)
-        $(Q)cpp -P -DVERSION='"$(VERSION)"' $*.js | jq . > $@
+	$(ECHO_TARGET)
+	cpp -P -DVERSION='"$(VERSION)"' $*.js | jq . > $@
