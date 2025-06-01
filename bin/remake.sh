@@ -110,7 +110,7 @@ do
     o)  opts=$OPTARG;;
     t)  target=$OPTARG;;
     v)  verbose=1; debug=;;
-    q)  verbose=; debug=;;
+    q)  quiet=1; verbose=; debug=;;
     _)  verbose=1; debug=1;;
     \?)	echo $usage >&2
 	exit 2;;
