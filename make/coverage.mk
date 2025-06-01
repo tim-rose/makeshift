@@ -34,6 +34,7 @@ PRINT_gcov_VERSION = gcov --version
 
 GCOV_FILES := $(C_SRC:%.c=%.c.gcov) $(C++_SRC:%=%.gcov)
 GCOV_GCDA_FILES := $(C_OBJ:%.o=%.gcda) $(C++_OBJ:%.o=%.gcda)
+GCOV_GCNO_FILES := $(C_OBJ:%.o=%.gcno) $(C++_OBJ:%.o=%.gcno)
 
 .PHONY: coverage html-coverage
 coverage:	$(GCOV_FILES)
@@ -82,7 +83,8 @@ $(archdir)/coverage/index.html:	$(archdir)/trace.info | $(archdir)/coverage
 clean: clean-coverage
 clean-coverage:
 	$(ECHO_TARGET)
-	$(RM) -r $(GCOV_FILES) $(archdir)/trace.info $(archdir)/coverage
+	$(RM) -r $(GCOV_FILES) $(GCOV_GCDA_FILES) $(GCOV_GCNO_FILES)
+	$(RM) -r $(archdir)/trace.info $(archdir)/coverage
 
 #
 # +version: --Report details of tools used by coverage
