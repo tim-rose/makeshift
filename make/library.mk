@@ -45,13 +45,19 @@ LIB_INCLUDEDIR = $(LIB_ROOT)/include/$(subdir)
 #
 export LIB_TYPE ?= static
 include $(LIB_TYPE:%=library/%.mk)
-
 #
 # Pattern rules for doing a staged install of the library's ".h" files.
 #
-$(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_RDONLY) $? $@
-$(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(INSTALL_RDONLY) $? $@
-$(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_RDONLY) $? $@
+# $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_RDONLY) $? $@
+# $(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(INSTALL_RDONLY) $? $@
+# $(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_RDONLY) $? $@
+#
+# Experimental: use (hard) links
+#
+$(LIB_INCLUDEDIR):; $(MKDIR) $@
+$(LIB_INCLUDEDIR)/%:		$(archdir)/% | $(LIB_INCLUDEDIR);	$(LN) $? $@
+$(LIB_INCLUDEDIR)/%:		$(gendir)/% | $(LIB_INCLUDEDIR);	$(LN) $? $@
+$(LIB_INCLUDEDIR)/%:		% | $(LIB_INCLUDEDIR);		$(LN) $? $@
 #
 # Respecify pattern rules to avoid the trailing // if subdir is empty,
 # so that dependencies can be declared more naturally (otherwise make
