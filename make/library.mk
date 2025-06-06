@@ -55,9 +55,9 @@ include $(LIB_TYPE:%=library/%.mk)
 # Experimental: use (hard) links
 #
 $(LIB_INCLUDEDIR):; $(MKDIR) $@
-$(LIB_INCLUDEDIR)/%:		$(archdir)/% | $(LIB_INCLUDEDIR);	$(LN) $? $@
-$(LIB_INCLUDEDIR)/%:		$(gendir)/% | $(LIB_INCLUDEDIR);	$(LN) $? $@
-$(LIB_INCLUDEDIR)/%:		% | $(LIB_INCLUDEDIR);		$(LN) $? $@
+$(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(MKDIR) $(@D); $(LN) $? $@
+$(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(MKDIR) $(@D); $(LN) $? $@
+$(LIB_INCLUDEDIR)/%:		%;		$(MKDIR) $(@D); $(LN) $? $@
 #
 # Respecify pattern rules to avoid the trailing // if subdir is empty,
 # so that dependencies can be declared more naturally (otherwise make
