@@ -253,7 +253,7 @@ lint-cppcheck[%.h]:
 	$(ECHO_TARGET)
 	cppcheck $(CPPCHECK_FLAGS) $(abspath $*.h)
 
-CLANG_TIDY_FLAGS ?= -fix
+CLANG_TIDY_FLAGS ?= --fix
 CLANG_EXTRA_FLAGS = $(C_CPPFLAGS) $(C_DEFS) $(C_FLAGS)
 
 lint-c-clang-tidy: c-src-defined
