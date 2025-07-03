@@ -48,16 +48,27 @@ include $(LIB_TYPE:%=library/%.mk)
 #
 # Pattern rules for doing a staged install of the library's ".h" files.
 #
+# There are three ways to do this: copy, hardlink, symlink.
+#
+# * option 1: copy, using the install command.
+#
 # $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(INSTALL_RDONLY) $? $@
 # $(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(INSTALL_RDONLY) $? $@
 # $(LIB_INCLUDEDIR)/%:		%;		$(INSTALL_RDONLY) $? $@
 #
-# Experimental: use (hard) links
+# * option 2: use (hard) links.
 #
-$(LIB_INCLUDEDIR):; $(MKDIR) $@
 $(LIB_INCLUDEDIR)/%:		$(archdir)/%;	$(MKDIR) $(@D); $(LN) $? $@
 $(LIB_INCLUDEDIR)/%:		$(gendir)/%;	$(MKDIR) $(@D); $(LN) $? $@
 $(LIB_INCLUDEDIR)/%:		%;		$(MKDIR) $(@D); $(LN) $? $@
+#
+# * option 3: use symlinks.
+# This is a little fragile, because you end up with a symlink to
+# an absolute path name, not a relative path.
+#
+# $(LIB_INCLUDEDIR)/%:		$(archdir)/%;		$(MKDIR) $(@D); cd $(@D); $(SYMLINK) $$OLDPWD/$(@F) $(@F)
+# $(LIB_INCLUDEDIR)/%:		$(gendir)/%;		$(MKDIR) $(@D); cd $(@D); $(SYMLINK) $$OLDPWD/$(@F) $(@F)
+# $(LIB_INCLUDEDIR)/%:		%;		$(MKDIR) $(@D); cd $(@D); $(SYMLINK) $$OLDPWD/$(@F) $(@F)
 #
 # Respecify pattern rules to avoid the trailing // if subdir is empty,
 # so that dependencies can be declared more naturally (otherwise make
