@@ -69,7 +69,7 @@ $(datadir)/%.html:	%.html; $(INSTALL_DATA) $? $@
 #
 README.html:	README.md
 	$(ECHO_TARGET)
-	$(MD) --from gfm --to=html $(ALL_MDFLAGS) README.md > $@ || $(RM) $@
+	$(MD) --from gfm --to=html --standalone $(ALL_MDFLAGS) README.md > $@ || $(RM) $@
 #
 
 #
