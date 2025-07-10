@@ -58,9 +58,15 @@ std-targets = clean distclean build test test-xml coverage \
 # * lint --Run a static analyser over all source files.
 # * tidy --Reformat all source files in a consistent style.
 # * todo --Find and print all "todo", "revisit" and "fixme" annotations.
+# * config --Run the "pre-build" target only.
 #
-makeshift-targets = src toc lint tidy todo
+makeshift-targets = src toc lint tidy todo config
 recursive-targets = $(std-targets) $(makeshift-targets)
+
+#
+# config: --do any configuration required for this to build.
+#
+config: pre-build
 
 #
 # install-strip: --install stuff, and strip binaries.
