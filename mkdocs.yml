@@ -13,3 +13,8 @@ nav:
       - C: api-reference/language-c.md
 theme:
   name: material
+  # Used for Read the Docs hosting support
+  custom_dir: docs/overrides
+extra_javascript:
+  # Used for Read the Docs hosting support
+  - javascript/readthedocs.js
