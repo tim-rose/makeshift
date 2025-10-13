@@ -1,0 +1,10 @@
+# Requirements for the documentation
+#
+# These are matched to the versions found on Ubuntu so you can install into system
+# Python if you prefer.
+# 
+# SPDX-FileCopyrightText: 2006-2023 Tim Rose <tim.rose@acm.org>
+# SPDX-License-Identifier: MIT
+
+mkdocs~=1.4.2
+mkdocs-material~=8.2.5
