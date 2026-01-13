@@ -15,10 +15,18 @@
 #
 mk_args="OS=unknown ARCH=all $*"
 PATH=$PWD/bin:$PATH
+SUDO=
+
+while getopts "s" opt; do
+    case $opt in
+        s) SUDO="sudo" ;;
+    esac
+done
+shift $((OPTIND -1))
 
 build_bin() { make -I$PWD/make -C bin build $mk_args; }
 build_self() { make -I$PWD/make build $mk_args; }
-install_all() { make -I$PWD/make install $mk_args; }
+install_all() { ${SUDO} make -I$PWD/make install $mk_args; }
 
 os_warning()
 {
