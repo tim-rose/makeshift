@@ -42,7 +42,7 @@ ifdef autosrc
     SED_SRC	?= $(LOCAL_SED_SRC)
 endif
 
-shlibdir	:= $(exec_prefix)/lib/sh/$(subdir)
+shlibdir	?= $(exec_prefix)/lib/sh/$(subdir)
 SH_TRG	:= $(SH_SRC:%.sh=$(archdir)/%)
 AWK_TRG	:= $(AWK_SRC:%.awk=$(archdir)/%)
 SED_TRG	:= $(SED_SRC:%.sed=$(archdir)/%)

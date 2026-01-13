@@ -39,7 +39,7 @@ PY_TIDY_ALL_FLAGS = $(PY_TIDY_FLAGS) $(OS.PY_TIDY_FLAGS) $(ARCH.PY_TIDY_FLAGS) \
 #
 # %.py:		--Rules for installing python scripts
 #
-pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
+pythonlibdir      ?= $(exec_prefix)/lib/python/$(subdir)
 PY_TRG = $(PY_SRC:%.py=$(archdir)/%)
 SET_VERSION = $(SED) -e 's/\<VERSION\>/$(VERSION)/'
 

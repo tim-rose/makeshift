@@ -35,7 +35,7 @@ H++_SUFFIX ?= h
 
 XSD ?= xsd
 XML_SCHEMA ?= xml-schema
-xsddir = $(exec_prefix)/share/xsd
+xsddir ?= $(exec_prefix)/share/xsd
 
 XSD_OBJ = $(XSD_SRC:%.xsd=$(archdir)/%.$(o))
 XSD_PIC_OBJ += $(XSD_SRC:%.xsd=$(archdir)/%.$(s.o))
