@@ -16,7 +16,7 @@ ifdef autosrc
     SQL_SRC ?= $(LOCAL_SQL_SRC)
 endif
 
-sqllibdir	:= $(exec_prefix)/lib/sql/$(subdir)
+sqllibdir	?= $(exec_prefix)/lib/sql/$(subdir)
 
 #
 # %.sql: --Rules for installing SQL scripts into libdir

@@ -18,6 +18,8 @@
 #
 .PHONY: $(recursive-targets:%=%-python)
 
+python ?= python
+
 PY_MAIN_RGX = '^.! */usr/bin/env python'
 
 ifdef autosrc
@@ -39,7 +41,8 @@ PY_TIDY_ALL_FLAGS = $(PY_TIDY_FLAGS) $(OS.PY_TIDY_FLAGS) $(ARCH.PY_TIDY_FLAGS) \
 #
 # %.py:		--Rules for installing python scripts
 #
-pythonlibdir      = $(exec_prefix)/lib/python/$(subdir)
+pythonpkgdir ?= site-packages
+pythonlibdir ?= $(exec_prefix)/lib/$(python)/$(pythonpkgdir)/$(subdir)
 PY_TRG = $(PY_SRC:%.py=$(archdir)/%)
 SET_VERSION = $(SED) -e 's/\<VERSION\>/$(VERSION)/'
 

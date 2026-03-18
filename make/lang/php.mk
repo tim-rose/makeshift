@@ -15,7 +15,7 @@ ifdef autosrc
     PHP_SRC ?= $(LOCAL_PHP_SRC)
 endif
 
-phplibdir      = $(exec_prefix)/lib/php/$(subdir)
+phplibdir      ?= $(exec_prefix)/lib/php/$(subdir)
 
 #
 # %.php:		--Rules for installing php scripts
