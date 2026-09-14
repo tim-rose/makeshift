@@ -21,13 +21,34 @@
     font-size: 10pt;
     line-height: 1.3em;
 
+    @top-left {
+        content: string(doc-title);
+        padding-left: 2em;
+    }
+    @top-center {
+        content: string(doc-section);
+    }
+
+    @bottom-left {
+        content: "Copyright \a9 " string(doc-year) " " string(doc-author);
+        padding-left: 2em;
+    }
     @bottom-center {
+        content: "Version " string(doc-version);
+    }
+    @bottom-right {
         content: "Page " counter(page) " of " counter(pages);
-    	padding-top: 1em;
-    	vertical-align: top;
+        padding-top: 1em;
+        padding-right: 2em;
+        vertical-align: top;
     }
 }
 
+h1 { string-set: doc-title content(); }
+h2 { string-set: doc-section content(); }
+meta[name="version"] { string-set: doc-version attr(content); }
+meta[name="author"] { string-set: doc-author attr(content); }
+meta[name="year"] { string-set: doc-year attr(content); }
 .new-page {
     page-break-before: always;
 }
