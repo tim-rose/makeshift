@@ -16,7 +16,8 @@ CC ?= cc
 so = dylib
 LD_SHARED_FLAGS = -Wl,-undefined,dynamic_lookup -Wl,-install_name,$(notdir $@) -dynamiclib
 
-OS.CFLAGS 	= -MMD -ffunction-sections -fdata-sections -Wa,-adglmsn=$(@:%.o=%.s)
+#OS.CFLAGS 	= -MMD -ffunction-sections -fdata-sections -Wa,-adglmsn=$(@:%.o=%.s)
+OS.CFLAGS 	= -MMD -ffunction-sections -fdata-sections
 OS.C_WARN_FLAGS = -Wno-gnu-zero-variadic-macro-arguments
 OS.C_CPPFLAGS   = -I/usr/local/include -I/opt/local/include
 OS.C_DEFS       = -D__Darwin__
@@ -34,7 +35,7 @@ OS.PYTEST_FLAGS = --junit-xml pytest-tests.xml
 OS.RPM_FLAGS    = --define "_tmppath /var/tmp"
 OS.AUTO_CLEAN	= .DS_Store
 
-PS2PDF = pstopdf
+PS2PDF = ps2pdf
 
 +vars:   $(.VARIABLES:%=+var[%])
 
