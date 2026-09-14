@@ -21,7 +21,7 @@ ifdef autosrc
     BTM_SRC	?= $(LOCAL_BTM_SRC)
 endif
 
-cmdlibdir	:= $(exec_prefix)/lib/cmd/$(subdir)
+cmdlibdir	?= $(exec_prefix)/lib/cmd/$(subdir)
 
 #
 # %.cmd: --Rules for installing cmd/bat commands, libraries

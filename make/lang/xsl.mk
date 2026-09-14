@@ -19,7 +19,7 @@ endif
 #
 # %.xsl: --Rules for installing xsl files
 #
-xsllibdir = $(libdir)/xsl
+xsllibdir ?= $(libdir)/xsl
 install-xsl:	$(XSL_SRC:%.xsl=$(xsllibdir)/%.xsl)
 $(xsllibdir)/%.xsl:	%.xsl;	$(INSTALL_DATA) $? $@
 

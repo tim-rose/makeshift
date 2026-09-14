@@ -216,13 +216,13 @@ C++_TIDY_FLAGS = $(C++_TIDY_CMD_FLAGS) $(OS.C++_TIDY_FLAGS) \
 tidy:	tidy-c++
 tidy-c++:	c++-src-defined
 	$(ECHO_TARGET)
-	$(C++_TIDY) $(C++_TIDY_FLAGS) $(H++_SRC) $(C++_SRC)
+	$(C++_TIDY_CMD) $(C++_TIDY_FLAGS) $(H++_SRC) $(C++_SRC)
 tidy[%.$(C++_SUFFIX)]:
 	$(ECHO_TARGET)
-	$(C++_TIDY) $(C++_TIDY_FLAGS) $*.$(C++_SUFFIX)
+	$(C++_TIDY_CMD) $(C++_TIDY_FLAGS) $*.$(C++_SUFFIX)
 tidy[%.$(H++_SUFFIX)]:
 	$(ECHO_TARGET)
-	$(C++_TIDY) $(C++_TIDY_FLAGS) $*.$(H++_SUFFIX)
+	$(C++_TIDY_CMD) $(C++_TIDY_FLAGS) $*.$(H++_SUFFIX)
 #
 # lint: --Perform static analysis for C++ files.
 #

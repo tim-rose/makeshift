@@ -32,7 +32,7 @@ ALL_JAVA_FLAGS = $(OS.JAVA_FLAGS) $(ARCH.JAVA_FLAGS) $(LOCAL.JAVA_FLAGS) \
 
 JAVA_OBJ	= $(JAVA_SRC:%.java=$(archdir)/%.class)
 
-javalibdir      = $(exec_prefix)/lib/java/$(subdir)
+javalibdir      ?= $(exec_prefix)/lib/java/$(subdir)
 
 $(javalibdir)/%.class:	$(archdir)/%.class;	$(INSTALL_DATA) $? $@
 

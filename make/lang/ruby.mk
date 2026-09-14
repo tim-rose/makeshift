@@ -12,7 +12,7 @@
 #
 .PHONY: $(recursive-targets:%=%-ruby)
 
-rubylibdir      = $(exec_prefix)/lib/ruby/$(subdir)
+rubylibdir      ?= $(exec_prefix)/lib/ruby/$(subdir)
 RB_TRG = $(RB_SRC:%.rb=%)
 
 %:			%.rb;	$(INSTALL_SCRIPT) $*.rb $@

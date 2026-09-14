@@ -15,6 +15,7 @@
 version="VERSION"
 PATH=$PATH:/usr/libexec:/usr/local/libexec
 export LC_COLLATE=C
+export LC_ALL=${LC_ALL:+${LC_COLLATE}}
 tmp=${TMPDIR:-/tmp}/$$
 backup=.bak
 directories=

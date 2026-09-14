@@ -18,6 +18,9 @@ s.a = s.a
 OS.C_SHARED_FLAGS = -fpic
 OS.C++_SHARED_FLAGS = -fpic
 
+OS.C++_LINT_FLAGS = --library=posix
+OS.C_LINT_FLAGS = --library=posix
+
 CHMOD	= chmod
 CP 	= cp
 FAKEROOT = fakeroot

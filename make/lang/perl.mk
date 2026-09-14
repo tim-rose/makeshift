@@ -23,7 +23,7 @@ ifdef autosrc
     T_SRC ?= $(LOCAL_T_SRC)
 endif
 
-perllibdir      = $(exec_prefix)/lib/perl5/$(subdir)
+perllibdir      ?= $(exec_prefix)/lib/perl5/$(subdir)
 PERL_SRC=$(PL_SRC) $(PM_SRC) $(T_SRC)
 PERL_TRG = $(PL_SRC:%.pl=%)
 

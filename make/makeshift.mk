@@ -122,6 +122,7 @@ TODO_PATTERN = $(TODO_KEYWORDS:%=-e %)
 #
 # VERBOSE: --Control how (+how much, how colourful) echo's output is.
 #
+VERBOSE ?= ${V}
 ifeq "$(VERBOSE)" "color"
     ECHO = colour_echo() { printf '\033[36m++ $(CURDIR) $@: \033[33m%s\033[m\n' "$$*"; }; colour_echo
     Q =
